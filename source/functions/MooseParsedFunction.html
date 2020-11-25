@@ -1,103 +1,90 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>MooseParsedFunction.md|RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script><script type="text/javascript" src="../../contrib/plotly/plotly.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="bdc892bc-af9c-4aa7-81b9-85b80e6b0b33"><i class="material-icons">menu</i></a><ul class="sidenav" id="bdc892bc-af9c-4aa7-81b9-85b80e6b0b33"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">functions</span><a href="#" class="breadcrumb">MooseParsedFunction</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="e663183a-e580-4c55-aa21-46999e6646f1" data-section-level="1" data-section-text="ParsedFunction"><h1 id="parsedfunction">ParsedFunction</h1><p>Function created by parsing a string</p><section class="scrollspy" id="b3a7dfaa-7ae0-4da0-85bf-f583c3fe1547" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p>The <code>ParsedFunction</code> function takes a mathematical expression in <code>value</code>.  The expression can be a function of time (t) or coordinate (x, y, or z).  The expression can include common mathematical functions.  Examples include <code>4e4+1e2*t</code>, <code>sqrt(x*x+y*y+z*z)</code>, and <code>if(t\textless=1.0, 0.1*t, (1.0+0.1)*cos(pi/2*(t-1.0)) - 1.0)</code>.</p><p>Additional variables may be declared in the <code>vars</code> parameter vector. The corresponding <code>vals</code> parameter vector should list the items these variables are bound to. Variables can be bound to:</p><ul class="browser-default"><li><p>Constant number literals (for example <code>vars = kB</code> and <code>vals = 8.61733e-5</code>) </p></li><li><p>A PostProcessor name (providing the value from the PP&#x27;s last execution) </p></li><li><p>A Function name (providing an immediate evaluation of the specified function) </p></li><li><p>A scalar variable name</p></li></ul><p>Further information can be found at the <a href="http://warp.povusers.org/FunctionParser/">function parser site</a>.</p></section><section class="scrollspy" id="f97e7b4c-a43e-4d08-a754-a5ace98fc147" data-section-level="2" data-section-text="Example Input Syntax"><h2 id="example-input-syntax">Example Input Syntax</h2><pre class="moose-pre"><code class="language-text">[Functions]
-  [./tr_x]
+<!DOCTYPE html><head><meta charset="UTF-8"><title>MooseParsedFunction.md|RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script><script type="text/javascript" src="../../contrib/plotly/plotly.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="e1207b68-876b-4286-9dcb-1719945576af"><i class="material-icons">menu</i></a><ul class="sidenav" id="e1207b68-876b-4286-9dcb-1719945576af"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">functions</span><a href="#" class="breadcrumb">MooseParsedFunction</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="57a43154-cd9b-4ca0-a829-7e1258322b5a" data-section-level="1" data-section-text="ParsedFunction"><h1 id="parsedfunction">ParsedFunction</h1><p>Function created by parsing a string</p><section class="scrollspy" id="4fe8c37a-bff6-47da-8f38-5ffd7e8735b3" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p>The <code>ParsedFunction</code> function takes a mathematical expression in <code>value</code>.  The expression can be a function of time (t) or coordinate (x, y, or z).  The expression can include common mathematical functions.  Examples include <code>4e4+1e2*t</code>, <code>sqrt(x*x+y*y+z*z)</code>, and <code>if(t\textless=1.0, 0.1*t, (1.0+0.1)*cos(pi/2*(t-1.0)) - 1.0)</code>.</p><p>Additional variables may be declared in the <code>vars</code> parameter vector. The corresponding <code>vals</code> parameter vector should list the items these variables are bound to. Variables can be bound to:</p><ul class="browser-default"><li><p>Constant number literals (for example <code>vars = kB</code> and <code>vals = 8.61733e-5</code>) </p></li><li><p>A PostProcessor name (providing the value from the PP&#x27;s last execution) </p></li><li><p>A Function name (providing an immediate evaluation of the specified function) </p></li><li><p>A scalar variable name</p></li></ul><p>Further information can be found at the <a href="http://warp.povusers.org/FunctionParser/">function parser site</a>.</p></section><section class="scrollspy" id="7878d6c3-af8f-4d0a-b746-459ebf13e69b" data-section-level="2" data-section-text="Example Input Syntax"><h2 id="example-input-syntax">Example Input Syntax</h2><pre class="moose-pre"><code class="language-text">[Functions]
+  # A ParsedFunction allows us to supply analytic expressions
+  # directly in the input file
+  [./bc_func]
     type = ParsedFunction
-    value = sqrt(x^2+y^2)*cos(2*pi/3)
+    value = sin(alpha*pi*x)
+    vars = &#x27;alpha&#x27;
+    vals = &#x27;16&#x27;
   [../]
 
-  [./tr_y]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*sin(2*pi/3)
-  [../]
-
-  [./itr_x]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*cos(0)
-  [../]
-
-  [./itr_y]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*sin(0) # Always Zero!
+  # This function is an actual compiled function
+  # We could have used ParsedFunction for this as well
+  [./forcing_func]
+    type = ExampleFunction
+    alpha = 16
   [../]
 []
-</code></pre><a href="#02eb57b4-fcea-4e43-b539-953be310435e" class="modal-trigger">(moose/examples/ex04_bcs/trapezoid.i)</a><div class="modal moose-modal" id="02eb57b4-fcea-4e43-b539-953be310435e"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/examples/ex04_bcs/trapezoid.i</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  file = trapezoid.e
-  uniform_refine = 1
-[]
+</code></pre><a href="#f91258e2-89c4-4745-846c-2830bb20a337" class="modal-trigger">(moose/examples/ex13_functions/ex13.i)</a><div class="modal moose-modal" id="f91258e2-89c4-4745-846c-2830bb20a337"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/examples/ex13_functions/ex13.i</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  type = GeneratedMesh
+  dim = 2
 
-# Polar to Cartesian
-# R = sqrt(x^2 + y^2)
-# x = R * cos(theta)
-# y = R * sin(theta)
-[Functions]
-  [./tr_x]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*cos(2*pi/3)
-  [../]
+  nx = 100
+  ny = 100
 
-  [./tr_y]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*sin(2*pi/3)
-  [../]
+  xmin = 0.0
+  xmax = 1.0
 
-  [./itr_x]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*cos(0)
-  [../]
-
-  [./itr_y]
-    type = ParsedFunction
-    value = sqrt(x^2+y^2)*sin(0)  # Always Zero!
-  [../]
+  ymin = 0.0
+  ymax = 1.0
 []
 
 [Variables]
-  [./u]
+  [./forced]
     order = FIRST
     family = LAGRANGE
+  [../]
+[]
+
+[Functions]
+  # A ParsedFunction allows us to supply analytic expressions
+  # directly in the input file
+  [./bc_func]
+    type = ParsedFunction
+    value = sin(alpha*pi*x)
+    vars = &#x27;alpha&#x27;
+    vals = &#x27;16&#x27;
+  [../]
+
+  # This function is an actual compiled function
+  # We could have used ParsedFunction for this as well
+  [./forcing_func]
+    type = ExampleFunction
+    alpha = 16
   [../]
 []
 
 [Kernels]
   [./diff]
     type = Diffusion
-    variable = u
+    variable = forced
   [../]
 
-  # A forcing term near the periodic boundary
+  # This Kernel can take a function name to use
   [./forcing]
-    type = ExampleGaussContForcing
-    variable = u
-    x_center = 2
-    y_center = -1
-    x_spread = 0.25
-    y_spread = 0.5
-  [../]
-
-  [./dot]
-    type = TimeDerivative
-    variable = u
+    type = BodyForce
+    variable = forced
+    function = forcing_func
   [../]
 []
 
 [BCs]
-  [./Periodic]
-    [./x]
-      primary = 1
-      secondary = 4
-      transform_func = &#x27;tr_x tr_y&#x27;
-      inv_transform_func = &#x27;itr_x itr_y&#x27;
-    [../]
+  # The BC can take a function name to use
+  [./all]
+    type = FunctionDirichletBC
+    variable = forced
+    boundary = &#x27;bottom right top left&#x27;
+    function = bc_func
   [../]
 []
 
 [Executioner]
-  type = Transient
-  dt = 0.5
-  num_steps = 6
+  type = Steady
+  solve_type = &#x27;PJFNK&#x27;
 []
 
 [Outputs]
   execute_on = &#x27;timestep_end&#x27;
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></section><section class="scrollspy" id="f7c69100-cea2-4561-b9ab-42327ef854ca" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="9e9113d6-7536-43e8-be24-5758321bafde" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">value</span><span class="moose-parameter-header-description">The user defined function.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>FunctionExpression</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The user defined function.</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="a2df7ff4-d152-44ce-8cc0-784e65f26f66" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">vals</span><span class="moose-parameter-header-description">Constant numeric values, postprocessor names, or function names for vars.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector<std::string></p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Constant numeric values, postprocessor names, or function names for vars.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">vars</span><span class="moose-parameter-header-description">Variables (excluding t,x,y,z) that are bound to the values provided by the corresponding items in the vals vector.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector<std::string></p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Variables (excluding t,x,y,z) that are bound to the values provided by the corresponding items in the vals vector.</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="4a110771-5a3c-4cbe-af25-3d9e38117993" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector<std::string></p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section></section></section></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#b3a7dfaa-7ae0-4da0-85bf-f583c3fe1547" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#f97e7b4c-a43e-4d08-a754-a5ace98fc147" class="tooltipped" data-position="left" data-tooltip="Example Input Syntax">Example Input Syntax</a></li><li><a href="#f7c69100-cea2-4561-b9ab-42327ef854ca" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></section><section class="scrollspy" id="776dd999-9dc0-41e4-99c8-df96ed9b572d" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="b7744d5c-d3b7-4e35-821d-797af00411c1" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">value</span><span class="moose-parameter-header-description">The user defined function.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>FunctionExpression</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The user defined function.</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="a9f93e61-3829-4db6-af15-87f83599a6a4" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">vals</span><span class="moose-parameter-header-description">Constant numeric values, postprocessor names, or function names for vars.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Constant numeric values, postprocessor names, or function names for vars.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">vars</span><span class="moose-parameter-header-description">Variables (excluding t,x,y,z) that are bound to the values provided by the corresponding items in the vals vector.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Variables (excluding t,x,y,z) that are bound to the values provided by the corresponding items in the vals vector.</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="e2d1db95-e937-4a4a-9de4-74aefacb8461" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section></section></section></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#4fe8c37a-bff6-47da-8f38-5ffd7e8735b3" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#7878d6c3-af8f-4d0a-b746-459ebf13e69b" class="tooltipped" data-position="left" data-tooltip="Example Input Syntax">Example Input Syntax</a></li><li><a href="#776dd999-9dc0-41e4-99c8-df96ed9b572d" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>
