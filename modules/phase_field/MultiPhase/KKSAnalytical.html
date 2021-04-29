@@ -1,4 +1,4 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>KKSAnalytical.md|RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script><script type="text/javascript" src="../../../contrib/plotly/plotly.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="2c53951e-7cdd-4fab-9402-c9e5d08ba3f5"><i class="material-icons">menu</i></a><ul class="sidenav" id="2c53951e-7cdd-4fab-9402-c9e5d08ba3f5"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href="../.." class="breadcrumb">modules</a><a href=".." class="breadcrumb">phase_field</a><span class="breadcrumb">MultiPhase</span><a href="#" class="breadcrumb">KKSAnalytical</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="2c8dd965-d4db-41a5-9482-ad259fdfc217" data-section-level="1" data-section-text="Analytical Solution for a 1 D equilibrium interface"><h1 id="analytical-solution-for-a-1-d-equilibrium-interface">Analytical Solution for a 1D equilibrium interface</h1><div class="card moose-float" style="width:200px;margin-left:20px;float:right;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_c.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Composition <span class="moose-katex-inline-equation" id="moose-equation-34f4fe95-47e0-4445-a4d0-28415c43e433"><script>var element = document.getElementById("moose-equation-34f4fe95-47e0-4445-a4d0-28415c43e433");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> for 2D simulation domain.</span></p></div></div><div class="card moose-float" style="width:200px;margin-left:20px;float:right;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_example_split_eta_0050.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Order parameter <span class="moose-katex-inline-equation" id="moose-equation-d34ce41f-54b8-4952-9b06-547727c5c078"><script>var element = document.getElementById("moose-equation-d34ce41f-54b8-4952-9b06-547727c5c078");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> along <span class="moose-katex-inline-equation" id="moose-equation-4396e886-cb06-463b-8663-6c795631cde4"><script>var element = document.getElementById("moose-equation-4396e886-cb06-463b-8663-6c795631cde4");katex.render("y = 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</span></p></div></div><div class="card moose-float" style="width:200px;margin-left:20px;float:right;clear:both;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_example_split_c_0050.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Composition <span class="moose-katex-inline-equation" id="moose-equation-ddc7732a-20d2-40bb-988d-4cd4509af3e4"><script>var element = document.getElementById("moose-equation-ddc7732a-20d2-40bb-988d-4cd4509af3e4");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> along <span class="moose-katex-inline-equation" id="moose-equation-25473170-240b-4b1c-b9f4-8279bec5a331"><script>var element = document.getElementById("moose-equation-25473170-240b-4b1c-b9f4-8279bec5a331");katex.render("y =0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</span></p></div></div><p>In the KKS model, an analytical solution exists for the order parameter <span class="moose-katex-inline-equation" id="moose-equation-4d056bac-45dc-4cc5-9215-bdd1f04c6581"><script>var element = document.getElementById("moose-equation-4d056bac-45dc-4cc5-9215-bdd1f04c6581");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and composition <span class="moose-katex-inline-equation" id="moose-equation-28e5be2a-5ee5-4be3-8224-85da09b6f40e"><script>var element = document.getElementById("moose-equation-28e5be2a-5ee5-4be3-8224-85da09b6f40e");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> through a 1D equilibrium interface:</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-d565e9b8-b371-4136-be91-88dc190bc375"></span><script>var element = document.getElementById("moose-equation-d565e9b8-b371-4136-be91-88dc190bc375");katex.render("\\eta_0(x) = \\frac{1}{2} \\left[1-\\tanh{\\left( \\frac{\\sqrt{w}}{\\sqrt{2} \\epsilon} x\\right)} \\right]", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-9abf4f1f-a1c0-40bf-b9bd-749b3e8590e8"></span><script>var element = document.getElementById("moose-equation-9abf4f1f-a1c0-40bf-b9bd-749b3e8590e8");katex.render("c_0(x) =  h(\\eta_0(x))c_S^e + [1-h(\\eta_0(x))]c_L^e", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p>where we use the switching function <span class="moose-katex-inline-equation" id="moose-equation-5f57775b-10b3-4e92-b538-1018c472d3d6"><script>var element = document.getElementById("moose-equation-5f57775b-10b3-4e92-b538-1018c472d3d6");katex.render("h(\\eta) = \\eta^3(6\\eta^2-15\\eta+10)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, the gradient energy coefficient <span class="moose-katex-inline-equation" id="moose-equation-b5d73978-544f-4506-b351-c9b4e27f6e23"><script>var element = document.getElementById("moose-equation-b5d73978-544f-4506-b351-c9b4e27f6e23");katex.render("\\epsilon^2 = 1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and the barrier function height <span class="moose-katex-inline-equation" id="moose-equation-d9a2006e-96fd-4403-a26a-888238aae057"><script>var element = document.getElementById("moose-equation-d9a2006e-96fd-4403-a26a-888238aae057");katex.render("w=1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>. (Note that there is a typo in Eq. (49) of <a href="#kim_phase-field_1999">Kim et al. (1999)</a>, <span class="moose-katex-inline-equation" id="moose-equation-ecb70844-bcee-4fe0-907f-aa527dd544b6"><script>var element = document.getElementById("moose-equation-ecb70844-bcee-4fe0-907f-aa527dd544b6");katex.render("\\epsilon", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> should be in the denominator of the argument to the <span class="moose-katex-inline-equation" id="moose-equation-9f1d5566-ebec-48df-9094-4eef4a65e271"><script>var element = document.getElementById("moose-equation-9f1d5566-ebec-48df-9094-4eef4a65e271");katex.render("\\tanh", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> function, not <span class="moose-katex-inline-equation" id="moose-equation-1e604cae-3a34-4484-89ec-6a2259a40794"><script>var element = document.getElementById("moose-equation-1e604cae-3a34-4484-89ec-6a2259a40794");katex.render("\\sqrt{\\epsilon}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.) In the following example, we equilibrate a flat interface between a solid phase (<span class="moose-katex-inline-equation" id="moose-equation-8c310c7f-ac76-49b1-a9fa-299c44932925"><script>var element = document.getElementById("moose-equation-8c310c7f-ac76-49b1-a9fa-299c44932925");katex.render("\\eta = 1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-936b3837-3427-4683-aebe-5bc9432772bc"><script>var element = document.getElementById("moose-equation-936b3837-3427-4683-aebe-5bc9432772bc");katex.render("f^S = (c_S-c_S^e)^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-f33b6ec5-4f6a-48eb-aabc-00e4b4c450b2"><script>var element = document.getElementById("moose-equation-f33b6ec5-4f6a-48eb-aabc-00e4b4c450b2");katex.render("c_S^e = 0.9", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>) and a liquid phase (<span class="moose-katex-inline-equation" id="moose-equation-880df84c-f07e-4f19-bcf2-20f4b3da74db"><script>var element = document.getElementById("moose-equation-880df84c-f07e-4f19-bcf2-20f4b3da74db");katex.render("\\eta = 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-721e304b-eb97-45e5-96be-962e768877ce"><script>var element = document.getElementById("moose-equation-721e304b-eb97-45e5-96be-962e768877ce");katex.render("f^L = (c_L-c_L^e)^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-54cdc4fb-8857-4281-8be7-2d3449eafebe"><script>var element = document.getElementById("moose-equation-54cdc4fb-8857-4281-8be7-2d3449eafebe");katex.render("c_L^e = 0.1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>) in a 2D simulation. The vector postprocessor <code>LineValueSampler</code> is used to obtain the values of <span class="moose-katex-inline-equation" id="moose-equation-1f8ca60a-3ba3-4ab4-9d4f-dc9defcaca32"><script>var element = document.getElementById("moose-equation-1f8ca60a-3ba3-4ab4-9d4f-dc9defcaca32");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-4876756d-e152-4f20-9e20-71f0ea3ea726"><script>var element = document.getElementById("moose-equation-4876756d-e152-4f20-9e20-71f0ea3ea726");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> along <span class="moose-katex-inline-equation" id="moose-equation-95a4c1cd-88a7-4bf0-a3e9-7742d7e67fea"><script>var element = document.getElementById("moose-equation-95a4c1cd-88a7-4bf0-a3e9-7742d7e67fea");katex.render("y=0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, the results are output to a CSV file, and plotted together with the 1D analytical solution. (We will use no-flux boundary conditions, so a boundary conditions block is not required in the input file.)</p><pre class="moose-pre"><code class="language-text">#
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Analytical Solution for a 1 D equilibrium interface | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="dc4cc76c-468b-418c-8e42-0752179f3022"><i class="material-icons">menu</i></a><ul class="sidenav" id="dc4cc76c-468b-418c-8e42-0752179f3022"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href="../.." class="breadcrumb">modules</a><a href=".." class="breadcrumb">phase_field</a><span class="breadcrumb">MultiPhase</span><a href="#" class="breadcrumb">KKSAnalytical</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="0567e860-88fb-42d8-a987-5029a72cb0d2" data-section-level="1" data-section-text="Analytical Solution for a 1 D equilibrium interface"><h1 id="analytical-solution-for-a-1-d-equilibrium-interface">Analytical Solution for a 1D equilibrium interface</h1><div class="card moose-float" style="width:200px;margin-left:20px;float:right;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_c.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Composition <span class="moose-katex-inline-equation" id="moose-equation-f669ad2f-45c6-4531-9c01-3b6aedf90a5d"><script>var element = document.getElementById("moose-equation-f669ad2f-45c6-4531-9c01-3b6aedf90a5d");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> for 2D simulation domain.</span></p></div></div><div class="card moose-float" style="width:200px;margin-left:20px;float:right;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_example_split_eta_0050.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Order parameter <span class="moose-katex-inline-equation" id="moose-equation-44fbc222-873f-47ee-b030-556ba5ce39f1"><script>var element = document.getElementById("moose-equation-44fbc222-873f-47ee-b030-556ba5ce39f1");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> along <span class="moose-katex-inline-equation" id="moose-equation-465ef84f-6107-4a98-9335-2b96bd721696"><script>var element = document.getElementById("moose-equation-465ef84f-6107-4a98-9335-2b96bd721696");katex.render("y = 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</span></p></div></div><div class="card moose-float" style="width:200px;margin-left:20px;float:right;clear:both;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_example_split_c_0050.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Composition <span class="moose-katex-inline-equation" id="moose-equation-8e175c1b-9d78-4bf5-a8d5-2f9e0507e642"><script>var element = document.getElementById("moose-equation-8e175c1b-9d78-4bf5-a8d5-2f9e0507e642");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> along <span class="moose-katex-inline-equation" id="moose-equation-9f6bce96-e3d8-4efb-b1d5-63045658eeb7"><script>var element = document.getElementById("moose-equation-9f6bce96-e3d8-4efb-b1d5-63045658eeb7");katex.render("y =0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</span></p></div></div><p>In the KKS model, an analytical solution exists for the order parameter <span class="moose-katex-inline-equation" id="moose-equation-a5e4c52e-07e2-4b9a-9f9e-fb14a428e188"><script>var element = document.getElementById("moose-equation-a5e4c52e-07e2-4b9a-9f9e-fb14a428e188");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and composition <span class="moose-katex-inline-equation" id="moose-equation-0333ec64-a9dc-4fa7-b9ea-3bdce9d16d74"><script>var element = document.getElementById("moose-equation-0333ec64-a9dc-4fa7-b9ea-3bdce9d16d74");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> through a 1D equilibrium interface:</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-319f689a-14d3-4161-b9d7-5f43ab587857"></span><script>var element = document.getElementById("moose-equation-319f689a-14d3-4161-b9d7-5f43ab587857");katex.render("\\eta_0(x) = \\frac{1}{2} \\left[1-\\tanh{\\left( \\frac{\\sqrt{w}}{\\sqrt{2} \\epsilon} x\\right)} \\right]", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-a2c01457-20a9-446d-86cb-bab489aaf778"></span><script>var element = document.getElementById("moose-equation-a2c01457-20a9-446d-86cb-bab489aaf778");katex.render("c_0(x) =  h(\\eta_0(x))c_S^e + [1-h(\\eta_0(x))]c_L^e", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p>where we use the switching function <span class="moose-katex-inline-equation" id="moose-equation-6b09cb83-fc4c-4f17-9133-12204ebef568"><script>var element = document.getElementById("moose-equation-6b09cb83-fc4c-4f17-9133-12204ebef568");katex.render("h(\\eta) = \\eta^3(6\\eta^2-15\\eta+10)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, the gradient energy coefficient <span class="moose-katex-inline-equation" id="moose-equation-61aa0240-43a0-44d0-89d4-1e90151befc3"><script>var element = document.getElementById("moose-equation-61aa0240-43a0-44d0-89d4-1e90151befc3");katex.render("\\epsilon^2 = 1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and the barrier function height <span class="moose-katex-inline-equation" id="moose-equation-e8debb3e-b23c-43dd-957b-4420771a6d12"><script>var element = document.getElementById("moose-equation-e8debb3e-b23c-43dd-957b-4420771a6d12");katex.render("w=1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>. (Note that there is a typo in Eq. (49) of <a href="#kim_phase-field_1999">Kim et al. (1999)</a>, <span class="moose-katex-inline-equation" id="moose-equation-758bb775-b538-4ee2-8539-1fb51dcd8a98"><script>var element = document.getElementById("moose-equation-758bb775-b538-4ee2-8539-1fb51dcd8a98");katex.render("\\epsilon", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> should be in the denominator of the argument to the <span class="moose-katex-inline-equation" id="moose-equation-7811834f-7e10-49a3-b2d9-3f9d77471e1d"><script>var element = document.getElementById("moose-equation-7811834f-7e10-49a3-b2d9-3f9d77471e1d");katex.render("\\tanh", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> function, not <span class="moose-katex-inline-equation" id="moose-equation-3676712a-9f3d-4b53-8297-f76ad7150305"><script>var element = document.getElementById("moose-equation-3676712a-9f3d-4b53-8297-f76ad7150305");katex.render("\\sqrt{\\epsilon}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.) In the following example, we equilibrate a flat interface between a solid phase (<span class="moose-katex-inline-equation" id="moose-equation-6e4e8a46-e888-415f-8318-1165962e690e"><script>var element = document.getElementById("moose-equation-6e4e8a46-e888-415f-8318-1165962e690e");katex.render("\\eta = 1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-aea8bc34-abf6-48d7-b055-87858980ddcf"><script>var element = document.getElementById("moose-equation-aea8bc34-abf6-48d7-b055-87858980ddcf");katex.render("f^S = (c_S-c_S^e)^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-ed0b5295-521f-404f-a149-7d0c7de41b10"><script>var element = document.getElementById("moose-equation-ed0b5295-521f-404f-a149-7d0c7de41b10");katex.render("c_S^e = 0.9", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>) and a liquid phase (<span class="moose-katex-inline-equation" id="moose-equation-1e7b0953-c119-4e25-92bf-802e69908bca"><script>var element = document.getElementById("moose-equation-1e7b0953-c119-4e25-92bf-802e69908bca");katex.render("\\eta = 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-addbe317-48c8-45b9-a5a2-6f8a42870160"><script>var element = document.getElementById("moose-equation-addbe317-48c8-45b9-a5a2-6f8a42870160");katex.render("f^L = (c_L-c_L^e)^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-1b2e3b3d-c81f-414f-80d6-01e9afe0ca59"><script>var element = document.getElementById("moose-equation-1b2e3b3d-c81f-414f-80d6-01e9afe0ca59");katex.render("c_L^e = 0.1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>) in a 2D simulation. The vector postprocessor <code>LineValueSampler</code> is used to obtain the values of <span class="moose-katex-inline-equation" id="moose-equation-82e120d8-f0a7-411f-981c-5a8c95dbed5e"><script>var element = document.getElementById("moose-equation-82e120d8-f0a7-411f-981c-5a8c95dbed5e");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-28b2e657-6e6c-416d-a64b-00f79c047d36"><script>var element = document.getElementById("moose-equation-28b2e657-6e6c-416d-a64b-00f79c047d36");katex.render("c", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> along <span class="moose-katex-inline-equation" id="moose-equation-7750489f-264b-4c6b-97c4-5a34666de2d2"><script>var element = document.getElementById("moose-equation-7750489f-264b-4c6b-97c4-5a34666de2d2");katex.render("y=0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, the results are output to a CSV file, and plotted together with the 1D analytical solution. (We will use no-flux boundary conditions, so a boundary conditions block is not required in the input file.)</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">#
 # KKS simple example in the split form
 #
 
@@ -255,264 +255,7 @@
     execute_on = final
   [../]
 []
-</code></pre><a href="#8815c15d-e2f8-48be-b0b5-44c0aadf5534" class="modal-trigger">(moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_noflux.i)</a><div class="modal moose-modal" id="8815c15d-e2f8-48be-b0b5-44c0aadf5534"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_noflux.i</h4><pre class="moose-pre"><code class="language-text">#
-# KKS simple example in the split form
-#
-
-[Mesh]
-  type = GeneratedMesh
-  dim = 2
-  nx = 150
-  ny = 15
-  nz = 0
-  xmin = -25
-  xmax = 25
-  ymin = -2.5
-  ymax = 2.5
-  zmin = 0
-  zmax = 0
-  elem_type = QUAD4
-[]
-
-[AuxVariables]
-  [./Fglobal]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-[]
-
-[Variables]
-  # order parameter
-  [./eta]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  # solute concentration
-  [./c]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  # chemical potential
-  [./w]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  # Liquid phase solute concentration
-  [./cl]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0.1
-  [../]
-  # Solid phase solute concentration
-  [./cs]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0.9
-  [../]
-[]
-
-[Functions]
-  [./ic_func_eta]
-    type = ParsedFunction
-    value = &#x27;0.5*(1.0-tanh((x)/sqrt(2.0)))&#x27;
-  [../]
-  [./ic_func_c]
-    type = ParsedFunction
-    value = &#x27;0.9*(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10)+0.1*(1-(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10))&#x27;
-  [../]
-[]
-
-[ICs]
-  [./eta]
-    variable = eta
-    type = FunctionIC
-    function = ic_func_eta
-  [../]
-  [./c]
-    variable = c
-    type = FunctionIC
-    function = ic_func_c
-  [../]
-[]
-
-[Materials]
-  # Free energy of the liquid
-  [./fl]
-    type = DerivativeParsedMaterial
-    f_name = fl
-    args = &#x27;cl&#x27;
-    function = &#x27;(0.1-cl)^2&#x27;
-  [../]
-
-  # Free energy of the solid
-  [./fs]
-    type = DerivativeParsedMaterial
-    f_name = fs
-    args = &#x27;cs&#x27;
-    function = &#x27;(0.9-cs)^2&#x27;
-  [../]
-
-  # h(eta)
-  [./h_eta]
-    type = SwitchingFunctionMaterial
-    h_order = HIGH
-    eta = eta
-  [../]
-
-  # g(eta)
-  [./g_eta]
-    type = BarrierFunctionMaterial
-    g_order = SIMPLE
-    eta = eta
-  [../]
-
-  # constant properties
-  [./constants]
-    type = GenericConstantMaterial
-    prop_names  = &#x27;M   L   eps_sq&#x27;
-    prop_values = &#x27;0.7 0.7 1.0  &#x27;
-  [../]
-[]
-
-[Kernels]
-  active = &#x27;PhaseConc ChemPotSolute CHBulk ACBulkF ACBulkC ACInterface dcdt detadt ckernel&#x27;
-
-  # enforce c = (1-h(eta))*cl + h(eta)*cs
-  [./PhaseConc]
-    type = KKSPhaseConcentration
-    ca       = cl
-    variable = cs
-    c        = c
-    eta      = eta
-  [../]
-
-  # enforce pointwise equality of chemical potentials
-  [./ChemPotSolute]
-    type = KKSPhaseChemicalPotential
-    variable = cl
-    cb       = cs
-    fa_name  = fl
-    fb_name  = fs
-  [../]
-
-  #
-  # Cahn-Hilliard Equation
-  #
-  [./CHBulk]
-    type = KKSSplitCHCRes
-    variable = c
-    ca       = cl
-    fa_name  = fl
-    w        = w
-  [../]
-
-  [./dcdt]
-    type = CoupledTimeDerivative
-    variable = w
-    v = c
-  [../]
-  [./ckernel]
-    type = SplitCHWRes
-    mob_name = M
-    variable = w
-  [../]
-
-  #
-  # Allen-Cahn Equation
-  #
-  [./ACBulkF]
-    type = KKSACBulkF
-    variable = eta
-    fa_name  = fl
-    fb_name  = fs
-    w        = 1.0
-    args = &#x27;cl cs&#x27;
-  [../]
-  [./ACBulkC]
-    type = KKSACBulkC
-    variable = eta
-    ca       = cl
-    cb       = cs
-    fa_name  = fl
-  [../]
-  [./ACInterface]
-    type = ACInterface
-    variable = eta
-    kappa_name = eps_sq
-  [../]
-  [./detadt]
-    type = TimeDerivative
-    variable = eta
-  [../]
-[]
-
-[AuxKernels]
-  [./GlobalFreeEnergy]
-    variable = Fglobal
-    type = KKSGlobalFreeEnergy
-    fa_name = fl
-    fb_name = fs
-    w = 1.0
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;PJFNK&#x27;
-
-  petsc_options_iname = &#x27;-pc_type -sub_pc_type -sub_pc_factor_shift_type&#x27;
-  petsc_options_value = &#x27;asm      ilu          nonzero&#x27;
-
-  l_max_its = 100
-  nl_max_its = 100
-
-  num_steps = 50
-  dt = 0.1
-[]
-
-#
-# Precondition using handcoded off-diagonal terms
-#
-[Preconditioning]
-  [./full]
-    type = SMP
-    full = true
-  [../]
-[]
-
-[VectorPostprocessors]
-  [./c]
-    type =  LineValueSampler
-    start_point = &#x27;-25 0 0&#x27;
-    end_point = &#x27;25 0 0&#x27;
-    variable = c
-    num_points = 151
-    sort_by =  id
-    execute_on = timestep_end
-  [../]
-  [./eta]
-    type =  LineValueSampler
-    start_point = &#x27;-25 0 0&#x27;
-    end_point = &#x27;25 0 0&#x27;
-    variable = eta
-    num_points = 151
-    sort_by =  id
-    execute_on = timestep_end
-  [../]
-
-[]
-
-[Outputs]
-  exodus = true
-  [./csv]
-    type = CSV
-    execute_on = final
-  [../]
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></section><section id="be09dcd9-f624-401f-8ab0-7cd872baa940" data-section-level="1" data-section-text="Verification against analytical solution"><h1 id="verification-against-analytical-solution">Verification against analytical solution</h1><div class="card moose-float" style="width:200px;margin-left:20px;float:right;clear:both;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_convergence.png"></img></picture><p class="moose-caption"><span class="moose-caption-text"><span class="moose-katex-inline-equation" id="moose-equation-865ce27c-6d0d-47a2-af93-0bb5dd51bef5"><script>var element = document.getElementById("moose-equation-865ce27c-6d0d-47a2-af93-0bb5dd51bef5");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error for order parameter <span class="moose-katex-inline-equation" id="moose-equation-f6b97c94-131e-41cb-bf93-d3f1cc02321e"><script>var element = document.getElementById("moose-equation-f6b97c94-131e-41cb-bf93-d3f1cc02321e");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</span></p></div></div><p>To perform a more quantitative comparison of the simulation results to the analytical solution, we will calculate the <span class="moose-katex-inline-equation" id="moose-equation-d857c98e-7941-4620-bcf5-cc0043957d4a"><script>var element = document.getElementById("moose-equation-d857c98e-7941-4620-bcf5-cc0043957d4a");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> norm of the difference between the simulation result and the analytical solution. The <span class="moose-katex-inline-equation" id="moose-equation-60833a4c-1e93-4138-8415-435efc74aa28"><script>var element = document.getElementById("moose-equation-60833a4c-1e93-4138-8415-435efc74aa28");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> norm is defined for this case as</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-f27234b0-b17e-4ee9-ab40-ad420b960b14"></span><script>var element = document.getElementById("moose-equation-f27234b0-b17e-4ee9-ab40-ad420b960b14");katex.render("\\left|u - u_h\\right|_{L^2} = \\left( \\int_\\Omega (u - u_h)^2 d\\Omega \\right)^{1/2}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-4801fe59-ed26-4070-8eeb-5ca2906f10c6"><script>var element = document.getElementById("moose-equation-4801fe59-ed26-4070-8eeb-5ca2906f10c6");katex.render("u", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the analytical solution, <span class="moose-katex-inline-equation" id="moose-equation-ee8a89aa-7158-4147-b4fa-165b88765369"><script>var element = document.getElementById("moose-equation-ee8a89aa-7158-4147-b4fa-165b88765369");katex.render("u_h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the equilibrium solution from simulation, and <span class="moose-katex-inline-equation" id="moose-equation-b981f4ba-b6d2-40b0-9d2a-818b94ab8fc3"><script>var element = document.getElementById("moose-equation-b981f4ba-b6d2-40b0-9d2a-818b94ab8fc3");katex.render("\\Omega", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the domain. The <span class="moose-katex-inline-equation" id="moose-equation-3b5fe9c4-96df-44b4-8a23-a953cac39371"><script>var element = document.getElementById("moose-equation-3b5fe9c4-96df-44b4-8a23-a953cac39371");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> norm can be obtained in the MOOSE framework using the <a href="../../../source/postprocessors/ElementL2Error.html"><code>ElementL2Error</code></a> postprocessor. It can be shown from the properties of the finite element method that for the linear Lagrange elements used in the split formulation,</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-471b3599-2265-4178-8894-c790dbbf92ae"></span><script>var element = document.getElementById("moose-equation-471b3599-2265-4178-8894-c790dbbf92ae");katex.render("|u - u_h|_{L^2} \\le Ch^2", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-2d8e0a8f-edf8-4255-b4ac-3fcb43416da2"><script>var element = document.getElementById("moose-equation-2d8e0a8f-edf8-4255-b4ac-3fcb43416da2");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the characteristic element size (for 2D square elements, <span class="moose-katex-inline-equation" id="moose-equation-2befa2c9-8687-42f6-9f6d-fe2f4c421563"><script>var element = document.getElementById("moose-equation-2befa2c9-8687-42f6-9f6d-fe2f4c421563");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the length of one side) and <span class="moose-katex-inline-equation" id="moose-equation-3809b589-0548-4c85-8f27-6aa70bef4639"><script>var element = document.getElementById("moose-equation-3809b589-0548-4c85-8f27-6aa70bef4639");katex.render("C", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is a constant specific to the problem. Thus, as the mesh is refined, <span class="moose-katex-inline-equation" id="moose-equation-f0b4f417-71d1-418a-ba86-fae5d7b56ce6"><script>var element = document.getElementById("moose-equation-f0b4f417-71d1-418a-ba86-fae5d7b56ce6");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error should decrease (at least) quadratically with <span class="moose-katex-inline-equation" id="moose-equation-b3940858-f76f-4a31-8afc-d09e8e05181b"><script>var element = document.getElementById("moose-equation-b3940858-f76f-4a31-8afc-d09e8e05181b");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</p><p>In performing this comparison between the analytical solution and simulation results, if a no-flux boundary condition is used in the simulation, the order parameter and composition profiles may shift slightly in the <span class="moose-katex-inline-equation" id="moose-equation-37ef2b8b-9bfb-461b-89a4-3ad82b2d2919"><script>var element = document.getElementById("moose-equation-37ef2b8b-9bfb-461b-89a4-3ad82b2d2919");katex.render("+x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> or <span class="moose-katex-inline-equation" id="moose-equation-bb9243d1-2c79-44cf-a35f-3b87fa2b9690"><script>var element = document.getElementById("moose-equation-bb9243d1-2c79-44cf-a35f-3b87fa2b9690");katex.render("-x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> direction, even if the analytical solution is used as an initial condition. This makes it difficult to compare to an analytical solution centered at <span class="moose-katex-inline-equation" id="moose-equation-37a979b6-1c8f-4cfa-917a-0c12a7402ef6"><script>var element = document.getElementById("moose-equation-37a979b6-1c8f-4cfa-917a-0c12a7402ef6");katex.render("x=0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>. Therefore, we simulate the <span class="moose-katex-inline-equation" id="moose-equation-09635dd2-70f6-4c9f-b418-8418dec5d9c0"><script>var element = document.getElementById("moose-equation-09635dd2-70f6-4c9f-b418-8418dec5d9c0");katex.render("x \\ge 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> half of the domain and use a Dirichlet boundary condition of <span class="moose-katex-inline-equation" id="moose-equation-57dadf02-5e50-4b77-8a5b-fddf830c2cc1"><script>var element = document.getElementById("moose-equation-57dadf02-5e50-4b77-8a5b-fddf830c2cc1");katex.render("\\eta=0.5", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-b00049f6-1171-487c-ad71-ef794196d1fc"><script>var element = document.getElementById("moose-equation-b00049f6-1171-487c-ad71-ef794196d1fc");katex.render("c=0.5", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> at <span class="moose-katex-inline-equation" id="moose-equation-fbedfe4b-d509-4a22-8db1-34ca0c021723"><script>var element = document.getElementById("moose-equation-fbedfe4b-d509-4a22-8db1-34ca0c021723");katex.render("x=0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, which prevents the interface from moving. For the verification, the size of the domain was also reduced to lower the computational cost.</p><p>To verify that <span class="moose-katex-inline-equation" id="moose-equation-1822ce51-a595-46be-bc76-d0e94b96bba2"><script>var element = document.getElementById("moose-equation-1822ce51-a595-46be-bc76-d0e94b96bba2");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error decreases quadratically with <span class="moose-katex-inline-equation" id="moose-equation-7f5e1748-78f7-4292-b7c3-bd642bcfe478"><script>var element = document.getElementById("moose-equation-7f5e1748-78f7-4292-b7c3-bd642bcfe478");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, see the plot showing <span class="moose-katex-inline-equation" id="moose-equation-a852bf4d-e19e-4986-a798-f7a415be1379"><script>var element = document.getElementById("moose-equation-a852bf4d-e19e-4986-a798-f7a415be1379");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error versus <span class="moose-katex-inline-equation" id="moose-equation-42cb23ff-d3cb-44e3-901c-778153dcd97b"><script>var element = document.getElementById("moose-equation-42cb23ff-d3cb-44e3-901c-778153dcd97b");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> for <span class="moose-katex-inline-equation" id="moose-equation-52d389e3-f220-4c14-8e5c-700b3a15a1ae"><script>var element = document.getElementById("moose-equation-52d389e3-f220-4c14-8e5c-700b3a15a1ae");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> in this problem. As expected, on a log-log scale, the points are fit well by a straight line. The slope was determined to be 1.995, in good agreement with the expected value of 2.</p><pre class="moose-pre"><code class="language-text">#
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#6373845e-86b4-4f35-afc2-ad8682526331">(moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_noflux.i)</a></section><section id="2d6e737f-f532-49fe-a522-87a47e649c1f" data-section-level="1" data-section-text="Verification against analytical solution"><h1 id="verification-against-analytical-solution">Verification against analytical solution</h1><div class="card moose-float" style="width:200px;margin-left:20px;float:right;clear:both;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../media/phase_field/kks_convergence.png"></img></picture><p class="moose-caption"><span class="moose-caption-text"><span class="moose-katex-inline-equation" id="moose-equation-5fa1321c-1b50-4224-a55b-d99cb000817e"><script>var element = document.getElementById("moose-equation-5fa1321c-1b50-4224-a55b-d99cb000817e");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error for order parameter <span class="moose-katex-inline-equation" id="moose-equation-45c3cc7a-9c96-4834-b082-28de96b5f01e"><script>var element = document.getElementById("moose-equation-45c3cc7a-9c96-4834-b082-28de96b5f01e");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</span></p></div></div><p>To perform a more quantitative comparison of the simulation results to the analytical solution, we will calculate the <span class="moose-katex-inline-equation" id="moose-equation-35d4fa8f-e5da-4709-89b2-f82eacdeda05"><script>var element = document.getElementById("moose-equation-35d4fa8f-e5da-4709-89b2-f82eacdeda05");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> norm of the difference between the simulation result and the analytical solution. The <span class="moose-katex-inline-equation" id="moose-equation-18789dad-2afd-4305-a32f-bbbbb99b4bde"><script>var element = document.getElementById("moose-equation-18789dad-2afd-4305-a32f-bbbbb99b4bde");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> norm is defined for this case as</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-82b5bdba-513c-4f9f-9536-5d5859667ef5"></span><script>var element = document.getElementById("moose-equation-82b5bdba-513c-4f9f-9536-5d5859667ef5");katex.render("\\left|u - u_h\\right|_{L^2} = \\left( \\int_\\Omega (u - u_h)^2 d\\Omega \\right)^{1/2}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-53cdf5cc-d99e-4af2-82a7-394349f71504"><script>var element = document.getElementById("moose-equation-53cdf5cc-d99e-4af2-82a7-394349f71504");katex.render("u", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the analytical solution, <span class="moose-katex-inline-equation" id="moose-equation-c95a9f37-19af-4a44-9c50-2b4e9cb06bf2"><script>var element = document.getElementById("moose-equation-c95a9f37-19af-4a44-9c50-2b4e9cb06bf2");katex.render("u_h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the equilibrium solution from simulation, and <span class="moose-katex-inline-equation" id="moose-equation-8ed51090-d0e0-44c1-9ff2-4e2e7abdf6e1"><script>var element = document.getElementById("moose-equation-8ed51090-d0e0-44c1-9ff2-4e2e7abdf6e1");katex.render("\\Omega", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the domain. The <span class="moose-katex-inline-equation" id="moose-equation-888d4e43-c97f-48b6-b7a4-3058ee197d0c"><script>var element = document.getElementById("moose-equation-888d4e43-c97f-48b6-b7a4-3058ee197d0c");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> norm can be obtained in the MOOSE framework using the <a href="../../../source/postprocessors/ElementL2Error.html"><code>ElementL2Error</code></a> postprocessor. It can be shown from the properties of the finite element method that for the linear Lagrange elements used in the split formulation,</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-218f454e-77e7-452f-ac27-7b941a28c722"></span><script>var element = document.getElementById("moose-equation-218f454e-77e7-452f-ac27-7b941a28c722");katex.render("|u - u_h|_{L^2} \\le Ch^2", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-9f841f95-9d74-4ef3-9ff1-d02bdf980f62"><script>var element = document.getElementById("moose-equation-9f841f95-9d74-4ef3-9ff1-d02bdf980f62");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the characteristic element size (for 2D square elements, <span class="moose-katex-inline-equation" id="moose-equation-eee5e50b-6e74-4ac3-beb4-b9f06e76cf89"><script>var element = document.getElementById("moose-equation-eee5e50b-6e74-4ac3-beb4-b9f06e76cf89");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the length of one side) and <span class="moose-katex-inline-equation" id="moose-equation-6748ced9-e7d5-464e-a6c7-3daee3ae6a07"><script>var element = document.getElementById("moose-equation-6748ced9-e7d5-464e-a6c7-3daee3ae6a07");katex.render("C", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is a constant specific to the problem. Thus, as the mesh is refined, <span class="moose-katex-inline-equation" id="moose-equation-7bde9024-ce05-482d-b002-4057e107ff5e"><script>var element = document.getElementById("moose-equation-7bde9024-ce05-482d-b002-4057e107ff5e");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error should decrease (at least) quadratically with <span class="moose-katex-inline-equation" id="moose-equation-4e75bcc3-bd2c-44ec-b658-5fb080ed4983"><script>var element = document.getElementById("moose-equation-4e75bcc3-bd2c-44ec-b658-5fb080ed4983");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>.</p><p>In performing this comparison between the analytical solution and simulation results, if a no-flux boundary condition is used in the simulation, the order parameter and composition profiles may shift slightly in the <span class="moose-katex-inline-equation" id="moose-equation-6f35301f-9422-4242-8c9e-548eb7058305"><script>var element = document.getElementById("moose-equation-6f35301f-9422-4242-8c9e-548eb7058305");katex.render("+x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> or <span class="moose-katex-inline-equation" id="moose-equation-7080bc2e-c73c-46a0-909c-7ee52615d79d"><script>var element = document.getElementById("moose-equation-7080bc2e-c73c-46a0-909c-7ee52615d79d");katex.render("-x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> direction, even if the analytical solution is used as an initial condition. This makes it difficult to compare to an analytical solution centered at <span class="moose-katex-inline-equation" id="moose-equation-509db8db-f9dc-46e3-8b33-a20ed9ebb603"><script>var element = document.getElementById("moose-equation-509db8db-f9dc-46e3-8b33-a20ed9ebb603");katex.render("x=0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>. Therefore, we simulate the <span class="moose-katex-inline-equation" id="moose-equation-6c918f55-bbdd-4a34-8a2e-c379f03fd025"><script>var element = document.getElementById("moose-equation-6c918f55-bbdd-4a34-8a2e-c379f03fd025");katex.render("x \\ge 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> half of the domain and use a Dirichlet boundary condition of <span class="moose-katex-inline-equation" id="moose-equation-ff7d6b51-6c8b-4b2f-992c-70a2c25a934b"><script>var element = document.getElementById("moose-equation-ff7d6b51-6c8b-4b2f-992c-70a2c25a934b");katex.render("\\eta=0.5", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-e65a3e9e-006f-45a1-a996-4764938fd631"><script>var element = document.getElementById("moose-equation-e65a3e9e-006f-45a1-a996-4764938fd631");katex.render("c=0.5", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> at <span class="moose-katex-inline-equation" id="moose-equation-11412537-0a90-44ae-a86f-5de2a83442f8"><script>var element = document.getElementById("moose-equation-11412537-0a90-44ae-a86f-5de2a83442f8");katex.render("x=0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, which prevents the interface from moving. For the verification, the size of the domain was also reduced to lower the computational cost.</p><p>To verify that <span class="moose-katex-inline-equation" id="moose-equation-273d9f2f-6d30-4a75-b688-cd7a75d0ad4c"><script>var element = document.getElementById("moose-equation-273d9f2f-6d30-4a75-b688-cd7a75d0ad4c");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error decreases quadratically with <span class="moose-katex-inline-equation" id="moose-equation-8426d2a2-f001-4235-aa28-153feb1442d9"><script>var element = document.getElementById("moose-equation-8426d2a2-f001-4235-aa28-153feb1442d9");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, see the plot showing <span class="moose-katex-inline-equation" id="moose-equation-10b06601-d560-4611-9140-328ca7fed44a"><script>var element = document.getElementById("moose-equation-10b06601-d560-4611-9140-328ca7fed44a");katex.render("L^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> error versus <span class="moose-katex-inline-equation" id="moose-equation-5c50f429-c27c-4aa7-841c-b8c4909f3f76"><script>var element = document.getElementById("moose-equation-5c50f429-c27c-4aa7-841c-b8c4909f3f76");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> for <span class="moose-katex-inline-equation" id="moose-equation-2c7f9bf1-924a-4ca1-82b4-0c5e6a6c478f"><script>var element = document.getElementById("moose-equation-2c7f9bf1-924a-4ca1-82b4-0c5e6a6c478f");katex.render("\\eta", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> in this problem. As expected, on a log-log scale, the points are fit well by a straight line. The slope was determined to be 1.995, in good agreement with the expected value of 2.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">#
 # KKS simple example in the split form
 #
 
@@ -770,268 +513,10 @@
   console = true
   gnuplot = true
 []
-</code></pre><a href="#6cfdadb9-f138-4c2c-befe-ea06ac99d890" class="modal-trigger">(moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_dirichlet.i)</a><div class="modal moose-modal" id="6cfdadb9-f138-4c2c-befe-ea06ac99d890"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_dirichlet.i</h4><pre class="moose-pre"><code class="language-text">#
-# KKS simple example in the split form
-#
-
-[Mesh]
-  type = GeneratedMesh
-  dim = 2
-  elem_type = QUAD4
-  nx = 50
-  ny = 2
-  nz = 0
-  xmin = 0
-  xmax = 20
-  ymin = 0
-  ymax = 0.4
-  zmin = 0
-  zmax = 0
-[]
-
-[AuxVariables]
-  [./Fglobal]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-[]
-
-[Variables]
-  # order parameter
-  [./eta]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  # hydrogen concentration
-  [./c]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  # chemical potential
-  [./w]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  # Liquid phase solute concentration
-  [./cl]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0.1
-  [../]
-  # Solid phase solute concentration
-  [./cs]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0.9
-  [../]
-[]
-
-[Functions]
-  [./ic_func_eta]
-    type = ParsedFunction
-    value = 0.5*(1.0-tanh((x)/sqrt(2.0)))
-  [../]
-  [./ic_func_c]
-    type = ParsedFunction
-    value = &#x27;0.9*(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10)+0.1*(1-(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10))&#x27;
-  [../]
-[]
-
-[ICs]
-  [./eta]
-    variable = eta
-    type = FunctionIC
-    function = ic_func_eta
-  [../]
-  [./c]
-    variable = c
-    type = FunctionIC
-    function = ic_func_c
-  [../]
-[]
-
-[BCs]
-  [./left_c]
-    type = DirichletBC
-    variable = &#x27;c&#x27;
-    boundary = &#x27;left&#x27;
-    value = 0.5
-  [../]
-  [./left_eta]
-    type = DirichletBC
-    variable = &#x27;eta&#x27;
-    boundary = &#x27;left&#x27;
-    value = 0.5
-  [../]
-[]
-
-[Materials]
-  # Free energy of the liquid
-  [./fl]
-    type = DerivativeParsedMaterial
-    f_name = fl
-    args = &#x27;cl&#x27;
-    function = &#x27;(0.1-cl)^2&#x27;
-  [../]
-
-  # Free energy of the solid
-  [./fs]
-    type = DerivativeParsedMaterial
-    f_name = fs
-    args = &#x27;cs&#x27;
-    function = &#x27;(0.9-cs)^2&#x27;
-  [../]
-
-  # h(eta)
-  [./h_eta]
-    type = SwitchingFunctionMaterial
-    h_order = HIGH
-    eta = eta
-  [../]
-
-  # g(eta)
-  [./g_eta]
-    type = BarrierFunctionMaterial
-    g_order = SIMPLE
-    eta = eta
-  [../]
-
-  # constant properties
-  [./constants]
-    type = GenericConstantMaterial
-    prop_names  = &#x27;M   L   eps_sq&#x27;
-    prop_values = &#x27;0.7 0.7 1.0  &#x27;
-  [../]
-[]
-
-[Kernels]
-  # enforce c = (1-h(eta))*cl + h(eta)*cs
-  [./PhaseConc]
-    type = KKSPhaseConcentration
-    ca       = cl
-    variable = cs
-    c        = c
-    eta      = eta
-  [../]
-
-  # enforce pointwise equality of chemical potentials
-  [./ChemPotSolute]
-    type = KKSPhaseChemicalPotential
-    variable = cl
-    cb       = cs
-    fa_name  = fl
-    fb_name  = fs
-  [../]
-
-  #
-  # Cahn-Hilliard Equation
-  #
-  [./CHBulk]
-    type = KKSSplitCHCRes
-    variable = c
-    ca       = cl
-    fa_name  = fl
-    w        = w
-  [../]
-
-  [./dcdt]
-    type = CoupledTimeDerivative
-    variable = w
-    v = c
-  [../]
-  [./ckernel]
-    type = SplitCHWRes
-    mob_name = M
-    variable = w
-  [../]
-
-  #
-  # Allen-Cahn Equation
-  #
-  [./ACBulkF]
-    type = KKSACBulkF
-    variable = eta
-    fa_name  = fl
-    fb_name  = fs
-    w        = 1.0
-    args = &#x27;cl cs&#x27;
-  [../]
-  [./ACBulkC]
-    type = KKSACBulkC
-    variable = eta
-    ca       = cl
-    cb       = cs
-    fa_name  = fl
-  [../]
-  [./ACInterface]
-    type = ACInterface
-    variable = eta
-    kappa_name = eps_sq
-  [../]
-  [./detadt]
-    type = TimeDerivative
-    variable = eta
-  [../]
-[]
-
-[AuxKernels]
-  [./GlobalFreeEnergy]
-    variable = Fglobal
-    type = KKSGlobalFreeEnergy
-    fa_name = fl
-    fb_name = fs
-    w = 1.0
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;PJFNK&#x27;
-
-  petsc_options_iname = &#x27;-pc_type -sub_pc_type -sub_pc_factor_shift_type&#x27;
-  petsc_options_value = &#x27;asm      ilu          nonzero&#x27;
-
-  l_max_its = 100
-  nl_max_its = 100
-  nl_abs_tol = 1e-10
-
-  end_time = 800
-  dt = 4.0
-[]
-
-#
-# Precondition using handcoded off-diagonal terms
-#
-[Preconditioning]
-  [./full]
-    type = SMP
-    full = true
-  [../]
-[]
-
-[Postprocessors]
-  [./dofs]
-    type = NumDOFs
-  [../]
-  [./integral]
-    type = ElementL2Error
-    variable = eta
-    function = ic_func_eta
-  [../]
-[]
-
-[Outputs]
-  exodus = true
-  console = true
-  gnuplot = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><section class="scrollspy" id="b51493ef-d63a-4ccc-8431-442a881ed3eb" data-section-level="2" data-section-text="References"><h2 id="references">References</h2><div class="moose-bibliography"><ol><li id="kim_phase-field_1999">Seong&nbsp;Gyoon Kim, Won&nbsp;Tae Kim, and Toshio Suzuki.
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#5bbfa93a-de6c-41a0-9c2a-ec3152f98c9f">(moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_dirichlet.i)</a><section class="scrollspy" id="1b70a751-6a32-4c8a-bcb2-68eecccebce1" data-section-level="2" data-section-text="References"><h2 id="references">References</h2><div class="moose-bibliography"><ol><li id="kim_phase-field_1999">Seong&nbsp;Gyoon Kim, Won&nbsp;Tae Kim, and Toshio Suzuki.
 Phase-field model for binary alloys.
 <em>Physical Review E</em>, 60(6):7186&ndash;7197, December 1999.
-URL: <a href="http://link.aps.org/doi/10.1103/PhysRevE.60.7186">http://link.aps.org/doi/10.1103/PhysRevE.60.7186</a>, <a href="https://doi.org/10.1103/PhysRevE.60.7186">doi:10.1103/PhysRevE.60.7186</a>.<a href="#45841231-83fe-4cd1-a6a3-57e3b9084b8a" class="modal-trigger moose-bibtex-modal" style="padding-left:10px;">[BibTeX]</a><div class="modal" id="45841231-83fe-4cd1-a6a3-57e3b9084b8a"><div class="modal-content"><pre style="line-height:1.25;"><code class="language-latex">@article{kim_phase-field_1999,
+URL: <a href="http://link.aps.org/doi/10.1103/PhysRevE.60.7186">http://link.aps.org/doi/10.1103/PhysRevE.60.7186</a> (visited on 2014-03-31), <a href="https://doi.org/10.1103/PhysRevE.60.7186">doi:10.1103/PhysRevE.60.7186</a>.<a href="#abced4e8-922b-4256-9d11-b2f6a84e14ec" class="modal-trigger moose-bibtex-modal" style="padding-left:10px;">[BibTeX]</a><div class="modal" id="abced4e8-922b-4256-9d11-b2f6a84e14ec"><div class="modal-content"><pre style="line-height:1.25;"><code class="language-latex">@article{kim_phase-field_1999,
     author = "Kim, Seong Gyoon and Kim, Won Tae and Suzuki, Toshio",
     title = "Phase-field model for binary alloys",
     volume = "60",
@@ -1044,4 +529,521 @@ URL: <a href="http://link.aps.org/doi/10.1103/PhysRevE.60.7186">http://link.aps.
     year = "1999",
     pages = "7186-7197"
 }
-</code></pre></div></div></li></ol></div></section></section></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#b51493ef-d63a-4ccc-8431-442a881ed3eb" class="tooltipped" data-position="left" data-tooltip="References">References</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../../js/init.js"></script><script type="text/javascript" src="../../../js/navigation.js"></script><script type="text/javascript" src="../../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../../js/search_index.js"></script><script type="text/javascript" src="../../../js/sqa_moose.js"></script>
+</code></pre></div></div></li></ol></div></section></section><div class="moose-modal modal" id="6373845e-86b4-4f35-afc2-ad8682526331"><div class="modal-content"><h4>(moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_noflux.i)</h4><pre class="moose-pre"><code class="language-text">#
+# KKS simple example in the split form
+#
+
+[Mesh]
+  type = GeneratedMesh
+  dim = 2
+  nx = 150
+  ny = 15
+  nz = 0
+  xmin = -25
+  xmax = 25
+  ymin = -2.5
+  ymax = 2.5
+  zmin = 0
+  zmax = 0
+  elem_type = QUAD4
+[]
+
+[AuxVariables]
+  [./Fglobal]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
+
+[Variables]
+  # order parameter
+  [./eta]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  # solute concentration
+  [./c]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  # chemical potential
+  [./w]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  # Liquid phase solute concentration
+  [./cl]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 0.1
+  [../]
+  # Solid phase solute concentration
+  [./cs]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 0.9
+  [../]
+[]
+
+[Functions]
+  [./ic_func_eta]
+    type = ParsedFunction
+    value = &#x27;0.5*(1.0-tanh((x)/sqrt(2.0)))&#x27;
+  [../]
+  [./ic_func_c]
+    type = ParsedFunction
+    value = &#x27;0.9*(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10)+0.1*(1-(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10))&#x27;
+  [../]
+[]
+
+
+[ICs]
+  [./eta]
+    variable = eta
+    type = FunctionIC
+    function = ic_func_eta
+  [../]
+  [./c]
+    variable = c
+    type = FunctionIC
+    function = ic_func_c
+  [../]
+[]
+
+[Materials]
+  # Free energy of the liquid
+  [./fl]
+    type = DerivativeParsedMaterial
+    f_name = fl
+    args = &#x27;cl&#x27;
+    function = &#x27;(0.1-cl)^2&#x27;
+  [../]
+
+  # Free energy of the solid
+  [./fs]
+    type = DerivativeParsedMaterial
+    f_name = fs
+    args = &#x27;cs&#x27;
+    function = &#x27;(0.9-cs)^2&#x27;
+  [../]
+
+  # h(eta)
+  [./h_eta]
+    type = SwitchingFunctionMaterial
+    h_order = HIGH
+    eta = eta
+  [../]
+
+  # g(eta)
+  [./g_eta]
+    type = BarrierFunctionMaterial
+    g_order = SIMPLE
+    eta = eta
+  [../]
+
+  # constant properties
+  [./constants]
+    type = GenericConstantMaterial
+    prop_names  = &#x27;M   L   eps_sq&#x27;
+    prop_values = &#x27;0.7 0.7 1.0  &#x27;
+  [../]
+[]
+
+[Kernels]
+  active = &#x27;PhaseConc ChemPotSolute CHBulk ACBulkF ACBulkC ACInterface dcdt detadt ckernel&#x27;
+
+  # enforce c = (1-h(eta))*cl + h(eta)*cs
+  [./PhaseConc]
+    type = KKSPhaseConcentration
+    ca       = cl
+    variable = cs
+    c        = c
+    eta      = eta
+  [../]
+
+  # enforce pointwise equality of chemical potentials
+  [./ChemPotSolute]
+    type = KKSPhaseChemicalPotential
+    variable = cl
+    cb       = cs
+    fa_name  = fl
+    fb_name  = fs
+  [../]
+
+  #
+  # Cahn-Hilliard Equation
+  #
+  [./CHBulk]
+    type = KKSSplitCHCRes
+    variable = c
+    ca       = cl
+    fa_name  = fl
+    w        = w
+  [../]
+
+  [./dcdt]
+    type = CoupledTimeDerivative
+    variable = w
+    v = c
+  [../]
+  [./ckernel]
+    type = SplitCHWRes
+    mob_name = M
+    variable = w
+  [../]
+
+  #
+  # Allen-Cahn Equation
+  #
+  [./ACBulkF]
+    type = KKSACBulkF
+    variable = eta
+    fa_name  = fl
+    fb_name  = fs
+    w        = 1.0
+    args = &#x27;cl cs&#x27;
+  [../]
+  [./ACBulkC]
+    type = KKSACBulkC
+    variable = eta
+    ca       = cl
+    cb       = cs
+    fa_name  = fl
+  [../]
+  [./ACInterface]
+    type = ACInterface
+    variable = eta
+    kappa_name = eps_sq
+  [../]
+  [./detadt]
+    type = TimeDerivative
+    variable = eta
+  [../]
+[]
+
+[AuxKernels]
+  [./GlobalFreeEnergy]
+    variable = Fglobal
+    type = KKSGlobalFreeEnergy
+    fa_name = fl
+    fb_name = fs
+    w = 1.0
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;PJFNK&#x27;
+
+  petsc_options_iname = &#x27;-pc_type -sub_pc_type -sub_pc_factor_shift_type&#x27;
+  petsc_options_value = &#x27;asm      ilu          nonzero&#x27;
+
+  l_max_its = 100
+  nl_max_its = 100
+
+  num_steps = 50
+  dt = 0.1
+[]
+
+#
+# Precondition using handcoded off-diagonal terms
+#
+[Preconditioning]
+  [./full]
+    type = SMP
+    full = true
+  [../]
+[]
+
+
+[VectorPostprocessors]
+  [./c]
+    type =  LineValueSampler
+    start_point = &#x27;-25 0 0&#x27;
+    end_point = &#x27;25 0 0&#x27;
+    variable = c
+    num_points = 151
+    sort_by =  id
+    execute_on = timestep_end
+  [../]
+  [./eta]
+    type =  LineValueSampler
+    start_point = &#x27;-25 0 0&#x27;
+    end_point = &#x27;25 0 0&#x27;
+    variable = eta
+    num_points = 151
+    sort_by =  id
+    execute_on = timestep_end
+  [../]
+
+[]
+
+[Outputs]
+  exodus = true
+  [./csv]
+    type = CSV
+    execute_on = final
+  [../]
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="5bbfa93a-de6c-41a0-9c2a-ec3152f98c9f"><div class="modal-content"><h4>(moose/modules/phase_field/examples/kim-kim-suzuki/kks_example_dirichlet.i)</h4><pre class="moose-pre"><code class="language-text">#
+# KKS simple example in the split form
+#
+
+[Mesh]
+  type = GeneratedMesh
+  dim = 2
+  elem_type = QUAD4
+  nx = 50
+  ny = 2
+  nz = 0
+  xmin = 0
+  xmax = 20
+  ymin = 0
+  ymax = 0.4
+  zmin = 0
+  zmax = 0
+[]
+
+[AuxVariables]
+  [./Fglobal]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
+
+[Variables]
+  # order parameter
+  [./eta]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  # hydrogen concentration
+  [./c]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  # chemical potential
+  [./w]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  # Liquid phase solute concentration
+  [./cl]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 0.1
+  [../]
+  # Solid phase solute concentration
+  [./cs]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 0.9
+  [../]
+[]
+
+[Functions]
+  [./ic_func_eta]
+    type = ParsedFunction
+    value = 0.5*(1.0-tanh((x)/sqrt(2.0)))
+  [../]
+  [./ic_func_c]
+    type = ParsedFunction
+    value = &#x27;0.9*(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10)+0.1*(1-(0.5*(1.0-tanh(x/sqrt(2.0))))^3*(6*(0.5*(1.0-tanh(x/sqrt(2.0))))^2-15*(0.5*(1.0-tanh(x/sqrt(2.0))))+10))&#x27;
+  [../]
+[]
+
+[ICs]
+  [./eta]
+    variable = eta
+    type = FunctionIC
+    function = ic_func_eta
+  [../]
+  [./c]
+    variable = c
+    type = FunctionIC
+    function = ic_func_c
+  [../]
+[]
+
+[BCs]
+  [./left_c]
+    type = DirichletBC
+    variable = &#x27;c&#x27;
+    boundary = &#x27;left&#x27;
+    value = 0.5
+  [../]
+  [./left_eta]
+    type = DirichletBC
+    variable = &#x27;eta&#x27;
+    boundary = &#x27;left&#x27;
+    value = 0.5
+  [../]
+[]
+
+[Materials]
+  # Free energy of the liquid
+  [./fl]
+    type = DerivativeParsedMaterial
+    f_name = fl
+    args = &#x27;cl&#x27;
+    function = &#x27;(0.1-cl)^2&#x27;
+  [../]
+
+  # Free energy of the solid
+  [./fs]
+    type = DerivativeParsedMaterial
+    f_name = fs
+    args = &#x27;cs&#x27;
+    function = &#x27;(0.9-cs)^2&#x27;
+  [../]
+
+  # h(eta)
+  [./h_eta]
+    type = SwitchingFunctionMaterial
+    h_order = HIGH
+    eta = eta
+  [../]
+
+  # g(eta)
+  [./g_eta]
+    type = BarrierFunctionMaterial
+    g_order = SIMPLE
+    eta = eta
+  [../]
+
+  # constant properties
+  [./constants]
+    type = GenericConstantMaterial
+    prop_names  = &#x27;M   L   eps_sq&#x27;
+    prop_values = &#x27;0.7 0.7 1.0  &#x27;
+  [../]
+[]
+
+[Kernels]
+  # enforce c = (1-h(eta))*cl + h(eta)*cs
+  [./PhaseConc]
+    type = KKSPhaseConcentration
+    ca       = cl
+    variable = cs
+    c        = c
+    eta      = eta
+  [../]
+
+  # enforce pointwise equality of chemical potentials
+  [./ChemPotSolute]
+    type = KKSPhaseChemicalPotential
+    variable = cl
+    cb       = cs
+    fa_name  = fl
+    fb_name  = fs
+  [../]
+
+  #
+  # Cahn-Hilliard Equation
+  #
+  [./CHBulk]
+    type = KKSSplitCHCRes
+    variable = c
+    ca       = cl
+    fa_name  = fl
+    w        = w
+  [../]
+
+  [./dcdt]
+    type = CoupledTimeDerivative
+    variable = w
+    v = c
+  [../]
+  [./ckernel]
+    type = SplitCHWRes
+    mob_name = M
+    variable = w
+  [../]
+
+  #
+  # Allen-Cahn Equation
+  #
+  [./ACBulkF]
+    type = KKSACBulkF
+    variable = eta
+    fa_name  = fl
+    fb_name  = fs
+    w        = 1.0
+    args = &#x27;cl cs&#x27;
+  [../]
+  [./ACBulkC]
+    type = KKSACBulkC
+    variable = eta
+    ca       = cl
+    cb       = cs
+    fa_name  = fl
+  [../]
+  [./ACInterface]
+    type = ACInterface
+    variable = eta
+    kappa_name = eps_sq
+  [../]
+  [./detadt]
+    type = TimeDerivative
+    variable = eta
+  [../]
+[]
+
+[AuxKernels]
+  [./GlobalFreeEnergy]
+    variable = Fglobal
+    type = KKSGlobalFreeEnergy
+    fa_name = fl
+    fb_name = fs
+    w = 1.0
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;PJFNK&#x27;
+
+  petsc_options_iname = &#x27;-pc_type -sub_pc_type -sub_pc_factor_shift_type&#x27;
+  petsc_options_value = &#x27;asm      ilu          nonzero&#x27;
+
+  l_max_its = 100
+  nl_max_its = 100
+  nl_abs_tol = 1e-10
+
+  end_time = 800
+  dt = 4.0
+[]
+
+#
+# Precondition using handcoded off-diagonal terms
+#
+[Preconditioning]
+  [./full]
+    type = SMP
+    full = true
+  [../]
+[]
+
+[Postprocessors]
+  [./dofs]
+    type = NumDOFs
+  [../]
+  [./integral]
+    type = ElementL2Error
+    variable = eta
+    function = ic_func_eta
+  [../]
+[]
+
+[Outputs]
+  exodus = true
+  console = true
+  gnuplot = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#1b70a751-6a32-4c8a-bcb2-68eecccebce1" class="tooltipped" data-position="left" data-tooltip="References">References</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../../js/init.js"></script><script type="text/javascript" src="../../../js/navigation.js"></script><script type="text/javascript" src="../../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../../js/search_index.js"></script><script type="text/javascript" src="../../../js/sqa_moose.js"></script>

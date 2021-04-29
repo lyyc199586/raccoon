@@ -1,4 +1,4 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>TemperatureDependentHardeningStressUpdate.md|RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script><script type="text/javascript" src="../../contrib/plotly/plotly.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="43d0aa7a-7f49-4c5c-b21b-11ea3ab7133b"><i class="material-icons">menu</i></a><ul class="sidenav" id="43d0aa7a-7f49-4c5c-b21b-11ea3ab7133b"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">materials</span><a href="#" class="breadcrumb">TemperatureDependentHardeningStressUpdate</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="f3355407-22db-43fd-8c41-e7ec8215a698" data-section-level="1" data-section-text="Temperature Dependent Hardening Stress Update"><h1 id="temperature-dependent-hardening-stress-update">Temperature Dependent Hardening Stress Update</h1><p>Computes the stress as a function of temperature and plastic strain from user-supplied hardening functions. This class can be used in conjunction with other creep and plasticity materials for more complex simulations</p><section class="scrollspy" id="01090c36-3791-48f9-a244-55e1d083445a" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p>In this numerical approach, a trial stress is calculated at the start of each simulation time increment; the trial stress calculation assumed all of the new strain increment is elastic strain:</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-e625d92c-cbb3-47d4-8527-a654bac5a374"></span><script>var element = document.getElementById("moose-equation-e625d92c-cbb3-47d4-8527-a654bac5a374");katex.render("\\sigma_{trial} = C_{ijkl} \\left( \\Delta \\epsilon_{assumed-elastic} + \\epsilon_{elastic}^{old} \\right)", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p>The algorithms checks to see if the trial stress state is outside of the yield surface, as shown in the figure to the right. If the stress state is outside of the yield surface, the algorithm recomputes the scalar effective inelastic strain required to return the stress state to the yield surface. This approach is given the name Radial Return because the yield surface used is the <a href="https://en.wikipedia.org/wiki/Von_Mises_yield_criterion">von Mises yield surface</a>: in the <a href="https://en.wikipedia.org/wiki/Cauchy_stress_tensor#Stress_deviator_tensor">devitoric stress space</a>, this yield surface has the shape of a circle, and the scalar inelastic strain is assumed to always be directed at the circle center.</p><section id="51f0d5e9-6e11-404d-83bf-a2c96960b757" data-section-level="3" data-section-text="Recompute Iterations on the Effective Plastic Strain Increment"><h3 id="recompute-iterations-on-the-effective-plastic-strain-increment">Recompute Iterations on the Effective Plastic Strain Increment</h3><p>The recompute radial return materials each individually calculate, using the <a href="http://mathworld.wolfram.com/NewtonsMethod.html">Newton Method</a>, the amount of effective inelastic strain required to return the stress state to the yield surface.</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-88210126-6bfb-418b-86ef-13d5f5783bf8"></span><script>var element = document.getElementById("moose-equation-88210126-6bfb-418b-86ef-13d5f5783bf8");katex.render("\\Delta p^{(t+1)} = \\Delta p^t + d \\Delta p", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p>where the change in the iterative effective inelastic strain is defined as the yield surface over the derivative of the yield surface with respect to the inelastic strain increment. </p></section></section><section class="scrollspy" id="9ffcbacb-5c08-4365-9993-3c2723209f09" data-section-level="2" data-section-text="Isotropic Plasticity"><h2 id="isotropic-plasticity">Isotropic Plasticity</h2><p><code>TemperatureDependentHardeningStressUpdate</code> is formulated in the same manner as <a href="IsotropicPlasticityStressUpdate.html">IsotropicPlasticityStressUpdate</a> such that the effective plastic strain increment has the form <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-fb8dcb78-cfc4-4be3-9c22-2b1a41523ed7"></span><span class="moose-katex-equation-number">(1)</span><script>var element = document.getElementById("moose-equation-fb8dcb78-cfc4-4be3-9c22-2b1a41523ed7");katex.render("     d \\Delta p = \\frac{\\sigma^{trial}_{effective} - 3 G \\Delta p - r - \\sigma_y}{3G + h}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-19ca4455-cf22-461d-803e-a081a2455ce9"><script>var element = document.getElementById("moose-equation-19ca4455-cf22-461d-803e-a081a2455ce9");katex.render("G", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the isotropic shear modulus, <span class="moose-katex-inline-equation" id="moose-equation-597923df-d3cd-4535-9314-4bfd41630fbf"><script>var element = document.getElementById("moose-equation-597923df-d3cd-4535-9314-4bfd41630fbf");katex.render("\\sigma^{trial}_{effective}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the scalar von Mises trial stress, <span class="moose-katex-inline-equation" id="moose-equation-f3893ffd-b573-4144-bd7e-ec09236539f1"><script>var element = document.getElementById("moose-equation-f3893ffd-b573-4144-bd7e-ec09236539f1");katex.render("\\sigma_y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the yield stress, <span class="moose-katex-inline-equation" id="moose-equation-a496f0f9-e67f-4359-aff5-7056b654fc54"><script>var element = document.getElementById("moose-equation-a496f0f9-e67f-4359-aff5-7056b654fc54");katex.render("r", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the hardening function, and <span class="moose-katex-inline-equation" id="moose-equation-928f780f-0e4e-4e2f-9222-49dd931e855c"><script>var element = document.getElementById("moose-equation-928f780f-0e4e-4e2f-9222-49dd931e855c");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the derivative of the hardening function with respect to the trial stress.</p><section id="ac4ecf77-6be7-4fc8-bd6d-0788678dbc85" data-section-level="3" data-section-text="Temperature Dependent Hardening"><h3 id="temperature-dependent-hardening">Temperature Dependent Hardening</h3><p>The temperature dependence in <a href="#moose-equation-fb8dcb78-cfc4-4be3-9c22-2b1a41523ed7">Eq. (1)</a> is captured in the hardening function and the hardening function derivative. <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-cf069123-5297-4dc4-a3ff-a341dd3d9dee"></span><span class="moose-katex-equation-number">(2)</span><script>var element = document.getElementById("moose-equation-cf069123-5297-4dc4-a3ff-a341dd3d9dee");katex.render("     \\begin{aligned}     r & = \\left(1 - T_{hf} \\right) \\cdot \\mathit{f} \\left( i_{low}, \\Delta p \\right)           + T_{hf} \\cdot \\mathit{f} \\left( i_{upper}, \\Delta p \\right) - \\sigma_y \\\\     h & = \\left(1 - T_{hf} \\right) \\cdot \\mathit{f} \\left( i_{low}, \\Delta p_{old} \\right)           + T_{hf} \\cdot \\mathit{f} \\left( i_{upper}, \\Delta p_{old} \\right)   \\end{aligned}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-114753e5-4c89-4b24-88f5-8ef7925b7928"><script>var element = document.getElementById("moose-equation-114753e5-4c89-4b24-88f5-8ef7925b7928");katex.render("T_{hf}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the relative temperature fraction within the lower and upper temperature bounds of the current piecewise function section, <span class="moose-katex-inline-equation" id="moose-equation-457ee074-e569-458e-8075-b7b62c0d35f3"><script>var element = document.getElementById("moose-equation-457ee074-e569-458e-8075-b7b62c0d35f3");katex.render("i_{low}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the index of the lower temperature bound and its corresponding hardening function, and <span class="moose-katex-inline-equation" id="moose-equation-c43d0e86-7c4a-4931-b2a0-407460dd0351"><script>var element = document.getElementById("moose-equation-c43d0e86-7c4a-4931-b2a0-407460dd0351");katex.render("i_{upper}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the upper temperature bound and hardening function index, and <span class="moose-katex-inline-equation" id="moose-equation-a77b2b12-daa9-4091-89ac-7a893aecc800"><script>var element = document.getElementById("moose-equation-a77b2b12-daa9-4091-89ac-7a893aecc800");katex.render("\\Delta p", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-1a1d52a1-787f-4fb1-aec6-d3a8a9abe688"><script>var element = document.getElementById("moose-equation-1a1d52a1-787f-4fb1-aec6-d3a8a9abe688");katex.render("\\Delta p_{old}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> are the current and old effective strain increments, respectively. The relative temperature fraction is defined as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-79f69409-9896-4a34-967a-e6c718f6d2cd"></span><span class="moose-katex-equation-number">(3)</span><script>var element = document.getElementById("moose-equation-79f69409-9896-4a34-967a-e6c718f6d2cd");katex.render("     T_{hf} = \\frac{T - T(i_{low})}{T(i_{upper}) - T(i_{low})}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-bda62754-3cd6-4264-a288-7e52ad5236e6"><script>var element = document.getElementById("moose-equation-bda62754-3cd6-4264-a288-7e52ad5236e6");katex.render("T", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the current temperature, and <span class="moose-katex-inline-equation" id="moose-equation-22e40617-28fd-4850-bebe-17264f37524e"><script>var element = document.getElementById("moose-equation-22e40617-28fd-4850-bebe-17264f37524e");katex.render("i_{low}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-fe11d8d7-37da-414a-99ed-7513277d5569"><script>var element = document.getElementById("moose-equation-fe11d8d7-37da-414a-99ed-7513277d5569");katex.render("i_{high}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> are the same indices as defined for <a href="#moose-equation-cf069123-5297-4dc4-a3ff-a341dd3d9dee">Eq. (2)</a>. The <span class="moose-katex-inline-equation" id="moose-equation-fb99d71f-d073-4173-9c38-15a93cc2717f"><script>var element = document.getElementById("moose-equation-fb99d71f-d073-4173-9c38-15a93cc2717f");katex.render("T_{hf}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> value is used in <a href="#moose-equation-cf069123-5297-4dc4-a3ff-a341dd3d9dee">Eq. (2)</a> to interpolate the hardening values.</p><p>This class, <code>TemperatureDependentHardeningStressUpdate</code>, calculates an effective trial stress, an effective scalar plastic strain increment, and the derivative of the scalar effective plastic strain increment; these values are passed to the <a href="RadialReturnStressUpdate.html">RadialReturnStressUpdate</a> to compute the radial return stress increment.  The plastic strain as a stateful material property.</p></section></section><section class="scrollspy" id="09fb07b9-7e81-4458-a2f0-3ddcc40f1e22" data-section-level="2" data-section-text="Example Input File"><h2 id="example-input-file">Example Input File</h2><pre class="moose-pre"><code class="language-text">[./temp_dep_hardening]
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Temperature Dependent Hardening Stress Update | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="088f743f-fe79-4b50-a1c2-2966de7ffc7e"><i class="material-icons">menu</i></a><ul class="sidenav" id="088f743f-fe79-4b50-a1c2-2966de7ffc7e"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">materials</span><a href="#" class="breadcrumb">TemperatureDependentHardeningStressUpdate</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="ada7e6ef-11fa-4d0c-a988-6c59627bfae3" data-section-level="1" data-section-text="Temperature Dependent Hardening Stress Update"><h1 id="temperature-dependent-hardening-stress-update">Temperature Dependent Hardening Stress Update</h1><p>Computes the stress as a function of temperature and plastic strain from user-supplied hardening functions. This class can be used in conjunction with other creep and plasticity materials for more complex simulations</p><section class="scrollspy" id="623a3079-ce80-41b3-8daf-f722f665c6f5" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p>In this numerical approach, a trial stress is calculated at the start of each simulation time increment; the trial stress calculation assumed all of the new strain increment is elastic strain:</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-a09277b0-eb5a-4198-9036-fe624d02e024"></span><script>var element = document.getElementById("moose-equation-a09277b0-eb5a-4198-9036-fe624d02e024");katex.render("\\sigma_{trial} = C_{ijkl} \\left( \\Delta \\epsilon_{assumed-elastic} + \\epsilon_{elastic}^{old} \\right)", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p>The algorithms checks to see if the trial stress state is outside of the yield surface, as shown in the figure to the right. If the stress state is outside of the yield surface, the algorithm recomputes the scalar effective inelastic strain required to return the stress state to the yield surface. This approach is given the name Radial Return because the yield surface used is the <a href="https://en.wikipedia.org/wiki/Von_Mises_yield_criterion">von Mises yield surface</a>: in the <a href="https://en.wikipedia.org/wiki/Cauchy_stress_tensor#Stress_deviator_tensor">devitoric stress space</a>, this yield surface has the shape of a circle, and the scalar inelastic strain is assumed to always be directed at the circle center.</p><section id="96777c51-9e2c-4563-8e11-22cf36eb5bcb" data-section-level="3" data-section-text="Recompute Iterations on the Effective Plastic Strain Increment"><h3 id="recompute-iterations-on-the-effective-plastic-strain-increment">Recompute Iterations on the Effective Plastic Strain Increment</h3><p>The recompute radial return materials each individually calculate, using the <a href="http://mathworld.wolfram.com/NewtonsMethod.html">Newton Method</a>, the amount of effective inelastic strain required to return the stress state to the yield surface.</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-1a581b1f-c3d8-4ae6-b81a-0ee5d4adebc8"></span><script>var element = document.getElementById("moose-equation-1a581b1f-c3d8-4ae6-b81a-0ee5d4adebc8");katex.render("\\Delta p^{(t+1)} = \\Delta p^t + d \\Delta p", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span></p><p>where the change in the iterative effective inelastic strain is defined as the yield surface over the derivative of the yield surface with respect to the inelastic strain increment. </p></section></section><section class="scrollspy" id="aa05cd2a-1135-4228-abdf-0b2fdee655bf" data-section-level="2" data-section-text="Isotropic Plasticity"><h2 id="isotropic-plasticity">Isotropic Plasticity</h2><p><code>TemperatureDependentHardeningStressUpdate</code> is formulated in the same manner as <a href="IsotropicPlasticityStressUpdate.html">IsotropicPlasticityStressUpdate</a> such that the effective plastic strain increment has the form <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-3c952c18-5f1f-4917-b7e2-aa83117b5113"></span><span class="moose-katex-equation-number">(1)</span><script>var element = document.getElementById("moose-equation-3c952c18-5f1f-4917-b7e2-aa83117b5113");katex.render("     d \\Delta p = \\frac{\\sigma^{trial}_{effective} - 3 G \\Delta p - r - \\sigma_y}{3G + h}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-1ab74952-613e-4916-9c8d-a93fc45c2c6a"><script>var element = document.getElementById("moose-equation-1ab74952-613e-4916-9c8d-a93fc45c2c6a");katex.render("G", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the isotropic shear modulus, <span class="moose-katex-inline-equation" id="moose-equation-7acf191a-9050-4b90-8155-32a7bbaae9e7"><script>var element = document.getElementById("moose-equation-7acf191a-9050-4b90-8155-32a7bbaae9e7");katex.render("\\sigma^{trial}_{effective}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the scalar von Mises trial stress, <span class="moose-katex-inline-equation" id="moose-equation-541092c7-fd12-4ebb-a48f-58831e2e3230"><script>var element = document.getElementById("moose-equation-541092c7-fd12-4ebb-a48f-58831e2e3230");katex.render("\\sigma_y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the yield stress, <span class="moose-katex-inline-equation" id="moose-equation-0ae8438e-46d1-467c-8878-f5b025685fa6"><script>var element = document.getElementById("moose-equation-0ae8438e-46d1-467c-8878-f5b025685fa6");katex.render("r", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the hardening function, and <span class="moose-katex-inline-equation" id="moose-equation-723e3377-9279-4e4d-b408-6dca442cb574"><script>var element = document.getElementById("moose-equation-723e3377-9279-4e4d-b408-6dca442cb574");katex.render("h", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the derivative of the hardening function with respect to the trial stress.</p><section id="f641e32b-c948-43fe-8434-8efc2ddae88c" data-section-level="3" data-section-text="Temperature Dependent Hardening"><h3 id="temperature-dependent-hardening">Temperature Dependent Hardening</h3><p>The temperature dependence in <a href="#moose-equation-3c952c18-5f1f-4917-b7e2-aa83117b5113">Eq. (1)</a> is captured in the hardening function and the hardening function derivative. <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-d0482f2d-7a6e-438c-bd86-71c1289d7eb9"></span><span class="moose-katex-equation-number">(2)</span><script>var element = document.getElementById("moose-equation-d0482f2d-7a6e-438c-bd86-71c1289d7eb9");katex.render("     \\begin{aligned}     r & = \\left(1 - T_{hf} \\right) \\cdot \\mathit{f} \\left( i_{low}, \\Delta p \\right)           + T_{hf} \\cdot \\mathit{f} \\left( i_{upper}, \\Delta p \\right) - \\sigma_y \\\\     h & = \\left(1 - T_{hf} \\right) \\cdot \\mathit{f} \\left( i_{low}, \\Delta p_{old} \\right)           + T_{hf} \\cdot \\mathit{f} \\left( i_{upper}, \\Delta p_{old} \\right)   \\end{aligned}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-af94ed6b-63c6-4112-8ef4-3550ae3ab82d"><script>var element = document.getElementById("moose-equation-af94ed6b-63c6-4112-8ef4-3550ae3ab82d");katex.render("T_{hf}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the relative temperature fraction within the lower and upper temperature bounds of the current piecewise function section, <span class="moose-katex-inline-equation" id="moose-equation-ba959f28-1d42-4016-b242-95d9012bc5fe"><script>var element = document.getElementById("moose-equation-ba959f28-1d42-4016-b242-95d9012bc5fe");katex.render("i_{low}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the index of the lower temperature bound and its corresponding hardening function, and <span class="moose-katex-inline-equation" id="moose-equation-8af6586b-45cb-48aa-a7b1-c9adb9c7c096"><script>var element = document.getElementById("moose-equation-8af6586b-45cb-48aa-a7b1-c9adb9c7c096");katex.render("i_{upper}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the upper temperature bound and hardening function index, and <span class="moose-katex-inline-equation" id="moose-equation-0bb9e38a-a3ab-42e0-b75b-4059f3347e56"><script>var element = document.getElementById("moose-equation-0bb9e38a-a3ab-42e0-b75b-4059f3347e56");katex.render("\\Delta p", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-14a8cbd0-bd53-4a97-af1c-573c0496da9e"><script>var element = document.getElementById("moose-equation-14a8cbd0-bd53-4a97-af1c-573c0496da9e");katex.render("\\Delta p_{old}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> are the current and old effective strain increments, respectively. The relative temperature fraction is defined as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-0b0fcea6-6e4b-43f2-bca9-92f93d7f11e9"></span><span class="moose-katex-equation-number">(3)</span><script>var element = document.getElementById("moose-equation-0b0fcea6-6e4b-43f2-bca9-92f93d7f11e9");katex.render("     T_{hf} = \\frac{T - T(i_{low})}{T(i_{upper}) - T(i_{low})}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-fca5a40c-d3e9-4df9-8141-e39eb1fd70f9"><script>var element = document.getElementById("moose-equation-fca5a40c-d3e9-4df9-8141-e39eb1fd70f9");katex.render("T", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the current temperature, and <span class="moose-katex-inline-equation" id="moose-equation-b4eb6d7c-b6b3-46f6-8546-b7421db1c157"><script>var element = document.getElementById("moose-equation-b4eb6d7c-b6b3-46f6-8546-b7421db1c157");katex.render("i_{low}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-cef48ad1-09ae-49f2-bbf5-6e032965f59b"><script>var element = document.getElementById("moose-equation-cef48ad1-09ae-49f2-bbf5-6e032965f59b");katex.render("i_{high}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> are the same indices as defined for <a href="#moose-equation-d0482f2d-7a6e-438c-bd86-71c1289d7eb9">Eq. (2)</a>. The <span class="moose-katex-inline-equation" id="moose-equation-1a9f6b66-f706-409d-b276-c87b85f9a560"><script>var element = document.getElementById("moose-equation-1a9f6b66-f706-409d-b276-c87b85f9a560");katex.render("T_{hf}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> value is used in <a href="#moose-equation-d0482f2d-7a6e-438c-bd86-71c1289d7eb9">Eq. (2)</a> to interpolate the hardening values.</p><p>This class, <code>TemperatureDependentHardeningStressUpdate</code>, calculates an effective trial stress, an effective scalar plastic strain increment, and the derivative of the scalar effective plastic strain increment; these values are passed to the <a href="RadialReturnStressUpdate.html">RadialReturnStressUpdate</a> to compute the radial return stress increment.  The plastic strain as a stateful material property.</p></section></section><section class="scrollspy" id="99248dbe-b140-459d-bcde-07fdda9ac8e9" data-section-level="2" data-section-text="Example Input File"><h2 id="example-input-file">Example Input File</h2><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./temp_dep_hardening]
   type = TemperatureDependentHardeningStressUpdate
   hardening_functions = &#x27;hf1 hf2&#x27;
   temperatures = &#x27;300.0 800.0&#x27;
@@ -6,553 +6,22 @@
   absolute_tolerance = 1e-5
   temperature = temp
 [../]
-</code></pre><a href="#5e2e17a5-b963-499e-ae18-a1657a5f6ffc" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><div class="modal moose-modal" id="5e2e17a5-b963-499e-ae18-a1657a5f6ffc"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i</h4><pre class="moose-pre"><code class="language-text">#
-# This is a test of the piece-wise linear strain hardening model using the
-# small strain formulation.  This test exercises the temperature-dependent
-# hardening curve capability.
-#
-# Test procedure:
-# 1. The element is pulled to and then beyond the yield stress for a given
-# temperature.
-# 2. The displacement is then constant while the temperature increases and
-# the yield stress decreases.  This results in a lower stress with more
-# plastic strain.
-# 3. The temperature decreases beyond its original value giving a higher
-# yield stress.  The displacement increases, causing increases stress to
-# the new yield stress.
-# 4. The temperature and yield stress are constant with increasing
-# displacement giving a constant stress and more plastic strain.
-#
-# Plotting total_strain_yy on the x axis and stress_yy on the y axis shows
-# the stress history in a clear way.
-#
-#  s |
-#  t |            *****
-#  r |           *
-#  e |   *****  *
-#  s |  *    * *
-#  s | *     *
-#    |*
-#    +------------------
-#           total strain
-#
-# The exact same problem was run in Abaqus with exactly the same result.
-
-[Mesh]
-  type = GeneratedMesh
-  dim = 3
-  nx = 1
-  ny = 1
-  nz = 1
-  # This test uses ElementalVariableValue postprocessors on specific
-  # elements, so element numbering needs to stay unchanged
-  allow_renumbering = false
-[]
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y disp_z&#x27;
-[]
-
-[AuxVariables]
-  [./temp]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 500.0
-  [../]
-[]
-
-[AuxKernels]
-  [./temp_aux]
-    type = FunctionAux
-    variable = temp
-    function = temp_hist
-  [../]
-[]
-
-[Functions]
-  [./top_pull]
-    type = PiecewiseLinear
-    x = &#x27;0 1     2    4    5    6&#x27;
-    y = &#x27;0 0.025 0.05 0.05 0.06 0.085&#x27;
-  [../]
-  [./hf1]
-    type = PiecewiseLinear
-    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
-    y = &#x27;5000 5030 5060 5090 5300&#x27;
-  [../]
-  [./hf2]
-    type = PiecewiseLinear
-    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
-    y = &#x27;4000 4020 4040 4060 4200&#x27;
-  [../]
-  [./temp_hist]
-    type = PiecewiseLinear
-    x = &#x27;0   1   2   3   4&#x27;
-    y = &#x27;500 500 500 600 400&#x27;
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [./all]
-    strain = SMALL
-    incremental = true
-    add_variables = true
-    generate_output = &#x27;stress_yy strain_yy plastic_strain_xx plastic_strain_yy plastic_strain_zz&#x27;
-  [../]
-[]
-
-[BCs]
-  [./y_pull_function]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = 3
-    function = top_pull
-  [../]
-  [./x_bot]
-    type = DirichletBC
-    variable = disp_x
-    boundary = 4
-    value = 0.0
-  [../]
-  [./y_bot]
-    type = DirichletBC
-    variable = disp_y
-    boundary = 1
-    value = 0.0
-  [../]
-  [./z_bot]
-    type = DirichletBC
-    variable = disp_z
-    boundary = 0
-    value = 0.0
-  [../]
-[]
-
-[Postprocessors]
-  [./stress_yy_el]
-    type = ElementalVariableValue
-    variable = stress_yy
-    elementid = 0
-  [../]
-[]
-
-[Materials]
-  [./elasticity_tensor]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 2e5
-    poissons_ratio = 0.3
-  [../]
-  [./temp_dep_hardening]
-    type = TemperatureDependentHardeningStressUpdate
-    hardening_functions = &#x27;hf1 hf2&#x27;
-    temperatures = &#x27;300.0 800.0&#x27;
-    relative_tolerance = 1e-25
-    absolute_tolerance = 1e-5
-    temperature = temp
-  [../]
-  [./radial_return_stress]
-    type = ComputeMultipleInelasticStress
-    tangent_operator = elastic
-    inelastic_models = &#x27;temp_dep_hardening&#x27;
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;PJFNK&#x27;
-
-  petsc_options = &#x27;-snes_ksp_ew&#x27;
-  petsc_options_iname = &#x27;-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter&#x27;
-  petsc_options_value = &#x27;201                hypre    boomeramg      4&#x27;
-
-  line_search = &#x27;none&#x27;
-
-  l_max_its = 100
-  nl_max_its = 100
-  nl_rel_tol = 1e-12
-  nl_abs_tol = 1e-10
-  l_tol = 1e-9
-
-  start_time = 0.0
-  end_time = 6
-  dt = 0.1
-[]
-
-[Outputs]
-  [./out]
-    type = Exodus
-  [../]
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><p>where the arguments for the <code>hardening_functions</code> parameter are defined in the <code>Functions</code> block of the input file:</p><pre class="moose-pre"><code class="language-text">[./hf1]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#347b56eb-4070-44ca-8422-2bae87fa1d6c">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><p>where the arguments for the <code>hardening_functions</code> parameter are defined in the <code>Functions</code> block of the input file:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./hf1]
   type = PiecewiseLinear
   x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
   y = &#x27;5000 5030 5060 5090 5300&#x27;
 [../]
-</code></pre><a href="#3380fb0e-ca8b-4359-a4d0-01afa202ec9c" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><div class="modal moose-modal" id="3380fb0e-ca8b-4359-a4d0-01afa202ec9c"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i</h4><pre class="moose-pre"><code class="language-text">#
-# This is a test of the piece-wise linear strain hardening model using the
-# small strain formulation.  This test exercises the temperature-dependent
-# hardening curve capability.
-#
-# Test procedure:
-# 1. The element is pulled to and then beyond the yield stress for a given
-# temperature.
-# 2. The displacement is then constant while the temperature increases and
-# the yield stress decreases.  This results in a lower stress with more
-# plastic strain.
-# 3. The temperature decreases beyond its original value giving a higher
-# yield stress.  The displacement increases, causing increases stress to
-# the new yield stress.
-# 4. The temperature and yield stress are constant with increasing
-# displacement giving a constant stress and more plastic strain.
-#
-# Plotting total_strain_yy on the x axis and stress_yy on the y axis shows
-# the stress history in a clear way.
-#
-#  s |
-#  t |            *****
-#  r |           *
-#  e |   *****  *
-#  s |  *    * *
-#  s | *     *
-#    |*
-#    +------------------
-#           total strain
-#
-# The exact same problem was run in Abaqus with exactly the same result.
-
-[Mesh]
-  type = GeneratedMesh
-  dim = 3
-  nx = 1
-  ny = 1
-  nz = 1
-  # This test uses ElementalVariableValue postprocessors on specific
-  # elements, so element numbering needs to stay unchanged
-  allow_renumbering = false
-[]
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y disp_z&#x27;
-[]
-
-[AuxVariables]
-  [./temp]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 500.0
-  [../]
-[]
-
-[AuxKernels]
-  [./temp_aux]
-    type = FunctionAux
-    variable = temp
-    function = temp_hist
-  [../]
-[]
-
-[Functions]
-  [./top_pull]
-    type = PiecewiseLinear
-    x = &#x27;0 1     2    4    5    6&#x27;
-    y = &#x27;0 0.025 0.05 0.05 0.06 0.085&#x27;
-  [../]
-  [./hf1]
-    type = PiecewiseLinear
-    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
-    y = &#x27;5000 5030 5060 5090 5300&#x27;
-  [../]
-  [./hf2]
-    type = PiecewiseLinear
-    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
-    y = &#x27;4000 4020 4040 4060 4200&#x27;
-  [../]
-  [./temp_hist]
-    type = PiecewiseLinear
-    x = &#x27;0   1   2   3   4&#x27;
-    y = &#x27;500 500 500 600 400&#x27;
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [./all]
-    strain = SMALL
-    incremental = true
-    add_variables = true
-    generate_output = &#x27;stress_yy strain_yy plastic_strain_xx plastic_strain_yy plastic_strain_zz&#x27;
-  [../]
-[]
-
-[BCs]
-  [./y_pull_function]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = 3
-    function = top_pull
-  [../]
-  [./x_bot]
-    type = DirichletBC
-    variable = disp_x
-    boundary = 4
-    value = 0.0
-  [../]
-  [./y_bot]
-    type = DirichletBC
-    variable = disp_y
-    boundary = 1
-    value = 0.0
-  [../]
-  [./z_bot]
-    type = DirichletBC
-    variable = disp_z
-    boundary = 0
-    value = 0.0
-  [../]
-[]
-
-[Postprocessors]
-  [./stress_yy_el]
-    type = ElementalVariableValue
-    variable = stress_yy
-    elementid = 0
-  [../]
-[]
-
-[Materials]
-  [./elasticity_tensor]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 2e5
-    poissons_ratio = 0.3
-  [../]
-  [./temp_dep_hardening]
-    type = TemperatureDependentHardeningStressUpdate
-    hardening_functions = &#x27;hf1 hf2&#x27;
-    temperatures = &#x27;300.0 800.0&#x27;
-    relative_tolerance = 1e-25
-    absolute_tolerance = 1e-5
-    temperature = temp
-  [../]
-  [./radial_return_stress]
-    type = ComputeMultipleInelasticStress
-    tangent_operator = elastic
-    inelastic_models = &#x27;temp_dep_hardening&#x27;
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;PJFNK&#x27;
-
-  petsc_options = &#x27;-snes_ksp_ew&#x27;
-  petsc_options_iname = &#x27;-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter&#x27;
-  petsc_options_value = &#x27;201                hypre    boomeramg      4&#x27;
-
-  line_search = &#x27;none&#x27;
-
-  l_max_its = 100
-  nl_max_its = 100
-  nl_rel_tol = 1e-12
-  nl_abs_tol = 1e-10
-  l_tol = 1e-9
-
-  start_time = 0.0
-  end_time = 6
-  dt = 0.1
-[]
-
-[Outputs]
-  [./out]
-    type = Exodus
-  [../]
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><pre class="moose-pre"><code class="language-text">[./hf2]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#4394a826-aea5-4a13-a272-5607948a14c5">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./hf2]
   type = PiecewiseLinear
   x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
   y = &#x27;4000 4020 4040 4060 4200&#x27;
 [../]
-</code></pre><a href="#92c300ee-80b4-40b8-9b6e-9d55b6fbd1f0" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><div class="modal moose-modal" id="92c300ee-80b4-40b8-9b6e-9d55b6fbd1f0"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i</h4><pre class="moose-pre"><code class="language-text">#
-# This is a test of the piece-wise linear strain hardening model using the
-# small strain formulation.  This test exercises the temperature-dependent
-# hardening curve capability.
-#
-# Test procedure:
-# 1. The element is pulled to and then beyond the yield stress for a given
-# temperature.
-# 2. The displacement is then constant while the temperature increases and
-# the yield stress decreases.  This results in a lower stress with more
-# plastic strain.
-# 3. The temperature decreases beyond its original value giving a higher
-# yield stress.  The displacement increases, causing increases stress to
-# the new yield stress.
-# 4. The temperature and yield stress are constant with increasing
-# displacement giving a constant stress and more plastic strain.
-#
-# Plotting total_strain_yy on the x axis and stress_yy on the y axis shows
-# the stress history in a clear way.
-#
-#  s |
-#  t |            *****
-#  r |           *
-#  e |   *****  *
-#  s |  *    * *
-#  s | *     *
-#    |*
-#    +------------------
-#           total strain
-#
-# The exact same problem was run in Abaqus with exactly the same result.
-
-[Mesh]
-  type = GeneratedMesh
-  dim = 3
-  nx = 1
-  ny = 1
-  nz = 1
-  # This test uses ElementalVariableValue postprocessors on specific
-  # elements, so element numbering needs to stay unchanged
-  allow_renumbering = false
-[]
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y disp_z&#x27;
-[]
-
-[AuxVariables]
-  [./temp]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 500.0
-  [../]
-[]
-
-[AuxKernels]
-  [./temp_aux]
-    type = FunctionAux
-    variable = temp
-    function = temp_hist
-  [../]
-[]
-
-[Functions]
-  [./top_pull]
-    type = PiecewiseLinear
-    x = &#x27;0 1     2    4    5    6&#x27;
-    y = &#x27;0 0.025 0.05 0.05 0.06 0.085&#x27;
-  [../]
-  [./hf1]
-    type = PiecewiseLinear
-    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
-    y = &#x27;5000 5030 5060 5090 5300&#x27;
-  [../]
-  [./hf2]
-    type = PiecewiseLinear
-    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
-    y = &#x27;4000 4020 4040 4060 4200&#x27;
-  [../]
-  [./temp_hist]
-    type = PiecewiseLinear
-    x = &#x27;0   1   2   3   4&#x27;
-    y = &#x27;500 500 500 600 400&#x27;
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [./all]
-    strain = SMALL
-    incremental = true
-    add_variables = true
-    generate_output = &#x27;stress_yy strain_yy plastic_strain_xx plastic_strain_yy plastic_strain_zz&#x27;
-  [../]
-[]
-
-[BCs]
-  [./y_pull_function]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = 3
-    function = top_pull
-  [../]
-  [./x_bot]
-    type = DirichletBC
-    variable = disp_x
-    boundary = 4
-    value = 0.0
-  [../]
-  [./y_bot]
-    type = DirichletBC
-    variable = disp_y
-    boundary = 1
-    value = 0.0
-  [../]
-  [./z_bot]
-    type = DirichletBC
-    variable = disp_z
-    boundary = 0
-    value = 0.0
-  [../]
-[]
-
-[Postprocessors]
-  [./stress_yy_el]
-    type = ElementalVariableValue
-    variable = stress_yy
-    elementid = 0
-  [../]
-[]
-
-[Materials]
-  [./elasticity_tensor]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 2e5
-    poissons_ratio = 0.3
-  [../]
-  [./temp_dep_hardening]
-    type = TemperatureDependentHardeningStressUpdate
-    hardening_functions = &#x27;hf1 hf2&#x27;
-    temperatures = &#x27;300.0 800.0&#x27;
-    relative_tolerance = 1e-25
-    absolute_tolerance = 1e-5
-    temperature = temp
-  [../]
-  [./radial_return_stress]
-    type = ComputeMultipleInelasticStress
-    tangent_operator = elastic
-    inelastic_models = &#x27;temp_dep_hardening&#x27;
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;PJFNK&#x27;
-
-  petsc_options = &#x27;-snes_ksp_ew&#x27;
-  petsc_options_iname = &#x27;-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter&#x27;
-  petsc_options_value = &#x27;201                hypre    boomeramg      4&#x27;
-
-  line_search = &#x27;none&#x27;
-
-  l_max_its = 100
-  nl_max_its = 100
-  nl_rel_tol = 1e-12
-  nl_abs_tol = 1e-10
-  l_tol = 1e-9
-
-  start_time = 0.0
-  end_time = 6
-  dt = 0.1
-[]
-
-[Outputs]
-  [./out]
-    type = Exodus
-  [../]
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><p><code>TemperatureDependentHardeningStressUpdate</code> must be run in conjunction with the inelastic strain return mapping stress calculator as shown below:</p><pre class="moose-pre"><code class="language-text">[./radial_return_stress]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#f8d822b7-b4f9-4a93-9709-9b79a3bd98f7">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><p><code>TemperatureDependentHardeningStressUpdate</code> must be run in conjunction with the inelastic strain return mapping stress calculator as shown below:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./radial_return_stress]
   type = ComputeMultipleInelasticStress
   tangent_operator = elastic
   inelastic_models = &#x27;temp_dep_hardening&#x27;
 [../]
-</code></pre><a href="#09c1939c-5c0c-4cb4-9c01-fcab7ed286be" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a><div class="modal moose-modal" id="09c1939c-5c0c-4cb4-9c01-fcab7ed286be"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i</h4><pre class="moose-pre"><code class="language-text">#
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#13e69b8a-5c81-4f2f-8bbc-a09b641edb3a">(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</a></section><section class="scrollspy" id="5449ceed-94dd-440c-ac35-44204873d66f" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="c198d39a-e899-4186-88f4-2755c5266d8d" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">hardening_functions</span><span class="moose-parameter-header-description">List of functions of true stress as function of plastic strain at different temperatures</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;FunctionName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of functions of true stress as function of plastic strain at different temperatures</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">temperatures</span><span class="moose-parameter-header-description">List of temperatures corresponding to the functions listed in 'hardening_functions'</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of temperatures corresponding to the functions listed in 'hardening_functions'</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="877b2dad-f5ff-4d30-82e8-1ad83f82b647" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">absolute_tolerance</span><span class="moose-parameter-header-default">1e-11</span><span class="moose-parameter-header-description">Absolute convergence tolerance for Newton iteration</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1e-11</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Absolute convergence tolerance for Newton iteration</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">acceptable_multiplier</span><span class="moose-parameter-header-default">10</span><span class="moose-parameter-header-description">Factor applied to relative and absolute tolerance for acceptable convergence if iterations are no longer making progress</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>10</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Factor applied to relative and absolute tolerance for acceptable convergence if iterations are no longer making progress</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that defines a prefix for all material properties related to this stress update model. This allows for multiple models of the same type to be used without naming conflicts.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that defines a prefix for all material properties related to this stress update model. This allows for multiple models of the same type to be used without naming conflicts.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">max_inelastic_increment</span><span class="moose-parameter-header-default">0.0001</span><span class="moose-parameter-header-description">The maximum inelastic strain increment allowed in a time step</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0.0001</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The maximum inelastic strain increment allowed in a time step</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">relative_tolerance</span><span class="moose-parameter-header-default">1e-08</span><span class="moose-parameter-header-description">Relative convergence tolerance for Newton iteration</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1e-08</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Relative convergence tolerance for Newton iteration</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">temperature</span><span class="moose-parameter-header-description">Coupled Temperature</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Coupled Temperature</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_substep</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether to use substepping</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether to use substepping</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="a860e42a-5e50-4144-9b7e-f43a3aee5836" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">apply_strain</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Flag to apply strain. Used for testing.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Flag to apply strain. Used for testing.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">effective_inelastic_strain_name</span><span class="moose-parameter-header-default">effective_plastic_strain</span><span class="moose-parameter-header-description">Name of the material property that stores the effective inelastic strain</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>effective_plastic_strain</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the material property that stores the effective inelastic strain</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">substep_strain_tolerance</span><span class="moose-parameter-header-default">0.1</span><span class="moose-parameter-header-description">Maximum ratio of the initial elastic strain increment at start of the return mapping solve to the maximum inelastic strain allowable in a single substep. Reduce this value to increase the number of substeps</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0.1</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Maximum ratio of the initial elastic strain increment at start of the return mapping solve to the maximum inelastic strain allowable in a single substep. Reduce this value to increase the number of substeps</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_displaced_mesh</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="0bcb4211-6a02-42b2-bf50-7d5900451c19" data-section-level="3" data-section-text="Debug Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">internal_solve_full_iteration_history</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Set true to output full internal Newton iteration history at times determined by `internal_solve_output_on`. If false, only a summary is output.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set true to output full internal Newton iteration history at times determined by `internal_solve_output_on`. If false, only a summary is output.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">internal_solve_output_on</span><span class="moose-parameter-header-default">on_error</span><span class="moose-parameter-header-description">When to output internal Newton solve information</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>on_error</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>never, on_error, always</p><p class="moose-parameter-description"><span>Description:</span>When to output internal Newton solve information</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Debug Parameters</h3></summary></details></section><section id="a89f7ee8-6a54-4747-bd80-f9d38e30d09a" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section></section><div class="moose-modal modal" id="347b56eb-4070-44ca-8422-2bae87fa1d6c"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</h4><pre class="moose-pre"><code class="language-text">#
 # This is a test of the piece-wise linear strain hardening model using the
 # small strain formulation.  This test exercises the temperature-dependent
 # hardening curve capability.
@@ -647,6 +116,7 @@
   [../]
 []
 
+
 [BCs]
   [./y_pull_function]
     type = FunctionDirichletBC
@@ -729,4 +199,538 @@
     type = Exodus
   [../]
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></section><section class="scrollspy" id="6809b134-fbb4-40c8-8e58-121694a437b7" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="31d644a9-3dcc-462a-835a-f8cbae119fc2" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">hardening_functions</span><span class="moose-parameter-header-description">List of functions of true stress as function of plastic strain at different temperatures</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;FunctionName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of functions of true stress as function of plastic strain at different temperatures</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">temperatures</span><span class="moose-parameter-header-description">List of temperatures corresponding to the functions listed in 'hardening_functions'</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of temperatures corresponding to the functions listed in 'hardening_functions'</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="40f62054-70ab-4464-bce3-228fe77bd515" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">absolute_tolerance</span><span class="moose-parameter-header-default">1e-11</span><span class="moose-parameter-header-description">Absolute convergence tolerance for Newton iteration</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1e-11</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Absolute convergence tolerance for Newton iteration</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">acceptable_multiplier</span><span class="moose-parameter-header-default">10</span><span class="moose-parameter-header-description">Factor applied to relative and absolute tolerance for acceptable convergence if iterations are no longer making progress</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>10</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Factor applied to relative and absolute tolerance for acceptable convergence if iterations are no longer making progress</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that defines a prefix for all material properties related to this stress update model. This allows for multiple models of the same type to be used without naming conflicts.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that defines a prefix for all material properties related to this stress update model. This allows for multiple models of the same type to be used without naming conflicts.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE ELEMENT SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">max_inelastic_increment</span><span class="moose-parameter-header-default">0.0001</span><span class="moose-parameter-header-description">The maximum inelastic strain increment allowed in a time step</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0.0001</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The maximum inelastic strain increment allowed in a time step</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">relative_tolerance</span><span class="moose-parameter-header-default">1e-08</span><span class="moose-parameter-header-description">Relative convergence tolerance for Newton iteration</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1e-08</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Relative convergence tolerance for Newton iteration</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">temperature</span><span class="moose-parameter-header-description">Coupled Temperature</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Coupled Temperature</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_substep</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether to use substepping</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether to use substepping</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="2f543733-b2e3-45a2-bba2-ef72d605f9af" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">effective_inelastic_strain_name</span><span class="moose-parameter-header-default">effective_plastic_strain</span><span class="moose-parameter-header-description">Name of the material property that stores the effective inelastic strain</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>effective_plastic_strain</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the material property that stores the effective inelastic strain</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">substep_strain_tolerance</span><span class="moose-parameter-header-default">0.1</span><span class="moose-parameter-header-description">Maximum ratio of the initial elastic strain increment at start of the return mapping solve to the maximum inelastic strain allowable in a single substep. Reduce this value to increase the number of substeps</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0.1</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Maximum ratio of the initial elastic strain increment at start of the return mapping solve to the maximum inelastic strain allowable in a single substep. Reduce this value to increase the number of substeps</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_displaced_mesh</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="be8b9de5-1ec9-4481-af20-1a47a7e11d60" data-section-level="3" data-section-text="Debug Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">internal_solve_full_iteration_history</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Set true to output full internal Newton iteration history at times determined by `internal_solve_output_on`. If false, only a summary is output.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set true to output full internal Newton iteration history at times determined by `internal_solve_output_on`. If false, only a summary is output.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">internal_solve_output_on</span><span class="moose-parameter-header-default">on_error</span><span class="moose-parameter-header-description">When to output internal Newton solve information</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>on_error</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>never on_error always</p><p class="moose-parameter-description"><span>Description:</span>When to output internal Newton solve information</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Debug Parameters</h3></summary></details></section><section id="3e8f7b6a-f6c7-488b-b387-eabe7a7c3dfc" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section></section></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#01090c36-3791-48f9-a244-55e1d083445a" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#9ffcbacb-5c08-4365-9993-3c2723209f09" class="tooltipped" data-position="left" data-tooltip="Isotropic Plasticity">Isotropic Plasticity</a></li><li><a href="#09fb07b9-7e81-4458-a2f0-3ddcc40f1e22" class="tooltipped" data-position="left" data-tooltip="Example Input File">Example Input File</a></li><li><a href="#6809b134-fbb4-40c8-8e58-121694a437b7" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="4394a826-aea5-4a13-a272-5607948a14c5"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</h4><pre class="moose-pre"><code class="language-text">#
+# This is a test of the piece-wise linear strain hardening model using the
+# small strain formulation.  This test exercises the temperature-dependent
+# hardening curve capability.
+#
+# Test procedure:
+# 1. The element is pulled to and then beyond the yield stress for a given
+# temperature.
+# 2. The displacement is then constant while the temperature increases and
+# the yield stress decreases.  This results in a lower stress with more
+# plastic strain.
+# 3. The temperature decreases beyond its original value giving a higher
+# yield stress.  The displacement increases, causing increases stress to
+# the new yield stress.
+# 4. The temperature and yield stress are constant with increasing
+# displacement giving a constant stress and more plastic strain.
+#
+# Plotting total_strain_yy on the x axis and stress_yy on the y axis shows
+# the stress history in a clear way.
+#
+#  s |
+#  t |            *****
+#  r |           *
+#  e |   *****  *
+#  s |  *    * *
+#  s | *     *
+#    |*
+#    +------------------
+#           total strain
+#
+# The exact same problem was run in Abaqus with exactly the same result.
+
+[Mesh]
+  type = GeneratedMesh
+  dim = 3
+  nx = 1
+  ny = 1
+  nz = 1
+  # This test uses ElementalVariableValue postprocessors on specific
+  # elements, so element numbering needs to stay unchanged
+  allow_renumbering = false
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+[]
+
+[AuxVariables]
+  [./temp]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 500.0
+  [../]
+[]
+
+[AuxKernels]
+  [./temp_aux]
+    type = FunctionAux
+    variable = temp
+    function = temp_hist
+  [../]
+[]
+
+[Functions]
+  [./top_pull]
+    type = PiecewiseLinear
+    x = &#x27;0 1     2    4    5    6&#x27;
+    y = &#x27;0 0.025 0.05 0.05 0.06 0.085&#x27;
+  [../]
+  [./hf1]
+    type = PiecewiseLinear
+    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
+    y = &#x27;5000 5030 5060 5090 5300&#x27;
+  [../]
+  [./hf2]
+    type = PiecewiseLinear
+    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
+    y = &#x27;4000 4020 4040 4060 4200&#x27;
+  [../]
+  [./temp_hist]
+    type = PiecewiseLinear
+    x = &#x27;0   1   2   3   4&#x27;
+    y = &#x27;500 500 500 600 400&#x27;
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [./all]
+    strain = SMALL
+    incremental = true
+    add_variables = true
+    generate_output = &#x27;stress_yy strain_yy plastic_strain_xx plastic_strain_yy plastic_strain_zz&#x27;
+  [../]
+[]
+
+
+[BCs]
+  [./y_pull_function]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = 3
+    function = top_pull
+  [../]
+  [./x_bot]
+    type = DirichletBC
+    variable = disp_x
+    boundary = 4
+    value = 0.0
+  [../]
+  [./y_bot]
+    type = DirichletBC
+    variable = disp_y
+    boundary = 1
+    value = 0.0
+  [../]
+  [./z_bot]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 0
+    value = 0.0
+  [../]
+[]
+
+[Postprocessors]
+  [./stress_yy_el]
+    type = ElementalVariableValue
+    variable = stress_yy
+    elementid = 0
+  [../]
+[]
+
+[Materials]
+  [./elasticity_tensor]
+    type = ComputeIsotropicElasticityTensor
+    youngs_modulus = 2e5
+    poissons_ratio = 0.3
+  [../]
+  [./temp_dep_hardening]
+    type = TemperatureDependentHardeningStressUpdate
+    hardening_functions = &#x27;hf1 hf2&#x27;
+    temperatures = &#x27;300.0 800.0&#x27;
+    relative_tolerance = 1e-25
+    absolute_tolerance = 1e-5
+    temperature = temp
+  [../]
+  [./radial_return_stress]
+    type = ComputeMultipleInelasticStress
+    tangent_operator = elastic
+    inelastic_models = &#x27;temp_dep_hardening&#x27;
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;PJFNK&#x27;
+
+  petsc_options = &#x27;-snes_ksp_ew&#x27;
+  petsc_options_iname = &#x27;-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter&#x27;
+  petsc_options_value = &#x27;201                hypre    boomeramg      4&#x27;
+
+  line_search = &#x27;none&#x27;
+
+  l_max_its = 100
+  nl_max_its = 100
+  nl_rel_tol = 1e-12
+  nl_abs_tol = 1e-10
+  l_tol = 1e-9
+
+  start_time = 0.0
+  end_time = 6
+  dt = 0.1
+[]
+
+[Outputs]
+  [./out]
+    type = Exodus
+  [../]
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="f8d822b7-b4f9-4a93-9709-9b79a3bd98f7"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</h4><pre class="moose-pre"><code class="language-text">#
+# This is a test of the piece-wise linear strain hardening model using the
+# small strain formulation.  This test exercises the temperature-dependent
+# hardening curve capability.
+#
+# Test procedure:
+# 1. The element is pulled to and then beyond the yield stress for a given
+# temperature.
+# 2. The displacement is then constant while the temperature increases and
+# the yield stress decreases.  This results in a lower stress with more
+# plastic strain.
+# 3. The temperature decreases beyond its original value giving a higher
+# yield stress.  The displacement increases, causing increases stress to
+# the new yield stress.
+# 4. The temperature and yield stress are constant with increasing
+# displacement giving a constant stress and more plastic strain.
+#
+# Plotting total_strain_yy on the x axis and stress_yy on the y axis shows
+# the stress history in a clear way.
+#
+#  s |
+#  t |            *****
+#  r |           *
+#  e |   *****  *
+#  s |  *    * *
+#  s | *     *
+#    |*
+#    +------------------
+#           total strain
+#
+# The exact same problem was run in Abaqus with exactly the same result.
+
+[Mesh]
+  type = GeneratedMesh
+  dim = 3
+  nx = 1
+  ny = 1
+  nz = 1
+  # This test uses ElementalVariableValue postprocessors on specific
+  # elements, so element numbering needs to stay unchanged
+  allow_renumbering = false
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+[]
+
+[AuxVariables]
+  [./temp]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 500.0
+  [../]
+[]
+
+[AuxKernels]
+  [./temp_aux]
+    type = FunctionAux
+    variable = temp
+    function = temp_hist
+  [../]
+[]
+
+[Functions]
+  [./top_pull]
+    type = PiecewiseLinear
+    x = &#x27;0 1     2    4    5    6&#x27;
+    y = &#x27;0 0.025 0.05 0.05 0.06 0.085&#x27;
+  [../]
+  [./hf1]
+    type = PiecewiseLinear
+    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
+    y = &#x27;5000 5030 5060 5090 5300&#x27;
+  [../]
+  [./hf2]
+    type = PiecewiseLinear
+    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
+    y = &#x27;4000 4020 4040 4060 4200&#x27;
+  [../]
+  [./temp_hist]
+    type = PiecewiseLinear
+    x = &#x27;0   1   2   3   4&#x27;
+    y = &#x27;500 500 500 600 400&#x27;
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [./all]
+    strain = SMALL
+    incremental = true
+    add_variables = true
+    generate_output = &#x27;stress_yy strain_yy plastic_strain_xx plastic_strain_yy plastic_strain_zz&#x27;
+  [../]
+[]
+
+
+[BCs]
+  [./y_pull_function]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = 3
+    function = top_pull
+  [../]
+  [./x_bot]
+    type = DirichletBC
+    variable = disp_x
+    boundary = 4
+    value = 0.0
+  [../]
+  [./y_bot]
+    type = DirichletBC
+    variable = disp_y
+    boundary = 1
+    value = 0.0
+  [../]
+  [./z_bot]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 0
+    value = 0.0
+  [../]
+[]
+
+[Postprocessors]
+  [./stress_yy_el]
+    type = ElementalVariableValue
+    variable = stress_yy
+    elementid = 0
+  [../]
+[]
+
+[Materials]
+  [./elasticity_tensor]
+    type = ComputeIsotropicElasticityTensor
+    youngs_modulus = 2e5
+    poissons_ratio = 0.3
+  [../]
+  [./temp_dep_hardening]
+    type = TemperatureDependentHardeningStressUpdate
+    hardening_functions = &#x27;hf1 hf2&#x27;
+    temperatures = &#x27;300.0 800.0&#x27;
+    relative_tolerance = 1e-25
+    absolute_tolerance = 1e-5
+    temperature = temp
+  [../]
+  [./radial_return_stress]
+    type = ComputeMultipleInelasticStress
+    tangent_operator = elastic
+    inelastic_models = &#x27;temp_dep_hardening&#x27;
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;PJFNK&#x27;
+
+  petsc_options = &#x27;-snes_ksp_ew&#x27;
+  petsc_options_iname = &#x27;-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter&#x27;
+  petsc_options_value = &#x27;201                hypre    boomeramg      4&#x27;
+
+  line_search = &#x27;none&#x27;
+
+  l_max_its = 100
+  nl_max_its = 100
+  nl_rel_tol = 1e-12
+  nl_abs_tol = 1e-10
+  l_tol = 1e-9
+
+  start_time = 0.0
+  end_time = 6
+  dt = 0.1
+[]
+
+[Outputs]
+  [./out]
+    type = Exodus
+  [../]
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="13e69b8a-5c81-4f2f-8bbc-a09b641edb3a"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/temperature_dependent_hardening/temp_dep_hardening.i)</h4><pre class="moose-pre"><code class="language-text">#
+# This is a test of the piece-wise linear strain hardening model using the
+# small strain formulation.  This test exercises the temperature-dependent
+# hardening curve capability.
+#
+# Test procedure:
+# 1. The element is pulled to and then beyond the yield stress for a given
+# temperature.
+# 2. The displacement is then constant while the temperature increases and
+# the yield stress decreases.  This results in a lower stress with more
+# plastic strain.
+# 3. The temperature decreases beyond its original value giving a higher
+# yield stress.  The displacement increases, causing increases stress to
+# the new yield stress.
+# 4. The temperature and yield stress are constant with increasing
+# displacement giving a constant stress and more plastic strain.
+#
+# Plotting total_strain_yy on the x axis and stress_yy on the y axis shows
+# the stress history in a clear way.
+#
+#  s |
+#  t |            *****
+#  r |           *
+#  e |   *****  *
+#  s |  *    * *
+#  s | *     *
+#    |*
+#    +------------------
+#           total strain
+#
+# The exact same problem was run in Abaqus with exactly the same result.
+
+[Mesh]
+  type = GeneratedMesh
+  dim = 3
+  nx = 1
+  ny = 1
+  nz = 1
+  # This test uses ElementalVariableValue postprocessors on specific
+  # elements, so element numbering needs to stay unchanged
+  allow_renumbering = false
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+[]
+
+[AuxVariables]
+  [./temp]
+    order = FIRST
+    family = LAGRANGE
+    initial_condition = 500.0
+  [../]
+[]
+
+[AuxKernels]
+  [./temp_aux]
+    type = FunctionAux
+    variable = temp
+    function = temp_hist
+  [../]
+[]
+
+[Functions]
+  [./top_pull]
+    type = PiecewiseLinear
+    x = &#x27;0 1     2    4    5    6&#x27;
+    y = &#x27;0 0.025 0.05 0.05 0.06 0.085&#x27;
+  [../]
+  [./hf1]
+    type = PiecewiseLinear
+    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
+    y = &#x27;5000 5030 5060 5090 5300&#x27;
+  [../]
+  [./hf2]
+    type = PiecewiseLinear
+    x = &#x27;0.0  0.01 0.02 0.03 0.1&#x27;
+    y = &#x27;4000 4020 4040 4060 4200&#x27;
+  [../]
+  [./temp_hist]
+    type = PiecewiseLinear
+    x = &#x27;0   1   2   3   4&#x27;
+    y = &#x27;500 500 500 600 400&#x27;
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [./all]
+    strain = SMALL
+    incremental = true
+    add_variables = true
+    generate_output = &#x27;stress_yy strain_yy plastic_strain_xx plastic_strain_yy plastic_strain_zz&#x27;
+  [../]
+[]
+
+
+[BCs]
+  [./y_pull_function]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = 3
+    function = top_pull
+  [../]
+  [./x_bot]
+    type = DirichletBC
+    variable = disp_x
+    boundary = 4
+    value = 0.0
+  [../]
+  [./y_bot]
+    type = DirichletBC
+    variable = disp_y
+    boundary = 1
+    value = 0.0
+  [../]
+  [./z_bot]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 0
+    value = 0.0
+  [../]
+[]
+
+[Postprocessors]
+  [./stress_yy_el]
+    type = ElementalVariableValue
+    variable = stress_yy
+    elementid = 0
+  [../]
+[]
+
+[Materials]
+  [./elasticity_tensor]
+    type = ComputeIsotropicElasticityTensor
+    youngs_modulus = 2e5
+    poissons_ratio = 0.3
+  [../]
+  [./temp_dep_hardening]
+    type = TemperatureDependentHardeningStressUpdate
+    hardening_functions = &#x27;hf1 hf2&#x27;
+    temperatures = &#x27;300.0 800.0&#x27;
+    relative_tolerance = 1e-25
+    absolute_tolerance = 1e-5
+    temperature = temp
+  [../]
+  [./radial_return_stress]
+    type = ComputeMultipleInelasticStress
+    tangent_operator = elastic
+    inelastic_models = &#x27;temp_dep_hardening&#x27;
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;PJFNK&#x27;
+
+  petsc_options = &#x27;-snes_ksp_ew&#x27;
+  petsc_options_iname = &#x27;-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter&#x27;
+  petsc_options_value = &#x27;201                hypre    boomeramg      4&#x27;
+
+  line_search = &#x27;none&#x27;
+
+  l_max_its = 100
+  nl_max_its = 100
+  nl_rel_tol = 1e-12
+  nl_abs_tol = 1e-10
+  l_tol = 1e-9
+
+  start_time = 0.0
+  end_time = 6
+  dt = 0.1
+[]
+
+[Outputs]
+  [./out]
+    type = Exodus
+  [../]
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#623a3079-ce80-41b3-8daf-f722f665c6f5" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#aa05cd2a-1135-4228-abdf-0b2fdee655bf" class="tooltipped" data-position="left" data-tooltip="Isotropic Plasticity">Isotropic Plasticity</a></li><li><a href="#99248dbe-b140-459d-bcde-07fdda9ac8e9" class="tooltipped" data-position="left" data-tooltip="Example Input File">Example Input File</a></li><li><a href="#5449ceed-94dd-440c-ac35-44204873d66f" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>

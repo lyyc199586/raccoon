@@ -1,0 +1,338 @@
+<!DOCTYPE html><head><meta charset="UTF-8"><title>RayTracingMeshOutput | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="9c72bd6e-d795-474f-bd4d-90c890646393"><i class="material-icons">menu</i></a><ul class="sidenav" id="9c72bd6e-d795-474f-bd4d-90c890646393"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">outputs</span><a href="#" class="breadcrumb">RayTracingMeshOutput</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="1f4f51fb-f310-477e-8b1a-3d870574c93d" data-section-level="1" data-section-text="RayTracingMeshOutput"><h1 id="raytracingmeshoutput">RayTracingMeshOutput</h1><p><code>RayTracingMeshOutput</code> is the base class for the output of rays traced with the <a href="../../modules/ray_tracing/index.html">Ray Tracing Module</a> as 1D elements in a mesh format. Exodus and Nemesis mesh formats are currently supported and are found in <a href="RayTracingExodus.html">RayTracingExodus</a> and <a href="RayTracingNemesis.html">RayTracingNemesis</a>, respectively. The information that follows pertains to both Exodus and Nemesis output&mdash;the only difference is the format in which the mesh is output. In order to output traced rays, you must enable the caching of the trace information in the <a href="../userobjects/RayTracingStudy.html">RayTracingStudy</a> (see <a href="RayTracingMeshOutput.html#trace-caching">Trace Caching</a>).</p><p>Each segment of the <a href="../raytracing/Ray.html">Ray</a> (the portion of the trace within an element) is represented as a 1D, edge element. This enables the overlaying of the traced rays on the actual mesh with ease using visualization software such as Paraview.</p><p></p><section class="scrollspy" id="c64cf109-095b-4a45-962a-32336996949a" data-section-level="2" data-section-text="Ray Information Output"><h2 id="ray-information-output">Ray Information Output</h2><p>Information on each segment can also be output. In the most general form, the information is output as a constant value on the Ray segment. The supported output for information on a <a href="../raytracing/Ray.html">Ray</a> is as follows:</p><ul class="browser-default"><li><p>All of the data on the <a href="../raytracing/Ray.html">Ray</a>, enabled by <a href="#72f733fc-c79e-4e85-a9a2-9aa414a719d4" class="moose-modal-link modal-trigger">&quot;output_data&quot;</a>. </p></li><li><p>All of the auxiliary data on the <a href="../raytracing/Ray.html">Ray</a>, enabled by <a href="#55701ba5-5272-4cd3-b419-128b1c0445ec" class="moose-modal-link modal-trigger">&quot;output_aux_data&quot;</a>. </p></li><li><p>The <a href="../raytracing/Ray.html">Ray</a> ID, enabled by appending <code>ray_id</code> to the <a href="#539a7588-4f9d-48d9-88a9-7be4b0a9bcfe" class="moose-modal-link modal-trigger">&quot;output_properties&quot;</a> parameter. </p></li><li><p>The number of intersections the <a href="../raytracing/Ray.html">Ray</a> has encountered up to a segment, enabled by appending <code>intersections</code> to the <a href="#e7ce87d6-ba11-42a8-9c55-a207538a726a" class="moose-modal-link modal-trigger">&quot;output_properties&quot;</a> parameter. </p></li><li><p>The processor ID that the segment was executed on, enabled by appending <code>pid</code> to the <a href="#205d3985-9ad1-4a5b-9617-b111bd7763b1" class="moose-modal-link modal-trigger">&quot;output_properties&quot;</a> parameter. </p></li><li><p>The number of processor crossings that the <a href="../raytracing/Ray.html">Ray</a> has encountered up to a segment, enabled by appending <code>processor_crossings</code> to the <a href="#ff5a7cd1-8827-4120-84be-69736a314798" class="moose-modal-link modal-trigger">&quot;output_properties&quot;</a> parameter. </p></li><li><p>The number of trajectory changes that the <a href="../raytracing/Ray.html">Ray</a> has encountered up to a segment, enabled by appending <code>trajectory_changes</code> to the <a href="#bf57edef-fd4a-473a-9c20-2328b59dcac7" class="moose-modal-link modal-trigger">&quot;output_properties&quot;</a> parameter.</p></li></ul><p>Note that the representation of data on a <a href="../raytracing/Ray.html">Ray</a> segment as a constant value is an approximation. When this data is a represented as a constant value, the data is sampled at the furthest point of the trace after <a href="../../syntax/RayKernels/index.html">RayKernels</a> and <a href="../../syntax/RayBCs/index.html">RayBCs</a> are executed on it. Another form of approximation available is the output of this data in a nodal sense, where the data are sampled at both points on the segments and represented linearly. This is enabled by the <a href="#48ba42d6-68c7-4da7-a233-e970d3692020" class="moose-modal-link modal-trigger">&quot;output_data_nodal&quot;</a> parameter.</p></section><section class="scrollspy" id="3bc599c8-3a56-4248-af24-05a978f7a4e9" data-section-level="2" data-section-text="Trace Caching"><h2 id="trace-caching">Trace Caching</h2><p><code>RayTracingMeshOutput</code> uses cached information about the traces to produce this output. By default, this caching is not enabled in the <a href="../userobjects/RayTracingStudy.html">RayTracingStudy</a>.</p><p>The default method in <a href="../userobjects/RayTracingStudy.html">RayTracingStudy</a> makes use of the <a href="#378dec56-cbe9-477e-96dd-b7423b2e023e" class="moose-modal-link modal-trigger">&quot;always_cache_traces&quot;</a> parameter, which enables the caching of all traces. In addition, if you wish to output <a href="../raytracing/Ray.html">Ray</a> data or auxiliary data, you must set true the <a href="#32ac0702-07bd-47b5-ae02-6db59a1f5a29" class="moose-modal-link modal-trigger">&quot;data_on_cache_traces&quot;</a> and <a href="#d34af73b-6f41-4d33-9d9d-d2fc7ce0537d" class="moose-modal-link modal-trigger">&quot;aux_data_on_cache_traces&quot;</a> parameters, respectively.</p><p>In simulations in which many rays are traced, storing and outputting each segment could be constrained by memory or could be computationally expensive. With this, there is also an option to represent the traces with as little information as possible. This option stores the cached information about the traces only when the <a href="../raytracing/Ray.html">Ray</a> trajectory has changed or when the <a href="../raytracing/Ray.html">Ray</a> has crossed a processor. This functionality is enabled by the <a href="#1ed5f781-7ab9-4103-9a50-036f4f7da635" class="moose-modal-link modal-trigger">&quot;segments_on_cache_traces&quot;</a> parameter in the <a href="../userobjects/RayTracingStudy.html">RayTracingStudy</a>.</p></section><section class="scrollspy" id="d1d68e43-3243-496d-a368-8d0389834ddf" data-section-level="2" data-section-text="Example"><h2 id="example">Example</h2><p>As an example, we are going to output the segment-wise accumulated integral for the simple diffusion variable integral example described in <a href="../../modules/ray_tracing/examples/line_integrals.html">Computing Line Integrals</a>.</p><p>To recap, we begin with the &quot;simple diffusion&quot; problem:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 5
+    ny = 5
+    xmax = 5
+    ymax = 5
+  []
+[]
+
+[Variables/u]
+[]
+
+[Kernels/diff]
+  type = Diffusion
+  variable = u
+[]
+
+[BCs]
+  [left]
+    type = DirichletBC
+    variable = u
+    boundary = left
+    value = 0
+  []
+  [right]
+    type = DirichletBC
+    variable = u
+    boundary = right
+    value = 1
+  []
+[]
+
+[Executioner]
+  type = Steady
+  solve_type = &#x27;PJFNK&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_hypre_type&#x27;
+  petsc_options_value = &#x27;hypre boomeramg&#x27;
+[]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#d03cdeb7-a25e-4410-a769-bc07937f21bd">(moose/modules/ray_tracing/test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i)</a><p>A <a href="../userobjects/RepeatableRayStudy.html">RepeatableRayStudy</a> is utilized that computes the integral of the variable <span class="moose-katex-inline-equation" id="moose-equation-2acae218-6e0d-45e3-afc5-79985529ecba"><script>var element = document.getElementById("moose-equation-2acae218-6e0d-45e3-afc5-79985529ecba");katex.render("u", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> from <span class="moose-katex-inline-equation" id="moose-equation-6d7b5965-7792-4776-b5e1-815c9782d150"><script>var element = document.getElementById("moose-equation-6d7b5965-7792-4776-b5e1-815c9782d150");katex.render("(0, 0)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> to <span class="moose-katex-inline-equation" id="moose-equation-b374ab23-9968-4400-8bc8-e730cfc6f3d8"><script>var element = document.getElementById("moose-equation-b374ab23-9968-4400-8bc8-e730cfc6f3d8");katex.render("(5, 5)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and from <span class="moose-katex-inline-equation" id="moose-equation-d8e06db9-114e-4a87-a15c-fe99451a34fe"><script>var element = document.getElementById("moose-equation-d8e06db9-114e-4a87-a15c-fe99451a34fe");katex.render("(5, 0)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> to <span class="moose-katex-inline-equation" id="moose-equation-fdda3e75-95c9-431d-86c8-71e4b6b28aba"><script>var element = document.getElementById("moose-equation-fdda3e75-95c9-431d-86c8-71e4b6b28aba");katex.render("(5, 5)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[UserObjects/study]
+  type = RepeatableRayStudy
+  names = &#x27;diag
+           right_up&#x27;
+  start_points = &#x27;0 0 0
+                  5 0 0&#x27;
+  end_points = &#x27;5 5 0
+                5 5 0&#x27;
+
+  execute_on = TIMESTEP_END
+
+  # Needed to cache trace information for RayTracingMeshOutput
+  # always_cache_traces = true
+  # Needed to cache Ray data for RayTracingMeshOutput
+  # data_on_cache_traces = true
+[]
+
+[RayKernels/u_integral]
+  type = VariableIntegralRayKernel
+  variable = u
+[]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#67266cce-49bc-449e-a60f-5ec74561b21b">(moose/modules/ray_tracing/test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i)</a><p>Take note that we must enable the commented out parameters <a href="#0fd217b7-2c00-4dfb-bb86-de8e869d79ec" class="moose-modal-link modal-trigger">&quot;always_cache_traces&quot;</a> and <a href="#d1b91582-cbbd-4db4-bdd3-3d38de0acd48" class="moose-modal-link modal-trigger">&quot;data_on_cache_traces&quot;</a> in order to enable the caching of information needed for the output.</p><p>Lastly, we are going to add a <a href="RayTracingExodus.html">RayTracingExodus</a> output object that will output the traces in Exodus format. For Nemesis format, simply use <a href="RayTracingNemesis.html">RayTracingNemesis</a>.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Outputs]
+  exodus = false
+  csv = true
+  [rays]
+    type = RayTracingExodus
+    study = study
+    output_data = false # enable for data output
+    output_data_nodal = false # enable for nodal data output
+    execute_on = NONE # TIMESTEP_END for Ray mesh output
+  []
+[]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#b9df82d5-2766-401b-80eb-89f02aca2e38">(moose/modules/ray_tracing/test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i)</a><p>In order to enable this output, we will set <a href="#e60e044a-8900-4ad0-b239-798f6d43ab0c" class="moose-modal-link modal-trigger">&quot;execute_on&quot;</a> to <code>TIMESTEP_END</code> as per the comment.</p><section id="c9643f68-2067-41e8-95e9-101db62ace29" data-section-level="3" data-section-text="Running the Example"><h3 id="running-the-example">Running the Example</h3><p>First, we will run the example with constant data for the integrated value on each segment:</p><pre class="moose-pre"><code class="language-text">
+./ray_tracing-opt -i test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i UserObjects/study/always_cache_traces=true UserObjects/study/data_on_cache_traces=true Outputs/rays/output_data=true Outputs/rays/execute_on=TIMESTEP_END
+</code></pre><p>Overlaying the standard output of the problem, <code>simple_diffusion_line_integral_out.e</code>, with the ray output, <code>simple_diffusion_line_integral_rays.e</code> and visualizing the <code>u_integral_value</code> variable on the ray output mesh, we obtain the result below in <a href="#constant">Figure 1</a>.</p><div class="card moose-float" style="width:70%;" id="constant"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../large_media/ray_tracing/simple_diffusion_line_integral_rays_constant.png"></img></picture><p class="moose-caption"><span class="moose-caption-heading">Figure 1: </span><span class="moose-caption-text">Simple diffusion line integral example result with Ray integral value overlay.</span></p></div></div><p>Second, we will instead plot the ray data in a nodal sense, in which the value on a segment is represented in a linear fashion with its start and end point values. This is done by enabling enabling <a href="#46362c19-c75b-4687-b2f4-3aa57f69b257" class="moose-modal-link modal-trigger">&quot;output_data_nodal&quot;</a>, as:</p><pre class="moose-pre"><code class="language-text">
+./ray_tracing-opt -i test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.iUserObjects/study/always_cache_traces=true UserObjects/study/data_on_cache_traces=true Outputs/rays/output_data_nodal=true Outputs/rays/execute_on=TIMESTEP_END
+</code></pre><p>Again, overlaying the ray mesh result on the problem result we obtain the result below in <a href="#nodal">Figure 2</a>.</p><div class="card moose-float" style="width:70%;" id="nodal"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../large_media/ray_tracing/simple_diffusion_line_integral_rays_nodal.png"></img></picture><p class="moose-caption"><span class="moose-caption-heading">Figure 2: </span><span class="moose-caption-text">Simple diffusion line integral example result with Ray integral value overlay and nodal output enabled.</span></p></div></div></section></section></section><div class="moose-modal modal" id="72f733fc-c79e-4e85-a9a2-9aa414a719d4"><div class="modal-content"><h4>output_data</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to also output the Ray's data</p></div></div><div class="moose-modal modal" id="55701ba5-5272-4cd3-b419-128b1c0445ec"><div class="modal-content"><h4>output_aux_data</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to also output the Ray's aux data</p></div></div><div class="moose-modal modal" id="539a7588-4f9d-48d9-88a9-7be4b0a9bcfe"><div class="modal-content"><h4>output_properties</h4><p class="moose-parameter-description-default"><span>Default:</span>ray_id intersections</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>ray_id, intersections, pid, processor_crossings, trajectory_changes</p><p class="moose-parameter-description"><span>Description:</span>Which Ray properties to output</p></div></div><div class="moose-modal modal" id="e7ce87d6-ba11-42a8-9c55-a207538a726a"><div class="modal-content"><h4>output_properties</h4><p class="moose-parameter-description-default"><span>Default:</span>ray_id intersections</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>ray_id, intersections, pid, processor_crossings, trajectory_changes</p><p class="moose-parameter-description"><span>Description:</span>Which Ray properties to output</p></div></div><div class="moose-modal modal" id="205d3985-9ad1-4a5b-9617-b111bd7763b1"><div class="modal-content"><h4>output_properties</h4><p class="moose-parameter-description-default"><span>Default:</span>ray_id intersections</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>ray_id, intersections, pid, processor_crossings, trajectory_changes</p><p class="moose-parameter-description"><span>Description:</span>Which Ray properties to output</p></div></div><div class="moose-modal modal" id="ff5a7cd1-8827-4120-84be-69736a314798"><div class="modal-content"><h4>output_properties</h4><p class="moose-parameter-description-default"><span>Default:</span>ray_id intersections</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>ray_id, intersections, pid, processor_crossings, trajectory_changes</p><p class="moose-parameter-description"><span>Description:</span>Which Ray properties to output</p></div></div><div class="moose-modal modal" id="bf57edef-fd4a-473a-9c20-2328b59dcac7"><div class="modal-content"><h4>output_properties</h4><p class="moose-parameter-description-default"><span>Default:</span>ray_id intersections</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>ray_id, intersections, pid, processor_crossings, trajectory_changes</p><p class="moose-parameter-description"><span>Description:</span>Which Ray properties to output</p></div></div><div class="moose-modal modal" id="48ba42d6-68c7-4da7-a233-e970d3692020"><div class="modal-content"><h4>output_data_nodal</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to output the Ray's data in a nodal sense, in which the data is interpolated linearly across segments</p></div></div><div class="moose-modal modal" id="378dec56-cbe9-477e-96dd-b7423b2e023e"><div class="modal-content"><h4>always_cache_traces</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to cache the Ray traces on every execution, primarily for use in output. Warning: this can get expensive very quick with a large number of rays!</p></div></div><div class="moose-modal modal" id="32ac0702-07bd-47b5-ae02-6db59a1f5a29"><div class="modal-content"><h4>data_on_cache_traces</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to also cache the Ray's data when caching its traces</p></div></div><div class="moose-modal modal" id="d34af73b-6f41-4d33-9d9d-d2fc7ce0537d"><div class="modal-content"><h4>aux_data_on_cache_traces</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to also cache the Ray's aux data when caching its traces</p></div></div><div class="moose-modal modal" id="1ed5f781-7ab9-4103-9a50-036f4f7da635"><div class="modal-content"><h4>segments_on_cache_traces</h4><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to cache individual segments when trace caching is enabled. If false, we will instead cache a segment for each part of the trace where the direction is the same. This minimizes the number of segments requied to represent the Ray's path, but removes the ability to show Ray field data on each segment through an element.</p></div></div><div class="moose-modal modal" id="d03cdeb7-a25e-4410-a769-bc07937f21bd"><div class="modal-content"><h4>(moose/modules/ray_tracing/test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 5
+    ny = 5
+    xmax = 5
+    ymax = 5
+  []
+[]
+
+[Variables/u]
+[]
+
+[Kernels/diff]
+  type = Diffusion
+  variable = u
+[]
+
+[BCs]
+  [left]
+    type = DirichletBC
+    variable = u
+    boundary = left
+    value = 0
+  []
+  [right]
+    type = DirichletBC
+    variable = u
+    boundary = right
+    value = 1
+  []
+[]
+
+[Executioner]
+  type = Steady
+  solve_type = &#x27;PJFNK&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_hypre_type&#x27;
+  petsc_options_value = &#x27;hypre boomeramg&#x27;
+[]
+
+[Outputs]
+  exodus = false
+  csv = true
+  [rays]
+    type = RayTracingExodus
+    study = study
+    output_data = false # enable for data output
+    output_data_nodal = false # enable for nodal data output
+    execute_on = NONE # TIMESTEP_END for Ray mesh output
+  []
+[]
+
+[UserObjects/study]
+  type = RepeatableRayStudy
+  names = &#x27;diag
+           right_up&#x27;
+  start_points = &#x27;0 0 0
+                  5 0 0&#x27;
+  end_points = &#x27;5 5 0
+                5 5 0&#x27;
+
+  execute_on = TIMESTEP_END
+
+  # Needed to cache trace information for RayTracingMeshOutput
+  # always_cache_traces = true
+  # Needed to cache Ray data for RayTracingMeshOutput
+  # data_on_cache_traces = true
+[]
+
+[RayKernels/u_integral]
+  type = VariableIntegralRayKernel
+  variable = u
+[]
+
+[Postprocessors]
+  [diag_line_integral]
+    type = RayIntegralValue
+    ray_kernel = u_integral
+    ray = diag
+  []
+  [right_up_line_integral]
+    type = RayIntegralValue
+    ray_kernel = u_integral
+    ray = right_up
+  []
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="67266cce-49bc-449e-a60f-5ec74561b21b"><div class="modal-content"><h4>(moose/modules/ray_tracing/test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 5
+    ny = 5
+    xmax = 5
+    ymax = 5
+  []
+[]
+
+[Variables/u]
+[]
+
+[Kernels/diff]
+  type = Diffusion
+  variable = u
+[]
+
+[BCs]
+  [left]
+    type = DirichletBC
+    variable = u
+    boundary = left
+    value = 0
+  []
+  [right]
+    type = DirichletBC
+    variable = u
+    boundary = right
+    value = 1
+  []
+[]
+
+[Executioner]
+  type = Steady
+  solve_type = &#x27;PJFNK&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_hypre_type&#x27;
+  petsc_options_value = &#x27;hypre boomeramg&#x27;
+[]
+
+[Outputs]
+  exodus = false
+  csv = true
+  [rays]
+    type = RayTracingExodus
+    study = study
+    output_data = false # enable for data output
+    output_data_nodal = false # enable for nodal data output
+    execute_on = NONE # TIMESTEP_END for Ray mesh output
+  []
+[]
+
+[UserObjects/study]
+  type = RepeatableRayStudy
+  names = &#x27;diag
+           right_up&#x27;
+  start_points = &#x27;0 0 0
+                  5 0 0&#x27;
+  end_points = &#x27;5 5 0
+                5 5 0&#x27;
+
+  execute_on = TIMESTEP_END
+
+  # Needed to cache trace information for RayTracingMeshOutput
+  # always_cache_traces = true
+  # Needed to cache Ray data for RayTracingMeshOutput
+  # data_on_cache_traces = true
+[]
+
+[RayKernels/u_integral]
+  type = VariableIntegralRayKernel
+  variable = u
+[]
+
+[Postprocessors]
+  [diag_line_integral]
+    type = RayIntegralValue
+    ray_kernel = u_integral
+    ray = diag
+  []
+  [right_up_line_integral]
+    type = RayIntegralValue
+    ray_kernel = u_integral
+    ray = right_up
+  []
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="0fd217b7-2c00-4dfb-bb86-de8e869d79ec"><div class="modal-content"><h4>always_cache_traces</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to cache the Ray traces on every execution, primarily for use in output. Warning: this can get expensive very quick with a large number of rays!</p></div></div><div class="moose-modal modal" id="d1b91582-cbbd-4db4-bdd3-3d38de0acd48"><div class="modal-content"><h4>data_on_cache_traces</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to also cache the Ray's data when caching its traces</p></div></div><div class="moose-modal modal" id="b9df82d5-2766-401b-80eb-89f02aca2e38"><div class="modal-content"><h4>(moose/modules/ray_tracing/test/tests/raykernels/variable_integral_ray_kernel/simple_diffusion_line_integral.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 5
+    ny = 5
+    xmax = 5
+    ymax = 5
+  []
+[]
+
+[Variables/u]
+[]
+
+[Kernels/diff]
+  type = Diffusion
+  variable = u
+[]
+
+[BCs]
+  [left]
+    type = DirichletBC
+    variable = u
+    boundary = left
+    value = 0
+  []
+  [right]
+    type = DirichletBC
+    variable = u
+    boundary = right
+    value = 1
+  []
+[]
+
+[Executioner]
+  type = Steady
+  solve_type = &#x27;PJFNK&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_hypre_type&#x27;
+  petsc_options_value = &#x27;hypre boomeramg&#x27;
+[]
+
+[Outputs]
+  exodus = false
+  csv = true
+  [rays]
+    type = RayTracingExodus
+    study = study
+    output_data = false # enable for data output
+    output_data_nodal = false # enable for nodal data output
+    execute_on = NONE # TIMESTEP_END for Ray mesh output
+  []
+[]
+
+[UserObjects/study]
+  type = RepeatableRayStudy
+  names = &#x27;diag
+           right_up&#x27;
+  start_points = &#x27;0 0 0
+                  5 0 0&#x27;
+  end_points = &#x27;5 5 0
+                5 5 0&#x27;
+
+  execute_on = TIMESTEP_END
+
+  # Needed to cache trace information for RayTracingMeshOutput
+  # always_cache_traces = true
+  # Needed to cache Ray data for RayTracingMeshOutput
+  # data_on_cache_traces = true
+[]
+
+[RayKernels/u_integral]
+  type = VariableIntegralRayKernel
+  variable = u
+[]
+
+[Postprocessors]
+  [diag_line_integral]
+    type = RayIntegralValue
+    ray_kernel = u_integral
+    ray = diag
+  []
+  [right_up_line_integral]
+    type = RayIntegralValue
+    ray_kernel = u_integral
+    ray = right_up
+  []
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="e60e044a-8900-4ad0-b239-798f6d43ab0c"><div class="modal-content"><h4>execute_on</h4><p class="moose-parameter-description-default"><span>Default:</span>TIMESTEP_END</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>ExecFlagEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, INITIAL, LINEAR, NONLINEAR, TIMESTEP_END, TIMESTEP_BEGIN, FINAL, CUSTOM, PRE_KERNELS</p><p class="moose-parameter-description"><span>Description:</span>The list of flag(s) indicating when this object should be executed, the available options include NONE, INITIAL, LINEAR, NONLINEAR, TIMESTEP_END, TIMESTEP_BEGIN, FINAL, CUSTOM.</p></div></div><div class="moose-modal modal" id="46362c19-c75b-4687-b2f4-3aa57f69b257"><div class="modal-content"><h4>output_data_nodal</h4><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not to output the Ray's data in a nodal sense, in which the data is interpolated linearly across segments</p></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#c64cf109-095b-4a45-962a-32336996949a" class="tooltipped" data-position="left" data-tooltip="Ray Information Output">Ray Information Output</a></li><li><a href="#3bc599c8-3a56-4248-af24-05a978f7a4e9" class="tooltipped" data-position="left" data-tooltip="Trace Caching">Trace Caching</a></li><li><a href="#d1d68e43-3243-496d-a368-8d0389834ddf" class="tooltipped" data-position="left" data-tooltip="Example">Example</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>

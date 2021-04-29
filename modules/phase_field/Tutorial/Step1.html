@@ -1,0 +1,133 @@
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Step 1 Make a Simple Test Model | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="6dc672d9-03fc-44a2-8085-b1e2983c274f"><i class="material-icons">menu</i></a><ul class="sidenav" id="6dc672d9-03fc-44a2-8085-b1e2983c274f"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href="../.." class="breadcrumb">modules</a><a href=".." class="breadcrumb">phase_field</a><span class="breadcrumb">Tutorial</span><a href="#" class="breadcrumb">Step1</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="3003203d-0b65-4932-9fbf-30ea32483c23" data-section-level="1" data-section-text="Step 1 : Make a Simple Test Model"><h1 id="step-1-make-a-simple-test-model">Step 1: Make a Simple Test Model</h1><p>The input file for this step can be found here: <a href="https://github.com/idaholab/moose/blob/devel/modules/phase_field/tutorials/spinodal_decomposition/s1_testmodel.i">s1_testmodel.i</a></p><section class="scrollspy" id="442d6afd-38da-4c87-8900-e6d9aa787668" data-section-level="2" data-section-text="Input File Blocks"><h2 id="input-file-blocks">Input File Blocks</h2><p>We are going to start with the simplest input file we can. We will add on more features and make the model more accurate as we go. We will be using the <a href="../Phase_Field_Equations.html">Split Cahn-Hilliard</a> method because it converges faster than the direct method. The basic blocks we need are: Mesh, Variables, ICs, BCs, Kernels, Materials, Precoditioning, Executioner, and Outputs.</p><section id="d40312a7-f9f1-4b49-b4e5-82caf0923d15" data-section-level="3" data-section-text="Mesh"><h3 id="mesh">Mesh</h3><p>The mesh block is going to create a two dimensional mesh that is 25nm × 25nm and has 100 × 100 elements.</p><pre class="moose-pre"><code class="language-yaml">
+[Mesh]
+  # generate a 2D, 25nm x 25nm mesh
+  type = GeneratedMesh
+  dim = 2
+  elem_type = QUAD4
+  nx = 100
+  ny = 100
+  nz = 0
+  xmin = 0
+  xmax = 25
+  ymin = 0
+  ymax = 25
+  zmin = 0
+  zmax = 0
+[]
+</code></pre></section><section id="09fb5d8e-9580-4015-8811-17463b4ba630" data-section-level="3" data-section-text="Variables"><h3 id="variables">Variables</h3><p>Because we are using the split form, two variables are defined, the mole fraction of chromium and the chemical potential.</p><pre class="moose-pre"><code class="language-yaml">
+[Variables]
+  [./c]   # Mole fraction of Cr (unitless)
+    order = FIRST
+    family = LAGRANGE
+  [../]
+  [./w]   # Chemical potential (eV/mol)
+    order = FIRST
+    family = LAGRANGE
+  [../]
+[]
+</code></pre></section><section id="35f46626-ada5-4533-8527-3a3625739ec2" data-section-level="3" data-section-text="ICs"><h3 id="ics">ICs</h3><p>To start off we want to check our second expectation. That is, that the surface will minimize its interface region by forming circular or straight line regions. To do this, we will use a Bounding Box Initial Condition with the equilibrium concentrations we calculated from the free energy density curve.</p><pre class="moose-pre"><code class="language-yaml">
+[ICs]
+  # Use a bounding box IC at equilibrium concentrations to make sure the
+  # model behaves as expected.
+  [./testIC]
+    type = BoundingBoxIC
+    variable = c
+    x1 = 5
+    x2 = 20
+    y1 = 5
+    y2 = 20
+    inside = 0.823
+    outside = 0.236
+  [../]
+[]
+</code></pre></section><section id="5fd2b17e-f03d-4b0b-be9f-088bbdaee65a" data-section-level="3" data-section-text="BCs"><h3 id="bcs">BCs</h3><p>It is common in phase field simulations to use periodic boundary conditions.</p><pre class="moose-pre"><code class="language-yaml">
+[BCs]
+  # periodic BC as is usually done on phase-field models
+  [./Periodic]
+    [./c_bcs]
+      auto_direction = &#x27;x y&#x27;
+    [../]
+  [../]
+[]
+</code></pre></section><section id="b3910319-333d-4d53-9e07-6f1c5e6e8c6b" data-section-level="3" data-section-text="Kernels"><h3 id="kernels">Kernels</h3><p>We will use the kernels specified for the split Cahn-Hilliard equation. Note that here we name the free energy function, the mobility, and the gradient energy coefficient &quot;f_loc&quot;, &quot;M&quot;, and &quot;kappa_c&quot; respectively. These have the same names in the materials block.</p><pre class="moose-pre"><code class="language-yaml">
+[Kernels]
+  [./w_dot]
+    variable = w
+    v = c
+    type = CoupledTimeDerivative
+  [../]
+  [./coupled_res]
+    variable = w
+    type = SplitCHWRes
+    mob_name = M
+  [../]
+  [./coupled_parsed]
+    variable = c
+    type = SplitCHParsed
+    f_name = f_loc
+    kappa_name = kappa_c
+    w = w
+  [../]
+[]
+</code></pre></section><section id="bf29b2d0-878f-4964-b19f-d15e33d84981" data-section-level="3" data-section-text="Materials"><h3 id="materials">Materials</h3><p>The materials block defines the equations and constants in the model. This is where we will define <span class="moose-katex-inline-equation" id="moose-equation-59bc77b1-1a98-4779-b6b8-c9513bac5819"><script>var element = document.getElementById("moose-equation-59bc77b1-1a98-4779-b6b8-c9513bac5819");katex.render("f_{loc}(c)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, <span class="moose-katex-inline-equation" id="moose-equation-73e796fd-fdb0-489b-be0e-02714b5661d5"><script>var element = document.getElementById("moose-equation-73e796fd-fdb0-489b-be0e-02714b5661d5");katex.render("M(c)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, and <span class="moose-katex-inline-equation" id="moose-equation-78f15761-3c1d-4558-98fa-4ff5b92ece32"><script>var element = document.getElementById("moose-equation-78f15761-3c1d-4558-98fa-4ff5b92ece32");katex.render("\\kappa", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> in MOOSE. To simplify things right now, we are going to define <span class="moose-katex-inline-equation" id="moose-equation-02ef7752-7b9b-497f-96bb-9bc0885bf7ca"><script>var element = document.getElementById("moose-equation-02ef7752-7b9b-497f-96bb-9bc0885bf7ca");katex.render("M(c)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> as a constant value rather than a function. We will also be doing unit conversions in the materials block. Note that each value has the same name as in the kernels block.</p><p>In addition to the unit conversions, it was accidentally discovered that the convergence properties can be improved by using a scaling factor, <span class="moose-katex-inline-equation" id="moose-equation-2ea48da6-7ffd-425b-9dfa-68f2d87f0b1d"><script>var element = document.getElementById("moose-equation-2ea48da6-7ffd-425b-9dfa-68f2d87f0b1d");katex.render("d", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>. Both <span class="moose-katex-inline-equation" id="moose-equation-18f62098-ee35-4402-86de-1884b0747e37"><script>var element = document.getElementById("moose-equation-18f62098-ee35-4402-86de-1884b0747e37");katex.render("f_{loc}(c)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-60948a53-71a6-4b0d-b6c5-3d377e3ef716"><script>var element = document.getElementById("moose-equation-60948a53-71a6-4b0d-b6c5-3d377e3ef716");katex.render("\\kappa", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> are multiplied by <span class="moose-katex-inline-equation" id="moose-equation-4f9cf64b-3110-40d2-862f-88441e0b8944"><script>var element = document.getElementById("moose-equation-4f9cf64b-3110-40d2-862f-88441e0b8944");katex.render("d", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, while <span class="moose-katex-inline-equation" id="moose-equation-8e32c292-dd71-4c52-8a45-36cb6317a3d2"><script>var element = document.getElementById("moose-equation-8e32c292-dd71-4c52-8a45-36cb6317a3d2");katex.render("M(c)", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is multiplied by the inverse of <span class="moose-katex-inline-equation" id="moose-equation-906fb675-8bfe-4c3b-91e8-6512ed27bd92"><script>var element = document.getElementById("moose-equation-906fb675-8bfe-4c3b-91e8-6512ed27bd92");katex.render("d", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>. This does not change the solution, but it does seem to help the convergence.</p><pre class="moose-pre"><code class="language-yaml">
+[Materials]
+  # d is a scaling factor that makes it easier for the solution to converge
+  # without changing the results. It is defined in each of the materials and
+  # must have the same value in each one.
+  [./constants]
+    # Define constant values kappa_c and M. Eventually M will be replaced with
+    # an equation rather than a constant.
+    type = GenericFunctionMaterial
+    block = 0
+    prop_names = &#x27;kappa_c M&#x27;
+    prop_values = &#x27;8.125e-16*6.24150934e+18*1e+09^2*1e-27
+                   2.2841e-26*1e+09^2/6.24150934e+18/1e-27&#x27;
+                   # kappa_c*eV_J*nm_m^2*d
+                   # M*nm_m^2/eV_J/d
+  [../]
+  [./local_energy]
+    # Defines the function for the local free energy density as given in the
+    # problem, then converts units and adds scaling factor.
+    type = DerivativeParsedMaterial
+    block = 0
+    f_name = f_loc
+    args = c
+    constant_names = &#x27;A   B   C   D   E   F   G  eV_J  d&#x27;
+    constant_expressions = &#x27;-2.446831e+04 -2.827533e+04 4.167994e+03 7.052907e+03
+                            1.208993e+04 2.568625e+03 -2.354293e+03
+                            6.24150934e+18 1e-27&#x27;
+    function = &#x27;eV_J*d*(A*c+B*(1-c)+C*c*log(c)+D*(1-c)*log(1-c)+
+                E*c*(1-c)+F*c*(1-c)*(2*c-1)+G*c*(1-c)*(2*c-1)^2)&#x27;
+  [../]
+[]
+</code></pre></section><section id="f4e5f415-12f3-4e60-a0a0-2fd33268261f" data-section-level="3" data-section-text="Preconditioning"><h3 id="preconditioning">Preconditioning</h3><p>The split Cahn-Hilliard has the best convergence properties when we use the <a href="../Solving.html">Newton solver</a>. The newton solver always requires preconditioning.</p><pre class="moose-pre"><code class="language-yaml">
+[Preconditioning]
+  [./coupled]
+    type = SMP
+    full = true
+  [../]
+[]
+</code></pre></section><section id="d9d8a5cf-7c1b-4678-97ef-3be8990a7d08" data-section-level="3" data-section-text="Executioner"><h3 id="executioner">Executioner</h3><p>The executioner block tells MOOSE how to solve the problem. Many of the values in this block are arbitrary and you can experiment with changing them to see how they change the solution. See the the <a href="/syntax/Preconditioning/index.html">Executioner</a> and <a href="/syntax/Executioner/index.html">Preconditioning</a> pages for more information on these systems.</p><p>Right now our main interest is in seeing if the model is working. So we shortened the time that the simulation runs to just be long enough to see if the grain is becoming circular.</p><pre class="moose-pre"><code class="language-yaml">
+[Executioner]
+  type = Transient
+  solve_type = NEWTON
+  l_max_its = 30
+  l_tol = 1e-6
+  nl_max_its = 50
+  nl_abs_tol = 1e-9
+  end_time = 86400   # 1 day. We only need to run this long enough to verify
+                     # the model is working properly.
+  petsc_options_iname = &#x27;-pc_type -ksp_grmres_restart -sub_ksp_type
+                         -sub_pc_type -pc_asm_overlap&#x27;
+  petsc_options_value = &#x27;asm      31                  preonly
+                         ilu          1&#x27;
+  dt = 100
+[]
+</code></pre></section><section id="e7dacd57-af89-4463-8798-9954fa8facdb" data-section-level="3" data-section-text="Outputs"><h3 id="outputs">Outputs</h3><p>The outputs block lets us decide what MOOSE tells us about the simulation. We will output the initial condition so we can compare it to the final condition.</p><pre class="moose-pre"><code class="language-yaml">
+[Outputs]
+  exodus = true
+  console = true
+  print_perf_log = true
+  output_initial = true
+[]
+</code></pre></section></section><section class="scrollspy" id="eabde13a-d6e9-4925-8772-5320eb3ea983" data-section-level="2" data-section-text="Simulation Results"><h2 id="simulation-results">Simulation Results</h2><div class="card moose-float" style="width:300px;padding-left:20px;float:right;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../large_media/phase_field/simple1out.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Final result of Simple Test Model</span></p></div></div><div class="card moose-float" style="width:300px;padding-left:20px;float:right;"><div class="card-content"><picture class="materialboxed moose-image"><img src="../../../large_media/phase_field/Simple1in.png"></img></picture><p class="moose-caption"><span class="moose-caption-text">Initial condition of Simple Test Model.</span></p></div></div><p>The first image to the right shows the initial condition of this simulation. The second image shows the end result of the simulation. The result shows that the chromium phase&#x27;s corners are rounding out and the shape is becoming more circular. This is exactly what we would expect to happen as the surface tries to reduce its free energy. This result is a promising sign that our simulation is working correctly.</p></section><section class="scrollspy" id="5a048569-7e32-4eb1-ab11-f06ae49b761b" data-section-level="2" data-section-text="Continue"><h2 id="continue">Continue</h2><p><a href="Step2.html">step 2: Make a Faster Test Model</a> </p></section></section></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#442d6afd-38da-4c87-8900-e6d9aa787668" class="tooltipped" data-position="left" data-tooltip="Input File Blocks">Input File Blocks</a></li><li><a href="#eabde13a-d6e9-4925-8772-5320eb3ea983" class="tooltipped" data-position="left" data-tooltip="Simulation Results">Simulation Results</a></li><li><a href="#5a048569-7e32-4eb1-ab11-f06ae49b761b" class="tooltipped" data-position="left" data-tooltip="Continue">Continue</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../../js/init.js"></script><script type="text/javascript" src="../../../js/navigation.js"></script><script type="text/javascript" src="../../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../../js/search_index.js"></script><script type="text/javascript" src="../../../js/sqa_moose.js"></script>

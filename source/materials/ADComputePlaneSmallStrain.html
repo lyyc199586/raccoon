@@ -1,310 +1,18 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>ADComputePlaneSmallStrain.md|RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script><script type="text/javascript" src="../../contrib/plotly/plotly.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="d79c8bb8-7179-4887-902e-da1bf6efee03"><i class="material-icons">menu</i></a><ul class="sidenav" id="d79c8bb8-7179-4887-902e-da1bf6efee03"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">materials</span><a href="#" class="breadcrumb">ADComputePlaneSmallStrain</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="c985c929-ac5a-44c5-8776-7af721ca3b87" data-section-level="1" data-section-text="Compute Plane Small Strain"><h1 id="compute-plane-small-strain">Compute Plane Small Strain</h1><p>Compute a small strain under generalized plane strain assumptions where the out of plane strain is generally nonzero.</p><section class="scrollspy" id="29fd52af-7388-42f3-8404-c3d581a09add" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p>The material <code>ADComputePlaneSmallStrain</code> calculates the small total strain for 2D plane strain problems. It can be used for classical <a href="https://en.wikipedia.org/wiki/Plane_stress">plane strain or plane stress</a> problems, or in <a href="../../modules/tensor_mechanics/generalized_plane_strain.html">Generalized Plane Strain</a> simulations.</p></section><section class="scrollspy" id="6dc0a42e-d9fa-4d61-84d8-a97e3153cf9f" data-section-level="2" data-section-text="Out of Plane Strain"><h2 id="out-of-plane-strain">Out of Plane Strain</h2><p>In the classical plane strain problem, it is assumed that the front and back surfaces of the body are constrained in the out-of-plane direction, and that the displacements in that direction on those surfaces are zero. As a result, the strain and deformation gradient components in the out-of-plane direction are held constant at zero: <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-1f1a28ee-82d4-4b63-90b5-752629b547a1"></span><span class="moose-katex-equation-number">(1)</span><script>var element = document.getElementById("moose-equation-1f1a28ee-82d4-4b63-90b5-752629b547a1");katex.render("     \\epsilon|^{dop} = 0", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> <span class="moose-katex-inline-equation" id="moose-equation-2738c885-1c81-4228-846b-a97c3a1fecbf"><script>var element = document.getElementById("moose-equation-2738c885-1c81-4228-846b-a97c3a1fecbf");katex.render("\\epsilon|^{dop}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the strain tensor diagonal component for the direction of the out-of-plane strain.</p><section id="f2af4c79-aede-4f9a-b519-83f31173024f" data-section-level="3" data-section-text="Plane Stress and Generalized Plane Strain"><h3 id="plane-stress-and-generalized-plane-strain">Plane Stress and Generalized Plane Strain</h3><p>In the cases of the plane stress and generalized plane strain assumptions, the component of strain and the deformation gradient in the out-of-plane direction is non-zero. To solve for this out-of-plane strain, we use the out-of-plane strain variable as the strain tensor component <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-9675c04a-d539-4d70-94a4-b0c362c09180"></span><span class="moose-katex-equation-number">(2)</span><script>var element = document.getElementById("moose-equation-9675c04a-d539-4d70-94a4-b0c362c09180");katex.render("     \\epsilon|^{dop} = \\epsilon|^{op}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-a939d6d6-0b83-4929-823c-8b3c79246a05"><script>var element = document.getElementById("moose-equation-a939d6d6-0b83-4929-823c-8b3c79246a05");katex.render("\\epsilon|^{dop}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the strain tensor diagonal component for the direction of the out-of-plane strain and <span class="moose-katex-inline-equation" id="moose-equation-64a19c46-e0db-4eed-97b9-62181955994d"><script>var element = document.getElementById("moose-equation-64a19c46-e0db-4eed-97b9-62181955994d");katex.render("\\epsilon|^{op}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is a prescribed out-of-plane strain value: this strain value can be given either as a scalar variable or a nonlinear field variable. The <a href="../../modules/tensor_mechanics/generalized_plane_strain.html">Generalized Plane Strain</a> problems use scalar variables. Multiple scalar variables can be provided such that one strain calculator is needed for multiple generalized plane strain models on different subdomains.</p><p>For the case of plane stress, the <a href="../kernels/ADWeakPlaneStress.html">ADWeakPlaneStress</a> kernel is used to integrate the out-of-plane component of the stress over the area of each element, and assemble that integral to the residual of the out-of-plane strain field variable. This results in a weak enforcement of the condition that the out-of-plane stress is zero, which allows for re-use of the same constitutive models for models of all dimensionality.</p></section></section><section class="scrollspy" id="3340c653-2a61-4c11-984b-6740211f2d9b" data-section-level="2" data-section-text="Strain and Deformation Gradient Formulation"><h2 id="strain-and-deformation-gradient-formulation">Strain and Deformation Gradient Formulation</h2><p>The definition of a small total linearized strain is <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-b6dfe97b-80f3-4313-af5a-30111eb45f6a"></span><span class="moose-katex-equation-number">(3)</span><script>var element = document.getElementById("moose-equation-b6dfe97b-80f3-4313-af5a-30111eb45f6a");katex.render("     \\epsilon_{ij} = \\frac{1}{2} \\left( u_{i,j} + u_{j,i}  \\right)", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> The values of each of the strain tensor components depends on the direction selected by the user as the out-of-plane direction.</p><section id="c545decc-c31b-406b-9145-2dbcd7ba665e" data-section-level="4" data-section-text="- Direction of Out - of - Plane Strain ( Default ) var element = document.getElementById("moose-equation-ceb27b66-d1ac-4054-add5-84082e975728");katex.render("Z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h4 id="direction-of-out-of-plane-strain-default"><span class="moose-katex-inline-equation" id="moose-equation-ceb27b66-d1ac-4054-add5-84082e975728"><script>var element = document.getElementById("moose-equation-ceb27b66-d1ac-4054-add5-84082e975728");katex.render("Z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain (Default)</h4><p>The default out-of-plane direction is along the <span class="moose-katex-inline-equation" id="moose-equation-9335240d-e0bc-4b04-9fd5-41f62f4b9758"><script>var element = document.getElementById("moose-equation-9335240d-e0bc-4b04-9fd5-41f62f4b9758");katex.render("z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-axis. For this direction the strain tensor, <a href="#moose-equation-c704a236-a177-4eb8-82ff-c83eb09d012f">Eq. (3)</a>, is given as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-d3c3f218-14bc-4329-9416-893313763725"></span><span class="moose-katex-equation-number">(4)</span><script>var element = document.getElementById("moose-equation-d3c3f218-14bc-4329-9416-893313763725");katex.render("     \\boldsymbol{\\epsilon} = \\begin{bmatrix}                 u_{x,x} & \\frac{1}{2} \\left(u_{x,y} + u_{y,x} \\right) & 0 \\\\                 \\frac{1}{2} \\left(u_{x,y} + u_{y,x} \\right) & u_{y,y} & 0 \\\\                 0 & 0 & \\epsilon|^{dop}               \\end{bmatrix}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-0afe9254-6355-4d82-9443-be8894c64166"><script>var element = document.getElementById("moose-equation-0afe9254-6355-4d82-9443-be8894c64166");katex.render("\\epsilon|^{dop}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is defined in <a href="#moose-equation-1f919a7f-cc27-4818-ba0a-9f36fd27010f">Eq. (2)</a>. As in the classical presentation of the strain tensor in plane strain problems, the components of the strain tensor associated with the <span class="moose-katex-inline-equation" id="moose-equation-aa4712a8-c7af-4ee0-a4ad-db058a1dc808"><script>var element = document.getElementById("moose-equation-aa4712a8-c7af-4ee0-a4ad-db058a1dc808");katex.render("z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction are zero; these zero components indicate no coupling between the in-plane and the out-of-plane strains.</p></section><section id="72c5b33e-e0c2-48bd-a248-647225058074" data-section-level="4" data-section-text="- Direction of Out - of - Plane Strain var element = document.getElementById("moose-equation-41b840c0-73dc-4135-bc73-651cb929006b");katex.render("X", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h4 id="direction-of-out-of-plane-strain"><span class="moose-katex-inline-equation" id="moose-equation-41b840c0-73dc-4135-bc73-651cb929006b"><script>var element = document.getElementById("moose-equation-41b840c0-73dc-4135-bc73-651cb929006b");katex.render("X", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain</h4><p>If the user selects the out-of-plane direction as along the <span class="moose-katex-inline-equation" id="moose-equation-549e6ab9-666a-4f77-938c-26ddad203249"><script>var element = document.getElementById("moose-equation-549e6ab9-666a-4f77-938c-26ddad203249");katex.render("x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction, the strain tensor from <a href="#moose-equation-c704a236-a177-4eb8-82ff-c83eb09d012f">Eq. (3)</a> is given as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-bd9e4da6-c0ca-4b9d-93b2-a6174c5bafc8"></span><span class="moose-katex-equation-number">(5)</span><script>var element = document.getElementById("moose-equation-bd9e4da6-c0ca-4b9d-93b2-a6174c5bafc8");katex.render("     \\boldsymbol{\\epsilon} = \\begin{bmatrix}                 \\epsilon|^{dop} & 0 & 0 \\\\                 0 & u_{y,y} & \\frac{1}{2} \\left(u_{y,z} + u_{z,y} \\right) \\\\                 0 & \\frac{1}{2} \\left(u_{y,z} + u_{z,y} \\right) & u_{z,z}               \\end{bmatrix}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> so that the off-diagonal components of the strain tensor associated with the <span class="moose-katex-inline-equation" id="moose-equation-1630d3fd-e9ec-4dd6-b231-d947b88c147a"><script>var element = document.getElementById("moose-equation-1630d3fd-e9ec-4dd6-b231-d947b88c147a");katex.render("x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction are zeros.</p></section><section id="0f814020-2bb5-4ce5-8b67-cdbb1b2bf51e" data-section-level="4" data-section-text="- Direction of Out - of - Plane Strain var element = document.getElementById("moose-equation-26c06bb5-c559-4085-9dbe-35381986c737");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h4 id="direction-of-out-of-plane-strain"><span class="moose-katex-inline-equation" id="moose-equation-26c06bb5-c559-4085-9dbe-35381986c737"><script>var element = document.getElementById("moose-equation-26c06bb5-c559-4085-9dbe-35381986c737");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain</h4><p>If the user selects the out-of-plane direction as along the <span class="moose-katex-inline-equation" id="moose-equation-03826662-7c06-4f9e-b6d2-f6baaf0d9c31"><script>var element = document.getElementById("moose-equation-03826662-7c06-4f9e-b6d2-f6baaf0d9c31");katex.render("y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction, the strain tensor from <a href="#moose-equation-c704a236-a177-4eb8-82ff-c83eb09d012f">Eq. (3)</a> is given as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-c6404df9-4141-44f9-adbb-1cfd2fc52d49"></span><span class="moose-katex-equation-number">(6)</span><script>var element = document.getElementById("moose-equation-c6404df9-4141-44f9-adbb-1cfd2fc52d49");katex.render("     \\boldsymbol{\\epsilon} = \\begin{bmatrix}                 u_{x,x} & 0 & \\frac{1}{2} \\left(u_{x,z} + u_{z,x} \\right) \\\\                 0 & \\epsilon|^{dop} & 0 \\\\                 \\frac{1}{2} \\left(u_{x,z} + u_{z,x} \\right) & 0 & u_{z,z}               \\end{bmatrix}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> so that the off-diagonal components of the strain tensor associated with the <span class="moose-katex-inline-equation" id="moose-equation-8b2234ab-0220-4ffa-9935-60f25dcf3d33"><script>var element = document.getElementById("moose-equation-8b2234ab-0220-4ffa-9935-60f25dcf3d33");katex.render("y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction are zeros.</p></section></section><section id="8c268b54-236c-46e9-b2b6-5e51667a5285" data-section-level="3" data-section-text="Volumetric Locking Correction for Strain Tensor"><h3 id="volumetric-locking-correction-for-strain-tensor">Volumetric Locking Correction for Strain Tensor</h3><p>If selected by the user, the strain tensor is conditioned with a <span class="moose-katex-inline-equation" id="moose-equation-2b2e0d8f-241e-46d1-9173-f316c63a0848"><script>var element = document.getElementById("moose-equation-2b2e0d8f-241e-46d1-9173-f316c63a0848");katex.render("\\bar{B}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> formulation to mitigate volumetric locking of the elements. The volumetric locking correction is applied to the total strain <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-d9b8f5b1-d954-4c31-af66-f53b44e3f62e"></span><span class="moose-katex-equation-number">(7)</span><script>var element = document.getElementById("moose-equation-d9b8f5b1-d954-4c31-af66-f53b44e3f62e");katex.render("     \\boldsymbol{\\epsilon}|_{vlc} = \\boldsymbol{\\epsilon} + \\frac{\\left( \\boldsymbol{\\epsilon}_V - tr(\\boldsymbol{\\epsilon}) \\right)}{3} \\cdot \\boldsymbol{I}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-b78b946b-0524-4cda-9627-37f8a05a5cf3"><script>var element = document.getElementById("moose-equation-b78b946b-0524-4cda-9627-37f8a05a5cf3");katex.render("\\boldsymbol{\\epsilon}_V", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the volumetric strain and <span class="moose-katex-inline-equation" id="moose-equation-6560ffed-9b0a-44a9-8e7b-1d124a55bb80"><script>var element = document.getElementById("moose-equation-6560ffed-9b0a-44a9-8e7b-1d124a55bb80");katex.render("\\boldsymbol{I}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the Rank-2 identity tensor. For more details about the theory behind <a href="#moose-equation-65e31e2a-41aa-49d5-8bf9-8818147015da">Eq. (7)</a> see the <a href="../../modules/tensor_mechanics/VolumetricLocking.html">Volumetric Locking Correction</a> documentation.</p></section></section><section class="scrollspy" id="bcbc80a3-cf6a-484a-92d2-ce57b999d604" data-section-level="2" data-section-text="Example Input Files"><h2 id="example-input-files">Example Input Files</h2><section id="239c8f8d-87e7-4e61-9402-704bb977b996" data-section-level="3" data-section-text="Plane Stress"><h3 id="plane-stress">Plane Stress</h3><p>The tensor mechanics <a href="../../syntax/Modules/TensorMechanics/Master/index.html">Master action</a> can be used to create the <code>ADComputePlaneSmallStrain</code> class by setting <code>planar_formulation = WEAK_PLANE_STRESS</code> and <code>strain = SMALL</code> in the <code>Master</code> action block.</p><pre class="moose-pre"><code class="language-text">[Modules/TensorMechanics/Master]
-  [plane_stress]
-    planar_formulation = WEAK_PLANE_STRESS
-    strain = SMALL
-    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy&#x27;
-    eigenstrain_names = eigenstrain
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Compute Plane Small Strain | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="0edabae9-82f8-4fc1-a3dd-e52819b3a743"><i class="material-icons">menu</i></a><ul class="sidenav" id="0edabae9-82f8-4fc1-a3dd-e52819b3a743"><li><a href="../../install/index.html">Install</a></li><li><a href="../../theory/index.html">Theory</a></li><li><a href="../../modules/index.html">Modules</a></li><li><a href="../../syntax/index.html">Syntax</a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href=".." class="breadcrumb">source</a><span class="breadcrumb">materials</span><a href="#" class="breadcrumb">ADComputePlaneSmallStrain</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="1bdea346-de36-4666-abfa-620db8039615" data-section-level="1" data-section-text="Compute Plane Small Strain"><h1 id="compute-plane-small-strain">Compute Plane Small Strain</h1><p>Compute a small strain under generalized plane strain assumptions where the out of plane strain is generally nonzero.</p><section class="scrollspy" id="20ed1ce7-7d3d-4183-875b-423339c95b40" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p>The material <code>ADComputePlaneSmallStrain</code> calculates the small total strain for 2D plane strain problems. It can be used for classical <a href="https://en.wikipedia.org/wiki/Plane_stress">plane strain or plane stress</a> problems, or in <a href="../../modules/tensor_mechanics/generalized_plane_strain.html">Generalized Plane Strain</a> simulations.</p></section><section class="scrollspy" id="5ce9c5b1-b321-4f6d-b0f1-9093cb1b41f2" data-section-level="2" data-section-text="Out of Plane Strain"><h2 id="out-of-plane-strain">Out of Plane Strain</h2><p>In the classical plane strain problem, it is assumed that the front and back surfaces of the body are constrained in the out-of-plane direction, and that the displacements in that direction on those surfaces are zero. As a result, the strain and deformation gradient components in the out-of-plane direction are held constant at zero: <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-ba83d360-13b8-495e-ba7d-9a87a62d4891"></span><span class="moose-katex-equation-number">(1)</span><script>var element = document.getElementById("moose-equation-ba83d360-13b8-495e-ba7d-9a87a62d4891");katex.render("     \\epsilon|^{dop} = 0", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> <span class="moose-katex-inline-equation" id="moose-equation-eca11eb3-96d3-4e91-b340-f85d0e722e94"><script>var element = document.getElementById("moose-equation-eca11eb3-96d3-4e91-b340-f85d0e722e94");katex.render("\\epsilon|^{dop}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the strain tensor diagonal component for the direction of the out-of-plane strain.</p><section id="35909699-57ae-4fd4-a011-166f481af286" data-section-level="3" data-section-text="Plane Stress and Generalized Plane Strain"><h3 id="plane-stress-and-generalized-plane-strain">Plane Stress and Generalized Plane Strain</h3><p>In the cases of the plane stress and generalized plane strain assumptions, the component of strain and the deformation gradient in the out-of-plane direction is non-zero. To solve for this out-of-plane strain, we use the out-of-plane strain variable as the strain tensor component <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-c483b625-a00b-4e89-a7cc-9965f212d952"></span><span class="moose-katex-equation-number">(2)</span><script>var element = document.getElementById("moose-equation-c483b625-a00b-4e89-a7cc-9965f212d952");katex.render("     \\epsilon|^{dop} = \\epsilon|^{op}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-9c2bb9df-4c16-445a-a071-036c5e91e8a6"><script>var element = document.getElementById("moose-equation-9c2bb9df-4c16-445a-a071-036c5e91e8a6");katex.render("\\epsilon|^{dop}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the strain tensor diagonal component for the direction of the out-of-plane strain and <span class="moose-katex-inline-equation" id="moose-equation-1bf0e343-7ff1-46e5-9590-a026561981f3"><script>var element = document.getElementById("moose-equation-1bf0e343-7ff1-46e5-9590-a026561981f3");katex.render("\\epsilon|^{op}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is a prescribed out-of-plane strain value: this strain value can be given either as a scalar variable or a nonlinear field variable. The <a href="../../modules/tensor_mechanics/generalized_plane_strain.html">Generalized Plane Strain</a> problems use scalar variables. Multiple scalar variables can be provided such that one strain calculator is needed for multiple generalized plane strain models on different subdomains.</p><p>For the case of plane stress, the <a href="../kernels/ADWeakPlaneStress.html">ADWeakPlaneStress</a> kernel is used to integrate the out-of-plane component of the stress over the area of each element, and assemble that integral to the residual of the out-of-plane strain field variable. This results in a weak enforcement of the condition that the out-of-plane stress is zero, which allows for re-use of the same constitutive models for models of all dimensionality.</p></section></section><section class="scrollspy" id="19229cba-62d3-4581-bb11-4db1690284ab" data-section-level="2" data-section-text="Strain and Deformation Gradient Formulation"><h2 id="strain-and-deformation-gradient-formulation">Strain and Deformation Gradient Formulation</h2><p>The definition of a small total linearized strain is <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-6dc558df-79f8-48e8-97f8-169fb975b820"></span><span class="moose-katex-equation-number">(3)</span><script>var element = document.getElementById("moose-equation-6dc558df-79f8-48e8-97f8-169fb975b820");katex.render("     \\epsilon_{ij} = \\frac{1}{2} \\left( u_{i,j} + u_{j,i}  \\right)", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> The values of each of the strain tensor components depends on the direction selected by the user as the out-of-plane direction.</p><section id="2aa56022-996f-4d7a-93f1-841e766c2836" data-section-level="4" data-section-text="- Direction of Out - of - Plane Strain ( Default ) var element = document.getElementById("moose-equation-955bb53d-fee1-467b-a9a9-2a17545c2162");katex.render("Z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h4 id="direction-of-out-of-plane-strain-default"><span class="moose-katex-inline-equation" id="moose-equation-955bb53d-fee1-467b-a9a9-2a17545c2162"><script>var element = document.getElementById("moose-equation-955bb53d-fee1-467b-a9a9-2a17545c2162");katex.render("Z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain (Default)</h4><p>The default out-of-plane direction is along the <span class="moose-katex-inline-equation" id="moose-equation-d297d17f-8f0c-4813-9aea-4c25bfb81873"><script>var element = document.getElementById("moose-equation-d297d17f-8f0c-4813-9aea-4c25bfb81873");katex.render("z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-axis. For this direction the strain tensor, <a href="#moose-equation-b122e84a-2219-4e27-8df4-f14f44ac607a">Eq. (1)</a>, is given as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-2b227964-4a7e-48f7-bfb4-a25aedd0eb06"></span><span class="moose-katex-equation-number">(4)</span><script>var element = document.getElementById("moose-equation-2b227964-4a7e-48f7-bfb4-a25aedd0eb06");katex.render("     \\boldsymbol{\\epsilon} = \\begin{bmatrix}                 u_{x,x} & \\frac{1}{2} \\left(u_{x,y} + u_{y,x} \\right) & 0 \\\\                 \\frac{1}{2} \\left(u_{x,y} + u_{y,x} \\right) & u_{y,y} & 0 \\\\                 0 & 0 & \\epsilon|^{dop}               \\end{bmatrix}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-352d3eff-768c-4036-ae85-f79a72ae1cc6"><script>var element = document.getElementById("moose-equation-352d3eff-768c-4036-ae85-f79a72ae1cc6");katex.render("\\epsilon|^{dop}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is defined in <a href="#moose-equation-86fd2c1b-14d8-4f3f-b5ae-8d19571b4988">Eq. (3)</a>. As in the classical presentation of the strain tensor in plane strain problems, the components of the strain tensor associated with the <span class="moose-katex-inline-equation" id="moose-equation-0f9ca18d-6922-464b-9db3-7612fc42c0a8"><script>var element = document.getElementById("moose-equation-0f9ca18d-6922-464b-9db3-7612fc42c0a8");katex.render("z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction are zero; these zero components indicate no coupling between the in-plane and the out-of-plane strains.</p></section><section id="9409d47d-0dc1-402b-92dc-49491da0ef58" data-section-level="4" data-section-text="- Direction of Out - of - Plane Strain var element = document.getElementById("moose-equation-bebabeea-c4bc-47af-ad50-1927b4895a23");katex.render("X", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h4 id="direction-of-out-of-plane-strain"><span class="moose-katex-inline-equation" id="moose-equation-bebabeea-c4bc-47af-ad50-1927b4895a23"><script>var element = document.getElementById("moose-equation-bebabeea-c4bc-47af-ad50-1927b4895a23");katex.render("X", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain</h4><p>If the user selects the out-of-plane direction as along the <span class="moose-katex-inline-equation" id="moose-equation-0ef264ba-b0d7-4a00-99e3-4b441ebdd2c6"><script>var element = document.getElementById("moose-equation-0ef264ba-b0d7-4a00-99e3-4b441ebdd2c6");katex.render("x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction, the strain tensor from <a href="#moose-equation-b122e84a-2219-4e27-8df4-f14f44ac607a">Eq. (1)</a> is given as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-a60e6b88-9830-4e52-9a47-981c7db9d198"></span><span class="moose-katex-equation-number">(5)</span><script>var element = document.getElementById("moose-equation-a60e6b88-9830-4e52-9a47-981c7db9d198");katex.render("     \\boldsymbol{\\epsilon} = \\begin{bmatrix}                 \\epsilon|^{dop} & 0 & 0 \\\\                 0 & u_{y,y} & \\frac{1}{2} \\left(u_{y,z} + u_{z,y} \\right) \\\\                 0 & \\frac{1}{2} \\left(u_{y,z} + u_{z,y} \\right) & u_{z,z}               \\end{bmatrix}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> so that the off-diagonal components of the strain tensor associated with the <span class="moose-katex-inline-equation" id="moose-equation-ae28c06e-7e6b-4cbc-a652-36ffa8488f04"><script>var element = document.getElementById("moose-equation-ae28c06e-7e6b-4cbc-a652-36ffa8488f04");katex.render("x", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction are zeros.</p></section><section id="caa6ff34-f20c-41cd-9e69-5a0cdcec401f" data-section-level="4" data-section-text="- Direction of Out - of - Plane Strain var element = document.getElementById("moose-equation-43ea67f0-0467-49a2-82f8-c48922534c98");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h4 id="direction-of-out-of-plane-strain"><span class="moose-katex-inline-equation" id="moose-equation-43ea67f0-0467-49a2-82f8-c48922534c98"><script>var element = document.getElementById("moose-equation-43ea67f0-0467-49a2-82f8-c48922534c98");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain</h4><p>If the user selects the out-of-plane direction as along the <span class="moose-katex-inline-equation" id="moose-equation-efae3883-06bd-4ec9-9104-fc3ceabb173a"><script>var element = document.getElementById("moose-equation-efae3883-06bd-4ec9-9104-fc3ceabb173a");katex.render("y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction, the strain tensor from <a href="#moose-equation-b122e84a-2219-4e27-8df4-f14f44ac607a">Eq. (1)</a> is given as <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-73c41ead-a03b-4a81-94b4-df35ad959eaf"></span><span class="moose-katex-equation-number">(6)</span><script>var element = document.getElementById("moose-equation-73c41ead-a03b-4a81-94b4-df35ad959eaf");katex.render("     \\boldsymbol{\\epsilon} = \\begin{bmatrix}                 u_{x,x} & 0 & \\frac{1}{2} \\left(u_{x,z} + u_{z,x} \\right) \\\\                 0 & \\epsilon|^{dop} & 0 \\\\                 \\frac{1}{2} \\left(u_{x,z} + u_{z,x} \\right) & 0 & u_{z,z}               \\end{bmatrix}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> so that the off-diagonal components of the strain tensor associated with the <span class="moose-katex-inline-equation" id="moose-equation-5cf364d9-5887-4ba5-976b-78c99e900138"><script>var element = document.getElementById("moose-equation-5cf364d9-5887-4ba5-976b-78c99e900138");katex.render("y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction are zeros.</p></section></section><section id="8efaeb61-92f0-4722-a116-1a7ec1e8c89e" data-section-level="3" data-section-text="Volumetric Locking Correction for Strain Tensor"><h3 id="volumetric-locking-correction-for-strain-tensor">Volumetric Locking Correction for Strain Tensor</h3><p>If selected by the user, the strain tensor is conditioned with a <span class="moose-katex-inline-equation" id="moose-equation-46cb19ab-cf7a-43ed-8e69-16ca71f4cb26"><script>var element = document.getElementById("moose-equation-46cb19ab-cf7a-43ed-8e69-16ca71f4cb26");katex.render("\\bar{B}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> formulation to mitigate volumetric locking of the elements. The volumetric locking correction is applied to the total strain <span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-7641084a-27ea-4b7d-9df9-252447a24cdd"></span><span class="moose-katex-equation-number">(7)</span><script>var element = document.getElementById("moose-equation-7641084a-27ea-4b7d-9df9-252447a24cdd");katex.render("     \\boldsymbol{\\epsilon}|_{vlc} = \\boldsymbol{\\epsilon} + \\frac{\\left( \\boldsymbol{\\epsilon}_V - tr(\\boldsymbol{\\epsilon}) \\right)}{3} \\cdot \\boldsymbol{I}", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> where <span class="moose-katex-inline-equation" id="moose-equation-e1039112-5022-4cd2-9922-4d44d89c7a54"><script>var element = document.getElementById("moose-equation-e1039112-5022-4cd2-9922-4d44d89c7a54");katex.render("\\boldsymbol{\\epsilon}_V", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the volumetric strain and <span class="moose-katex-inline-equation" id="moose-equation-0442b346-28ab-41c3-a702-552d75f91885"><script>var element = document.getElementById("moose-equation-0442b346-28ab-41c3-a702-552d75f91885");katex.render("\\boldsymbol{I}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> is the Rank-2 identity tensor. For more details about the theory behind <a href="#moose-equation-a5db5d95-8536-49c6-8487-83ee7ae450de">Eq. (7)</a> see the <a href="../../modules/tensor_mechanics/VolumetricLocking.html">Volumetric Locking Correction</a> documentation.</p></section></section><section class="scrollspy" id="02990f40-80f5-44e6-a2ac-58b9e7b7a9b6" data-section-level="2" data-section-text="Example Input Files"><h2 id="example-input-files">Example Input Files</h2><section id="c0aca65e-7a57-497f-a717-d7fe93bb50cf" data-section-level="3" data-section-text="Plane Stress"><h3 id="plane-stress">Plane Stress</h3><p>The tensor mechanics <a href="../../syntax/Modules/TensorMechanics/Master/index.html">Master action</a> can be used to create the <code>ADComputePlaneSmallStrain</code> class by setting <code>planar_formulation = WEAK_PLANE_STRESS</code> and <code>strain = SMALL</code> in the <code>Master</code> action block.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Modules/TensorMechanics/Master]
+  [Modules/TensorMechanics/Master]
+    [Modules/TensorMechanics/Master]
+      [plane_stress]
+        planar_formulation = WEAK_PLANE_STRESS
+        strain = SMALL
+        generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy&#x27;
+        eigenstrain_names = eigenstrain
+      []
+    []
   []
 []
-</code></pre><a href="#3b3c5f4f-a772-407e-8f43-c1c60a6a3592" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i)</a><div class="modal moose-modal" id="3b3c5f4f-a772-407e-8f43-c1c60a6a3592"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
-  order = FIRST
-  family = LAGRANGE
-  displacements = &#x27;disp_x disp_y&#x27;
-  temperature = temp
-  out_of_plane_strain = strain_zz
-[]
-
-[Mesh]
-  [./square]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 2
-    ny = 2
-  [../]
-[]
-
-[Variables]
-  [./disp_x]
-  [../]
-  [./disp_y]
-  [../]
-  [./strain_zz]
-  [../]
-[]
-
-[AuxVariables]
-  [./temp]
-  [../]
-  [./nl_strain_zz]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-[]
-
-[Postprocessors]
-  [./react_z]
-    type = MaterialTensorIntegral
-    rank_two_tensor = stress
-    index_i = 2
-    index_j = 2
-  [../]
-  [./min_strain_zz]
-    type = NodalExtremeValue
-    variable = strain_zz
-    value_type = min
-  [../]
-  [./max_strain_zz]
-    type = NodalExtremeValue
-    variable = strain_zz
-    value_type = max
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [plane_stress]
-    planar_formulation = WEAK_PLANE_STRESS
-    strain = SMALL
-    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy&#x27;
-    eigenstrain_names = eigenstrain
-  []
-[]
-
-[AuxKernels]
-  [./tempfuncaux]
-    type = FunctionAux
-    variable = temp
-    function = tempfunc
-    use_displaced_mesh = false
-  [../]
-  [./strain_zz]
-    type = RankTwoAux
-    rank_two_tensor = total_strain
-    variable = nl_strain_zz
-    index_i = 2
-    index_j = 2
-  [../]
-[]
-
-[Functions]
-  [./pull]
-    type = PiecewiseLinear
-    x=&#x27;0     1   100&#x27;
-    y=&#x27;0  0.00  0.00&#x27;
-  [../]
-  [./tempfunc]
-    type = ParsedFunction
-    value = &#x27;(1 - x) * t&#x27;
-  [../]
-[]
-
-[BCs]
-  [./bottomx]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_x
-    value = 0.0
-  [../]
-  [./bottomy]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_y
-    value = 0.0
-  [../]
-[]
-
-[Materials]
-  [./elasticity_tensor]
-    type = ComputeIsotropicElasticityTensor
-    poissons_ratio = 0.3
-    youngs_modulus = 1e6
-  [../]
-  [./thermal_strain]
-    type = ComputeThermalExpansionEigenstrain
-    thermal_expansion_coeff = 0.02
-    stress_free_temperature = 0.5
-    eigenstrain_name = eigenstrain
-  [../]
-  [./stress]
-    type = ComputeLinearElasticStress
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = PJFNK
-  line_search = none
-
-# controls for linear iterations
-  l_max_its = 100
-  l_tol = 1e-06
-
-# controls for nonlinear iterations
-  nl_max_its = 15
-  nl_rel_tol = 1e-14
-  nl_abs_tol = 1e-12
-
-# time control
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 2.0
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><p>Note that for plane stress analysis, the <code>out_of_plane_strain</code> parameter must be defined, and is the name of the out-of-plane strain field variable.</p><pre class="moose-pre"><code class="language-text">[./strain_zz]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#7a33d026-facc-4f47-8121-e90662e389e3">(moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i)</a><p>Note that for plane stress analysis, the <code>out_of_plane_strain</code> parameter must be defined, and is the name of the out-of-plane strain field variable.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./strain_zz]
 [../]
-</code></pre><a href="#c7a68694-ffa0-4aa8-a7fa-6359f6b6bc28" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i)</a><div class="modal moose-modal" id="c7a68694-ffa0-4aa8-a7fa-6359f6b6bc28"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
-  order = FIRST
-  family = LAGRANGE
-  displacements = &#x27;disp_x disp_y&#x27;
-  temperature = temp
-  out_of_plane_strain = strain_zz
-[]
-
-[Mesh]
-  [./square]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 2
-    ny = 2
-  [../]
-[]
-
-[Variables]
-  [./disp_x]
-  [../]
-  [./disp_y]
-  [../]
-  [./strain_zz]
-  [../]
-[]
-
-[AuxVariables]
-  [./temp]
-  [../]
-  [./nl_strain_zz]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-[]
-
-[Postprocessors]
-  [./react_z]
-    type = MaterialTensorIntegral
-    rank_two_tensor = stress
-    index_i = 2
-    index_j = 2
-  [../]
-  [./min_strain_zz]
-    type = NodalExtremeValue
-    variable = strain_zz
-    value_type = min
-  [../]
-  [./max_strain_zz]
-    type = NodalExtremeValue
-    variable = strain_zz
-    value_type = max
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [plane_stress]
-    planar_formulation = WEAK_PLANE_STRESS
-    strain = SMALL
-    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy&#x27;
-    eigenstrain_names = eigenstrain
-  []
-[]
-
-[AuxKernels]
-  [./tempfuncaux]
-    type = FunctionAux
-    variable = temp
-    function = tempfunc
-    use_displaced_mesh = false
-  [../]
-  [./strain_zz]
-    type = RankTwoAux
-    rank_two_tensor = total_strain
-    variable = nl_strain_zz
-    index_i = 2
-    index_j = 2
-  [../]
-[]
-
-[Functions]
-  [./pull]
-    type = PiecewiseLinear
-    x=&#x27;0     1   100&#x27;
-    y=&#x27;0  0.00  0.00&#x27;
-  [../]
-  [./tempfunc]
-    type = ParsedFunction
-    value = &#x27;(1 - x) * t&#x27;
-  [../]
-[]
-
-[BCs]
-  [./bottomx]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_x
-    value = 0.0
-  [../]
-  [./bottomy]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_y
-    value = 0.0
-  [../]
-[]
-
-[Materials]
-  [./elasticity_tensor]
-    type = ComputeIsotropicElasticityTensor
-    poissons_ratio = 0.3
-    youngs_modulus = 1e6
-  [../]
-  [./thermal_strain]
-    type = ComputeThermalExpansionEigenstrain
-    thermal_expansion_coeff = 0.02
-    stress_free_temperature = 0.5
-    eigenstrain_name = eigenstrain
-  [../]
-  [./stress]
-    type = ComputeLinearElasticStress
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = PJFNK
-  line_search = none
-
-# controls for linear iterations
-  l_max_its = 100
-  l_tol = 1e-06
-
-# controls for nonlinear iterations
-  nl_max_its = 15
-  nl_rel_tol = 1e-14
-  nl_abs_tol = 1e-12
-
-# time control
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 2.0
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><p>In the case of this example, <code>out_of_plane_strain</code> is defined in the <code>GlobalParams</code> block.</p></section><section id="f06eda01-95ae-45c2-8112-96b9dc895eff" data-section-level="3" data-section-text="Generalized Plane Strain"><h3 id="generalized-plane-strain">Generalized Plane Strain</h3><p>The use of this plane strain class for <a href="../../modules/tensor_mechanics/generalized_plane_strain.html">Generalized Plane Strain</a> simulations uses the scalar out-of-plane strains. The tensor mechanics <a href="../../syntax/Modules/TensorMechanics/Master/index.html">Master action</a> is used to create the <code>ADComputePlaneSmallStrain</code> class with the <code>planar_formulation = GENERALIZED_PLANE_STRAIN</code> and <code>strain = SMALL</code> settings.</p><pre class="moose-pre"><code class="language-text">[./all]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#ce1eafa7-04e3-40b0-a80d-1a0e0a1e9a45">(moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i)</a><p>In the case of this example, <code>out_of_plane_strain</code> is defined in the <code>GlobalParams</code> block.</p></section><section id="35111058-bb65-42bd-90e9-be452f12def7" data-section-level="3" data-section-text="Generalized Plane Strain"><h3 id="generalized-plane-strain">Generalized Plane Strain</h3><p>The use of this plane strain class for <a href="../../modules/tensor_mechanics/generalized_plane_strain.html">Generalized Plane Strain</a> simulations uses the scalar out-of-plane strains. The tensor mechanics <a href="../../syntax/Modules/TensorMechanics/Master/index.html">Master action</a> is used to create the <code>ADComputePlaneSmallStrain</code> class with the <code>planar_formulation = GENERALIZED_PLANE_STRAIN</code> and <code>strain = SMALL</code> settings.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./all]
   strain = SMALL
   add_variables = true
   displacements = &#x27;disp_x disp_y&#x27;
@@ -315,291 +23,11 @@
   temperature = temp
   save_in = &#x27;saved_x saved_y&#x27;
 [../]
-</code></pre><a href="#59dc3825-09c3-4f5f-9b1c-e7536055a109" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i)</a><div class="modal moose-modal" id="59dc3825-09c3-4f5f-9b1c-e7536055a109"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[Mesh]
-  [./square]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 2
-    ny = 2
-  [../]
-[]
-
-[Variables]
-  [./scalar_strain_zz]
-    order = FIRST
-    family = SCALAR
-  [../]
-[]
-
-[AuxVariables]
-  [./temp]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-  [./saved_x]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-  [./saved_y]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-[]
-
-[Postprocessors]
-  [./react_z]
-    type = MaterialTensorIntegral
-    rank_two_tensor = stress
-    index_i = 2
-    index_j = 2
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [./all]
-    strain = SMALL
-    add_variables = true
-    displacements = &#x27;disp_x disp_y&#x27;
-    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy strain_zz&#x27;
-    planar_formulation = GENERALIZED_PLANE_STRAIN
-    eigenstrain_names = eigenstrain
-    scalar_out_of_plane_strain = scalar_strain_zz
-    temperature = temp
-    save_in = &#x27;saved_x saved_y&#x27;
-  [../]
-[]
-
-[AuxKernels]
-  [./tempfuncaux]
-    type = FunctionAux
-    variable = temp
-    function = tempfunc
-    use_displaced_mesh = false
-  [../]
-[]
-
-[Functions]
-  [./tempfunc]
-    type = ParsedFunction
-    value = &#x27;(1-x)*t&#x27;
-  [../]
-[]
-
-[BCs]
-  [./bottomx]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_x
-    value = 0.0
-  [../]
-  [./bottomy]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_y
-    value = 0.0
-  [../]
-[]
-
-[Materials]
-  [./elastic_tensor]
-    type = ComputeIsotropicElasticityTensor
-    poissons_ratio = 0.3
-    youngs_modulus = 1e6
-  [../]
-  [./thermal_strain]
-    type = ComputeThermalExpansionEigenstrain
-    temperature = temp
-    thermal_expansion_coeff = 0.02
-    stress_free_temperature = 0.5
-    eigenstrain_name = eigenstrain
-  [../]
-  [./stress]
-    type = ComputeLinearElasticStress
-  [../]
-[]
-
-[Preconditioning]
-  [./smp]
-    type = SMP
-    full = true
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = PJFNK
-  line_search = none
-
-# controls for linear iterations
-  l_max_its = 100
-  l_tol = 1e-4
-
-# controls for nonlinear iterations
-  nl_max_its = 15
-  nl_rel_tol = 1e-10
-  nl_abs_tol = 1e-5
-
-# time control
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 2.0
-  num_steps = 5000
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><p>Note that the argument for the <code>scalar_out_of_plane_strain</code> parameter is the name of the scalar strain variable</p><pre class="moose-pre"><code class="language-text">[./scalar_strain_zz]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#2d760588-f85d-41c4-aa0f-2f49214f8eb8">(moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i)</a><p>Note that the argument for the <code>scalar_out_of_plane_strain</code> parameter is the name of the scalar strain variable</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./scalar_strain_zz]
   order = FIRST
   family = SCALAR
 [../]
-</code></pre><a href="#9a2df8ff-2aaf-4d0c-80b7-f7aac6134152" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i)</a><div class="modal moose-modal" id="9a2df8ff-2aaf-4d0c-80b7-f7aac6134152"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[Mesh]
-  [./square]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 2
-    ny = 2
-  [../]
-[]
-
-[Variables]
-  [./scalar_strain_zz]
-    order = FIRST
-    family = SCALAR
-  [../]
-[]
-
-[AuxVariables]
-  [./temp]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-  [./saved_x]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-  [./saved_y]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-[]
-
-[Postprocessors]
-  [./react_z]
-    type = MaterialTensorIntegral
-    rank_two_tensor = stress
-    index_i = 2
-    index_j = 2
-  [../]
-[]
-
-[Modules/TensorMechanics/Master]
-  [./all]
-    strain = SMALL
-    add_variables = true
-    displacements = &#x27;disp_x disp_y&#x27;
-    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy strain_zz&#x27;
-    planar_formulation = GENERALIZED_PLANE_STRAIN
-    eigenstrain_names = eigenstrain
-    scalar_out_of_plane_strain = scalar_strain_zz
-    temperature = temp
-    save_in = &#x27;saved_x saved_y&#x27;
-  [../]
-[]
-
-[AuxKernels]
-  [./tempfuncaux]
-    type = FunctionAux
-    variable = temp
-    function = tempfunc
-    use_displaced_mesh = false
-  [../]
-[]
-
-[Functions]
-  [./tempfunc]
-    type = ParsedFunction
-    value = &#x27;(1-x)*t&#x27;
-  [../]
-[]
-
-[BCs]
-  [./bottomx]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_x
-    value = 0.0
-  [../]
-  [./bottomy]
-    type = DirichletBC
-    boundary = 0
-    variable = disp_y
-    value = 0.0
-  [../]
-[]
-
-[Materials]
-  [./elastic_tensor]
-    type = ComputeIsotropicElasticityTensor
-    poissons_ratio = 0.3
-    youngs_modulus = 1e6
-  [../]
-  [./thermal_strain]
-    type = ComputeThermalExpansionEigenstrain
-    temperature = temp
-    thermal_expansion_coeff = 0.02
-    stress_free_temperature = 0.5
-    eigenstrain_name = eigenstrain
-  [../]
-  [./stress]
-    type = ComputeLinearElasticStress
-  [../]
-[]
-
-[Preconditioning]
-  [./smp]
-    type = SMP
-    full = true
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = PJFNK
-  line_search = none
-
-# controls for linear iterations
-  l_max_its = 100
-  l_tol = 1e-4
-
-# controls for nonlinear iterations
-  nl_max_its = 15
-  nl_rel_tol = 1e-10
-  nl_abs_tol = 1e-5
-
-# time control
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 2.0
-  num_steps = 5000
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></section><section id="9afd5bb8-d8ac-4035-ba92-2ba62b23315f" data-section-level="3" data-section-text="- Direction of Out - of - Plane Strain var element = document.getElementById("moose-equation-66e30d0f-ed07-4440-acb4-5222e16a027b");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h3 id="direction-of-out-of-plane-strain"><span class="moose-katex-inline-equation" id="moose-equation-66e30d0f-ed07-4440-acb4-5222e16a027b"><script>var element = document.getElementById("moose-equation-66e30d0f-ed07-4440-acb4-5222e16a027b");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain</h3><p>This plane strain class is used to model plane strain with an out-of-plane strain in directions other than in the <span class="moose-katex-inline-equation" id="moose-equation-4489c79f-29c3-4074-b3c7-22f5aa97c253"><script>var element = document.getElementById("moose-equation-4489c79f-29c3-4074-b3c7-22f5aa97c253");katex.render("z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction. As an example, the tensor mechanics <a href="../../syntax/Modules/TensorMechanics/Master/index.html">Master action</a> can be used to create the <code>ComputePlaneFiniteStrain</code> class for a <span class="moose-katex-inline-equation" id="moose-equation-34c3de98-c1cf-4905-b7db-19e0f890536a"><script>var element = document.getElementById("moose-equation-34c3de98-c1cf-4905-b7db-19e0f890536a");katex.render("y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction out-of-plane strain with the <code>planar_formulation = PLANE_STRAIN</code> and the <code>out_of_plane_direction = y</code> settings.</p><pre class="moose-pre"><code class="language-text">[./plane_strain]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#f0d2c398-4a55-4096-b23d-b5561a0847cc">(moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i)</a></section><section id="5b6de118-9d4a-4059-80fd-6d87ac99c713" data-section-level="3" data-section-text="- Direction of Out - of - Plane Strain var element = document.getElementById("moose-equation-a7d67cd0-f5f6-4488-9603-9a424ac89c45");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});"><h3 id="direction-of-out-of-plane-strain"><span class="moose-katex-inline-equation" id="moose-equation-a7d67cd0-f5f6-4488-9603-9a424ac89c45"><script>var element = document.getElementById("moose-equation-a7d67cd0-f5f6-4488-9603-9a424ac89c45");katex.render("Y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-Direction of Out-of-Plane Strain</h3><p>This plane strain class is used to model plane strain with an out-of-plane strain in directions other than in the <span class="moose-katex-inline-equation" id="moose-equation-69bb54c4-3373-41ba-8377-12005696adc0"><script>var element = document.getElementById("moose-equation-69bb54c4-3373-41ba-8377-12005696adc0");katex.render("z", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction. As an example, the tensor mechanics <a href="../../syntax/Modules/TensorMechanics/Master/index.html">Master action</a> can be used to create the <code>ComputePlaneFiniteStrain</code> class for a <span class="moose-katex-inline-equation" id="moose-equation-3254401a-ba4a-4495-908e-5715188be6a2"><script>var element = document.getElementById("moose-equation-3254401a-ba4a-4495-908e-5715188be6a2");katex.render("y", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>-direction out-of-plane strain with the <code>planar_formulation = PLANE_STRAIN</code> and the <code>out_of_plane_direction = y</code> settings.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[./plane_strain]
   block = 1
   strain = SMALL
   out_of_plane_direction = y
@@ -607,7 +35,583 @@
   eigenstrain_names = &#x27;eigenstrain&#x27;
   generate_output = &#x27;stress_xx stress_xz stress_yy stress_zz strain_xx strain_xz strain_yy strain_zz&#x27;
 [../]
-</code></pre><a href="#a90c652e-78d5-424a-aa99-fa4cfea56a8f" class="modal-trigger">(moose/modules/tensor_mechanics/test/tests/2D_different_planes/planestrain_xz.i)</a><div class="modal moose-modal" id="a90c652e-78d5-424a-aa99-fa4cfea56a8f"><div class="modal-content"><h4>/home/travis/build/hugary1995/raccoon/moose/modules/tensor_mechanics/test/tests/2D_different_planes/planestrain_xz.i</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#edaf2e6f-4155-4fcd-96af-2cdf3901d6bf">(moose/modules/tensor_mechanics/test/tests/2D_different_planes/planestrain_xz.i)</a></section></section><section class="scrollspy" id="a719a268-3eeb-4123-acda-67dc84f2c346" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="2a84f2f5-a5fd-4a7c-9d51-f496f38f30a1" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">displacements</span><span class="moose-parameter-header-description">The displacements appropriate for the simulation geometry and coordinate system</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The displacements appropriate for the simulation geometry and coordinate system</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="2d2e3675-5763-4c6e-a7c6-ce518bfa4e93" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">eigenstrain_names</span><span class="moose-parameter-header-description">List of eigenstrains to be applied in this strain calculation</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;MaterialPropertyName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of eigenstrains to be applied in this strain calculation</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">global_strain</span><span class="moose-parameter-header-description">Optional material property holding a global strain tensor applied to the mesh as a whole</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional material property holding a global strain tensor applied to the mesh as a whole</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">out_of_plane_direction</span><span class="moose-parameter-header-default">z</span><span class="moose-parameter-header-description">The direction of the out-of-plane strain.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>z</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>x, y, z</p><p class="moose-parameter-description"><span>Description:</span>The direction of the out-of-plane strain.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">out_of_plane_strain</span><span class="moose-parameter-header-description">Nonlinear variable for plane stress condition</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Nonlinear variable for plane stress condition</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">scalar_out_of_plane_strain</span><span class="moose-parameter-header-description">Scalar variable for generalized plane strain</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Scalar variable for generalized plane strain</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">subblock_index_provider</span><span class="moose-parameter-header-description">SubblockIndexProvider user object name</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>UserObjectName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>SubblockIndexProvider user object name</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">volumetric_locking_correction</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Flag to correct volumetric locking</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Flag to correct volumetric locking</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="56929e68-a12e-4c61-a3d6-87dbf6c86763" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="73a31111-0ddc-460e-bf66-47ecac09542c" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section class="scrollspy" id="fb94e8a8-cf31-4720-bdfc-794b8a857235" data-section-level="2" data-section-text="References"><h2 id="references">References</h2><div class="moose-bibliography"><ol></ol></div></section><div class="moose-modal modal" id="7a33d026-facc-4f47-8121-e90662e389e3"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i)</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
+  order = FIRST
+  family = LAGRANGE
+  displacements = &#x27;disp_x disp_y&#x27;
+  temperature = temp
+  out_of_plane_strain = strain_zz
+[]
+
+[Mesh]
+  [./square]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 2
+    ny = 2
+  [../]
+[]
+
+[Variables]
+  [./disp_x]
+  [../]
+  [./disp_y]
+  [../]
+  [./strain_zz]
+  [../]
+[]
+
+[AuxVariables]
+  [./temp]
+  [../]
+  [./nl_strain_zz]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
+
+[Postprocessors]
+  [./react_z]
+    type = MaterialTensorIntegral
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+  [./min_strain_zz]
+    type = NodalExtremeValue
+    variable = strain_zz
+    value_type = min
+  [../]
+  [./max_strain_zz]
+    type = NodalExtremeValue
+    variable = strain_zz
+    value_type = max
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [plane_stress]
+    planar_formulation = WEAK_PLANE_STRESS
+    strain = SMALL
+    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy&#x27;
+    eigenstrain_names = eigenstrain
+  []
+[]
+
+[AuxKernels]
+  [./tempfuncaux]
+    type = FunctionAux
+    variable = temp
+    function = tempfunc
+    use_displaced_mesh = false
+  [../]
+  [./strain_zz]
+    type = RankTwoAux
+    rank_two_tensor = total_strain
+    variable = nl_strain_zz
+    index_i = 2
+    index_j = 2
+  [../]
+[]
+
+[Functions]
+  [./pull]
+    type = PiecewiseLinear
+    x=&#x27;0     1   100&#x27;
+    y=&#x27;0  0.00  0.00&#x27;
+  [../]
+  [./tempfunc]
+    type = ParsedFunction
+    value = &#x27;(1 - x) * t&#x27;
+  [../]
+[]
+
+[BCs]
+  [./bottomx]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_x
+    value = 0.0
+  [../]
+  [./bottomy]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_y
+    value = 0.0
+  [../]
+[]
+
+[Materials]
+  [./elasticity_tensor]
+    type = ComputeIsotropicElasticityTensor
+    poissons_ratio = 0.3
+    youngs_modulus = 1e6
+  [../]
+  [./thermal_strain]
+    type = ComputeThermalExpansionEigenstrain
+    thermal_expansion_coeff = 0.02
+    stress_free_temperature = 0.5
+    eigenstrain_name = eigenstrain
+  [../]
+  [./stress]
+    type = ComputeLinearElasticStress
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = PJFNK
+  line_search = none
+
+# controls for linear iterations
+  l_max_its = 100
+  l_tol = 1e-06
+
+# controls for nonlinear iterations
+  nl_max_its = 15
+  nl_rel_tol = 1e-14
+  nl_abs_tol = 1e-12
+
+# time control
+  start_time = 0.0
+  dt = 1.0
+  dtmin = 1.0
+  end_time = 2.0
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="ce1eafa7-04e3-40b0-a80d-1a0e0a1e9a45"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/plane_stress/weak_plane_stress_small.i)</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
+  order = FIRST
+  family = LAGRANGE
+  displacements = &#x27;disp_x disp_y&#x27;
+  temperature = temp
+  out_of_plane_strain = strain_zz
+[]
+
+[Mesh]
+  [./square]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 2
+    ny = 2
+  [../]
+[]
+
+[Variables]
+  [./disp_x]
+  [../]
+  [./disp_y]
+  [../]
+  [./strain_zz]
+  [../]
+[]
+
+[AuxVariables]
+  [./temp]
+  [../]
+  [./nl_strain_zz]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
+
+[Postprocessors]
+  [./react_z]
+    type = MaterialTensorIntegral
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+  [./min_strain_zz]
+    type = NodalExtremeValue
+    variable = strain_zz
+    value_type = min
+  [../]
+  [./max_strain_zz]
+    type = NodalExtremeValue
+    variable = strain_zz
+    value_type = max
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [plane_stress]
+    planar_formulation = WEAK_PLANE_STRESS
+    strain = SMALL
+    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy&#x27;
+    eigenstrain_names = eigenstrain
+  []
+[]
+
+[AuxKernels]
+  [./tempfuncaux]
+    type = FunctionAux
+    variable = temp
+    function = tempfunc
+    use_displaced_mesh = false
+  [../]
+  [./strain_zz]
+    type = RankTwoAux
+    rank_two_tensor = total_strain
+    variable = nl_strain_zz
+    index_i = 2
+    index_j = 2
+  [../]
+[]
+
+[Functions]
+  [./pull]
+    type = PiecewiseLinear
+    x=&#x27;0     1   100&#x27;
+    y=&#x27;0  0.00  0.00&#x27;
+  [../]
+  [./tempfunc]
+    type = ParsedFunction
+    value = &#x27;(1 - x) * t&#x27;
+  [../]
+[]
+
+[BCs]
+  [./bottomx]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_x
+    value = 0.0
+  [../]
+  [./bottomy]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_y
+    value = 0.0
+  [../]
+[]
+
+[Materials]
+  [./elasticity_tensor]
+    type = ComputeIsotropicElasticityTensor
+    poissons_ratio = 0.3
+    youngs_modulus = 1e6
+  [../]
+  [./thermal_strain]
+    type = ComputeThermalExpansionEigenstrain
+    thermal_expansion_coeff = 0.02
+    stress_free_temperature = 0.5
+    eigenstrain_name = eigenstrain
+  [../]
+  [./stress]
+    type = ComputeLinearElasticStress
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = PJFNK
+  line_search = none
+
+# controls for linear iterations
+  l_max_its = 100
+  l_tol = 1e-06
+
+# controls for nonlinear iterations
+  nl_max_its = 15
+  nl_rel_tol = 1e-14
+  nl_abs_tol = 1e-12
+
+# time control
+  start_time = 0.0
+  dt = 1.0
+  dtmin = 1.0
+  end_time = 2.0
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="2d760588-f85d-41c4-aa0f-2f49214f8eb8"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i)</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [./square]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 2
+    ny = 2
+  [../]
+[]
+
+[Variables]
+  [./scalar_strain_zz]
+    order = FIRST
+    family = SCALAR
+  [../]
+[]
+
+[AuxVariables]
+  [./temp]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+  [./saved_x]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+  [./saved_y]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+[]
+
+[Postprocessors]
+  [./react_z]
+    type = MaterialTensorIntegral
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [./all]
+    strain = SMALL
+    add_variables = true
+    displacements = &#x27;disp_x disp_y&#x27;
+    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy strain_zz&#x27;
+    planar_formulation = GENERALIZED_PLANE_STRAIN
+    eigenstrain_names = eigenstrain
+    scalar_out_of_plane_strain = scalar_strain_zz
+    temperature = temp
+    save_in = &#x27;saved_x saved_y&#x27;
+  [../]
+[]
+
+[AuxKernels]
+  [./tempfuncaux]
+    type = FunctionAux
+    variable = temp
+    function = tempfunc
+    use_displaced_mesh = false
+  [../]
+[]
+
+[Functions]
+  [./tempfunc]
+    type = ParsedFunction
+    value = &#x27;(1-x)*t&#x27;
+  [../]
+[]
+
+[BCs]
+  [./bottomx]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_x
+    value = 0.0
+  [../]
+  [./bottomy]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_y
+    value = 0.0
+  [../]
+[]
+
+[Materials]
+  [./elastic_tensor]
+    type = ComputeIsotropicElasticityTensor
+    poissons_ratio = 0.3
+    youngs_modulus = 1e6
+  [../]
+  [./thermal_strain]
+    type = ComputeThermalExpansionEigenstrain
+    temperature = temp
+    thermal_expansion_coeff = 0.02
+    stress_free_temperature = 0.5
+    eigenstrain_name = eigenstrain
+  [../]
+  [./stress]
+    type = ComputeLinearElasticStress
+  [../]
+[]
+
+[Preconditioning]
+  [./smp]
+    type = SMP
+    full = true
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = PJFNK
+  line_search = none
+
+# controls for linear iterations
+  l_max_its = 100
+  l_tol = 1e-4
+
+# controls for nonlinear iterations
+  nl_max_its = 15
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-5
+
+# time control
+  start_time = 0.0
+  dt = 1.0
+  dtmin = 1.0
+  end_time = 2.0
+  num_steps = 5000
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="f0d2c398-4a55-4096-b23d-b5561a0847cc"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/generalized_plane_strain/generalized_plane_strain_small.i)</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [./square]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 2
+    ny = 2
+  [../]
+[]
+
+[Variables]
+  [./scalar_strain_zz]
+    order = FIRST
+    family = SCALAR
+  [../]
+[]
+
+[AuxVariables]
+  [./temp]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+  [./saved_x]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+  [./saved_y]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+[]
+
+[Postprocessors]
+  [./react_z]
+    type = MaterialTensorIntegral
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+[]
+
+[Modules/TensorMechanics/Master]
+  [./all]
+    strain = SMALL
+    add_variables = true
+    displacements = &#x27;disp_x disp_y&#x27;
+    generate_output = &#x27;stress_xx stress_xy stress_yy stress_zz strain_xx strain_xy strain_yy strain_zz&#x27;
+    planar_formulation = GENERALIZED_PLANE_STRAIN
+    eigenstrain_names = eigenstrain
+    scalar_out_of_plane_strain = scalar_strain_zz
+    temperature = temp
+    save_in = &#x27;saved_x saved_y&#x27;
+  [../]
+[]
+
+[AuxKernels]
+  [./tempfuncaux]
+    type = FunctionAux
+    variable = temp
+    function = tempfunc
+    use_displaced_mesh = false
+  [../]
+[]
+
+[Functions]
+  [./tempfunc]
+    type = ParsedFunction
+    value = &#x27;(1-x)*t&#x27;
+  [../]
+[]
+
+[BCs]
+  [./bottomx]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_x
+    value = 0.0
+  [../]
+  [./bottomy]
+    type = DirichletBC
+    boundary = 0
+    variable = disp_y
+    value = 0.0
+  [../]
+[]
+
+[Materials]
+  [./elastic_tensor]
+    type = ComputeIsotropicElasticityTensor
+    poissons_ratio = 0.3
+    youngs_modulus = 1e6
+  [../]
+  [./thermal_strain]
+    type = ComputeThermalExpansionEigenstrain
+    temperature = temp
+    thermal_expansion_coeff = 0.02
+    stress_free_temperature = 0.5
+    eigenstrain_name = eigenstrain
+  [../]
+  [./stress]
+    type = ComputeLinearElasticStress
+  [../]
+[]
+
+[Preconditioning]
+  [./smp]
+    type = SMP
+    full = true
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = PJFNK
+  line_search = none
+
+# controls for linear iterations
+  l_max_its = 100
+  l_tol = 1e-4
+
+# controls for nonlinear iterations
+  nl_max_its = 15
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-5
+
+# time control
+  start_time = 0.0
+  dt = 1.0
+  dtmin = 1.0
+  end_time = 2.0
+  num_steps = 5000
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="edaf2e6f-4155-4fcd-96af-2cdf3901d6bf"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/2D_different_planes/planestrain_xz.i)</h4><pre class="moose-pre"><code class="language-text">[GlobalParams]
   displacements = &#x27;disp_x disp_y disp_z&#x27;
 []
 
@@ -725,4 +729,4 @@
   file_base = planestrain_xz_small_out
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></section></section><section class="scrollspy" id="d820c843-36b0-4879-8263-cf6648158543" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="0ab8ebaa-9f4a-428e-be43-1bba86e888d3" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">displacements</span><span class="moose-parameter-header-description">The displacements appropriate for the simulation geometry and coordinate system</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The displacements appropriate for the simulation geometry and coordinate system</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="ae19c7bf-05ff-424f-a55b-57aff28886cd" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE ELEMENT SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">eigenstrain_names</span><span class="moose-parameter-header-description">List of eigenstrains to be applied in this strain calculation</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;MaterialPropertyName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of eigenstrains to be applied in this strain calculation</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">global_strain</span><span class="moose-parameter-header-description">Optional material property holding a global strain tensor applied to the mesh as a whole</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional material property holding a global strain tensor applied to the mesh as a whole</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">out_of_plane_direction</span><span class="moose-parameter-header-default">z</span><span class="moose-parameter-header-description">The direction of the out-of-plane strain.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>z</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>x y z</p><p class="moose-parameter-description"><span>Description:</span>The direction of the out-of-plane strain.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">out_of_plane_strain</span><span class="moose-parameter-header-description">Nonlinear variable for plane stress condition</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Nonlinear variable for plane stress condition</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">scalar_out_of_plane_strain</span><span class="moose-parameter-header-description">Scalar variable for generalized plane strain</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Scalar variable for generalized plane strain</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">subblock_index_provider</span><span class="moose-parameter-header-description">SubblockIndexProvider user object name</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>UserObjectName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>SubblockIndexProvider user object name</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">volumetric_locking_correction</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Flag to correct volumetric locking</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Flag to correct volumetric locking</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="906e85da-bf3f-4edc-bdd6-b901dc647929" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="515096aa-f12e-4964-8129-b1d16247e4a6" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section class="scrollspy" id="67360896-b8d5-45bf-bcce-05532726b7f0" data-section-level="2" data-section-text="References"><h2 id="references">References</h2><div class="moose-bibliography"><ol></ol></div></section></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#bcbc80a3-cf6a-484a-92d2-ce57b999d604" class="tooltipped" data-position="left" data-tooltip="Example Input Files">Example Input Files</a></li><li><a href="#d820c843-36b0-4879-8263-cf6648158543" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li><li><a href="#67360896-b8d5-45bf-bcce-05532726b7f0" class="tooltipped" data-position="left" data-tooltip="References">References</a></li><li><a href="#29fd52af-7388-42f3-8404-c3d581a09add" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#6dc0a42e-d9fa-4d61-84d8-a97e3153cf9f" class="tooltipped" data-position="left" data-tooltip="Out of Plane Strain">Out of Plane Strain</a></li><li><a href="#3340c653-2a61-4c11-984b-6740211f2d9b" class="tooltipped" data-position="left" data-tooltip="Strain and Deformation Gradient Formulation">Strain and Deformation Gradient Formulation</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#02990f40-80f5-44e6-a2ac-58b9e7b7a9b6" class="tooltipped" data-position="left" data-tooltip="Example Input Files">Example Input Files</a></li><li><a href="#a719a268-3eeb-4123-acda-67dc84f2c346" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li><li><a href="#fb94e8a8-cf31-4720-bdfc-794b8a857235" class="tooltipped" data-position="left" data-tooltip="References">References</a></li><li><a href="#20ed1ce7-7d3d-4183-875b-423339c95b40" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#5ce9c5b1-b321-4f6d-b0f1-9093cb1b41f2" class="tooltipped" data-position="left" data-tooltip="Out of Plane Strain">Out of Plane Strain</a></li><li><a href="#19229cba-62d3-4581-bb11-4db1690284ab" class="tooltipped" data-position="left" data-tooltip="Strain and Deformation Gradient Formulation">Strain and Deformation Gradient Formulation</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>
