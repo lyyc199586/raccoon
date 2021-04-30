@@ -1,4 +1,4 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>Mode I Crack Propagation | RACCOON</title><link rel="icon" type="image/x-icon" href="../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../media/framework/github-logo.png" class="github-mark"></img><img src="../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../install/index.html">Install</a></li><li><a href="../theory/index.html">Theory</a></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../syntax/index.html">Syntax</a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="a0e52791-18a1-4682-890f-889bb8272d05"><i class="material-icons">menu</i></a><ul class="sidenav" id="a0e52791-18a1-4682-890f-889bb8272d05"><li><a href="../install/index.html">Install</a></li><li><a href="../theory/index.html">Theory</a></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../syntax/index.html">Syntax</a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href="." class="breadcrumb">benchmarks</a><a href="#" class="breadcrumb">mode1</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="f0184c3b-3639-4459-a833-5bb8237dad97" data-section-level="1" data-section-text="Mode I Crack Propagation"><h1 id="mode-i-crack-propagation">Mode I Crack Propagation</h1><div class="card moose-float" style="width:30%;margin:auto;padding-top:2.5%;" id="mode1_bcs"><div class="card-content"><picture class="materialboxed moose-image"><img src="../media/mode1_bcs.png"></img></picture><p class="moose-caption"><span class="moose-caption-heading">Figure 1: </span><span class="moose-caption-text">boundary conditions of the Mode-I problem</span></p></div></div><p>Consider a 1mm <span class="moose-katex-inline-equation" id="moose-equation-e9f0a8a8-6cf2-48a9-a1f5-19af18eede94"><script>var element = document.getElementById("moose-equation-e9f0a8a8-6cf2-48a9-a1f5-19af18eede94");katex.render("\\times", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> 1mm plate with a pre-existing crack on the left side, loaded in uniaxial tension, as shown in <a href="#mode1_bcs">Figure 1</a>. We assume the plate to be composed of an isotropic material with Young&#x27;s modulus <span class="moose-katex-inline-equation" id="moose-equation-fc69f89a-0c67-4ec2-a190-99fe155cdd69"><script>var element = document.getElementById("moose-equation-fc69f89a-0c67-4ec2-a190-99fe155cdd69");katex.render("E = 2.1 \\times 10^5", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>MPa, Poisson&#x27;s ratio <span class="moose-katex-inline-equation" id="moose-equation-9ae2308b-f982-4f4b-930e-10957309d913"><script>var element = document.getElementById("moose-equation-9ae2308b-f982-4f4b-930e-10957309d913");katex.render("\\nu = 0.3", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, fracture toughness <span class="moose-katex-inline-equation" id="moose-equation-eefe017b-5b74-4517-ad39-601d505aa607"><script>var element = document.getElementById("moose-equation-eefe017b-5b74-4517-ad39-601d505aa607");katex.render("\\Gc = 2.7", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>Jmm<span class="moose-katex-inline-equation" id="moose-equation-07ec7522-6d02-44e4-a745-d8b20bca8460"><script>var element = document.getElementById("moose-equation-07ec7522-6d02-44e4-a745-d8b20bca8460");katex.render("^{-3}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, and critical strength <span class="moose-katex-inline-equation" id="moose-equation-e3471964-55db-41b4-904c-8a6d3a8982c0"><script>var element = document.getElementById("moose-equation-e3471964-55db-41b4-904c-8a6d3a8982c0");katex.render("\\sigma_c = 2.5 \\times 10^3", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>MPa. The plate is fixed along the bottom, and the top surface is displaced in the vertical direction.  Roller supports are also assumed to be in place, such that the horizontal displacement vanishes along the top surface. The plate is assumed to be sufficiently thick such that plane strain conditions hold.</p><p>The fixed-point iterative scheme is implemented using two input files.</p><ul class="browser-default"><li><p><a class="moose-source-filename tooltipped modal-trigger" href="#306e6f84-ff24-4163-9f2f-9eac24f63f98">mechanical.i</a> defines and solves the elasticity subproblem </p></li><li><p><a class="moose-source-filename tooltipped modal-trigger" href="#743ec0ea-84c1-4d43-a8e4-7ac20b3ce77e">fracture.i</a> defines and solves the phase-field subproblem</p></li></ul><section class="scrollspy" id="6d0e8d76-c111-4458-a4b3-b748cbe3bc3e" data-section-level="2" data-section-text="The elasticity subproblem"><h2 id="the-elasticity-subproblem">The elasticity subproblem</h2><p>The &quot;mechanical.i&quot; input file defines and solves the elasticity subproblem. Two kernels define the residual term <span class="moose-katex-inline-equation" id="moose-equation-33706203-4b2f-4e82-8800-21bea4556b0d"><script>var element = document.getElementById("moose-equation-33706203-4b2f-4e82-8800-21bea4556b0d");katex.render("\\xstress_{ij,j}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[AuxKernels]
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Mode I Crack Propagation | RACCOON</title><link rel="icon" type="image/x-icon" href="../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../media/framework/github-logo.png" class="github-mark"></img><img src="../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../install/index.html">Install</a></li><li><a href="../theory/index.html">Theory</a></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../syntax/index.html">Syntax</a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="3260905e-d795-4fab-8618-3b9ab1f668fd"><i class="material-icons">menu</i></a><ul class="sidenav" id="3260905e-d795-4fab-8618-3b9ab1f668fd"><li><a href="../install/index.html">Install</a></li><li><a href="../theory/index.html">Theory</a></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../syntax/index.html">Syntax</a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href="." class="breadcrumb">benchmarks</a><a href="#" class="breadcrumb">mode1</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="d7007fbb-7704-4b63-ae4b-634838276ce7" data-section-level="1" data-section-text="Mode I Crack Propagation"><h1 id="mode-i-crack-propagation">Mode I Crack Propagation</h1><div class="card moose-float" style="width:30%;margin:auto;padding-top:2.5%;" id="mode1_bcs"><div class="card-content"><picture class="materialboxed moose-image"><img src="../media/mode1_bcs.png"></img></picture><p class="moose-caption"><span class="moose-caption-heading">Figure 1: </span><span class="moose-caption-text">boundary conditions of the Mode-I problem</span></p></div></div><p>Consider a 1mm <span class="moose-katex-inline-equation" id="moose-equation-2760adc0-a321-429d-af3e-03a77b0c60ed"><script>var element = document.getElementById("moose-equation-2760adc0-a321-429d-af3e-03a77b0c60ed");katex.render("\\times", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span> 1mm plate with a pre-existing crack on the left side, loaded in uniaxial tension, as shown in <a href="#mode1_bcs">Figure 1</a>. We assume the plate to be composed of an isotropic material with Young&#x27;s modulus <span class="moose-katex-inline-equation" id="moose-equation-5878fbf2-f9de-4f11-8740-8551ff933862"><script>var element = document.getElementById("moose-equation-5878fbf2-f9de-4f11-8740-8551ff933862");katex.render("E = 2.1 \\times 10^5", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>MPa, Poisson&#x27;s ratio <span class="moose-katex-inline-equation" id="moose-equation-dacbde85-ae8e-4bda-b7af-34d6e09b6259"><script>var element = document.getElementById("moose-equation-dacbde85-ae8e-4bda-b7af-34d6e09b6259");katex.render("\\nu = 0.3", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, fracture toughness <span class="moose-katex-inline-equation" id="moose-equation-4dbb90a0-d0d7-4538-8733-68d2cacca52a"><script>var element = document.getElementById("moose-equation-4dbb90a0-d0d7-4538-8733-68d2cacca52a");katex.render("\\Gc = 2.7", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>Jmm<span class="moose-katex-inline-equation" id="moose-equation-44b2a6ea-f424-4889-a8e3-61f92d52e7f5"><script>var element = document.getElementById("moose-equation-44b2a6ea-f424-4889-a8e3-61f92d52e7f5");katex.render("^{-3}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>, and critical strength <span class="moose-katex-inline-equation" id="moose-equation-1c605a8d-14a9-495d-9624-86566863dd53"><script>var element = document.getElementById("moose-equation-1c605a8d-14a9-495d-9624-86566863dd53");katex.render("\\sigma_c = 2.5 \\times 10^3", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>MPa. The plate is fixed along the bottom, and the top surface is displaced in the vertical direction.  Roller supports are also assumed to be in place, such that the horizontal displacement vanishes along the top surface. The plate is assumed to be sufficiently thick such that plane strain conditions hold.</p><p>The fixed-point iterative scheme is implemented using two input files.</p><ul class="browser-default"><li><p><a class="moose-source-filename tooltipped modal-trigger" href="#78fcbfac-c5ce-46cc-b6b8-862ff7b696c9">mechanical.i</a> defines and solves the elasticity subproblem </p></li><li><p><a class="moose-source-filename tooltipped modal-trigger" href="#1dc097d6-d339-43b5-aeb4-00c1b61530c7">fracture.i</a> defines and solves the phase-field subproblem</p></li></ul><section class="scrollspy" id="ad163f9f-07b1-4982-8875-8d5bd160205f" data-section-level="2" data-section-text="The elasticity subproblem"><h2 id="the-elasticity-subproblem">The elasticity subproblem</h2><p>The &quot;mechanical.i&quot; input file defines and solves the elasticity subproblem. Two kernels define the residual term <span class="moose-katex-inline-equation" id="moose-equation-236d648e-c513-417d-9aa8-ab583c7fdde6"><script>var element = document.getElementById("moose-equation-236d648e-c513-417d-9aa8-ab583c7fdde6");katex.render("\\xstress_{ij,j}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\divergence":"\\nabla \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\diff":"\\text{ d}#1","\\total":"\\text{total}","\\internal":"\\text{internal}","\\external":"\\text{external}","\\elastic":"\\text{elastic}","\\fracture":"\\text{fracture}","\\critical":"\\text{critical}","\\activeenergy":"{\\left< A \\right>}","\\inactiveenergy":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\xstress":"\\widetilde{\\stress}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\grad":"\\bs{\\nabla}"}});</script></span>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[AuxKernels]
   [E_el]
     type = ADMaterialRealAux
     variable = &#x27;E_el_active&#x27;
@@ -6,7 +6,7 @@
     execute_on = &#x27;TIMESTEP_END&#x27;
   []
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#0538d905-dedc-406e-966e-d200f16b5499">(benchmarks/mode1_geometric_notch/mechanical.i)</a><div class="card moose-alert moose-alert-note"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">comment</i><span class="moose-alert-title-brand">note</span></div><div class="card-content"><div class="moose-alert-content"><p><p>Upon convergence, residual at Dirichlet DoFs are volumetric reaction forces. Those values are saved in <code>fy</code> and are summed by a postprocessor to get the reaction force in y direction.</p></p></div></div></div><p>Boundary conditions are defined according to <a href="#mode1_bcs">Figure 1</a>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[BCs]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#c48711c9-d811-4a9a-bfb7-a0c8982e8adb">(benchmarks/mode1_geometric_notch/mechanical.i)</a><div class="card moose-alert moose-alert-note"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">comment</i><span class="moose-alert-title-brand">note</span></div><div class="card-content"><div class="moose-alert-content"><p><p>Upon convergence, residual at Dirichlet DoFs are volumetric reaction forces. Those values are saved in <code>fy</code> and are summed by a postprocessor to get the reaction force in y direction.</p></p></div></div></div><p>Boundary conditions are defined according to <a href="#mode1_bcs">Figure 1</a>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[BCs]
   [ydisp]
     type = FunctionDirichletBC
     variable = &#x27;disp_y&#x27;
@@ -27,7 +27,7 @@
     value = 0
   []
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#d400d5de-fb8c-4568-a44b-545985bc8f5c">(benchmarks/mode1_geometric_notch/mechanical.i)</a><p>At the end of each time step, the fracture driving energy is saved in an auxiliary variable:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[AuxKernels]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#5a249109-5e71-4f7d-b065-524c560b6fa7">(benchmarks/mode1_geometric_notch/mechanical.i)</a><p>At the end of each time step, the fracture driving energy is saved in an auxiliary variable:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[AuxKernels]
   [E_el]
     type = ADMaterialRealAux
     variable = &#x27;E_el_active&#x27;
@@ -35,14 +35,14 @@
     execute_on = &#x27;TIMESTEP_END&#x27;
   []
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#855d849f-399f-4e97-ad10-b545050156c1">(benchmarks/mode1_geometric_notch/mechanical.i)</a><p>which is transferred to the fracture MultiApp to define the damage evolution equation:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[send_E_el_active]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#5bdefdea-d811-4180-aaed-43577a02d291">(benchmarks/mode1_geometric_notch/mechanical.i)</a><p>which is transferred to the fracture MultiApp to define the damage evolution equation:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[send_E_el_active]
   type = MultiAppCopyTransfer
   multi_app = fracture
   direction = to_multiapp
   source_variable = &#x27;E_el_active&#x27;
   variable = &#x27;E_el_active&#x27;
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#a285ecc2-387c-47b5-8e4f-f6d63de303a0">(benchmarks/mode1_geometric_notch/mechanical.i)</a></section><section class="scrollspy" id="1191c4dc-c197-41c8-9041-9c9eaaca0e2c" data-section-level="2" data-section-text="The fracture subproblem"><h2 id="the-fracture-subproblem">The fracture subproblem</h2><p>The &quot;fracture.i&quot; input file defines and solves the elasticity subproblem. Two kernels define the residual of the damage evolution equation:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Kernels]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#fdc6a473-ad9a-4e2d-99e7-7d4a9fd919dc">(benchmarks/mode1_geometric_notch/mechanical.i)</a></section><section class="scrollspy" id="4b34ee21-fe19-4776-a25a-f20488c1581a" data-section-level="2" data-section-text="The fracture subproblem"><h2 id="the-fracture-subproblem">The fracture subproblem</h2><p>The &quot;fracture.i&quot; input file defines and solves the elasticity subproblem. Two kernels define the residual of the damage evolution equation:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Kernels]
   [diff]
     type = ADPFFDiffusion
     variable = &#x27;d&#x27;
@@ -57,7 +57,7 @@
     driving_energy_var = &#x27;E_el_active&#x27;
   []
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#38f85be2-860a-4265-901f-fd5656f7f480">(benchmarks/mode1_geometric_notch/fracture.i)</a><div class="card moose-alert moose-alert-note"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">comment</i><span class="moose-alert-title-brand">note</span></div><div class="card-content"><div class="moose-alert-content"><p><p>The fracture driving energy is defined by an auxiliary variable retrieved from the mechanical MultiApp <code>E_el</code>.</p></p></div></div></div><p>Irreversibility of damage is enforced as a variation inequality:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Bounds]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#fa72d466-edd6-4294-bb4d-40933038d2e9">(benchmarks/mode1_geometric_notch/fracture.i)</a><div class="card moose-alert moose-alert-note"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">comment</i><span class="moose-alert-title-brand">note</span></div><div class="card-content"><div class="moose-alert-content"><p><p>The fracture driving energy is defined by an auxiliary variable retrieved from the mechanical MultiApp <code>E_el</code>.</p></p></div></div></div><p>Irreversibility of damage is enforced as a variation inequality:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Bounds]
   [irreversibility]
     type = VariableOldValueBoundsAux
     variable = &#x27;bounds_dummy&#x27;
@@ -72,9 +72,9 @@
     bound_value = 1
   []
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#0f6ad6a2-3130-47fc-b967-3efc7fd08329">(benchmarks/mode1_geometric_notch/fracture.i)</a><p>A variational inequality solver <strong>must</strong> be used for the bound to be effective. For example, here we use the <code>vinewtonrsls</code> nonlinear solver to enforce irreversibility:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">  petsc_options_iname = &#x27;-pc_type -snes_type&#x27;
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#012d6474-05e8-4b3e-9068-56f28d1e1789">(benchmarks/mode1_geometric_notch/fracture.i)</a><p>A variational inequality solver <strong>must</strong> be used for the bound to be effective. For example, here we use the <code>vinewtonrsls</code> nonlinear solver to enforce irreversibility:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">  petsc_options_iname = &#x27;-pc_type -snes_type&#x27;
   petsc_options_value = &#x27;lu       vinewtonrsls&#x27;
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#208adec7-80e9-4306-8843-309fbc315466">(benchmarks/mode1_geometric_notch/fracture.i)</a></section><section class="scrollspy" id="38b19938-cf95-4d2d-9059-d7e6ee20ceaf" data-section-level="2" data-section-text="Defining initial damage"><h2 id="defining-initial-damage">Defining initial damage</h2><p>Instead of a &quot;meshed-in&quot; initial crack, sometimes we may need initial imperfections in the form of an initial damage field. To do so, simply define the initial damage field in the master input file, e.g.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Variables]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#db1e0b0f-ff33-40ec-9d11-9c0b85337641">(benchmarks/mode1_geometric_notch/fracture.i)</a></section><section class="scrollspy" id="92afb838-24ae-42c9-aa0d-3f8bf440a17c" data-section-level="2" data-section-text="Defining initial damage"><h2 id="defining-initial-damage">Defining initial damage</h2><p>Instead of a &quot;meshed-in&quot; initial crack, sometimes we may need initial imperfections in the form of an initial damage field. To do so, simply define the initial damage field in the master input file, e.g.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Variables]
   [d]
     [InitialCondition]
       type = CohesiveDamageIC
@@ -89,188 +89,7 @@
     []
   []
 []
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#ba6902a3-9f1d-4d7d-966c-b307d727eaea">(benchmarks/mode1_initial_damage/fracture.i)</a><p><a href="../source/ics/CohesiveDamageIC.html">CohesiveDamageIC</a> and <a href="../source/ics/BrittleDamageIC.html">BrittleDamageIC</a> are predefined initial conditions based on closed-form solutions.</p></section><section class="scrollspy" id="7400effa-e4aa-4b83-9346-b22bb58123d8" data-section-level="2" data-section-text="Fixed - point iteration : the other way"><h2 id="fixed-point-iteration-the-other-way">Fixed-point iteration: the other way</h2><p>Recently, another way to perform fixed-point iteration has made its way into RACCOON. As opposed to the old way, the new system needs only one input file. Between fixed-point iterations within one load step, stateful material properties are advanced. Therefore, by &quot;lagging&quot; the fracture driving energy one step, we achieve effectively the fixed-point iteration.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[Problem]
-  type = FixedPointProblem
-[]
-
-[Mesh]
-  type = FileMesh
-  file = &#x27;gold/geo.msh&#x27;
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [fy]
-  []
-[]
-
-[UserObjects]
-  [E_driving]
-    type = ADFPIMaterialPropertyUserObject
-    mat_prop = &#x27;E_el_active&#x27;
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_x&#x27;
-    component = 0
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_y&#x27;
-    component = 1
-    displacements = &#x27;disp_x disp_y&#x27;
-    save_in = &#x27;fy&#x27;
-  []
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = &#x27;d&#x27;
-  []
-  [pff_barr]
-    type = ADPFFBarrier
-    variable = &#x27;d&#x27;
-  []
-  [pff_react]
-    type = ADPFFReaction
-    variable = &#x27;d&#x27;
-    driving_energy_uo = &#x27;E_driving&#x27;
-    lag = false
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top&#x27;
-    function = &#x27;t&#x27;
-  []
-  [xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top bottom&#x27;
-    value = 0
-  []
-  [yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;bottom&#x27;
-    value = 0
-  []
-[]
-
-[Materials]
-  [elasticity_tensor]
-    type = ADComputeIsotropicElasticityTensor
-    youngs_modulus = 2.1e5
-    poissons_ratio = 0.3
-  []
-  [strain]
-    type = ADComputeSmallStrain
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [stress]
-    type = SmallStrainDegradedElasticPK2Stress_StrainSpectral
-    d = &#x27;d&#x27;
-    d_crit = 2.0
-  []
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;phase_field_regularization_length energy_release_rate critical_fracture_energy&#x27;
-    prop_values = &#x27;0.015 2.7 14.88&#x27;
-  []
-  [local_dissipation]
-    type = LinearLocalDissipation
-    d = &#x27;d&#x27;
-  []
-  [fracture_properties]
-    type = ADFractureMaterial
-    local_dissipation_norm = 8/3
-  []
-  [degradation]
-    type = LorentzDegradation
-    d = &#x27;d&#x27;
-    residual_degradation = 1e-09
-  []
-[]
-
-[Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = &#x27;fy&#x27;
-    boundary = &#x27;top&#x27;
-  []
-[]
-
-[Executioner]
-  type = FixedPointTransient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels &#x27;
-                        &#x27;-snes_type&#x27;
-  petsc_options_value = &#x27;asm      ilu          200         200                0                     &#x27;
-                        &#x27;vinewtonrsls&#x27;
-  dt = 1e-4
-  end_time = 6e-3
-
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
-
-  automatic_scaling = true
-  compute_scaling_once = false
-
-  fp_max_its = 100
-  fp_tol = 1e-06
-  accept_on_max_fp_iteration = true
-[]
-
-[Outputs]
-  print_linear_residuals = false
-  print_linear_converged_reason = false
-  print_nonlinear_converged_reason = false
-  [csv]
-    type = CSV
-    delimiter = &#x27; &#x27;
-    file_base = &#x27;force_displacement&#x27;
-  []
-  [exodus]
-    type = Exodus
-    file_base = &#x27;visualize&#x27;
-  []
-  [console]
-    type = Console
-    outlier_variable_norms = false
-  []
-[]
-</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#49e70ce5-b999-45a4-b74e-c5d8f43b4dc2">(benchmarks/fixed_point_iteration/mechanical_fracture_uo.i)</a></section><section class="scrollspy" id="2d99eb32-6e2d-4e5a-a631-a93fa5e3c90e" data-section-level="2" data-section-text="Visualizing the outputs"><h2 id="visualizing-the-outputs">Visualizing the outputs</h2><p>The following animations are generated using Paraview.</p><picture class="materialboxed moose-image"><img src="../media/mode1.gif" style="width:60%;margin:auto;padding-top:2.5%;"></img></picture></section></section><div class="moose-modal modal" id="306e6f84-ff24-4163-9f2f-9eac24f63f98"><div class="modal-content"><h4>(doc/benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#42c84a64-9661-462a-8c7d-6c757b28b4dc">(benchmarks/mode1_initial_damage/fracture.i)</a><p><a href="../source/ics/CohesiveDamageIC.html">CohesiveDamageIC</a> and <a href="../source/ics/BrittleDamageIC.html">BrittleDamageIC</a> are predefined initial conditions based on closed-form solutions.</p></section><section class="scrollspy" id="68ef09b7-d485-4e4b-8838-a9807b0f711a" data-section-level="2" data-section-text="Visualizing the outputs"><h2 id="visualizing-the-outputs">Visualizing the outputs</h2><p>The following animations are generated using Paraview.</p><picture class="materialboxed moose-image"><img src="../media/mode1.gif" style="width:60%;margin:auto;padding-top:2.5%;"></img></picture></section></section><div class="moose-modal modal" id="78fcbfac-c5ce-46cc-b6b8-862ff7b696c9"><div class="modal-content"><h4>(doc/benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 Gc = 2.7
 l = 0.015
@@ -449,7 +268,7 @@ k = 1e-09
     file_base = &#x27;visualize&#x27;
   []
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="743ec0ea-84c1-4d43-a8e4-7ac20b3ce77e"><div class="modal-content"><h4>(doc/benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="1dc097d6-d339-43b5-aeb4-00c1b61530c7"><div class="modal-content"><h4>(doc/benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   type = FileMesh
   file = &#x27;gold/geo.msh&#x27;
 []
@@ -537,7 +356,7 @@ k = 1e-09
   print_linear_converged_reason = false
   print_nonlinear_converged_reason = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="0538d905-dedc-406e-966e-d200f16b5499"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="c48711c9-d811-4a9a-bfb7-a0c8982e8adb"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 Gc = 2.7
 l = 0.015
@@ -716,7 +535,7 @@ k = 1e-09
     file_base = &#x27;visualize&#x27;
   []
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="d400d5de-fb8c-4568-a44b-545985bc8f5c"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="5a249109-5e71-4f7d-b065-524c560b6fa7"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 Gc = 2.7
 l = 0.015
@@ -895,7 +714,7 @@ k = 1e-09
     file_base = &#x27;visualize&#x27;
   []
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="855d849f-399f-4e97-ad10-b545050156c1"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="5bdefdea-d811-4180-aaed-43577a02d291"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 Gc = 2.7
 l = 0.015
@@ -1074,7 +893,7 @@ k = 1e-09
     file_base = &#x27;visualize&#x27;
   []
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="a285ecc2-387c-47b5-8e4f-f6d63de303a0"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="fdc6a473-ad9a-4e2d-99e7-7d4a9fd919dc"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 Gc = 2.7
 l = 0.015
@@ -1253,7 +1072,7 @@ k = 1e-09
     file_base = &#x27;visualize&#x27;
   []
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="38f85be2-860a-4265-901f-fd5656f7f480"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="fa72d466-edd6-4294-bb4d-40933038d2e9"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   type = FileMesh
   file = &#x27;gold/geo.msh&#x27;
 []
@@ -1341,7 +1160,7 @@ k = 1e-09
   print_linear_converged_reason = false
   print_nonlinear_converged_reason = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="0f6ad6a2-3130-47fc-b967-3efc7fd08329"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="012d6474-05e8-4b3e-9068-56f28d1e1789"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   type = FileMesh
   file = &#x27;gold/geo.msh&#x27;
 []
@@ -1429,7 +1248,7 @@ k = 1e-09
   print_linear_converged_reason = false
   print_nonlinear_converged_reason = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="208adec7-80e9-4306-8843-309fbc315466"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="db1e0b0f-ff33-40ec-9d11-9c0b85337641"><div class="modal-content"><h4>(benchmarks/mode1_geometric_notch/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   type = FileMesh
   file = &#x27;gold/geo.msh&#x27;
 []
@@ -1517,7 +1336,7 @@ k = 1e-09
   print_linear_converged_reason = false
   print_nonlinear_converged_reason = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="ba6902a3-9f1d-4d7d-966c-b307d727eaea"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="42c84a64-9661-462a-8c7d-6c757b28b4dc"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [square]
     type = GeneratedMeshGenerator
     dim = 2
@@ -1639,185 +1458,4 @@ k = 1e-09
   print_linear_converged_reason = false
   print_nonlinear_converged_reason = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="49e70ce5-b999-45a4-b74e-c5d8f43b4dc2"><div class="modal-content"><h4>(benchmarks/fixed_point_iteration/mechanical_fracture_uo.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
-  type = FixedPointProblem
-[]
-
-[Mesh]
-  type = FileMesh
-  file = &#x27;gold/geo.msh&#x27;
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [fy]
-  []
-[]
-
-[UserObjects]
-  [E_driving]
-    type = ADFPIMaterialPropertyUserObject
-    mat_prop = &#x27;E_el_active&#x27;
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_x&#x27;
-    component = 0
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_y&#x27;
-    component = 1
-    displacements = &#x27;disp_x disp_y&#x27;
-    save_in = &#x27;fy&#x27;
-  []
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = &#x27;d&#x27;
-  []
-  [pff_barr]
-    type = ADPFFBarrier
-    variable = &#x27;d&#x27;
-  []
-  [pff_react]
-    type = ADPFFReaction
-    variable = &#x27;d&#x27;
-    driving_energy_uo = &#x27;E_driving&#x27;
-    lag = false
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top&#x27;
-    function = &#x27;t&#x27;
-  []
-  [xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top bottom&#x27;
-    value = 0
-  []
-  [yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;bottom&#x27;
-    value = 0
-  []
-[]
-
-[Materials]
-  [elasticity_tensor]
-    type = ADComputeIsotropicElasticityTensor
-    youngs_modulus = 2.1e5
-    poissons_ratio = 0.3
-  []
-  [strain]
-    type = ADComputeSmallStrain
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [stress]
-    type = SmallStrainDegradedElasticPK2Stress_StrainSpectral
-    d = &#x27;d&#x27;
-    d_crit = 2.0
-  []
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;phase_field_regularization_length energy_release_rate critical_fracture_energy&#x27;
-    prop_values = &#x27;0.015 2.7 14.88&#x27;
-  []
-  [local_dissipation]
-    type = LinearLocalDissipation
-    d = &#x27;d&#x27;
-  []
-  [fracture_properties]
-    type = ADFractureMaterial
-    local_dissipation_norm = 8/3
-  []
-  [degradation]
-    type = LorentzDegradation
-    d = &#x27;d&#x27;
-    residual_degradation = 1e-09
-  []
-[]
-
-[Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = &#x27;fy&#x27;
-    boundary = &#x27;top&#x27;
-  []
-[]
-
-[Executioner]
-  type = FixedPointTransient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels &#x27;
-                        &#x27;-snes_type&#x27;
-  petsc_options_value = &#x27;asm      ilu          200         200                0                     &#x27;
-                        &#x27;vinewtonrsls&#x27;
-  dt = 1e-4
-  end_time = 6e-3
-
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
-
-  automatic_scaling = true
-  compute_scaling_once = false
-
-  fp_max_its = 100
-  fp_tol = 1e-06
-  accept_on_max_fp_iteration = true
-[]
-
-[Outputs]
-  print_linear_residuals = false
-  print_linear_converged_reason = false
-  print_nonlinear_converged_reason = false
-  [csv]
-    type = CSV
-    delimiter = &#x27; &#x27;
-    file_base = &#x27;force_displacement&#x27;
-  []
-  [exodus]
-    type = Exodus
-    file_base = &#x27;visualize&#x27;
-  []
-  [console]
-    type = Console
-    outlier_variable_norms = false
-  []
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#6d0e8d76-c111-4458-a4b3-b748cbe3bc3e" class="tooltipped" data-position="left" data-tooltip="The elasticity subproblem">The elasticity subproblem</a></li><li><a href="#1191c4dc-c197-41c8-9041-9c9eaaca0e2c" class="tooltipped" data-position="left" data-tooltip="The fracture subproblem">The fracture subproblem</a></li><li><a href="#38b19938-cf95-4d2d-9059-d7e6ee20ceaf" class="tooltipped" data-position="left" data-tooltip="Defining initial damage">Defining initial damage</a></li><li><a href="#7400effa-e4aa-4b83-9346-b22bb58123d8" class="tooltipped" data-position="left" data-tooltip="Fixed - point iteration : the other way">Fixed - point iteration : the other way</a></li><li><a href="#2d99eb32-6e2d-4e5a-a631-a93fa5e3c90e" class="tooltipped" data-position="left" data-tooltip="Visualizing the outputs">Visualizing the outputs</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../js/init.js"></script><script type="text/javascript" src="../js/navigation.js"></script><script type="text/javascript" src="../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../js/search_index.js"></script><script type="text/javascript" src="../js/sqa_moose.js"></script>
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#ad163f9f-07b1-4982-8875-8d5bd160205f" class="tooltipped" data-position="left" data-tooltip="The elasticity subproblem">The elasticity subproblem</a></li><li><a href="#4b34ee21-fe19-4776-a25a-f20488c1581a" class="tooltipped" data-position="left" data-tooltip="The fracture subproblem">The fracture subproblem</a></li><li><a href="#92afb838-24ae-42c9-aa0d-3f8bf440a17c" class="tooltipped" data-position="left" data-tooltip="Defining initial damage">Defining initial damage</a></li><li><a href="#68ef09b7-d485-4e4b-8838-a9807b0f711a" class="tooltipped" data-position="left" data-tooltip="Visualizing the outputs">Visualizing the outputs</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../js/init.js"></script><script type="text/javascript" src="../js/navigation.js"></script><script type="text/javascript" src="../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../js/search_index.js"></script><script type="text/javascript" src="../js/sqa_moose.js"></script>
