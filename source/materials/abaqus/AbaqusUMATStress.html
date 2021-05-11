@@ -1,0 +1,131 @@
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Abaqus UMAT Stress | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../../modules/index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="6d50f144-7f85-4fa3-ac39-c2fda93eaf0e"><i class="material-icons">menu</i></a><ul class="sidenav" id="6d50f144-7f85-4fa3-ac39-c2fda93eaf0e"><li><a href="../../../install/index.html">Install</a></li><li><a href="../../../theory/index.html">Theory</a></li><li><a href="../../../modules/index.html">Modules</a></li><li><a href="../../../syntax/index.html">Syntax</a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="col hide-on-med-and-down l12"><nav class="breadcrumb-nav"><div class="nav-wrapper"><a href="../.." class="breadcrumb">source</a><span class="breadcrumb">materials</span><span class="breadcrumb">abaqus</span><a href="#" class="breadcrumb">AbaqusUMATStress</a></div></nav></div></div><div class="row"><div class="moose-content col s12 m12 l10"><section id="54ac373c-4e3b-470c-b2fd-d3db4f8623e3" data-section-level="1" data-section-text="Abaqus UMAT Stress"><h1 id="abaqus-umat-stress">Abaqus UMAT Stress</h1><p>Coupling material to use Abaqus UMAT models in MOOSE</p><section class="scrollspy" id="15bf5f2a-c5fa-4e26-be2e-7799a751bd84" data-section-level="2" data-section-text="Description"><h2 id="description">Description</h2><p><code>AbaqusUMATStress</code> provides an interface for using _Abaqus UMAT_ functions as constitutive models in MOOSE.</p></section><section class="scrollspy" id="21b10fc2-6648-4cc6-b6e2-26303855c4ef" data-section-level="2" data-section-text="UMAT User subroutine interface"><h2 id="umat-user-subroutine-interface">UMAT User subroutine interface</h2><p>UMAT functions are commonly coded in Fortran, are located in the <code>$(APPLICATION_DIR)/plugins</code> and <code>$(APPLICATION_DIR)/test/plugins</code> directories, and are automatically compiled by the MOOSE build system.</p><p>A UMAT file <code>my_umat.f</code> can be loaded by the <code>AbaqusUMATStress</code> by providing the the full path and filename without an extension via the <a href="#0190cf7f-10c9-4e8c-8c6f-ffda213432e2" class="moose-modal-link modal-trigger">&quot;plugin&quot;</a> parameter in the MOOSE input file.</p><p>A valid UMAT subroutine has the following call signature</p><pre class="moose-pre"><code class="language-text">
+SUBROUTINE UMAT(STRESS,STATEV,DDSDDE,SSE,SPD,SCD,
+     1 RPL,DDSDDT,DRPLDE,DRPLDT,
+     2 STRAN,DSTRAN,TIME,DTIME,TEMP,DTEMP,PREDEF,DPRED,CMNAME,
+     3 NDI,NSHR,NTENS,NSTATV,PROPS,NPROPS,COORDS,DROT,PNEWDT,
+     4 CELENTCELENT,DFGRD0,DFGRD1,NOEL,NPT,LAYER,KSPT,KSTEP,KINC)
+C
+      CHARACTER*80 CMNAME
+      DIMENSION STRESS(NTENS),STATEV(NSTATV),
+     1 DDSDDE(NTENS,NTENS),DDSDDT(NTENS),DRPLDE(NTENS),
+     2 STRAN(NTENS),DSTRAN(NTENS),TIME(2),PREDEF(1),DPRED(1),
+     3 PROPS(NPROPS),COORDS(3),DROT(3,3),DFGRD0(3,3),DFGRD1(3,3)
+
+
+      user coding to define DDSDDE, STRESS, STATEV, SSE, SPD, SCD
+      and, if necessary, RPL, DDSDDT, DRPLDE, DRPLDT, PNEWDT
+
+
+      RETURN
+      END
+</code></pre><p>A description of the input and output parameters of the UMAT user subroutines can be found in the Abaqus user manual.</p><div class="card moose-alert moose-alert-note"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">comment</i><span class="moose-alert-title-brand">note</span></div><div class="card-content"><div class="moose-alert-content"><p><p>Temperature coupling and <code>PREDEF</code> support are not yet implemented.</p></p></div></div></div></section><section class="scrollspy" id="aa8b8e94-7548-4106-b083-d5cce373f689" data-section-level="2" data-section-text="Example Input File"><h2 id="example-input-file">Example Input File</h2><pre class="moose-pre" style="max-height:350px;"><code class="language-text">[constant]
+  type = AbaqusUMATStress
+  #                      Young&#x27;s modulus,  Poisson&#x27;s Ratio, Yield, Hardening
+  constant_properties = &#x27;1000 0.3 10 100&#x27;
+  plugin = ../../plugins/linear_strain_hardening
+  num_state_vars = 3
+[]
+</code></pre><a class="moose-source-filename tooltipped modal-trigger" href="#b9cec452-9677-469d-b3c9-103fdacd18c4">(moose/modules/tensor_mechanics/test/tests/umat/linear_strain_hardening.i)</a></section><section class="scrollspy" id="a46a1e35-74db-4c23-b215-ff7d9eaab932" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="d25439ca-a6b6-4247-9b19-e83b14690667" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">constant_properties</span><span class="moose-parameter-header-description">Constant mechanical and thermal material properties (PROPS)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Constant mechanical and thermal material properties (PROPS)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">num_state_vars</span><span class="moose-parameter-header-description">The number of state variables this UMAT is going to use</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The number of state variables this UMAT is going to use</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">plugin</span><span class="moose-parameter-header-description">The path to the compiled dynamic library for the plugin you want to use</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>FileName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The path to the compiled dynamic library for the plugin you want to use</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="9a5723d7-0f2d-4786-a253-5ee4a00d4643" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="248e1bf7-920e-4459-93d4-d98cd982028c" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="b696076c-87da-428f-a5a2-3d9b8637bd1a" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section class="scrollspy" id="91dbccb2-0b92-4e2f-a4ce-e4eab6638524" data-section-level="2" data-section-text="References"><h2 id="references">References</h2><div class="moose-bibliography"><ol></ol></div></section></section><div class="moose-modal modal" id="0190cf7f-10c9-4e8c-8c6f-ffda213432e2"><div class="modal-content"><h4>plugin</h4><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>FileName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The path to the compiled dynamic library for the plugin you want to use</p></div></div><div class="moose-modal modal" id="b9cec452-9677-469d-b3c9-103fdacd18c4"><div class="modal-content"><h4>(moose/modules/tensor_mechanics/test/tests/umat/linear_strain_hardening.i)</h4><pre class="moose-pre"><code class="language-text"># Testing the UMAT Interface - creep linear strain hardening model using the finite strain formulation - visco-plastic material.
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 3
+    xmin = -0.5
+    xmax = 0.5
+    ymin = -0.5
+    ymax = 0.5
+    zmin = -0.5
+    zmax = 0.5
+  []
+[]
+
+[Functions]
+  [top_pull]
+    type = ParsedFunction
+    value = t/100
+  []
+[]
+
+[Modules/TensorMechanics/Master]
+  [all]
+    add_variables = true
+    strain = FINITE
+  []
+[]
+
+[BCs]
+  [y_pull_function]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = top_pull
+  []
+  [x_bot]
+    type = DirichletBC
+    variable = disp_x
+    boundary = left
+    value = 0.0
+  []
+  [y_bot]
+    type = DirichletBC
+    variable = disp_y
+    boundary = bottom
+    value = 0.0
+  []
+  [z_bot]
+    type = DirichletBC
+    variable = disp_z
+    boundary = front
+    value = 0.0
+  []
+[]
+
+[Materials]
+  [constant]
+    type = AbaqusUMATStress
+    #                      Young&#x27;s modulus,  Poisson&#x27;s Ratio, Yield, Hardening
+    constant_properties = &#x27;1000 0.3 10 100&#x27;
+    plugin = ../../plugins/linear_strain_hardening
+    num_state_vars = 3
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;PJFNK&#x27;
+
+  petsc_options = &#x27;-snes_ksp_ew&#x27;
+  petsc_options_iname = &#x27;-ksp_gmres_restart&#x27;
+  petsc_options_value = &#x27;101&#x27;
+
+  line_search = &#x27;none&#x27;
+
+  l_max_its = 100
+  nl_max_its = 100
+  nl_rel_tol = 1e-12
+  nl_abs_tol = 1e-10
+  l_tol = 1e-9
+  start_time = 0.0
+  num_steps = 30
+  dt = 1.0
+[]
+
+[Preconditioning]
+  [smp]
+    type = SMP
+    full = true
+  []
+[]
+
+[Outputs]
+  [out]
+    type = Exodus
+    elemental_as_nodal = true
+  []
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div><div class="col hide-on-med-and-down l2"><div class="toc-wrapper pin-top"><ul class="section table-of-contents"><li><a href="#15bf5f2a-c5fa-4e26-be2e-7799a751bd84" class="tooltipped" data-position="left" data-tooltip="Description">Description</a></li><li><a href="#21b10fc2-6648-4cc6-b6e2-26303855c4ef" class="tooltipped" data-position="left" data-tooltip="UMAT User subroutine interface">UMAT User subroutine interface</a></li><li><a href="#aa8b8e94-7548-4106-b083-d5cce373f689" class="tooltipped" data-position="left" data-tooltip="Example Input File">Example Input File</a></li><li><a href="#a46a1e35-74db-4c23-b215-ff7d9eaab932" class="tooltipped" data-position="left" data-tooltip="Input Parameters">Input Parameters</a></li><li><a href="#91dbccb2-0b92-4e2f-a4ce-e4eab6638524" class="tooltipped" data-position="left" data-tooltip="References">References</a></li></ul></div></div></div></div></main></div></body><script type="text/javascript" src="../../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../../js/init.js"></script><script type="text/javascript" src="../../../js/navigation.js"></script><script type="text/javascript" src="../../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../../js/search_index.js"></script><script type="text/javascript" src="../../../js/sqa_moose.js"></script>
