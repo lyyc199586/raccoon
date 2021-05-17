@@ -1,1 +1,406 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>Tutorial 2 Mode I crack propagation | RACCOON</title><link rel="icon" type="image/x-icon" href="../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../contrib/jquery/jquery.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../media/framework/github-logo.png" class="github-mark"></img><img src="../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="85f5c274-c006-42e7-a7ff-00887b1fe393" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="61ad0435-616c-4487-bd05-3376677a7d25" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="fc5c8772-37ce-4377-9bc0-cdd05284544f" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="b973e10e-2f95-4ab4-954c-7ad6bab286b0" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="1027055b-7a7c-48f7-9dc7-f442e0fc2dbf"><i class="material-icons">menu</i></a><ul class="sidenav" id="1027055b-7a7c-48f7-9dc7-f442e0fc2dbf"><li><a href="#!" class="dropdown-trigger" data-target="a3eafc3d-1da5-4ba4-b486-9dbe62f5c947" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="61a01a5c-2d76-424a-9921-5da6383a5ff2" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e04bfae2-83d8-4ed3-8046-9ff26835c7c9" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="aacc92bf-20e7-4b22-86e5-cba4f173510e" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="85f5c274-c006-42e7-a7ff-00887b1fe393"><li><a href="../getting_started/install.html">Install RACCOON</a></li><li><a href="../getting_started/update.html">Update RACCOON</a></li><li><a href="../getting_started/ide.html">Code development</a></li><li><a href="../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="61ad0435-616c-4487-bd05-3376677a7d25"><li><a href="01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="fc5c8772-37ce-4377-9bc0-cdd05284544f"><li><a href="../theory/intro.html">Introduction</a></li><li><a href="../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../theory/minimization.html">The minimization problem</a></li><li><a href="../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="b973e10e-2f95-4ab4-954c-7ad6bab286b0"><li><a href="../modules/index.html">Physics modules</a></li><li><a href="../syntax/index.html">Complete syntax</a></li><li><a href="../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="a3eafc3d-1da5-4ba4-b486-9dbe62f5c947"><li><a href="../getting_started/install.html">Install RACCOON</a></li><li><a href="../getting_started/update.html">Update RACCOON</a></li><li><a href="../getting_started/ide.html">Code development</a></li><li><a href="../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="61a01a5c-2d76-424a-9921-5da6383a5ff2"><li><a href="01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="e04bfae2-83d8-4ed3-8046-9ff26835c7c9"><li><a href="../theory/intro.html">Introduction</a></li><li><a href="../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../theory/minimization.html">The minimization problem</a></li><li><a href="../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="aacc92bf-20e7-4b22-86e5-cba4f173510e"><li><a href="../modules/index.html">Physics modules</a></li><li><a href="../syntax/index.html">Complete syntax</a></li><li><a href="../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><div class="card moose-alert moose-alert-warning"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">warning</i><span class="moose-alert-title-brand">warning:</span>Before you proceed</div><div class="card-content"><div class="moose-alert-content"><p><p>All tutorials are written assuming that you are reasonably familiar with MOOSE. If you find most of the tutorials difficult to follow, please refer to <a href="https://mooseframework.inl.gov/">the official MOOSE website</a> for learning resources.</p></p></div></div></div><section id="1cc32826-da9b-4c35-9231-736bdefd0cf0" data-section-level="1" data-section-text="Tutorial 2 : Mode - I crack propagation"><h1 id="tutorial-2-mode-i-crack-propagation">Tutorial 2: Mode-I crack propagation</h1><div class="moose-content-pagination" style="margin-top:24px;margin-bottom:24px;"><a href="01_small_deformation_elasticity.html" class="moose-content-previous btn">Tutorial 1 Small d. . .<i class="material-icons left">arrow_back</i></a><a href="03_mode2_brittle_fracture.html" class="moose-content-next btn">Tutorial 3 Mode II. . .<i class="material-icons right">arrow_forward</i></a></div></section></div></div></div></main></div></body><script type="text/javascript" src="../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../js/init.js"></script><script type="text/javascript" src="../js/navigation.js"></script><script type="text/javascript" src="../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../js/search_index.js"></script><script type="text/javascript" src="../js/sqa_moose.js"></script>
+<!DOCTYPE html><head><meta charset="UTF-8"><title>List of tutorials | RACCOON</title><link rel="icon" type="image/x-icon" href="../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../media/framework/github-logo.png" class="github-mark"></img><img src="../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="908d7fae-2aa2-46a5-8c03-dca3d5fed5e5" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="b9fde164-7659-4764-9035-8940412b1421" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="73a90620-24bc-4a71-a0b1-b56daca6489d" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e8297ade-cdf0-45c2-8a6d-3c700820251e" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="df825d2e-09c8-4f7f-9c8d-dd59926072eb"><i class="material-icons">menu</i></a><ul class="sidenav" id="df825d2e-09c8-4f7f-9c8d-dd59926072eb"><li><a href="#!" class="dropdown-trigger" data-target="42dd6800-e75d-447f-99a9-2e1e3fa4a215" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e8cfac84-2523-49b8-bcca-fe8de69dca4b" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="917aedfc-4480-4e00-8071-9a0dd9f2a60c" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="40f7de70-65a9-49c7-917c-2728f7fe351d" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="908d7fae-2aa2-46a5-8c03-dca3d5fed5e5"><li><a href="../getting_started/install.html">Install RACCOON</a></li><li><a href="../getting_started/update.html">Update RACCOON</a></li><li><a href="../getting_started/ide.html">Code development</a></li><li><a href="../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="b9fde164-7659-4764-9035-8940412b1421"><li><a href="01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="73a90620-24bc-4a71-a0b1-b56daca6489d"><li><a href="../theory/intro.html">Introduction</a></li><li><a href="../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../theory/minimization.html">The minimization problem</a></li><li><a href="../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="e8297ade-cdf0-45c2-8a6d-3c700820251e"><li><a href="../modules/index.html">Physics modules</a></li><li><a href="../syntax/index.html">Complete syntax</a></li><li><a href="../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="42dd6800-e75d-447f-99a9-2e1e3fa4a215"><li><a href="../getting_started/install.html">Install RACCOON</a></li><li><a href="../getting_started/update.html">Update RACCOON</a></li><li><a href="../getting_started/ide.html">Code development</a></li><li><a href="../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="e8cfac84-2523-49b8-bcca-fe8de69dca4b"><li><a href="01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="917aedfc-4480-4e00-8071-9a0dd9f2a60c"><li><a href="../theory/intro.html">Introduction</a></li><li><a href="../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../theory/minimization.html">The minimization problem</a></li><li><a href="../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="40f7de70-65a9-49c7-917c-2728f7fe351d"><li><a href="../modules/index.html">Physics modules</a></li><li><a href="../syntax/index.html">Complete syntax</a></li><li><a href="../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="d5375829-ca87-491c-8933-c20edbb3fa62" data-section-level="1" data-section-text="List of tutorials"><h1 id="list-of-tutorials">List of tutorials</h1><ul class="browser-default"><li><p><a href="01_small_deformation_elasticity.html">1. Small deformation</a> </p></li><li><p><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a> </p></li><li><p><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a> </p></li><li><p><a href="04_soil_desiccation.html">4. Soil desiccation</a> </p></li><li><p><a href="05_large_deformation_elasticity.html">5. Large deformation</a> </p></li><li><p><a href="06_elastoplasticity.html">6. Elastoplasticity</a> </p></li><li><p><a href="07_ductile_fracture.html">7. Ductile fracture</a> </p></li><li><p><a href="08_three_point_bending.html">8. Three-point bending</a></p></li></ul><div class="card moose-alert moose-alert-note"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">comment</i><span class="moose-alert-title-brand">note:</span>Before you proceed</div><div class="card-content"><div class="moose-alert-content"><p><p>All tutorials are written assuming that you are reasonably familiar with MOOSE. If you find most of the tutorials difficult to follow, please refer to <a href="https://mooseframework.inl.gov/">the official MOOSE website</a> for learning resources.</p></p></div></div></div></section><section id="8b7de194-7ee0-4a93-a1b8-ddb592b49066" data-section-level="1" data-section-text="Tutorial 2 : Mode - I crack propagation"><h1 id="tutorial-2-mode-i-crack-propagation">Tutorial 2: Mode-I crack propagation</h1><p>In this tutorial, we will set up the model for Mode-I crack propagation.</p><p>The geometry and boundary conditions are the same as those in <a href="01_small_deformation_elasticity.html">Tutorial 1</a>.</p><p>At each time step, the alternative minimization scheme first solves the displacements with a fixed phase-field, then solves the phase-field with the updated displacements. This scheme is realized using MOOSE&#x27;s MultiApp system. We will set up two input files. One for the displacement subproblem, and the other one for the phase-field subproblem.</p><section id="88bf5c49-9c67-4a8d-b6a0-96f93894f647" data-section-level="2" data-section-text=": The displacement subproblem elasticity.i"><h2 id="the-displacement-subproblem"><code>elasticity.i</code>: The displacement subproblem</h2><p>First, we set up the displacement subproblem as our <em>main app</em>. Two additional global expressions are defined at the top of the input file:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">Gc = 2.7
+l = 0.02
+</code></pre><p>The mesh is locally refined using initial adaptivity:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+</code></pre><p>The quadratic degradation function is defined as</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[degradation]
+  type = PowerDegradationFunction
+  f_name = g
+  function = (1-d)^p*(1-eta)+eta
+  phase_field = d
+  parameter_names = &#x27;p eta &#x27;
+  parameter_values = &#x27;2 1e-6&#x27;
+[]
+</code></pre></section><section id="79f35d5e-d2af-4f25-b5f3-4c2ab0938a6a" data-section-level="2" data-section-text=": The phase - field subproblem fracture.i"><h2 id="the-phase-field-subproblem"><code>fracture.i</code>: The phase-field subproblem</h2><p>Next, we set up the phase-field subproblem as our <em>sub app</em>. The sub app uses the same mesh as the main app. The equation we want to solve is</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-86415fa9-23d9-44f7-a651-750225cd28e5"></span><script>var element = document.getElementById("moose-equation-86415fa9-23d9-44f7-a651-750225cd28e5");katex.render("  - \\divergence \\dfrac{2 \\Gc l}{c_0} \\grad d + \\dfrac{\\partial}{\\partial d} \\left( \\alpha \\dfrac{\\Gc}{c_0l} + \\psi^e \\right) = 0,", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span></p><p>on the inactive set. The (local part of the) free energy, i.e. the term in the paranthesis, is defined using an <code>ADDerivativeParsedMaterial</code>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[psi]
+  type = ADDerivativeParsedMaterial
+  f_name = psi
+  function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+  args = &#x27;d psie_active&#x27;
+  material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+  derivative_order = 1
+[]
+</code></pre><p>With the definition of local free energy <code>psi</code>, the following kernels are used to construct the equation:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+</code></pre><p>The bound constraints <span class="moose-katex-inline-equation" id="moose-equation-1182707a-034b-4008-89c5-db6ba9196935"><script>var element = document.getElementById("moose-equation-1182707a-034b-4008-89c5-db6ba9196935");katex.render("d_{n-1} \\leqslant d_n \\leqslant 1", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> on the active set is defined using</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+</code></pre></section><section id="d62cabeb-34ef-42fd-ae8c-5a62e7d49494" data-section-level="2" data-section-text="Transferring information between the main and the sub app"><h2 id="transferring-information-between-the-main-and-the-sub-app">Transferring information between the main and the sub app</h2><p>The displacement subproblem need to know the solution of the phase-field subproblem, and the phase-field subproblem need to know the active elastic energy <code>psie_active</code>. Therefore, some transfer of information between the two apps must exist.</p><p>To do that, we first let the displacement subproblem (the main app) be aware of its subapp by adding the following section to <code>elasticity.i</code>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = &#x27;Gc=${Gc};l=${l}&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+</code></pre><p>The <code>cli_args</code> makes sure <span class="moose-katex-inline-equation" id="moose-equation-ebf37e5f-aea1-4958-af6b-c90d86175a84"><script>var element = document.getElementById("moose-equation-ebf37e5f-aea1-4958-af6b-c90d86175a84");katex.render("\\Gc", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-f7544446-b0d4-45c4-abdb-267ffcbb4eea"><script>var element = document.getElementById("moose-equation-f7544446-b0d4-45c4-abdb-267ffcbb4eea");katex.render("l", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> are consistent across the two apps. The <code>execute_on</code> flag tells the main app to execute the sub app at the end of the time step (after the displacements are solved).</p><p>Next, we set up the appropriate transfer:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+[]
+</code></pre><p>The phase-field <span class="moose-katex-inline-equation" id="moose-equation-a4bd0070-3223-468a-a560-1d8ee586a7a3"><script>var element = document.getElementById("moose-equation-a4bd0070-3223-468a-a560-1d8ee586a7a3");katex.render("d", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> is retrieved from the sub app, and the main app sends the active elastic energy <span class="moose-katex-inline-equation" id="moose-equation-a4fb94ad-8ebb-4acd-9dc7-73de72e8a871"><script>var element = document.getElementById("moose-equation-a4fb94ad-8ebb-4acd-9dc7-73de72e8a871");katex.render("psie_active", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> to the sub app.</p></section><section id="496f19bb-04e4-4a2b-87be-f3eaeafd6f7a" data-section-level="2" data-section-text="The alternating minimization scheme"><h2 id="the-alternating-minimization-scheme">The alternating minimization scheme</h2><p>Now that we have set up the displacement subproblem, the phase-field subproblem, and the transfers between them, we are now in good shape to set up the alternating minimization scheme.</p><p>To do so, we rely on MOOSE&#x27;s Picard iteration. In essence, a Picard solve iterates between the main app and the sub app(s) until the solution in the main app no longer changes between Picard iterations. We add the following parameters to the <code>Executioner</code> section to enable Picard iteration:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">  picard_max_its = 20
+  accept_on_max_picard_iteration = true
+  picard_rel_tol = 1e-8
+  picard_abs_tol = 1e-10
+</code></pre></section><section id="0980ef45-308f-4e31-8482-b83e84629d7b" data-section-level="2" data-section-text="The complete input files"><h2 id="the-complete-input-files">The complete input files</h2><ul class="browser-default"><li><p><a class="moose-source-filename tooltipped modal-trigger" href="#cd75033d-6320-478f-b4a1-30d6311b1313">elasticity.i</a> </p></li><li><p><a class="moose-source-filename tooltipped modal-trigger" href="#5821b178-a370-4001-beb7-ac629472d58d">fracture.i</a></p></li></ul><div class="moose-content-pagination" style="margin-top:24px;margin-bottom:24px;"><a href="01_small_deformation_elasticity.html" class="moose-content-previous btn">Previous<i class="material-icons left">arrow_back</i></a><a href="03_mode2_brittle_fracture.html" class="moose-content-next btn">Next<i class="material-icons right">arrow_forward</i></a></div></section></section><div class="moose-modal modal" id="cd75033d-6320-478f-b4a1-30d6311b1313"><div class="modal-content"><h4>(doc/tutorials/mode1_brittle_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+Gc = 2.7
+l = 0.02
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = &#x27;Gc=${Gc};l=${l}&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+    output_properties = &#x27;elastic_strain psie_active&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 2e-5
+  end_time = 3.5e-3
+
+  picard_max_its = 20
+  accept_on_max_picard_iteration = true
+  picard_rel_tol = 1e-8
+  picard_abs_tol = 1e-10
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="5821b178-a370-4001-beb7-ac629472d58d"><div class="modal-content"><h4>(doc/tutorials/mode1_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc l&#x27;
+    prop_values = &#x27;${Gc} ${l}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d^2&#x27;
+    phase_field = d
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div></div></div></main></div></body><script type="text/javascript" src="../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../js/init.js"></script><script type="text/javascript" src="../js/navigation.js"></script><script type="text/javascript" src="../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../js/search_index.js"></script><script type="text/javascript" src="../js/sqa_moose.js"></script>
