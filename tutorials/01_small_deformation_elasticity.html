@@ -1,0 +1,254 @@
+<!DOCTYPE html><head><meta charset="UTF-8"><title>Tutorial 1 Small deformation elasticity | RACCOON</title><link rel="icon" type="image/x-icon" href="../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../media/framework/github-logo.png" class="github-mark"></img><img src="../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="f508a2de-a8ae-4312-abff-9d932966b907" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="51fe9e44-6dd4-4386-8cce-3b09874438f0" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="5567c107-ca5f-4747-a523-fbf2ba157d75" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="f2fdaa2a-7f6d-444f-9340-93eaf1b9c098" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="eb71b003-ffc9-4a47-ad4f-e2d8726d3026"><i class="material-icons">menu</i></a><ul class="sidenav" id="eb71b003-ffc9-4a47-ad4f-e2d8726d3026"><li><a href="#!" class="dropdown-trigger" data-target="a5b7a512-55f4-41c3-8108-a715c6d2e4b7" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="d8b33f11-153a-46fa-a29d-b450e79b14c3" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="a0eefd40-9a68-4b33-be57-4f966f34272e" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="72797944-ce7f-44e4-98d1-073874c7f09f" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="f508a2de-a8ae-4312-abff-9d932966b907"><li><a href="../getting_started/install.html">Install RACCOON</a></li><li><a href="../getting_started/update.html">Update RACCOON</a></li><li><a href="../getting_started/ide.html">Code development</a></li><li><a href="../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="51fe9e44-6dd4-4386-8cce-3b09874438f0"><li><a href="01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="5567c107-ca5f-4747-a523-fbf2ba157d75"><li><a href="../theory/intro.html">Introduction</a></li><li><a href="../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../theory/minimization.html">The minimization problem</a></li><li><a href="../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="f2fdaa2a-7f6d-444f-9340-93eaf1b9c098"><li><a href="../modules/index.html">Physics modules</a></li><li><a href="../syntax/index.html">Complete syntax</a></li><li><a href="../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="a5b7a512-55f4-41c3-8108-a715c6d2e4b7"><li><a href="../getting_started/install.html">Install RACCOON</a></li><li><a href="../getting_started/update.html">Update RACCOON</a></li><li><a href="../getting_started/ide.html">Code development</a></li><li><a href="../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="d8b33f11-153a-46fa-a29d-b450e79b14c3"><li><a href="01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="a0eefd40-9a68-4b33-be57-4f966f34272e"><li><a href="../theory/intro.html">Introduction</a></li><li><a href="../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../theory/minimization.html">The minimization problem</a></li><li><a href="../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="72797944-ce7f-44e4-98d1-073874c7f09f"><li><a href="../modules/index.html">Physics modules</a></li><li><a href="../syntax/index.html">Complete syntax</a></li><li><a href="../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><div class="card moose-alert moose-alert-warning"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">warning</i><span class="moose-alert-title-brand">warning:</span>Before you proceed</div><div class="card-content"><div class="moose-alert-content"><p><p>All tutorials are written assuming that you are reasonably familiar with MOOSE. If you find most of the tutorials difficult to follow, please refer to <a href="https://mooseframework.inl.gov/">the official MOOSE website</a> for learning resources.</p></p></div></div></div><section id="9feedad8-e77d-4a76-a85b-6ecb31184dc0" data-section-level="1" data-section-text="Tutorial 1 : Small deformation elasticity"><h1 id="tutorial-1-small-deformation-elasticity">Tutorial 1: Small deformation elasticity</h1><p>This tutorial covers the basic usage of RACCOON.</p><p>Consider a two-dimensional square plate with a notch (the commonly used geometry for Mode-I fracture) under stretch, we would like to solve for the displacements and visualize its strains and stresses everywhere.</p><section id="df4ce45e-235a-4e45-91c5-942fb2c09f50" data-section-level="2" data-section-text="Global expressions and parameters"><h2 id="global-expressions-and-parameters">Global expressions and parameters</h2><p>It is always good practice to define parameters using expressions at the top of the input file. Here, we first define two expressions for Young&#x27;s modulus and Poisson&#x27;s ratio:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">E = 2.1e5
+nu = 0.3
+</code></pre><p>Next, we convert <span class="moose-katex-inline-equation" id="moose-equation-8e66b526-56f1-4b08-a450-0573c55a3e00"><script>var element = document.getElementById("moose-equation-8e66b526-56f1-4b08-a450-0573c55a3e00");katex.render("E", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> and <span class="moose-katex-inline-equation" id="moose-equation-82617d0e-21d8-4314-8516-c0d08a295f42"><script>var element = document.getElementById("moose-equation-82617d0e-21d8-4314-8516-c0d08a295f42");katex.render("\\nu", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> to bulk modulus <span class="moose-katex-inline-equation" id="moose-equation-10831c35-e449-44b7-a798-6b6926d90da5"><script>var element = document.getElementById("moose-equation-10831c35-e449-44b7-a798-6b6926d90da5");katex.render("K", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> and shear modulus <span class="moose-katex-inline-equation" id="moose-equation-53c767a5-928d-476f-9566-90c90b33dddb"><script>var element = document.getElementById("moose-equation-53c767a5-928d-476f-9566-90c90b33dddb");katex.render("G", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> using brace expressions:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+</code></pre><p>For our convenience, let&#x27;s also define the global parameter <code>displacements</code> as that is required by several objects, e.g. <code>ADStressDivergenceTensors</code>, <code>ADComputeSmallStrain</code>, etc.. <code>GlobalParams</code> definitions will be applied wherever applicable throughout the input file, unless locally overridden.</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+</code></pre></section><section id="cc275837-d71b-4de9-b3a6-d7bc53b44613" data-section-level="2" data-section-text="Mesh"><h2 id="mesh">Mesh</h2><p>Let&#x27;s utilize symmetry about the x-axis so that we can get away with only modeling the top half of the domain:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+</code></pre><p>Notice that we defined an extra nodeset/sideset called &quot;noncrack&quot;, so that we can later apply the <span class="moose-katex-inline-equation" id="moose-equation-de6c3c0b-2006-4788-9c68-dff5e2fa678f"><script>var element = document.getElementById("moose-equation-de6c3c0b-2006-4788-9c68-dff5e2fa678f");katex.render("u_y = 0", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> symmetry condition.</p></section><section id="927d147e-8223-4f90-a2b2-a6611125f3d7" data-section-level="2" data-section-text="Variables and AuxVariables"><h2 id="variables-and-auxvariables">Variables and AuxVariables</h2><p>In this problem we solve for displacements in the x- and y- directions, hence we define</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+</code></pre><p>In addition, we define auxiliary variables <code>fy</code> and <code>d</code>:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+</code></pre><p>The AuxVariable <code>fy</code> will store residuals associated with Variable <code>disp_y</code>. Later, we will use it to compute the reaction force.</p><p>The AuxVariable <code>d</code> is a dummy variable representing the phase-field that is zero everywhere. In this tutorial, it will stay zero.</p></section><section id="9b29c220-ea97-4d28-a24a-56b5711a8d24" data-section-level="2" data-section-text="Kernels"><h2 id="kernels">Kernels</h2><p>Kernels are arguably the most important objects in an input file. They define the equations we are solving for. In this case, we solve for</p><p><span class="moose-katex-block-equation"><span class="moose-katex-equation table-cell" id="moose-equation-6ae47145-0656-4950-8a14-91c51f435f61"></span><script>var element = document.getElementById("moose-equation-6ae47145-0656-4950-8a14-91c51f435f61");katex.render("  \\divergence \\stress = \\bs{0},", element, {displayMode:true,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> without any body force.</p><p>Kernels are defined as</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
+[]
+</code></pre><p>We are solving a vector-valued equation, and the two kernels correspond to the two components, respectively.</p></section><section id="98f901de-5455-4156-9c11-daea7dc60390" data-section-level="2" data-section-text="Boundary conditions"><h2 id="boundary-conditions">Boundary conditions</h2><p>In this problem, there is a symmetry boundary condition on the bottom nodeset called &quot;noncrack&quot;, and a displacement-controlled Dirichlet boundary condition on the top. The boundary conditions are defined as</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+</code></pre><p>The y-displacement on the top boundary is set to be equal to the time <code>t</code>. In this quasi-static setting, we can use time as a convenient dummy load-control parameter.</p></section><section id="947cb1fd-3b52-4911-895f-33647def0205" data-section-level="2" data-section-text="Material models"><h2 id="material-models">Material models</h2><p>The material is assumed to be isotropic elastic under small strain assumptions. First, the homogeneous shear and bulk modulus are defined everywhere (at every quadrature point):</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[bulk]
+  type = ADGenericConstantMaterial
+  prop_names = &#x27;K G&#x27;
+  prop_values = &#x27;${K} ${G}&#x27;
+[]
+</code></pre><p>Since we don&#x27;t consider any fracture coupling, a dummy <code>NoDegradation</code> degradation function is defined as</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[no_degradation]
+  type = NoDegradation
+  f_name = g
+  function = 1
+  phase_field = d
+[]
+</code></pre><p>Then, the <code>Materials</code> section is completed by the definition of the strain calculator, the constitutive relation, and the stress calculator:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [no_degradation]
+    type = NoDegradation
+    f_name = g
+    function = 1
+    phase_field = d
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;elastic_strain&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+</code></pre><p>Notice that we have requested to output <code>elastic_strain</code> and <code>stress</code> to exodus. Since they are <code>RankTwoTensor</code>s, we will find elemental variables with names like <code>elastic_strain_00</code> and <code>stress_22</code>, denoting their corresponding component.</p><div class="card moose-alert moose-alert-tip"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">school</i><span class="moose-alert-title-brand">tip:</span>Material evaluation</div><div class="card-content"><div class="moose-alert-content"><p><p>It is imperative to understand that, in MOOSE, <code>MaterialProperties</code> are computed <em>on-thy-fly</em>. Material dependency is automatically resolved by MOOSE.</p></p></div></div></div></section><section id="7a925204-c756-430b-bdb4-6c92ca565107" data-section-level="2" data-section-text="Postprocessors"><h2 id="postprocessors">Postprocessors</h2><p>Finally, we add a postprocessor to sum the nodal values of <code>fy</code> along the top boundary to give us the reaction force in the y-direction:</p><pre class="moose-pre" style="max-height:350px;"><code class="language-python">[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+</code></pre></section><section id="25f5ccdf-f1bb-4d95-8cb2-eb49618ec072" data-section-level="2" data-section-text="The complete input file"><h2 id="the-complete-input-file"><a class="moose-source-filename tooltipped modal-trigger" href="#de42afee-8a3b-4263-9cca-632e3afa4258">The complete input file</a></h2><div class="moose-content-pagination" style="margin-top:24px;margin-bottom:24px;"><a href="02_mode1_brittle_fracture.html" class="moose-content-next btn">Tutorial 2 Mode I . . .<i class="material-icons right">arrow_forward</i></a></div></section></section><div class="moose-modal modal" id="de42afee-8a3b-4263-9cca-632e3afa4258"><div class="modal-content"><h4>(doc/tutorials/small_deformation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [no_degradation]
+    type = NoDegradation
+    f_name = g
+    function = 1
+    phase_field = d
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;elastic_strain&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 1e-5
+  end_time = 1e-4
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div></div></div></main></div></body><script type="text/javascript" src="../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../js/init.js"></script><script type="text/javascript" src="../js/navigation.js"></script><script type="text/javascript" src="../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../js/search_index.js"></script><script type="text/javascript" src="../js/sqa_moose.js"></script>
