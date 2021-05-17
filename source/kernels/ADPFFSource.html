@@ -1,698 +1,4 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>ADPFFSource | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="4c9bd77a-416a-4918-a158-fb7e397fd3bf" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="9b8af094-b754-4b55-aa92-e5aa8f656eeb" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="c2e30316-9cb7-4b9d-bfae-f6627539b59f" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="deffa7d0-f631-4803-a372-8b7907e56bf3" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="fb503b45-751c-4d72-b905-87c4e213b877"><i class="material-icons">menu</i></a><ul class="sidenav" id="fb503b45-751c-4d72-b905-87c4e213b877"><li><a href="#!" class="dropdown-trigger" data-target="1e14d37c-a460-414f-9e2c-29e1a22709bc" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="3973d838-8b70-465a-9602-f7908663b2c2" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="ecc91c7a-724e-4e0e-9347-169fe52c4fa1" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="9eb0a4b4-a489-44aa-838a-2b51d9465263" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="4c9bd77a-416a-4918-a158-fb7e397fd3bf"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/ide.html">Code development</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="9b8af094-b754-4b55-aa92-e5aa8f656eeb"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="c2e30316-9cb7-4b9d-bfae-f6627539b59f"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="deffa7d0-f631-4803-a372-8b7907e56bf3"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="1e14d37c-a460-414f-9e2c-29e1a22709bc"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/ide.html">Code development</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="3973d838-8b70-465a-9602-f7908663b2c2"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="ecc91c7a-724e-4e0e-9347-169fe52c4fa1"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="9eb0a4b4-a489-44aa-838a-2b51d9465263"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="e54c72e8-6d71-4198-9225-a77eb18f0cf2" data-section-level="1" data-section-text="ADPFFSource"><h1 id="adpffsource">ADPFFSource</h1><div class="card moose-alert moose-alert-construction"><div class="card-title moose-alert-title"><i class="material-icons moose-inline-icon">build</i><span class="moose-alert-title-brand">construction:</span>Undocumented Class</div><div class="card-content"><div class="moose-alert-content"><p><p>The ADPFFSource has not been documented. The content listed below should be used as a starting point for documenting the class, which includes the typical automatic documentation associated with a MooseObject; however, what is contained is ultimately determined by what is necessary to make the documentation clear for users.</p></p></div></div></div><p>Compute the source term in phase-field evolution equation</p><section id="979eedf9-8083-4f28-a0b0-bd72c3c8ac90" data-section-level="2" data-section-text="Overview"><h2 id="overview">Overview</h2><p></p></section><section id="d3de0c21-37ee-4e8c-9b94-5caf6bd5fb3b" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2><p></p></section><section id="ade05de2-eb25-459c-9ae1-f4e089d2a765" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="6bfe158e-71d6-43a1-9951-b3004171bcf9" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">variable</span><span class="moose-parameter-header-description">The name of the variable that this residual object operates on</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>NonlinearVariableName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The name of the variable that this residual object operates on</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="ccd1111b-739b-4968-8432-7d1b0c1a2ea3" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">displacements</span><span class="moose-parameter-header-description">The displacements</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The displacements</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">free_energy</span><span class="moose-parameter-header-description">psiThe Helmholtz free energy</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>psiThe Helmholtz free energy</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="e97b0847-1b07-4a4b-8f6c-7e78f0dccbcf" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">diag_save_in</span><span class="moose-parameter-header-description">The name of auxiliary variables to save this Kernel's diagonal Jacobian contributions to. Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;AuxVariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The name of auxiliary variables to save this Kernel's diagonal Jacobian contributions to. Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">save_in</span><span class="moose-parameter-header-description">The name of auxiliary variables to save this Kernel's residual contributions to.  Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;AuxVariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The name of auxiliary variables to save this Kernel's residual contributions to.  Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_displaced_mesh</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether or not this object should use the displaced mesh for computation. Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not this object should use the displaced mesh for computation. Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="2ad6235d-bd8d-4aed-92ca-6d5fb3af9fe6" data-section-level="3" data-section-text="Tagging Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">extra_matrix_tags</span><span class="moose-parameter-header-description">The extra tags for the matrices this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;TagName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The extra tags for the matrices this Kernel should fill</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">extra_vector_tags</span><span class="moose-parameter-header-description">The extra tags for the vectors this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;TagName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The extra tags for the vectors this Kernel should fill</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">matrix_tags</span><span class="moose-parameter-header-default">system</span><span class="moose-parameter-header-description">The tag for the matrices this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>system</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>nontime, system</p><p class="moose-parameter-description"><span>Description:</span>The tag for the matrices this Kernel should fill</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">vector_tags</span><span class="moose-parameter-header-default">nontime</span><span class="moose-parameter-header-description">The tag for the vectors this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>nontime</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>nontime, time</p><p class="moose-parameter-description"><span>Description:</span>The tag for the vectors this Kernel should fill</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Tagging Parameters</h3></summary></details></section></section><section id="dc58cc34-6843-4165-9deb-aff0294f54af" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#c05068b5-cbeb-4670-b69f-36f5814dd725">(tutorials/mode1_ductile_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#ffb8c051-cdb9-42e5-9d47-b34643ff0bad">(tutorials/mode1_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#884c6809-80bb-4b43-bd1e-b61f30ecbdaf">(tutorials/mode2_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#9b6689b6-17e9-492c-92fd-d34802189e67">(tutorials/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#78334607-acca-4bbe-a80d-8e8b0d7ca634">(tutorials/mode2_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#843eec40-ce26-43bd-b496-e2e8964f9838">(tutorials/homogeneous_cube/CNH_J2_powerlawhardening.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#f99e4ea6-fce1-4219-a4ce-6c33381ad4e3">(tutorials/mode1_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#8037c47a-b95a-4879-b6e2-18e6f3363bb8">(benchmarks/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#944a9dc7-4eb2-4507-b120-6729116149a2">(tutorials/three_point_bending/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#57d35c91-bd6b-454d-ac65-917ba2b3c204">(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening.i)</a></li></ul></section></section><div class="moose-modal modal" id="c05068b5-cbeb-4670-b69f-36f5814dd725"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.75 0.25 0&#x27;
-      length = 0.8
-      width = 0.1
-      height = 1
-      length_direction = &#x27;1 1 0&#x27;
-      width_direction = &#x27;-1 1 0&#x27;
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [psip_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc psic l&#x27;
-    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
-    args = &#x27;d psie_active psip_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="ffb8c051-cdb9-42e5-9d47-b34643ff0bad"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = BoxMarker
-      bottom_left = &#x27;0.4 0 0&#x27;
-      top_right = &#x27;1 0.05 0&#x27;
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc psic l&#x27;
-    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
-    args = &#x27;d psie_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="884c6809-80bb-4b43-bd1e-b61f30ecbdaf"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [top_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = 0
-    ymax = 0.5
-    boundary_id_offset = 0
-    boundary_name_prefix = top_half
-  []
-  [top_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = top_half
-    new_boundary = top_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [bottom_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = -0.5
-    ymax = 0
-    boundary_id_offset = 5
-    boundary_name_prefix = bottom_half
-  []
-  [bottom_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = bottom_half
-    new_boundary = bottom_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [stitch]
-    type = StitchedMeshGenerator
-    inputs = &#x27;top_stitch bottom_stitch&#x27;
-    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.65 -0.25 0&#x27;
-      length = 0.8
-      width = 0.2
-      height = 1
-      length_direction = &#x27;1 -1.5 0&#x27;
-      width_direction = &#x27;1.5 1 0&#x27;
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc psic l&#x27;
-    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
-    args = &#x27;d psie_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="9b6689b6-17e9-492c-92fd-d34802189e67"><div class="modal-content"><h4>(tutorials/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = &#x27;gold/fields_refined.e&#x27;
-    use_for_exodus_restart = true
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [psii_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [bounds_dummy]
-  []
-  [Gc]
-    initial_from_file_var = &#x27;Gc&#x27;
-  []
-  [psic]
-    initial_from_file_var = &#x27;psic&#x27;
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = d
-  []
-  [pff_react]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_toughness]
-    type = ADParsedMaterial
-    f_name = Gc
-    args = Gc
-    function = &#x27;Gc&#x27;
-  []
-  [critial_fracture_energy]
-    type = ADParsedMaterial
-    f_name = psic
-    args = psic
-    function = &#x27;psic&#x27;
-  []
-  [length_scale]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;l&#x27;
-    prop_values = &#x27;${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 1 0 1e-6&#x27;
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psii_active)&#x27;
-    args = &#x27;d psie_active psii_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[BCs]
-  [Periodic]
-    [all]
-      variable = d
-      auto_direction = &#x27;x y&#x27;
-    []
-  []
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="78334607-acca-4bbe-a80d-8e8b0d7ca634"><div class="modal-content"><h4>(tutorials/mode2_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [top_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = 0
-    ymax = 0.5
-    boundary_id_offset = 0
-    boundary_name_prefix = top_half
-  []
-  [top_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = top_half
-    new_boundary = top_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [bottom_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = -0.5
-    ymax = 0
-    boundary_id_offset = 5
-    boundary_name_prefix = bottom_half
-  []
-  [bottom_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = bottom_half
-    new_boundary = bottom_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [stitch]
-    type = StitchedMeshGenerator
-    inputs = &#x27;top_stitch bottom_stitch&#x27;
-    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.65 -0.25 0&#x27;
-      length = 0.8
-      width = 0.2
-      height = 1
-      length_direction = &#x27;1 -1.5 0&#x27;
-      width_direction = &#x27;1.5 1 0&#x27;
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc l&#x27;
-    prop_values = &#x27;${Gc} ${l}&#x27;
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p eta &#x27;
-    parameter_values = &#x27;2 1e-6&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d^2&#x27;
-    phase_field = d
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
-    args = &#x27;d psie_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="843eec40-ce26-43bd-b496-e2e8964f9838"><div class="modal-content"><h4>(tutorials/homogeneous_cube/CNH_J2_powerlawhardening.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+<!DOCTYPE html><head><meta charset="UTF-8"><title>ADPFFSource | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="1a16db0f-50aa-4701-b502-f63221ebacc7" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="d6cef55e-c8da-4dd6-8413-03d295915303" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="2562759c-5c12-48d9-b34a-0f55d1bdf050" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="1874330e-eb9e-464b-b694-c5b9bab518c7" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="a836ad4d-f0f8-4a33-a6b4-eb332481c08c"><i class="material-icons">menu</i></a><ul class="sidenav" id="a836ad4d-f0f8-4a33-a6b4-eb332481c08c"><li><a href="#!" class="dropdown-trigger" data-target="dc4bbd5e-1430-4dae-8c1a-02cfba5cc60d" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="86ef609b-c2ca-4931-b01d-06a446964132" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="aaa070b0-bdb1-45b0-b047-75c5e559964a" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="c6b0342a-e67d-476a-9e86-6cad71ebba11" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="1a16db0f-50aa-4701-b502-f63221ebacc7"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/ide.html">Code development</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="d6cef55e-c8da-4dd6-8413-03d295915303"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="2562759c-5c12-48d9-b34a-0f55d1bdf050"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="1874330e-eb9e-464b-b694-c5b9bab518c7"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="dc4bbd5e-1430-4dae-8c1a-02cfba5cc60d"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/ide.html">Code development</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="86ef609b-c2ca-4931-b01d-06a446964132"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="aaa070b0-bdb1-45b0-b047-75c5e559964a"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="c6b0342a-e67d-476a-9e86-6cad71ebba11"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="9c2f4c3e-ccae-4a93-ba90-2887f9ead848" data-section-level="1" data-section-text="ADPFFSource"><h1 id="adpffsource">ADPFFSource</h1><p>The source term in the phase-field evolution equation. The weak form is <span class="moose-katex-inline-equation" id="moose-equation-7d3f95eb-dc52-452f-8f85-aa45cc891357"><script>var element = document.getElementById("moose-equation-7d3f95eb-dc52-452f-8f85-aa45cc891357");katex.render("(w, \\dfrac{\\partial \\psi}{\\partial d})", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>.</p><section id="71b5ad3a-4b84-475b-878f-59de2968e504" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="328e876b-6a91-4530-b721-9b303a64ff62" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="a058d384-6d25-455f-956f-3cf0c1143ff4" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">variable</span><span class="moose-parameter-header-description">The name of the variable that this residual object operates on</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>NonlinearVariableName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The name of the variable that this residual object operates on</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="bf1c70ba-dcf1-4f3e-a2ea-2e728ab440ca" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">displacements</span><span class="moose-parameter-header-description">The displacements</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The displacements</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">free_energy</span><span class="moose-parameter-header-description">psiThe Helmholtz free energy</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>psiThe Helmholtz free energy</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="4aab6dbe-9272-4d26-8d15-f2244072d4f7" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">diag_save_in</span><span class="moose-parameter-header-description">The name of auxiliary variables to save this Kernel's diagonal Jacobian contributions to. Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;AuxVariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The name of auxiliary variables to save this Kernel's diagonal Jacobian contributions to. Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">save_in</span><span class="moose-parameter-header-description">The name of auxiliary variables to save this Kernel's residual contributions to.  Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;AuxVariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The name of auxiliary variables to save this Kernel's residual contributions to.  Everything about that variable must match everything about this variable (the type, what blocks it's on, etc.)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_displaced_mesh</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether or not this object should use the displaced mesh for computation. Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not this object should use the displaced mesh for computation. Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="a65f768b-bc01-495e-bd82-a896700af66c" data-section-level="3" data-section-text="Tagging Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">extra_matrix_tags</span><span class="moose-parameter-header-description">The extra tags for the matrices this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;TagName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The extra tags for the matrices this Kernel should fill</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">extra_vector_tags</span><span class="moose-parameter-header-description">The extra tags for the vectors this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;TagName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The extra tags for the vectors this Kernel should fill</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">matrix_tags</span><span class="moose-parameter-header-default">system</span><span class="moose-parameter-header-description">The tag for the matrices this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>system</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>nontime, system</p><p class="moose-parameter-description"><span>Description:</span>The tag for the matrices this Kernel should fill</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">vector_tags</span><span class="moose-parameter-header-default">nontime</span><span class="moose-parameter-header-description">The tag for the vectors this Kernel should fill</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>nontime</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MultiMooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>nontime, time</p><p class="moose-parameter-description"><span>Description:</span>The tag for the vectors this Kernel should fill</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Tagging Parameters</h3></summary></details></section></section><section id="076b7e00-e607-4e23-871a-373a785fd079" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#bef178da-9b4a-4104-a2a7-dec16a1664b9">(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#2d33af01-eb06-4c07-aa92-1f4b17b42857">(tutorials/mode2_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#45115d6f-2c2f-4a7e-851c-8db0844b449d">(tutorials/mode2_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#a5f2d8e1-182e-4725-a284-17ea0535f5f9">(tutorials/mode1_ductile_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#e29d19e9-ecad-4326-ba85-827af9fc6b14">(tutorials/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#d1243100-baba-4330-b88a-7c0e47cb6941">(tutorials/mode1_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#fce88475-ad38-442c-8e91-45acc147525e">(benchmarks/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#00e44d09-4cd6-49e7-893f-d9ed84a69c1e">(tutorials/three_point_bending/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#f07b7a4b-3789-499f-804f-a514c97cfd71">(tutorials/mode1_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#7b09721a-aa11-42ca-ab75-5d03785f8008">(tutorials/homogeneous_cube/CNH_J2_powerlawhardening.i)</a></li></ul></section></section><div class="moose-modal modal" id="bef178da-9b4a-4104-a2a7-dec16a1664b9"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 R = 4
 
 psic = 15
@@ -835,7 +141,7 @@ ep0 = 0.01
     type = ComputeDeformationGradient
   []
   [hencky]
-    type = CNHIsotropicElasticity
+    type = HenckyIsotropicElasticity
     bulk_modulus = K
     shear_modulus = G
     phase_field = d
@@ -940,20 +246,45 @@ ep0 = 0.01
   print_linear_residuals = false
   csv = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="f99e4ea6-fce1-4219-a4ce-6c33381ad4e3"><div class="modal-content"><h4>(tutorials/mode1_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [gen]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="2d33af01-eb06-4c07-aa92-1f4b17b42857"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [top_half]
     type = GeneratedMeshGenerator
     dim = 2
     nx = 30
     ny = 15
+    ymin = 0
     ymax = 0.5
+    boundary_id_offset = 0
+    boundary_name_prefix = top_half
   []
-  [noncrack]
+  [top_stitch]
     type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
+    input = top_half
+    new_boundary = top_stitch
     bottom_left = &#x27;0.5 0 0&#x27;
     top_right = &#x27;1 0 0&#x27;
+  []
+  [bottom_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = -0.5
+    ymax = 0
+    boundary_id_offset = 5
+    boundary_name_prefix = bottom_half
+  []
+  [bottom_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = bottom_half
+    new_boundary = bottom_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [stitch]
+    type = StitchedMeshGenerator
+    inputs = &#x27;top_stitch bottom_stitch&#x27;
+    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
   []
   construct_side_list_from_node_list = true
 []
@@ -966,11 +297,170 @@ ep0 = 0.01
   max_h_level = 2
   [Markers]
     [marker]
-      type = BoxMarker
-      bottom_left = &#x27;0.4 0 0&#x27;
-      top_right = &#x27;1 0.05 0&#x27;
-      outside = DO_NOTHING
+      type = OrientedBoxMarker
+      center = &#x27;0.65 -0.25 0&#x27;
+      length = 0.8
+      width = 0.2
+      height = 1
+      length_direction = &#x27;1 -1.5 0&#x27;
+      width_direction = &#x27;1.5 1 0&#x27;
       inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc psic l&#x27;
+    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="45115d6f-2c2f-4a7e-851c-8db0844b449d"><div class="modal-content"><h4>(tutorials/mode2_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [top_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = 0
+    ymax = 0.5
+    boundary_id_offset = 0
+    boundary_name_prefix = top_half
+  []
+  [top_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = top_half
+    new_boundary = top_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [bottom_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = -0.5
+    ymax = 0
+    boundary_id_offset = 5
+    boundary_name_prefix = bottom_half
+  []
+  [bottom_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = bottom_half
+    new_boundary = bottom_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [stitch]
+    type = StitchedMeshGenerator
+    inputs = &#x27;top_stitch bottom_stitch&#x27;
+    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = OrientedBoxMarker
+      center = &#x27;0.65 -0.25 0&#x27;
+      length = 0.8
+      width = 0.2
+      height = 1
+      length_direction = &#x27;1 -1.5 0&#x27;
+      width_direction = &#x27;1.5 1 0&#x27;
+      inside = REFINE
+      outside = DO_NOTHING
     []
   []
 []
@@ -1065,7 +555,392 @@ ep0 = 0.01
 [Outputs]
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="8037c47a-b95a-4879-b6e2-18e6f3363bb8"><div class="modal-content"><h4>(benchmarks/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[MultiApps]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="a5f2d8e1-182e-4725-a284-17ea0535f5f9"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = OrientedBoxMarker
+      center = &#x27;0.75 0.25 0&#x27;
+      length = 0.8
+      width = 0.1
+      height = 1
+      length_direction = &#x27;1 1 0&#x27;
+      width_direction = &#x27;-1 1 0&#x27;
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [psip_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc psic l&#x27;
+    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
+    args = &#x27;d psie_active psip_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="e29d19e9-ecad-4326-ba85-827af9fc6b14"><div class="modal-content"><h4>(tutorials/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [fmg]
+    type = FileMeshGenerator
+    file = &#x27;gold/fields_refined.e&#x27;
+    use_for_exodus_restart = true
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [psii_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [bounds_dummy]
+  []
+  [Gc]
+    initial_from_file_var = &#x27;Gc&#x27;
+  []
+  [psic]
+    initial_from_file_var = &#x27;psic&#x27;
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = d
+  []
+  [pff_react]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_toughness]
+    type = ADParsedMaterial
+    f_name = Gc
+    args = Gc
+    function = &#x27;Gc&#x27;
+  []
+  [critial_fracture_energy]
+    type = ADParsedMaterial
+    f_name = psic
+    args = psic
+    function = &#x27;psic&#x27;
+  []
+  [length_scale]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;l&#x27;
+    prop_values = &#x27;${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 1 0 1e-6&#x27;
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psii_active)&#x27;
+    args = &#x27;d psie_active psii_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[BCs]
+  [Periodic]
+    [all]
+      variable = d
+      auto_direction = &#x27;x y&#x27;
+    []
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+
+  nl_abs_tol = 1e-08
+  nl_rel_tol = 1e-06
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="d1243100-baba-4330-b88a-7c0e47cb6941"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc psic l&#x27;
+    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="fce88475-ad38-442c-8e91-45acc147525e"><div class="modal-content"><h4>(benchmarks/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[MultiApps]
   [mechanical]
     type = TransientMultiApp
     input_files = &#x27;mechanical.i&#x27;
@@ -1236,7 +1111,7 @@ ep0 = 0.01
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="944a9dc7-4eb2-4507-b120-6729116149a2"><div class="modal-content"><h4>(tutorials/three_point_bending/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="00e44d09-4cd6-49e7-893f-d9ed84a69c1e"><div class="modal-content"><h4>(tutorials/three_point_bending/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [fmg]
     type = FileMeshGenerator
     file = &#x27;gold/beam.msh&#x27;
@@ -1341,7 +1216,132 @@ ep0 = 0.01
 [Outputs]
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="57d35c91-bd6b-454d-ac65-917ba2b3c204"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="f07b7a4b-3789-499f-804f-a514c97cfd71"><div class="modal-content"><h4>(tutorials/mode1_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc l&#x27;
+    prop_values = &#x27;${Gc} ${l}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d^2&#x27;
+    phase_field = d
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="7b09721a-aa11-42ca-ab75-5d03785f8008"><div class="modal-content"><h4>(tutorials/homogeneous_cube/CNH_J2_powerlawhardening.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 R = 4
 
 psic = 15
@@ -1484,7 +1484,7 @@ ep0 = 0.01
     type = ComputeDeformationGradient
   []
   [hencky]
-    type = HenckyIsotropicElasticity
+    type = CNHIsotropicElasticity
     bulk_modulus = K
     shear_modulus = G
     phase_field = d
