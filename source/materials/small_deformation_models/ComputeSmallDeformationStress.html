@@ -1,929 +1,4 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>ComputeSmallDeformationStress | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="d5d1308d-84e9-43c6-8d88-cc00aa5d64c5" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e2c59f06-2c13-469c-996b-9788b8947561" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="882f7011-32c8-4a38-b073-7ecfbe38d67e" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="8be38806-0efe-42fb-b7bb-96758aae9c41" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="7a6407a2-6ad2-482d-b60b-a6520a3b87a4"><i class="material-icons">menu</i></a><ul class="sidenav" id="7a6407a2-6ad2-482d-b60b-a6520a3b87a4"><li><a href="#!" class="dropdown-trigger" data-target="95efacea-398d-4b5f-9cc6-7ce5b18e2738" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="ca4153f8-f3b8-4d98-b655-6b92c8f6cb1f" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="0dafbf4f-2c40-421c-b4cd-8b69760453ee" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="43044a40-da9a-4ede-997d-ef954cc0775d" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="d5d1308d-84e9-43c6-8d88-cc00aa5d64c5"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="e2c59f06-2c13-469c-996b-9788b8947561"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="882f7011-32c8-4a38-b073-7ecfbe38d67e"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="8be38806-0efe-42fb-b7bb-96758aae9c41"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="95efacea-398d-4b5f-9cc6-7ce5b18e2738"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="ca4153f8-f3b8-4d98-b655-6b92c8f6cb1f"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="0dafbf4f-2c40-421c-b4cd-8b69760453ee"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="43044a40-da9a-4ede-997d-ef954cc0775d"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="3ab48d18-3093-4e72-908e-763fc3fe7688" data-section-level="1" data-section-text="ComputeSmallDeformationStress"><h1 id="computesmalldeformationstress">ComputeSmallDeformationStress</h1><p>The stress calculator given an elasticity model and a plasticity model. Small deformation is assumed.</p><section id="40ea08ae-c68c-4fed-acb0-6cfb577e9bac" data-section-level="2" data-section-text="Overview"><h2 id="overview">Overview</h2><p>The input of this stress calculator is the mechanical strain <span class="moose-katex-inline-equation" id="moose-equation-47959985-8d47-4aa4-a478-5578f8766ac2"><script>var element = document.getElementById("moose-equation-47959985-8d47-4aa4-a478-5578f8766ac2");katex.render("\\strain^m", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>. An elasticity model must be provided. A plasticity model can be optionally provided.</p><p>The stress calculator calls the elasticity model to compute the Cauchy stress given the mechanical strain.</p><p>If a plasticity model is provided, plastic deformation will be updated to bring the stress state back onto the yield surface.</p></section><section id="2f2c0a33-ca72-4af5-80fc-cf92ccf1d5e6" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="05ba7f18-ef3d-4bcc-af9e-1ef11eda9904" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="04c468f2-47b4-40b8-a47f-1284bdf6c0a9" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">elasticity_model</span><span class="moose-parameter-header-description">Name of the elastic stress-strain constitutive model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the elastic stress-strain constitutive model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="b50dcf9a-f7e9-4213-b0dd-a2231fcd77cb" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">plasticity_model</span><span class="moose-parameter-header-description">Name of the plasticity model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the plasticity model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="0a7dfcb3-d1e7-4b6b-b206-c044e764f43c" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="236bd662-322c-4340-9318-6b7ec2c60732" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section id="b8ca84ce-0134-4367-bced-36047410c182" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#57daa3c6-5146-4a67-94dd-46e316c0bffc">(tutorials/small_deformation/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#5051b3ed-42b9-4301-9be0-0b80688b87e1">(tutorials/mode2_brittle_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#1f0ec177-bc5f-409d-8e56-f2c254d2992f">(tutorials/mode2_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#74122020-d1f2-4f6e-a1bd-bd57a30c80d5">(tutorials/small_deformation/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#7100b878-a783-4db6-80f1-80a8db81a298">(tutorials/mode1_brittle_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#9668172a-94ba-4d75-968e-fed6cdb03c94">(tutorials/mode1_ductile_fracture/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#147499d8-b92f-4132-a51f-b0830cc413b3">(tutorials/mode1_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#ef1b7159-7d6f-4623-8b88-5556dd06ed7d">(tutorials/soil_desiccation/elasticity.i)</a></li></ul></section></section><div class="moose-modal modal" id="57daa3c6-5146-4a67-94dd-46e316c0bffc"><div class="modal-content"><h4>(tutorials/small_deformation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-[]
-
-[AuxVariables]
-  [fy]
-  []
-  [d]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    save_in = fy
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = top
-    function = &#x27;t&#x27;
-  []
-  [yfix]
-    type = DirichletBC
-    variable = disp_y
-    boundary = noncrack
-    value = 0
-  []
-  [xfix]
-    type = DirichletBC
-    variable = disp_x
-    boundary = top
-    value = 0
-  []
-[]
-
-[Materials]
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G&#x27;
-    prop_values = &#x27;${K} ${G}&#x27;
-  []
-  [no_degradation]
-    type = NoDegradation
-    f_name = g
-    function = 1
-    phase_field = d
-  []
-  [strain]
-    type = ADComputeSmallStrain
-  []
-  [elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    output_properties = &#x27;elastic_strain&#x27;
-    outputs = exodus
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-    output_properties = &#x27;stress&#x27;
-    outputs = exodus
-  []
-[]
-
-[Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = fy
-    boundary = top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 1e-5
-  end_time = 1e-4
-[]
-
-[Outputs]
-  exodus = true
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="5051b3ed-42b9-4301-9be0-0b80688b87e1"><div class="modal-content"><h4>(tutorials/mode2_brittle_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-
-Gc = 2.7
-l = 0.02
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = &#x27;Gc=${Gc};l=${l}&#x27;
-    execute_on = &#x27;TIMESTEP_END&#x27;
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
-    variable = d
-    source_variable = d
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    variable = psie_active
-    source_variable = psie_active
-  []
-[]
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[Mesh]
-  [top_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = 0
-    ymax = 0.5
-    boundary_id_offset = 0
-    boundary_name_prefix = top_half
-  []
-  [top_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = top_half
-    new_boundary = top_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [bottom_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = -0.5
-    ymax = 0
-    boundary_id_offset = 5
-    boundary_name_prefix = bottom_half
-  []
-  [bottom_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = bottom_half
-    new_boundary = bottom_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [stitch]
-    type = StitchedMeshGenerator
-    inputs = &#x27;top_stitch bottom_stitch&#x27;
-    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.65 -0.25 0&#x27;
-      length = 0.8
-      width = 0.2
-      height = 1
-      length_direction = &#x27;1 -1.5 0&#x27;
-      width_direction = &#x27;1.5 1 0&#x27;
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-[]
-
-[AuxVariables]
-  [fx]
-  []
-  [d]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-    save_in = fx
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-  []
-[]
-
-[BCs]
-  [xdisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top_half_top&#x27;
-    function = &#x27;t&#x27;
-    preset = false
-  []
-  [yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top_half_top bottom_half_bottom&#x27;
-    value = 0
-  []
-  [xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;bottom_half_bottom&#x27;
-    value = 0
-  []
-[]
-
-[Materials]
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G&#x27;
-    prop_values = &#x27;${K} ${G}&#x27;
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p eta &#x27;
-    parameter_values = &#x27;2 1e-6&#x27;
-  []
-  [strain]
-    type = ADComputeSmallStrain
-  []
-  [elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    decomposition = SPECTRAL
-    output_properties = &#x27;elastic_strain psie_active&#x27;
-    outputs = exodus
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-    output_properties = &#x27;stress&#x27;
-    outputs = exodus
-  []
-[]
-
-[Postprocessors]
-  [Fx]
-    type = NodalSum
-    variable = fx
-    boundary = top_half_top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 2e-5
-  end_time = 2e-2
-
-  picard_max_its = 20
-  accept_on_max_picard_iteration = true
-  picard_rel_tol = 1e-8
-  picard_abs_tol = 1e-10
-[]
-
-[Outputs]
-  exodus = true
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="1f0ec177-bc5f-409d-8e56-f2c254d2992f"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-
-Gc = 2.7
-psic = 14.88
-l = 0.02
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = &#x27;Gc=${Gc};psic=${psic};l=${l}&#x27;
-    execute_on = &#x27;TIMESTEP_END&#x27;
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
-    variable = d
-    source_variable = d
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    variable = psie_active
-    source_variable = psie_active
-  []
-[]
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[Mesh]
-  [top_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = 0
-    ymax = 0.5
-    boundary_id_offset = 0
-    boundary_name_prefix = top_half
-  []
-  [top_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = top_half
-    new_boundary = top_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [bottom_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = -0.5
-    ymax = 0
-    boundary_id_offset = 5
-    boundary_name_prefix = bottom_half
-  []
-  [bottom_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = bottom_half
-    new_boundary = bottom_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [stitch]
-    type = StitchedMeshGenerator
-    inputs = &#x27;top_stitch bottom_stitch&#x27;
-    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.65 -0.25 0&#x27;
-      length = 0.8
-      width = 0.2
-      height = 1
-      length_direction = &#x27;1 -1.5 0&#x27;
-      width_direction = &#x27;1.5 1 0&#x27;
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-[]
-
-[AuxVariables]
-  [fx]
-  []
-  [d]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-    save_in = fx
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-  []
-[]
-
-[BCs]
-  [xdisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top_half_top&#x27;
-    function = &#x27;t&#x27;
-    preset = false
-  []
-  [yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top_half_top bottom_half_bottom top_half_left top_half_right bottom_half_left &#x27;
-               &#x27;bottom_half_right&#x27;
-    value = 0
-  []
-  [xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;bottom_half_bottom&#x27;
-    value = 0
-  []
-[]
-
-[Materials]
-  [bulk_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l Gc psic&#x27;
-    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
-  []
-  [strain]
-    type = ADComputeSmallStrain
-  []
-  [elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    decomposition = SPECTRAL
-    output_properties = &#x27;elastic_strain psie_active&#x27;
-    outputs = exodus
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-    output_properties = &#x27;stress&#x27;
-    outputs = exodus
-  []
-[]
-
-[Postprocessors]
-  [Fx]
-    type = NodalSum
-    variable = fx
-    boundary = top_half_top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 2e-5
-  end_time = 2e-2
-
-  picard_max_its = 20
-  accept_on_max_picard_iteration = true
-  picard_rel_tol = 1e-8
-  picard_abs_tol = 1e-10
-[]
-
-[Outputs]
-  exodus = true
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="74122020-d1f2-4f6e-a1bd-bd57a30c80d5"><div class="modal-content"><h4>(tutorials/small_deformation/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-sigma_y = 50
-n = 5
-ep0 = 0.001
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-  volumetric_locking_correction = true
-[]
-
-[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-[]
-
-[AuxVariables]
-  [fy]
-  []
-  [d]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    save_in = fy
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = top
-    function = &#x27;t&#x27;
-  []
-  [yfix]
-    type = DirichletBC
-    variable = disp_y
-    boundary = noncrack
-    value = 0
-  []
-  [xfix]
-    type = DirichletBC
-    variable = disp_x
-    boundary = top
-    value = 0
-  []
-[]
-
-[Materials]
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G&#x27;
-    prop_values = &#x27;${K} ${G}&#x27;
-  []
-  [no_degradation]
-    type = NoDegradation
-    f_name = g
-    function = 1
-    phase_field = d
-  []
-  [strain]
-    type = ADComputeSmallStrain
-  []
-  [elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    output_properties = &#x27;elastic_strain&#x27;
-    outputs = exodus
-  []
-  [hardening]
-    type = PowerLawHardening
-    yield_stress = ${sigma_y}
-    exponent = ${n}
-    reference_plastic_strain = ${ep0}
-    phase_field = d
-    degradation_function = g
-  []
-  [plasticity]
-    type = SmallDeformationJ2Plasticity
-    hardening_model = hardening
-    output_properties = &#x27;effective_plastic_strain plastic_strain&#x27;
-    outputs = exodus
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-    plasticity_model = plasticity
-    output_properties = &#x27;stress&#x27;
-    outputs = exodus
-  []
-[]
-
-[Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = fy
-    boundary = top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 1e-5
-  end_time = 1e-3
-[]
-
-[Outputs]
-  exodus = true
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="7100b878-a783-4db6-80f1-80a8db81a298"><div class="modal-content"><h4>(tutorials/mode1_brittle_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-
-Gc = 2.7
-l = 0.02
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = &#x27;Gc=${Gc};l=${l}&#x27;
-    execute_on = &#x27;TIMESTEP_END&#x27;
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
-    variable = d
-    source_variable = d
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    variable = psie_active
-    source_variable = psie_active
-  []
-[]
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = BoxMarker
-      bottom_left = &#x27;0.4 0 0&#x27;
-      top_right = &#x27;1 0.05 0&#x27;
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-[]
-
-[AuxVariables]
-  [fy]
-  []
-  [d]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    save_in = fy
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = top
-    function = &#x27;t&#x27;
-  []
-  [yfix]
-    type = DirichletBC
-    variable = disp_y
-    boundary = noncrack
-    value = 0
-  []
-  [xfix]
-    type = DirichletBC
-    variable = disp_x
-    boundary = top
-    value = 0
-  []
-[]
-
-[Materials]
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G&#x27;
-    prop_values = &#x27;${K} ${G}&#x27;
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p eta &#x27;
-    parameter_values = &#x27;2 1e-6&#x27;
-  []
-  [strain]
-    type = ADComputeSmallStrain
-  []
-  [elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    decomposition = NONE
-    output_properties = &#x27;elastic_strain psie_active&#x27;
-    outputs = exodus
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-    output_properties = &#x27;stress&#x27;
-    outputs = exodus
-  []
-[]
-
-[Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = fy
-    boundary = top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 2e-5
-  end_time = 3.5e-3
-
-  picard_max_its = 20
-  accept_on_max_picard_iteration = true
-  picard_rel_tol = 1e-8
-  picard_abs_tol = 1e-10
-[]
-
-[Outputs]
-  exodus = true
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="9668172a-94ba-4d75-968e-fed6cdb03c94"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+<!DOCTYPE html><head><meta charset="UTF-8"><title>ComputeSmallDeformationStress | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="394b47d4-3ec9-4664-b4ff-f62cd4b2bcd5" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="b4c019ec-e0fd-4929-977f-e611f3fd4812" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="5159969b-0d67-42b9-bef5-c7e349d2270f" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="bb09788b-ce13-413f-b92c-408058f46391" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="1985dccd-eedf-4ecb-9ce1-43ad6e21fd4b"><i class="material-icons">menu</i></a><ul class="sidenav" id="1985dccd-eedf-4ecb-9ce1-43ad6e21fd4b"><li><a href="#!" class="dropdown-trigger" data-target="2a533a4e-c70e-442f-b609-eeae436b8f18" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="376ee251-52b3-4c65-9eb9-1ca022c9ef40" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="b4b3b266-df42-4951-ad99-c859ea69ecb3" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="dd45b5a8-1a37-4ce9-93e3-52b59a6a98ad" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="394b47d4-3ec9-4664-b4ff-f62cd4b2bcd5"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="b4c019ec-e0fd-4929-977f-e611f3fd4812"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="5159969b-0d67-42b9-bef5-c7e349d2270f"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="bb09788b-ce13-413f-b92c-408058f46391"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="2a533a4e-c70e-442f-b609-eeae436b8f18"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="376ee251-52b3-4c65-9eb9-1ca022c9ef40"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="b4b3b266-df42-4951-ad99-c859ea69ecb3"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="dd45b5a8-1a37-4ce9-93e3-52b59a6a98ad"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="79556be1-4a82-4ea1-a5a9-ed7dcb916e6f" data-section-level="1" data-section-text="ComputeSmallDeformationStress"><h1 id="computesmalldeformationstress">ComputeSmallDeformationStress</h1><p>The stress calculator given an elasticity model and a plasticity model. Small deformation is assumed.</p><section id="1eff447d-cc7d-4195-8291-a7a694f2213f" data-section-level="2" data-section-text="Overview"><h2 id="overview">Overview</h2><p>The input of this stress calculator is the mechanical strain <span class="moose-katex-inline-equation" id="moose-equation-0e808c2d-6145-4f2b-a45d-3d65f4f44a2a"><script>var element = document.getElementById("moose-equation-0e808c2d-6145-4f2b-a45d-3d65f4f44a2a");katex.render("\\strain^m", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>. An elasticity model must be provided. A plasticity model can be optionally provided.</p><p>The stress calculator calls the elasticity model to compute the Cauchy stress given the mechanical strain.</p><p>If a plasticity model is provided, plastic deformation will be updated to bring the stress state back onto the yield surface.</p></section><section id="305efb2a-2a98-413b-a3eb-622b7635e565" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="8abe997c-3c4f-4921-9dd5-ec918ca4363b" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="ec429555-7e60-45c4-89cc-fb27cfca4cac" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">elasticity_model</span><span class="moose-parameter-header-description">Name of the elastic stress-strain constitutive model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the elastic stress-strain constitutive model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="ec9fde11-e424-4dfc-a639-776aacd6c997" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">plasticity_model</span><span class="moose-parameter-header-description">Name of the plasticity model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the plasticity model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="96483373-c243-4d3a-beb8-1e03fc648e09" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="44b7b80d-bf9a-4c8e-a5e7-f8069924f5c0" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section id="57743aa0-288d-4073-822d-d81d3a4eed5d" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#5ef7cedc-401d-4c41-a776-cf1484ac37f1">(tutorials/mode1_ductile_fracture/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#3cee5add-4874-4b5e-b5c4-71847fb3eaea">(tutorials/mode1_brittle_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#586f34ef-384a-4d5b-879c-c48157b07902">(tutorials/small_deformation/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#70b5134a-7c26-4341-bd91-8b395a6a8b57">(tutorials/mode2_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#8c10f4a3-e04c-41b2-a7cb-956602e303a2">(tutorials/mode1_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b01a50e8-bae4-4c5b-89f0-caafd6413dc0">(tutorials/small_deformation/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#0b3ff99a-773c-4703-b878-a2409373ab12">(tutorials/mode2_brittle_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#78870dbf-81b9-497b-9529-f8f3a5c07818">(tutorials/soil_desiccation/elasticity.i)</a></li></ul></section></section><div class="moose-modal modal" id="5ef7cedc-401d-4c41-a776-cf1484ac37f1"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
@@ -1153,7 +228,559 @@ ep0 = 0.005
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="147499d8-b92f-4132-a51f-b0830cc413b3"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="3cee5add-4874-4b5e-b5c4-71847fb3eaea"><div class="modal-content"><h4>(tutorials/mode1_brittle_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+Gc = 2.7
+l = 0.02
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = &#x27;Gc=${Gc};l=${l}&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+    output_properties = &#x27;elastic_strain psie_active&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 2e-5
+  end_time = 3.5e-3
+
+  picard_max_its = 20
+  accept_on_max_picard_iteration = true
+  picard_rel_tol = 1e-8
+  picard_abs_tol = 1e-10
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="586f34ef-384a-4d5b-879c-c48157b07902"><div class="modal-content"><h4>(tutorials/small_deformation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [no_degradation]
+    type = NoDegradation
+    f_name = g
+    function = 1
+    phase_field = d
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;elastic_strain&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 1e-5
+  end_time = 1e-4
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="70b5134a-7c26-4341-bd91-8b395a6a8b57"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+Gc = 2.7
+psic = 14.88
+l = 0.02
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = &#x27;Gc=${Gc};psic=${psic};l=${l}&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [top_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = 0
+    ymax = 0.5
+    boundary_id_offset = 0
+    boundary_name_prefix = top_half
+  []
+  [top_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = top_half
+    new_boundary = top_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [bottom_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = -0.5
+    ymax = 0
+    boundary_id_offset = 5
+    boundary_name_prefix = bottom_half
+  []
+  [bottom_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = bottom_half
+    new_boundary = bottom_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [stitch]
+    type = StitchedMeshGenerator
+    inputs = &#x27;top_stitch bottom_stitch&#x27;
+    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = OrientedBoxMarker
+      center = &#x27;0.65 -0.25 0&#x27;
+      length = 0.8
+      width = 0.2
+      height = 1
+      length_direction = &#x27;1 -1.5 0&#x27;
+      width_direction = &#x27;1.5 1 0&#x27;
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fx]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    save_in = fx
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+  []
+[]
+
+[BCs]
+  [xdisp]
+    type = FunctionDirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;top_half_top&#x27;
+    function = &#x27;t&#x27;
+    preset = false
+  []
+  [yfix]
+    type = DirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;top_half_top bottom_half_bottom top_half_left top_half_right bottom_half_left &#x27;
+               &#x27;bottom_half_right&#x27;
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;bottom_half_bottom&#x27;
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G l Gc psic&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = SPECTRAL
+    output_properties = &#x27;elastic_strain psie_active&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fx]
+    type = NodalSum
+    variable = fx
+    boundary = top_half_top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 2e-5
+  end_time = 2e-2
+
+  picard_max_its = 20
+  accept_on_max_picard_iteration = true
+  picard_rel_tol = 1e-8
+  picard_abs_tol = 1e-10
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="8c10f4a3-e04c-41b2-a7cb-956602e303a2"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
@@ -1350,7 +977,380 @@ l = 0.02
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="ef1b7159-7d6f-4623-8b88-5556dd06ed7d"><div class="modal-content"><h4>(tutorials/soil_desiccation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 4
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b01a50e8-bae4-4c5b-89f0-caafd6413dc0"><div class="modal-content"><h4>(tutorials/small_deformation/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+sigma_y = 50
+n = 5
+ep0 = 0.001
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+  volumetric_locking_correction = true
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [no_degradation]
+    type = NoDegradation
+    f_name = g
+    function = 1
+    phase_field = d
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;elastic_strain&#x27;
+    outputs = exodus
+  []
+  [hardening]
+    type = PowerLawHardening
+    yield_stress = ${sigma_y}
+    exponent = ${n}
+    reference_plastic_strain = ${ep0}
+    phase_field = d
+    degradation_function = g
+  []
+  [plasticity]
+    type = SmallDeformationJ2Plasticity
+    hardening_model = hardening
+    output_properties = &#x27;effective_plastic_strain plastic_strain&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    plasticity_model = plasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 1e-5
+  end_time = 1e-3
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="0b3ff99a-773c-4703-b878-a2409373ab12"><div class="modal-content"><h4>(tutorials/mode2_brittle_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+Gc = 2.7
+l = 0.02
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = &#x27;Gc=${Gc};l=${l}&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+[]
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [top_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = 0
+    ymax = 0.5
+    boundary_id_offset = 0
+    boundary_name_prefix = top_half
+  []
+  [top_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = top_half
+    new_boundary = top_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [bottom_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = -0.5
+    ymax = 0
+    boundary_id_offset = 5
+    boundary_name_prefix = bottom_half
+  []
+  [bottom_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = bottom_half
+    new_boundary = bottom_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [stitch]
+    type = StitchedMeshGenerator
+    inputs = &#x27;top_stitch bottom_stitch&#x27;
+    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = OrientedBoxMarker
+      center = &#x27;0.65 -0.25 0&#x27;
+      length = 0.8
+      width = 0.2
+      height = 1
+      length_direction = &#x27;1 -1.5 0&#x27;
+      width_direction = &#x27;1.5 1 0&#x27;
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fx]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    save_in = fx
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+  []
+[]
+
+[BCs]
+  [xdisp]
+    type = FunctionDirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;top_half_top&#x27;
+    function = &#x27;t&#x27;
+    preset = false
+  []
+  [yfix]
+    type = DirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;top_half_top bottom_half_bottom&#x27;
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;bottom_half_bottom&#x27;
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = SPECTRAL
+    output_properties = &#x27;elastic_strain psie_active&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fx]
+    type = NodalSum
+    variable = fx
+    boundary = top_half_top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 2e-5
+  end_time = 2e-2
+
+  picard_max_its = 20
+  accept_on_max_picard_iteration = true
+  picard_rel_tol = 1e-8
+  picard_abs_tol = 1e-10
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="78870dbf-81b9-497b-9529-f8f3a5c07818"><div class="modal-content"><h4>(tutorials/soil_desiccation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 4
 nu = 0.2
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
