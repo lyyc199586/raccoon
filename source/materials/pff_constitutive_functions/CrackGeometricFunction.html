@@ -1,4 +1,804 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>CrackGeometricFunction | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="7adb88ab-8fbb-4034-beb7-0aa770bbd0d1" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="38e67770-58c3-45e5-a79e-1cba5ac084b5" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="fd02fa90-4833-4f12-8134-93237d1bf76f" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="a87bd5b2-255c-4c61-bb54-0ef66587e1bf" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="8f935ec2-7b71-4500-9890-879d729c774f"><i class="material-icons">menu</i></a><ul class="sidenav" id="8f935ec2-7b71-4500-9890-879d729c774f"><li><a href="#!" class="dropdown-trigger" data-target="141337f2-b1ba-4913-b18f-46578cd066ff" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="c83c56a5-5a65-4b26-b4e8-addb7e8c83d5" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="80953a6a-b052-4ce0-9af0-f63a93b9439a" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="d9f5e760-213f-4b89-8958-b1ccadde727b" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="7adb88ab-8fbb-4034-beb7-0aa770bbd0d1"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="38e67770-58c3-45e5-a79e-1cba5ac084b5"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="fd02fa90-4833-4f12-8134-93237d1bf76f"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="a87bd5b2-255c-4c61-bb54-0ef66587e1bf"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="141337f2-b1ba-4913-b18f-46578cd066ff"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="c83c56a5-5a65-4b26-b4e8-addb7e8c83d5"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="80953a6a-b052-4ce0-9af0-f63a93b9439a"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="d9f5e760-213f-4b89-8958-b1ccadde727b"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="b0fbf0d9-0bb4-4e96-90ce-13a6ee238543" data-section-level="1" data-section-text="CrackGeometricFunction"><h1 id="crackgeometricfunction">CrackGeometricFunction</h1><p>This is a wrapper of ADDerivativeParsedMaterial to conveniently define a crack geometric function. The initial derivative as well as the normalization constant are automatically populated given the function definition.</p><section id="b9088a18-564e-4739-9ec6-a664ef910bb5" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="7bd73288-632a-406c-baee-9c4a07e695d5" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="6b56c8cd-901c-45cb-b57d-e78ad687ed15" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">function</span><span class="moose-parameter-header-description">Function to parse</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Function to parse</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">phase_field</span><span class="moose-parameter-header-description">The phase-field variable</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The phase-field variable</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="2ba88673-0459-4f82-bedc-fdda4098d917" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">f_name</span><span class="moose-parameter-header-default">alpha</span><span class="moose-parameter-header-description">Base name of the free energy function (used to name the material properties)</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>alpha</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Base name of the free energy function (used to name the material properties)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">initial_derivative</span><span class="moose-parameter-header-default">xi</span><span class="moose-parameter-header-description">Name of the material to store the initial slope of the crack geometric function, $\alpha(d=0)$</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>xi</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the material to store the initial slope of the crack geometric function, $\alpha(d=0)$</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">material_property_names</span><span class="moose-parameter-header-description">Vector of material properties used in the degradation function</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of material properties used in the degradation function</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">maximum_iterations</span><span class="moose-parameter-header-default">1000000000</span><span class="moose-parameter-header-description">Maximum number of iterations allowed for the numerical computation of the normalization constant</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1000000000</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Maximum number of iterations allowed for the numerical computation of the normalization constant</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">normalization_constant</span><span class="moose-parameter-header-default">c0</span><span class="moose-parameter-header-description">Name of the material to store the normalization constant, $4\int_0^1 \sqrt{\alpha(s)} \diff{s}$</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>c0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the material to store the normalization constant, $4\int_0^1 \sqrt{\alpha(s)} \diff{s}$</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">parameter_names</span><span class="moose-parameter-header-description">Vector of parameters used in the parsed function</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of parameters used in the parsed function</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">parameter_values</span><span class="moose-parameter-header-description">Vector of values for the parameters</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of values for the parameters</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">tolerance</span><span class="moose-parameter-header-default">1e-08</span><span class="moose-parameter-header-description">Tolerance of the numerically computed normalization constant</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1e-08</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Tolerance of the numerically computed normalization constant</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="5e787a69-c9a2-4371-8251-1108c3820ad5" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">disable_fpoptimizer</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Disable the function parser algebraic optimizer</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Disable the function parser algebraic optimizer</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable_ad_cache</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Enable cacheing of function derivatives for faster startup time</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Enable cacheing of function derivatives for faster startup time</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable_auto_optimize</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Enable automatic immediate optimization of derivatives</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Enable automatic immediate optimization of derivatives</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable_jit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Enable just-in-time compilation of function expressions for faster evaluation</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Enable just-in-time compilation of function expressions for faster evaluation</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">evalerror_behavior</span><span class="moose-parameter-header-default">nan</span><span class="moose-parameter-header-description">What to do if evaluation error occurs. Options are to pass a nan, pass a nan with a warning, throw a error, or throw an exception</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>nan</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>nan, nan_warning, error, exception</p><p class="moose-parameter-description"><span>Description:</span>What to do if evaluation error occurs. Options are to pass a nan, pass a nan with a warning, throw a error, or throw an exception</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_displaced_mesh</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="691356d8-0f1a-4c3d-a272-dd35b7fe80e2" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section id="6d903a13-1bb4-4323-82cf-2c29242e83a7" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#d32192e2-b027-4524-846a-331da5bf24d9">(tutorials/mode1_ductile_fracture/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#384064e0-ad63-4385-9787-16cb2105a0ff">(tutorials/three_point_bending/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#dac20202-ea78-4ca3-ba86-25ca6e1d7939">(tutorials/mode2_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#2d55b3d1-0e80-4038-bfaa-a6a892b39ead">(tutorials/homogeneous_cube/CNH_J2_powerlawhardening.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#2243da56-fe97-4882-86e5-2cdac06a4e68">(tutorials/three_point_bending/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#c27b97c3-6ad1-4d4d-8b7a-2f4a8614ba37">(tutorials/mode2_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#17b1c182-4c91-4c91-a9e5-b8d39af7b58f">(tutorials/mode1_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#50ff5300-42d6-41b2-ae7b-419a961e6a1d">(tutorials/mode1_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#54a34dca-774e-40f0-98f7-f1c3aa549b37">(test/tests/crack_geometric_functions/quadratic.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#bbf103e5-da35-4f64-9501-884d5dbbd96e">(test/tests/crack_geometric_functions/mixed.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#30867cfa-0ba8-4358-8fe8-9b8494887b2e">(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b4ad4f68-cd47-4847-b999-3195fdde452e">(tutorials/soil_desiccation/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#59828e3f-b89f-43ab-99a4-19275e7cb864">(test/tests/crack_geometric_functions/linear.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#9eb219ec-9eb1-4ae8-b637-e7411a10bd13">(tutorials/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#11b7ef31-762f-4b43-959a-0a3daba148a1">(tutorials/mode2_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#52b930d7-a44a-4524-a012-2f9237f14439">(benchmarks/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#53c3d452-04e7-413b-8c69-8646c2069d08">(tutorials/mode1_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#9817d7ec-c743-4db7-a3dc-241958d16ff8">(benchmarks/soil_desiccation/mechanical.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#bbf75471-fdf7-44ad-b75f-7b54b4bca9ec">(tutorials/mode1_ductile_fracture/fracture.i)</a></li></ul></section></section><div class="moose-modal modal" id="d32192e2-b027-4524-846a-331da5bf24d9"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+<!DOCTYPE html><head><meta charset="UTF-8"><title>CrackGeometricFunction | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="https://hugary1995.github.io/raccoon/index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="a43ae2db-7984-43ed-8c0b-0155356ccba5" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="33e11d15-6b53-43f3-acf7-7b738fa6456c" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="fdafc3d3-7d03-4023-b062-0efec174b228" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="6a832bc4-585b-4f89-ac34-89945bb75a22" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="b0bda1e3-50e0-48ed-b8a8-b20b93fd95b6"><i class="material-icons">menu</i></a><ul class="sidenav" id="b0bda1e3-50e0-48ed-b8a8-b20b93fd95b6"><li><a href="#!" class="dropdown-trigger" data-target="13cf9f18-55bc-43b1-8085-1700dfa8ba60" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="c0a46836-7ca7-4767-9f33-f6cf4c1d86a3" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="c8ebddc9-1e5a-4218-813c-b9856de5240a" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="7e34fefe-e0da-4e5c-a22a-3502e571ac04" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="a43ae2db-7984-43ed-8c0b-0155356ccba5"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="33e11d15-6b53-43f3-acf7-7b738fa6456c"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="fdafc3d3-7d03-4023-b062-0efec174b228"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="6a832bc4-585b-4f89-ac34-89945bb75a22"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="13cf9f18-55bc-43b1-8085-1700dfa8ba60"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li></ul><ul class="dropdown-content" id="c0a46836-7ca7-4767-9f33-f6cf4c1d86a3"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_soil_desiccation.html">4. Soil desiccation</a></li><li><a href="../../../tutorials/05_large_deformation_elasticity.html">5. Large deformation</a></li><li><a href="../../../tutorials/06_elastoplasticity.html">6. Elastoplasticity</a></li><li><a href="../../../tutorials/07_ductile_fracture.html">7. Ductile fracture</a></li><li><a href="../../../tutorials/08_three_point_bending.html">8. Three-point bending</a></li></ul><ul class="dropdown-content" id="c8ebddc9-1e5a-4218-813c-b9856de5240a"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="7e34fefe-e0da-4e5c-a22a-3502e571ac04"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="https://hugary1995.github.io/raccoon/index.html" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="604d7092-f339-4005-8c20-a1be8f322b65" data-section-level="1" data-section-text="CrackGeometricFunction"><h1 id="crackgeometricfunction">CrackGeometricFunction</h1><p>This is a wrapper of ADDerivativeParsedMaterial to conveniently define a crack geometric function. The initial derivative as well as the normalization constant are automatically populated given the function definition.</p><section id="76c720b0-6652-45ad-a989-4be97aab5bb2" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="1efa74da-f341-4f98-8c73-53de83801b57" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="c0bf0072-f2c1-4b49-af21-d9cf84a4f146" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">function</span><span class="moose-parameter-header-description">Function to parse</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Function to parse</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">phase_field</span><span class="moose-parameter-header-description">The phase-field variable</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;VariableName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The phase-field variable</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="90b1cc35-e254-4145-a888-ddb086cc29c3" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">f_name</span><span class="moose-parameter-header-default">alpha</span><span class="moose-parameter-header-description">Base name of the free energy function (used to name the material properties)</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>alpha</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Base name of the free energy function (used to name the material properties)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">initial_derivative</span><span class="moose-parameter-header-default">xi</span><span class="moose-parameter-header-description">Name of the material to store the initial slope of the crack geometric function, $\alpha(d=0)$</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>xi</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the material to store the initial slope of the crack geometric function, $\alpha(d=0)$</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">material_property_names</span><span class="moose-parameter-header-description">Vector of material properties used in the degradation function</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of material properties used in the degradation function</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">maximum_iterations</span><span class="moose-parameter-header-default">1000000000</span><span class="moose-parameter-header-description">Maximum number of iterations allowed for the numerical computation of the normalization constant</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1000000000</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Maximum number of iterations allowed for the numerical computation of the normalization constant</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">normalization_constant</span><span class="moose-parameter-header-default">c0</span><span class="moose-parameter-header-description">Name of the material to store the normalization constant, $4\int_0^1 \sqrt{\alpha(s)} \diff{s}$</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>c0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the material to store the normalization constant, $4\int_0^1 \sqrt{\alpha(s)} \diff{s}$</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">parameter_names</span><span class="moose-parameter-header-description">Vector of parameters used in the parsed function</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of parameters used in the parsed function</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">parameter_values</span><span class="moose-parameter-header-description">Vector of values for the parameters</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of values for the parameters</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">tolerance</span><span class="moose-parameter-header-default">1e-08</span><span class="moose-parameter-header-description">Tolerance of the numerically computed normalization constant</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>1e-08</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Tolerance of the numerically computed normalization constant</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="31badc5b-c62e-458b-8393-44f3ec77fb82" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">disable_fpoptimizer</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Disable the function parser algebraic optimizer</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Disable the function parser algebraic optimizer</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable_ad_cache</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Enable cacheing of function derivatives for faster startup time</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Enable cacheing of function derivatives for faster startup time</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable_auto_optimize</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Enable automatic immediate optimization of derivatives</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Enable automatic immediate optimization of derivatives</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable_jit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Enable just-in-time compilation of function expressions for faster evaluation</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Enable just-in-time compilation of function expressions for faster evaluation</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">evalerror_behavior</span><span class="moose-parameter-header-default">nan</span><span class="moose-parameter-header-description">What to do if evaluation error occurs. Options are to pass a nan, pass a nan with a warning, throw a error, or throw an exception</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>nan</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>nan, nan_warning, error, exception</p><p class="moose-parameter-description"><span>Description:</span>What to do if evaluation error occurs. Options are to pass a nan, pass a nan with a warning, throw a error, or throw an exception</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">use_displaced_mesh</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Whether or not this object should use the displaced mesh for computation.  Note that in the case this is true but no displacements are provided in the Mesh block the undisplaced mesh will still be used.</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="9b61fbd6-83d1-4e08-aaef-c294f95afb52" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section id="3691b04d-7113-4ac3-a1a5-44bb7a054f67" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#b3397442-39a5-4cd8-97ae-63290df4b3b5">(benchmarks/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#1369affc-20f6-4cc4-8fe7-f0d3aaa67148">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#665dc6fc-0199-48ce-a1d8-01aa4ae48ac2">(tutorials/soil_desiccation/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#e33cf042-134a-4027-81bb-2c6781ff88f8">(tutorials/mode1_ductile_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b460e268-862b-4a2d-ab40-ddc104d295c8">(tutorials/mode1_ductile_fracture/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#f3aacaaa-a755-41ff-8823-2423b70471e8">(tutorials/soil_desiccation/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#528e067a-4846-4dfe-8f88-112df23d5de4">(tutorials/mode1_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#07139650-b293-4769-8e76-0bd3eff59bae">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#75c4ead2-201a-4bd9-b94c-f68b55376d14">(benchmarks/soil_desiccation/mechanical.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#597aeeea-00ab-4d07-b578-efbd655550bb">(tutorials/three_point_bending/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#a9d494aa-35f5-4aa2-b477-464a8162bad5">(tutorials/mode2_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#1068d9d4-ae3c-4077-b5d1-44e13ee20d36">(test/tests/crack_geometric_functions/linear.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#7188aee5-39ee-4765-bb5d-bd678b2bf440">(tutorials/three_point_bending/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#3f053005-4e66-45c4-9f7d-14a4c07e2284">(test/tests/crack_geometric_functions/quadratic.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#778eb98a-f00c-4b23-9e1b-23b42b7bbea5">(tutorials/homogeneous_cube/CNH_J2_powerlawhardening/elastoplasticity_fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#2137686e-c78d-4ce1-bffb-79bf32509026">(tutorials/mode2_cohesive_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#5cd06602-1d51-4b9e-bc78-7884621467df">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#d1975b12-d743-4d83-b0db-7a789e53d48e">(tutorials/mode1_cohesive_fracture/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b6c0cd25-3ab3-4616-b7a7-6d8a05827b29">(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening/elastoplasticity_fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#7d800893-0bd9-4b32-abfb-31f01bca80f7">(test/tests/crack_geometric_functions/mixed.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#7501026b-3323-4d33-a238-5dd47d761aa1">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#1c34e83a-04c6-434a-b4ea-cdead40da772">(tutorials/mode2_brittle_fracture/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#9c337149-2f0d-439b-b7b5-193a848c3ae7">(tutorials/mode1_cohesive_fracture/fracture.i)</a></li></ul></section></section><div class="moose-modal modal" id="b3397442-39a5-4cd8-97ae-63290df4b3b5"><div class="modal-content"><h4>(benchmarks/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[MultiApps]
+  [mechanical]
+    type = TransientMultiApp
+    input_files = &#x27;mechanical.i&#x27;
+    app_type = raccoonApp
+  []
+[]
+
+[Transfers]
+  [get_we_active]
+    type = MultiAppMeshFunctionTransfer
+    multi_app = &#x27;mechanical&#x27;
+    direction = from_multiapp
+    source_variable = &#x27;we_active&#x27;
+    variable = &#x27;we_active&#x27;
+  []
+  [send_d]
+    type = MultiAppMeshFunctionTransfer
+    multi_app = &#x27;mechanical&#x27;
+    direction = to_multiapp
+    source_variable = d
+    variable = d
+  []
+[]
+
+[Mesh]
+  [fmg]
+    type = FileMeshGenerator
+    file = &#x27;gold/fields.e&#x27;
+    use_for_exodus_restart = true
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [we_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [bounds_dummy]
+  []
+  [Gc]
+    initial_from_file_var = &#x27;Gc&#x27;
+  []
+  [psic]
+    initial_from_file_var = &#x27;psic&#x27;
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = d
+    mobility_name = L
+    kappa_name = kappa
+  []
+  [pff_react]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [energy_release_rate]
+    type = ADParsedMaterial
+    f_name = &#x27;Gc&#x27;
+    args = &#x27;Gc&#x27;
+    function = &#x27;Gc&#x27;
+  []
+  [critial_fracture_energy]
+    type = ADParsedMaterial
+    f_name = &#x27;psic&#x27;
+    args = &#x27;psic&#x27;
+    function = &#x27;psic&#x27;
+  []
+  [length_scale]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;l&#x27;
+    prop_values = &#x27;1&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    d = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    d = d
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 1 0 1e-6&#x27;
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+  []
+  [active_elastic_energy]
+    type = ADParsedMaterial
+    f_name = we_active
+    function = &#x27;we_active&#x27;
+    args = we_active
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha/c0/l+g*we_active/Gc&#x27;
+    args = d
+    material_property_names = &#x27;alpha(d) c0 l g(d) we_active Gc&#x27;
+    derivative_order = 1
+  []
+[]
+
+[BCs]
+  [Periodic]
+    [all]
+      variable = d
+      auto_direction = &#x27;x y&#x27;
+    []
+  []
+[]
+
+[Postprocessors]
+  [d_norm]
+    type = NodalSum
+    variable = d
+    outputs = none
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  dt = 1e-3
+  end_time = 0.22
+
+  nl_abs_tol = 1e-08
+  nl_rel_tol = 1e-06
+
+  picard_max_its = 10
+  disable_picard_residual_norm_check = true
+  picard_custom_pp = d_norm
+  custom_abs_tol = 1e-3
+  custom_rel_tol = 1e-3
+  accept_on_max_picard_iteration = true
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="1369affc-20f6-4cc4-8fe7-f0d3aaa67148"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+ratio = 4
+
+psic = 15
+Gc = 1.38e5
+l = &#x27;${fparse ratio * a}&#x27;
+
+E = 6.88e4
+nu = 0.33
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+sigma_0 = 2e-7
+Q = &#x27;${fparse 1.4054e8}&#x27;
+R = 8.3143e3
+T = 800
+eps = &#x27;${fparse E/100}&#x27;
+
+n = 160
+rate = 10000
+creep_coef = 1
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+  volumetric_locking_correction = true
+[]
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = &#x27;fracture.i&#x27;
+    cli_args = &#x27;a=${a};psic=${psic};Gc=${Gc};l=${l};&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+  [to_psip_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psip_active
+    source_variable = psip_active
+  []
+[]
+
+[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 3
+    xmax = ${a}
+    ymax = ${a}
+    zmax = ${a}
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+  [disp_z]
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+  [T]
+    initial_condition = ${T}
+  []
+  [stress]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [F]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[AuxKernels]
+  [stress]
+    type = ADRankTwoAux
+    variable = stress
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [F]
+    type = ADRankTwoAux
+    variable = F
+    rank_two_tensor = deformation_gradient
+    index_i = 1
+    index_j = 1
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    use_displaced_mesh = true
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    use_displaced_mesh = true
+  []
+  [solid_z]
+    type = ADStressDivergenceTensors
+    variable = disp_z
+    component = 2
+    use_displaced_mesh = true
+  []
+[]
+
+[Materials]
+  [bulk_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G l Gc psic sigma_0 Q&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${sigma_0} ${Q}&#x27;
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [arrhenius_law]
+    type = ArrheniusLaw
+    arrhenius_coefficient = A
+    activation_energy = Q
+    ideal_gas_constant = ${R}
+    T = T
+  []
+  [defgrad]
+    type = ComputeDeformationGradient
+  []
+  [hencky]
+    type = HenckyIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;psie_active&#x27;
+    outputs = exodus
+  []
+  [arrhenius_law_hardening]
+    type = ArrheniusLawHardening
+    reference_stress = sigma_0
+    arrhenius_coefficient = A
+    eps = ${eps}
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;psip_active&#x27;
+    outputs = exodus
+  []
+  [J2]
+    type = LargeDeformationJ2PowerLawCreep
+    hardening_model = arrhenius_law_hardening
+    coefficient = ${creep_coef}
+    exponent = ${n}
+  []
+  [stress]
+    type = ComputeLargeDeformationStress
+    elasticity_model = hencky
+    plasticity_model = J2
+  []
+[]
+
+[BCs]
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = &#x27;left&#x27;
+    value = 0
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = &#x27;bottom&#x27;
+    value = 0
+  []
+  [zfix]
+    type = DirichletBC
+    variable = disp_z
+    boundary = &#x27;back&#x27;
+    value = 0
+  []
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = &#x27;top&#x27;
+    function = &#x27;${rate}*t&#x27;
+    preset = false
+  []
+[]
+
+[Postprocessors]
+  [F]
+    type = ElementAverageValue
+    variable = F
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [stress]
+    type = ElementAverageValue
+    variable = stress
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [d]
+    type = ElementAverageValue
+    variable = d
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [ep]
+    type = ADElementAverageMaterialProperty
+    mat_prop = effective_plastic_strain
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type&#x27;
+  petsc_options_value = &#x27;lu&#x27;
+
+  nl_rel_tol = 1e-08
+  nl_abs_tol = 1e-10
+  nl_max_its = 50
+
+  dt = &#x27;${fparse 0.0005 * a / rate}&#x27;
+  end_time = &#x27;${fparse 0.1 * a / rate}&#x27;
+
+  automatic_scaling = true
+
+  picard_max_its = 100
+  picard_rel_tol = 1e-08
+  picard_abs_tol = 1e-10
+  accept_on_max_picard_iteration = true
+  abort_on_solve_fail = true
+[]
+
+[Outputs]
+  file_base = &#x27;stress_deformation_n_${n}_rate_${rate}&#x27;
+  print_linear_residuals = false
+  csv = true
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="665dc6fc-0199-48ce-a1d8-01aa4ae48ac2"><div class="modal-content"><h4>(tutorials/soil_desiccation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 4
+nu = 0.2
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+l = 0.5
+c = 0.1
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = &#x27;fracture.i&#x27;
+    cli_args = &#x27;l=${l}&#x27;
+  []
+[]
+
+[Transfers]
+  [send_psie_active]
+    type = MultiAppMeshFunctionTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    source_variable = psie_active
+    variable = psie_active
+  []
+  [send_psii_active]
+    type = MultiAppMeshFunctionTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    source_variable = psii_active
+    variable = psii_active
+  []
+  [get_d]
+    type = MultiAppMeshFunctionTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    source_variable = d
+    variable = d
+  []
+[]
+
+[Mesh]
+  [fmg]
+    type = FileMeshGenerator
+    file = &#x27;gold/fields_refined.e&#x27;
+    use_for_exodus_restart = true
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+  [strain_zz]
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+  [Gc]
+    initial_from_file_var = Gc
+  []
+  [psic]
+    initial_from_file_var = psic
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+  []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = strain_zz
+  []
+  [react_x]
+    type = ADCoefMatReaction
+    variable = disp_x
+    coefficient = ${c}
+    prop_names = &#x27;g&#x27;
+  []
+  [react_y]
+    type = ADCoefMatReaction
+    variable = disp_y
+    coefficient = ${c}
+    prop_names = &#x27;g&#x27;
+  []
+[]
+
+[BCs]
+  [Periodic]
+    [x]
+      variable = disp_x
+      auto_direction = &#x27;x y&#x27;
+    []
+    [y]
+      variable = disp_y
+      auto_direction = &#x27;x y&#x27;
+    []
+  []
+[]
+
+[Materials]
+  # fracture
+  [fracture_toughness]
+    type = ADParsedMaterial
+    f_name = Gc
+    args = Gc
+    function = &#x27;Gc&#x27;
+  []
+  [critial_fracture_energy]
+    type = ADParsedMaterial
+    f_name = psic
+    args = psic
+    function = &#x27;psic&#x27;
+  []
+  [bulk_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G l&#x27;
+    prop_values = &#x27;${K} ${G} ${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 1 0 1e-6&#x27;
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+  []
+  # elasticity
+  [eigen_strain]
+    type = ComputeEigenstrainFromFunctionInitialStress
+    initial_stress = &#x27;t t 0&#x27;
+    eigenstrain_name = &#x27;es&#x27;
+    bulk_modulus = K
+    shear_modulus = G
+  []
+  [strain]
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = strain_zz
+    eigenstrain_names = &#x27;es&#x27;
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+    output_properties = &#x27;psie_active&#x27;
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+  []
+  [interfacial_energy]
+    type = ThinFilmInterfaceEnergyDensity
+    phase_field = d
+    shear_lag_coef = ${c}
+    output_properties = &#x27;psii_active&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [delta_d]
+    type = SolutionChangeNorm
+    variable = d
+    outputs = none
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist&#x27;
+  dt = 0.0005
+  end_time = 0.22
+
+  nl_rel_tol = 1e-06
+  nl_abs_tol = 1e-08
+
+  automatic_scaling = true
+
+  picard_max_its = 10
+  picard_custom_pp = delta_d
+  disable_picard_residual_norm_check = true
+  custom_abs_tol = 1e-03
+  custom_rel_tol = 1e-03
+  accept_on_max_picard_iteration = true
+[]
+
+[Outputs]
+  print_linear_residuals = false
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="e33cf042-134a-4027-81bb-2c6781ff88f8"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = OrientedBoxMarker
+      center = &#x27;0.75 0.25 0&#x27;
+      length = 0.8
+      width = 0.1
+      height = 1
+      length_direction = &#x27;1 1 0&#x27;
+      width_direction = &#x27;-1 1 0&#x27;
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [psip_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc psic l&#x27;
+    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
+    args = &#x27;d psie_active psip_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b460e268-862b-4a2d-ab40-ddc104d295c8"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
@@ -228,10 +1028,163 @@ ep0 = 0.005
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="384064e0-ad63-4385-9787-16cb2105a0ff"><div class="modal-content"><h4>(tutorials/three_point_bending/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="f3aacaaa-a755-41ff-8823-2423b70471e8"><div class="modal-content"><h4>(tutorials/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = &#x27;gold/beam.msh&#x27;
+    file = &#x27;gold/fields_refined.e&#x27;
+    use_for_exodus_restart = true
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [psii_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [bounds_dummy]
+  []
+  [Gc]
+    initial_from_file_var = &#x27;Gc&#x27;
+  []
+  [psic]
+    initial_from_file_var = &#x27;psic&#x27;
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = d
+  []
+  [pff_react]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_toughness]
+    type = ADParsedMaterial
+    f_name = Gc
+    args = Gc
+    function = &#x27;Gc&#x27;
+  []
+  [critial_fracture_energy]
+    type = ADParsedMaterial
+    f_name = psic
+    args = psic
+    function = &#x27;psic&#x27;
+  []
+  [length_scale]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;l&#x27;
+    prop_values = &#x27;${l}&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 1 0 1e-6&#x27;
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psii_active)&#x27;
+    args = &#x27;d psie_active psii_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[BCs]
+  [Periodic]
+    [all]
+      variable = d
+      auto_direction = &#x27;x y&#x27;
+    []
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+
+  nl_abs_tol = 1e-08
+  nl_rel_tol = 1e-06
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="528e067a-4846-4dfe-8f88-112df23d5de4"><div class="modal-content"><h4>(tutorials/mode1_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
+      outside = DO_NOTHING
+      inside = REFINE
+    []
   []
 []
 
@@ -243,11 +1196,533 @@ ep0 = 0.005
 [AuxVariables]
   [bounds_dummy]
   []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc l&#x27;
+    prop_values = &#x27;${Gc} ${l}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d^2&#x27;
+    phase_field = d
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="07139650-b293-4769-8e76-0bd3eff59bae"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+ratio = 4
+
+psic = 15
+Gc = 1.38e5
+l = &#x27;${fparse ratio * a}&#x27;
+
+E = 6.88e4
+nu = 0.33
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+sigma_0 = 2e-7
+Q = &#x27;${fparse 1.4054e8}&#x27;
+R = 8.3143e3
+T = 800
+eps = &#x27;${fparse E/100}&#x27;
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+  volumetric_locking_correction = true
+[]
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = &#x27;fracture.i&#x27;
+    cli_args = &#x27;a=${a};psic=${psic};Gc=${Gc};l=${l};&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+  [to_psip_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psip_active
+    source_variable = psip_active
+  []
+[]
+
+[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 3
+    xmax = ${a}
+    ymax = ${a}
+    zmax = ${a}
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+  [disp_z]
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+  [T]
+    initial_condition = ${T}
+  []
+  [stress]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [F]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[AuxKernels]
+  [stress]
+    type = ADRankTwoAux
+    variable = stress
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+  []
+  [F]
+    type = ADRankTwoAux
+    variable = F
+    rank_two_tensor = deformation_gradient
+    index_i = 1
+    index_j = 1
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    use_displaced_mesh = true
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    use_displaced_mesh = true
+  []
+  [solid_z]
+    type = ADStressDivergenceTensors
+    variable = disp_z
+    component = 2
+    use_displaced_mesh = true
+  []
+[]
+
+[Materials]
+  [bulk_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G l Gc psic sigma_0 Q&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${sigma_0} ${Q}&#x27;
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [arrhenius_law]
+    type = ArrheniusLaw
+    arrhenius_coefficient = A
+    activation_energy = Q
+    ideal_gas_constant = ${R}
+    T = T
+  []
+  [defgrad]
+    type = ComputeDeformationGradient
+  []
+  [hencky]
+    type = HenckyIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;psie_active&#x27;
+    outputs = exodus
+  []
+  [arrhenius_law_hardening]
+    type = ArrheniusLawHardening
+    reference_stress = sigma_0
+    arrhenius_coefficient = A
+    eps = ${eps}
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;psip_active&#x27;
+    outputs = exodus
+  []
+  [J2]
+    type = LargeDeformationJ2Plasticity
+    hardening_model = arrhenius_law_hardening
+  []
+  [stress]
+    type = ComputeLargeDeformationStress
+    elasticity_model = hencky
+    plasticity_model = J2
+  []
+[]
+
+[BCs]
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = &#x27;left&#x27;
+    value = 0
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = &#x27;bottom&#x27;
+    value = 0
+  []
+  [zfix]
+    type = DirichletBC
+    variable = disp_z
+    boundary = &#x27;back&#x27;
+    value = 0
+  []
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = &#x27;top&#x27;
+    function = &#x27;t&#x27;
+    preset = false
+  []
+[]
+
+[Postprocessors]
+  [F]
+    type = ElementAverageValue
+    variable = F
+  []
+  [stress]
+    type = ElementAverageValue
+    variable = stress
+  []
+  [d]
+    type = ElementAverageValue
+    variable = d
+  []
+  [ep]
+    type = ADElementAverageMaterialProperty
+    mat_prop = effective_plastic_strain
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type&#x27;
+  petsc_options_value = &#x27;lu&#x27;
+
+  nl_rel_tol = 1e-08
+  nl_abs_tol = 1e-10
+  nl_max_its = 50
+
+  dt = &#x27;${fparse 0.0005 * a}&#x27;
+  end_time = &#x27;${fparse 0.1 * a}&#x27;
+
+  automatic_scaling = true
+
+  picard_max_its = 100
+  picard_rel_tol = 1e-08
+  picard_abs_tol = 1e-10
+  accept_on_max_picard_iteration = true
+  abort_on_solve_fail = true
+[]
+
+[Outputs]
+  file_base = &#x27;stress_deformation&#x27;
+  print_linear_residuals = false
+  csv = true
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="75c4ead2-201a-4bd9-b94c-f68b55376d14"><div class="modal-content"><h4>(benchmarks/soil_desiccation/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [fmg]
+    type = FileMeshGenerator
+    file = &#x27;gold/fields.e&#x27;
+    use_for_exodus_restart = true
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+  [strain_zz]
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
   [we_active]
     order = CONSTANT
     family = MONOMIAL
   []
-  [wp_active]
+  [Gc]
+    initial_from_file_var = &#x27;Gc&#x27;
+  []
+  [psic]
+    initial_from_file_var = &#x27;psic&#x27;
+  []
+[]
+
+[AuxKernels]
+  [we_active]
+    type = ADMaterialRealAux
+    variable = &#x27;we_active&#x27;
+    property = &#x27;we_active&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = &#x27;disp_x&#x27;
+    component = 0
+    displacements = &#x27;disp_x disp_y&#x27;
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = &#x27;disp_y&#x27;
+    component = 1
+    displacements = &#x27;disp_x disp_y&#x27;
+  []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = &#x27;strain_zz&#x27;
+    displacements = &#x27;disp_x disp_y&#x27;
+  []
+  [react_x]
+    type = ADCoefMatReaction
+    variable = &#x27;disp_x&#x27;
+    coefficient = 0.1
+    prop_names = &#x27;g&#x27;
+  []
+  [react_y]
+    type = ADCoefMatReaction
+    variable = &#x27;disp_y&#x27;
+    coefficient = 0.1
+    prop_names = &#x27;g&#x27;
+  []
+[]
+
+[BCs]
+  [Periodic]
+    [x]
+      variable = disp_x
+      auto_direction = &#x27;x y&#x27;
+    []
+    [y]
+      variable = disp_y
+      auto_direction = &#x27;x y&#x27;
+    []
+  []
+[]
+
+[Materials]
+  [eigen_strain]
+    type = ADComputeEigenstrainFromFunctionEigenstress
+    eigen_stress = &#x27;t 0 0 0 t 0 0 0 0&#x27;
+    eigenstrain_name = &#x27;es&#x27;
+  []
+  [elasticity_tensor]
+    type = ADComputeIsotropicElasticityTensor
+    poissons_ratio = 0.2
+    youngs_modulus = 4
+  []
+  [strain]
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = &#x27;strain_zz&#x27;
+    eigenstrain_names = &#x27;es&#x27;
+    displacements = &#x27;disp_x disp_y&#x27;
+  []
+  [stress]
+    type = SmallStrainDegradedElasticPK2Stress_NoSplit
+    d = &#x27;d&#x27;
+    d_crit = 0.6
+  []
+
+  [energy_release_rate]
+    type = ADParsedMaterial
+    f_name = &#x27;Gc&#x27;
+    args = &#x27;Gc&#x27;
+    function = &#x27;Gc&#x27;
+  []
+  [critial_fracture_energy]
+    type = ADParsedMaterial
+    f_name = &#x27;psic&#x27;
+    args = &#x27;psic&#x27;
+    function = &#x27;psic&#x27;
+  []
+  [length_scale]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;l&#x27;
+    prop_values = &#x27;1&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    d = d
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    d = d
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 1 0 1e-6&#x27;
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist&#x27;
+  dt = 1e-3
+  end_time = 0.22
+
+  nl_abs_tol = 1e-08
+  nl_rel_tol = 1e-06
+
+  automatic_scaling = true
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="597aeeea-00ab-4d07-b578-efbd655550bb"><div class="modal-content"><h4>(tutorials/three_point_bending/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [fmg]
+    type = FileMeshGenerator
+    file = ${mesh_file}
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [psip_active]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -309,8 +1784,8 @@ ep0 = 0.005
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*(we_active+wp_active)&#x27;
-    args = &#x27;d we_active wp_active&#x27;
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
+    args = &#x27;d psie_active psip_active&#x27;
     material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
     derivative_order = 1
   []
@@ -333,7 +1808,7 @@ ep0 = 0.005
 [Outputs]
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="dac20202-ea78-4ca3-ba86-25ca6e1d7939"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="a9d494aa-35f5-4aa2-b477-464a8162bad5"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
@@ -561,7 +2036,399 @@ l = 0.02
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="2d55b3d1-0e80-4038-bfaa-a6a892b39ead"><div class="modal-content"><h4>(tutorials/homogeneous_cube/CNH_J2_powerlawhardening.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="1068d9d4-ae3c-4077-b5d1-44e13ee20d36"><div class="modal-content"><h4>(test/tests/crack_geometric_functions/linear.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
+  solve = false
+[]
+
+[Mesh]
+  [one]
+    type = GeneratedMeshGenerator
+    dim = 1
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+[]
+
+[AuxKernels]
+  [d]
+    type = FunctionAux
+    variable = d
+    function = &#x27;t&#x27;
+  []
+[]
+
+[Materials]
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+[]
+
+[Postprocessors]
+  [d]
+    type = ElementAverageValue
+    variable = d
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [alpha]
+    type = ADElementAverageMaterialProperty
+    mat_prop = alpha
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [dalpha_dd]
+    type = ADElementAverageMaterialProperty
+    mat_prop = dalpha/dd
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [dalpha_dd_0]
+    type = ADElementAverageMaterialProperty
+    mat_prop = xi
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [c0]
+    type = ADElementAverageMaterialProperty
+    mat_prop = c0
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+[]
+
+[Executioner]
+  type = Transient
+  dt = 0.1
+  end_time = 1
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="7188aee5-39ee-4765-bb5d-bd678b2bf440"><div class="modal-content"><h4>(tutorials/three_point_bending/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">mesh_file = &#x27;gold/beam.msh&#x27;
+
+psic = 90
+Gc = 20
+l = 0.027
+
+E = 7.25e4
+nu = 0.34
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+eta = 1
+
+sigma_y = 345
+n = 1
+ep0 = 0.345
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+  volumetric_locking_correction = true
+[]
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = &#x27;fracture.i&#x27;
+    cli_args = &#x27;mesh_file=${mesh_file};Gc=${Gc};psic=${psic};l=${l}&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    source_variable = d
+    variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    source_variable = psie_active
+    variable = psie_active
+  []
+  [to_psip_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    source_variable = psip_active
+    variable = psip_active
+  []
+[]
+
+[Problem]
+  kernel_coverage_check = false
+  material_coverage_check = false
+[]
+
+[Mesh]
+  [fmg]
+    type = FileMeshGenerator
+    file = ${mesh_file}
+  []
+  [active]
+    type = SubdomainBoundingBoxGenerator
+    input = fmg
+    block_id = 0
+    bottom_left = &#x27;0 0 0&#x27;
+    top_right = &#x27;100 16 0&#x27;
+  []
+  [inactive]
+    type = SubdomainBoundingBoxGenerator
+    input = active
+    block_id = 1
+    bottom_left = &#x27;100 0 0&#x27;
+    top_right = &#x27;200 16 0&#x27;
+  []
+[]
+
+[UserObjects]
+  [esm]
+    type = CoupledVarThresholdElementSubdomainModifier
+    coupled_var = d
+    threshold = 0.925
+    criterion_type = ABOVE
+    subdomain_id = 1
+    complement_subdomain_id = 0
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+    apply_initial_conditions = false
+  []
+[]
+
+[Variables]
+  [disp_x]
+    block = 0
+  []
+  [disp_y]
+    block = 0
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+  [fy]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = &#x27;disp_x&#x27;
+    component = 0
+    use_displaced_mesh = true
+    block = 0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = &#x27;disp_y&#x27;
+    component = 1
+    use_displaced_mesh = true
+    save_in = fy
+    block = 0
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G l Gc psic viscosity&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${eta}&#x27;
+    block = 0
+  []
+  [degradation]
+    type = ADDerivativeParsedMaterial
+    f_name = g
+    args = d
+    function = &#x27;(1-d)^2/(1+(0.5*Gc/c0/l/psic-1)*d)^2*(1-eta)+eta&#x27;
+    material_property_names = &#x27;Gc c0 l psic&#x27;
+    constant_names = &#x27;eta &#x27;
+    constant_expressions = &#x27;5e-3&#x27;
+    derivative_order = 1
+    block = 0
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+    block = 0
+  []
+  [defgrad]
+    type = ComputeDeformationGradient
+    block = 0
+  []
+  [hencky]
+    type = HenckyIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;psie_active&#x27;
+    outputs = exodus
+    block = 0
+  []
+  [power_law_hardening]
+    type = PowerLawHardening
+    yield_stress = ${sigma_y}
+    exponent = ${n}
+    reference_plastic_strain = ${ep0}
+    phase_field = d
+    degradation_function = g
+    output_properties = &#x27;psip_active&#x27;
+    outputs = exodus
+    block = 0
+  []
+  [J2]
+    type = LargeDeformationJ2Plasticity
+    hardening_model = power_law_hardening
+    output_properties = &#x27;effective_plastic_strain&#x27;
+    outputs = exodus
+    block = 0
+  []
+  [newtonian_viscosity]
+    type = LargeDeformationNewtonianViscosity
+    block = 0
+  []
+  [stress]
+    type = ComputeLargeDeformationStress
+    elasticity_model = hencky
+    plasticity_model = J2
+    viscoelasticity_model = newtonian_viscosity
+    block = 0
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;left right&#x27;
+    function = &#x27;t&#x27;
+    preset = false
+  []
+  [top_xfix]
+    type = DirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;top&#x27;
+    value = 0
+  []
+  [top_yfix]
+    type = DirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;top&#x27;
+    value = 0
+  []
+[]
+
+[Postprocessors]
+  [force]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+
+  nl_rel_tol = 1e-06
+  nl_abs_tol = 1e-06
+  nl_max_its = 50
+
+  automatic_scaling = true
+  [TimeStepper]
+    type = FunctionDT
+    function = &#x27;0.05&#x27;
+    growth_factor = 1.5
+    cutback_factor_at_failure = 0.5
+  []
+  end_time = 6.4
+[]
+
+[Outputs]
+  print_linear_residuals = false
+  csv = true
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="3f053005-4e66-45c4-9f7d-14a4c07e2284"><div class="modal-content"><h4>(test/tests/crack_geometric_functions/quadratic.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
+  solve = false
+[]
+
+[Mesh]
+  [one]
+    type = GeneratedMeshGenerator
+    dim = 1
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+[]
+
+[AuxKernels]
+  [d]
+    type = FunctionAux
+    variable = d
+    function = &#x27;t&#x27;
+  []
+[]
+
+[Materials]
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d^2&#x27;
+    phase_field = d
+  []
+[]
+
+[Postprocessors]
+  [d]
+    type = ElementAverageValue
+    variable = d
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [alpha]
+    type = ADElementAverageMaterialProperty
+    mat_prop = alpha
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [dalpha_dd]
+    type = ADElementAverageMaterialProperty
+    mat_prop = dalpha/dd
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [dalpha_dd_0]
+    type = ADElementAverageMaterialProperty
+    mat_prop = xi
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [c0]
+    type = ADElementAverageMaterialProperty
+    mat_prop = c0
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+[]
+
+[Executioner]
+  type = Transient
+  dt = 0.1
+  end_time = 1
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="778eb98a-f00c-4b23-9e1b-23b42b7bbea5"><div class="modal-content"><h4>(tutorials/homogeneous_cube/CNH_J2_powerlawhardening/elastoplasticity_fracture.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 R = 4
 
 psic = 15
@@ -730,9 +2597,9 @@ ep0 = 0.01
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
-    function = &#x27;alpha*Gc/c0/l+we+wp&#x27;
+    function = &#x27;alpha*Gc/c0/l+psie+psip&#x27;
     args = d
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l we(d) wp(d)&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l psie(d) psip(d)&#x27;
     derivative_order = 1
   []
 []
@@ -806,260 +2673,12 @@ ep0 = 0.01
 []
 
 [Outputs]
-  print_linear_residuals = false
-  csv = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="2243da56-fe97-4882-86e5-2cdac06a4e68"><div class="modal-content"><h4>(tutorials/three_point_bending/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">psic = 90
-Gc = 20
-l = 0.027
-
-E = 7.25e4
-nu = 0.34
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-eta = 1
-
-sigma_y = 345
-n = 1
-ep0 = 0.345
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-  volumetric_locking_correction = true
-[]
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = &#x27;fracture.i&#x27;
-    cli_args = &#x27;Gc=${Gc};psic=${psic};l=${l}&#x27;
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
-    source_variable = d
-    variable = d
-  []
-  [to_we_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    source_variable = we_active
-    variable = we_active
-  []
-  [to_wp_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    source_variable = wp_active
-    variable = wp_active
-  []
-[]
-
-[Problem]
-  kernel_coverage_check = false
-  material_coverage_check = false
-[]
-
-[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = &#x27;gold/beam.msh&#x27;
-  []
-  [active]
-    type = SubdomainBoundingBoxGenerator
-    input = fmg
-    block_id = 0
-    bottom_left = &#x27;0 0 0&#x27;
-    top_right = &#x27;100 16 0&#x27;
-  []
-  [inactive]
-    type = SubdomainBoundingBoxGenerator
-    input = active
-    block_id = 1
-    bottom_left = &#x27;100 0 0&#x27;
-    top_right = &#x27;200 16 0&#x27;
-  []
-[]
-
-[UserObjects]
-  [esm]
-    type = CoupledVarThresholdElementSubdomainModifier
-    coupled_var = d
-    threshold = 0.925
-    criterion_type = ABOVE
-    subdomain_id = 1
-    complement_subdomain_id = 0
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-    apply_initial_conditions = false
-  []
-[]
-
-[Variables]
-  [disp_x]
-    block = 0
-  []
-  [disp_y]
-    block = 0
-  []
-[]
-
-[AuxVariables]
-  [d]
-  []
-  [fy]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_x&#x27;
-    component = 0
-    use_displaced_mesh = true
-    block = 0
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_y&#x27;
-    component = 1
-    use_displaced_mesh = true
-    save_in = fy
-    block = 0
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l Gc psic viscosity&#x27;
-    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${eta}&#x27;
-    block = 0
-  []
-  [degradation]
-    type = ADDerivativeParsedMaterial
-    f_name = g
-    args = d
-    function = &#x27;(1-d)^2/(1+(0.5*Gc/c0/l/psic-1)*d)^2*(1-eta)+eta&#x27;
-    material_property_names = &#x27;Gc c0 l psic&#x27;
-    constant_names = &#x27;eta &#x27;
-    constant_expressions = &#x27;5e-3&#x27;
-    derivative_order = 1
-    block = 0
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-    block = 0
-  []
-  [defgrad]
-    type = ComputeDeformationGradient
-    block = 0
-  []
-  [hencky]
-    type = HenckyIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    output_properties = &#x27;we_active&#x27;
-    outputs = exodus
-    block = 0
-  []
-  [power_law_hardening]
-    type = PowerLawHardening
-    yield_stress = ${sigma_y}
-    exponent = ${n}
-    reference_plastic_strain = ${ep0}
-    phase_field = d
-    degradation_function = g
-    output_properties = &#x27;wp_active&#x27;
-    outputs = exodus
-    block = 0
-  []
-  [J2]
-    type = LargeDeformationJ2Plasticity
-    hardening_model = power_law_hardening
-    output_properties = &#x27;effective_plastic_strain&#x27;
-    outputs = exodus
-    block = 0
-  []
-  [newtonian_viscosity]
-    type = LargeDeformationNewtonianViscosity
-    block = 0
-  []
-  [stress]
-    type = ComputeLargeDeformationStress
-    elasticity_model = hencky
-    plasticity_model = J2
-    viscoelasticity_model = newtonian_viscosity
-    block = 0
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;left right&#x27;
-    function = &#x27;t&#x27;
-    preset = false
-  []
-  [top_xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top&#x27;
-    value = 0
-  []
-  [top_yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top&#x27;
-    value = 0
-  []
-[]
-
-[Postprocessors]
-  [force]
-    type = NodalSum
-    variable = fy
-    boundary = top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-
-  nl_rel_tol = 1e-06
-  nl_abs_tol = 1e-06
-  nl_max_its = 50
-
-  automatic_scaling = true
-  [TimeStepper]
-    type = FunctionDT
-    function = &#x27;0.05&#x27;
-    growth_factor = 1.5
-    cutback_factor_at_failure = 0.5
-  []
-  end_time = 6.4
-[]
-
-[Outputs]
+  file_base = stress_deformation
   print_linear_residuals = false
   csv = true
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="c27b97c3-6ad1-4d4d-8b7a-2f4a8614ba37"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="2137686e-c78d-4ce1-bffb-79bf32509026"><div class="modal-content"><h4>(tutorials/mode2_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [top_half]
     type = GeneratedMeshGenerator
     dim = 2
@@ -1214,422 +2833,7 @@ ep0 = 0.345
 [Outputs]
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="17b1c182-4c91-4c91-a9e5-b8d39af7b58f"><div class="modal-content"><h4>(tutorials/mode1_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = BoxMarker
-      bottom_left = &#x27;0.4 0 0&#x27;
-      top_right = &#x27;1 0.05 0&#x27;
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc l&#x27;
-    prop_values = &#x27;${Gc} ${l}&#x27;
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p eta &#x27;
-    parameter_values = &#x27;2 1e-6&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d^2&#x27;
-    phase_field = d
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
-    args = &#x27;d psie_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="50ff5300-42d6-41b2-ae7b-419a961e6a1d"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
-  []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = BoxMarker
-      bottom_left = &#x27;0.4 0 0&#x27;
-      top_right = &#x27;1 0.05 0&#x27;
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc psic l&#x27;
-    prop_values = &#x27;${Gc} ${psic} ${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
-    args = &#x27;d psie_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="54a34dca-774e-40f0-98f7-f1c3aa549b37"><div class="modal-content"><h4>(test/tests/crack_geometric_functions/quadratic.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
-  solve = false
-[]
-
-[Mesh]
-  [one]
-    type = GeneratedMeshGenerator
-    dim = 1
-  []
-[]
-
-[AuxVariables]
-  [d]
-  []
-[]
-
-[AuxKernels]
-  [d]
-    type = FunctionAux
-    variable = d
-    function = &#x27;t&#x27;
-  []
-[]
-
-[Materials]
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d^2&#x27;
-    phase_field = d
-  []
-[]
-
-[Postprocessors]
-  [d]
-    type = ElementAverageValue
-    variable = d
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [alpha]
-    type = ADElementAverageMaterialProperty
-    mat_prop = alpha
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [dalpha_dd]
-    type = ADElementAverageMaterialProperty
-    mat_prop = dalpha/dd
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [dalpha_dd_0]
-    type = ADElementAverageMaterialProperty
-    mat_prop = xi
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [c0]
-    type = ADElementAverageMaterialProperty
-    mat_prop = c0
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-[]
-
-[Executioner]
-  type = Transient
-  dt = 0.1
-  end_time = 1
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="bbf103e5-da35-4f64-9501-884d5dbbd96e"><div class="modal-content"><h4>(test/tests/crack_geometric_functions/mixed.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
-  solve = false
-[]
-
-[Mesh]
-  [one]
-    type = GeneratedMeshGenerator
-    dim = 1
-  []
-[]
-
-[AuxVariables]
-  [d]
-  []
-[]
-
-[AuxKernels]
-  [d]
-    type = FunctionAux
-    variable = d
-    function = &#x27;t&#x27;
-  []
-[]
-
-[Materials]
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;xi*d+(1-xi)*d^2&#x27;
-    phase_field = d
-    parameter_names = &#x27;xi&#x27;
-    parameter_values = &#x27;2&#x27;
-    tolerance = 1e-8
-  []
-[]
-
-[Postprocessors]
-  [d]
-    type = ElementAverageValue
-    variable = d
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [alpha]
-    type = ADElementAverageMaterialProperty
-    mat_prop = alpha
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [dalpha_dd]
-    type = ADElementAverageMaterialProperty
-    mat_prop = dalpha/dd
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [dalpha_dd_0]
-    type = ADElementAverageMaterialProperty
-    mat_prop = xi
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [c0]
-    type = ADElementAverageMaterialProperty
-    mat_prop = c0
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-[]
-
-[Executioner]
-  type = Transient
-  dt = 0.1
-  end_time = 1
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="30867cfa-0ba8-4358-8fe8-9b8494887b2e"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
-R = 4
-
-psic = 15
-Gc = 1.38e5
-l = &#x27;${fparse R * a}&#x27;
-
-E = 6.88e4
-nu = 0.33
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-
-sigma_y = 320
-n = 5
-ep0 = 0.01
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y disp_z&#x27;
-  volumetric_locking_correction = true
-[]
-
-[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="5cd06602-1d51-4b9e-bc78-7884621467df"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [gmg]
     type = GeneratedMeshGenerator
     dim = 3
@@ -1640,12 +2844,6 @@ ep0 = 0.01
 []
 
 [Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-  [disp_z]
-  []
   [d]
   []
 []
@@ -1653,11 +2851,11 @@ ep0 = 0.01
 [AuxVariables]
   [bounds_dummy]
   []
-  [stress]
+  [psie_active]
     order = CONSTANT
     family = MONOMIAL
   []
-  [F]
+  [psip_active]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -1679,42 +2877,7 @@ ep0 = 0.01
   []
 []
 
-[AuxKernels]
-  [stress]
-    type = ADRankTwoAux
-    variable = stress
-    rank_two_tensor = stress
-    index_i = 1
-    index_j = 1
-  []
-  [F]
-    type = ADRankTwoAux
-    variable = F
-    rank_two_tensor = deformation_gradient
-    index_i = 1
-    index_j = 1
-  []
-[]
-
 [Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-    use_displaced_mesh = true
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    use_displaced_mesh = true
-  []
-  [solid_z]
-    type = ADStressDivergenceTensors
-    variable = disp_z
-    component = 2
-    use_displaced_mesh = true
-  []
   [pff_diff]
     type = ADPFFDiffusion
     variable = d
@@ -1729,8 +2892,8 @@ ep0 = 0.01
 [Materials]
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l Gc psic&#x27;
-    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic}&#x27;
+    prop_names = &#x27;l Gc psic&#x27;
+    prop_values = &#x27;${l} ${Gc} ${psic}&#x27;
   []
   [degradation]
     type = RationalDegradationFunction
@@ -1747,87 +2910,13 @@ ep0 = 0.01
     function = &#x27;d&#x27;
     phase_field = d
   []
-  [defgrad]
-    type = ComputeDeformationGradient
-  []
-  [hencky]
-    type = HenckyIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-  []
-  [power_law_hardening]
-    type = PowerLawHardening
-    yield_stress = ${sigma_y}
-    exponent = ${n}
-    reference_plastic_strain = ${ep0}
-    phase_field = d
-    degradation_function = g
-  []
-  [J2]
-    type = LargeDeformationJ2Plasticity
-    hardening_model = power_law_hardening
-  []
-  [stress]
-    type = ComputeLargeDeformationStress
-    elasticity_model = hencky
-    plasticity_model = J2
-  []
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
-    function = &#x27;alpha*Gc/c0/l+we+wp&#x27;
-    args = d
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l we(d) wp(d)&#x27;
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
+    args = &#x27;d psie_active psip_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
     derivative_order = 1
-  []
-[]
-
-[BCs]
-  [xfix]
-    type = DirichletBC
-    variable = disp_x
-    boundary = &#x27;left&#x27;
-    value = 0
-  []
-  [yfix]
-    type = DirichletBC
-    variable = disp_y
-    boundary = &#x27;bottom&#x27;
-    value = 0
-  []
-  [zfix]
-    type = DirichletBC
-    variable = disp_z
-    boundary = &#x27;back&#x27;
-    value = 0
-  []
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = &#x27;top&#x27;
-    function = &#x27;t&#x27;
-    preset = false
-  []
-[]
-
-[Postprocessors]
-  [F]
-    type = ElementAverageValue
-    variable = F
-  []
-  [stress]
-    type = ElementAverageValue
-    variable = stress
-  []
-  [d]
-    type = ElementAverageValue
-    variable = d
-  []
-  [ep]
-    type = ADElementAverageMaterialProperty
-    mat_prop = effective_plastic_strain
   []
 []
 
@@ -1835,17 +2924,12 @@ ep0 = 0.01
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount&#x27;
-  petsc_options_value = &#x27;lu       vinewtonrsls NONZERO               1e-10&#x27;
-
-  line_search = none
+  petsc_options_iname = &#x27;-pc_type -snes_type&#x27;
+  petsc_options_value = &#x27;lu vinewtonrsls&#x27;
 
   nl_rel_tol = 1e-08
   nl_abs_tol = 1e-10
   nl_max_its = 50
-
-  dt = &#x27;${fparse 0.0001 * a}&#x27;
-  end_time = &#x27;${fparse 0.1 * a}&#x27;
 
   automatic_scaling = true
 
@@ -1854,746 +2938,8 @@ ep0 = 0.01
 
 [Outputs]
   print_linear_residuals = false
-  csv = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b4ad4f68-cd47-4847-b999-3195fdde452e"><div class="modal-content"><h4>(tutorials/soil_desiccation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 4
-nu = 0.2
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-
-l = 0.5
-c = 0.1
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-[]
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = &#x27;fracture.i&#x27;
-    cli_args = &#x27;l=${l}&#x27;
-  []
-[]
-
-[Transfers]
-  [send_psie_active]
-    type = MultiAppMeshFunctionTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    source_variable = psie_active
-    variable = psie_active
-  []
-  [send_psii_active]
-    type = MultiAppMeshFunctionTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    source_variable = psii_active
-    variable = psii_active
-  []
-  [get_d]
-    type = MultiAppMeshFunctionTransfer
-    multi_app = fracture
-    direction = from_multiapp
-    source_variable = d
-    variable = d
-  []
-[]
-
-[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = &#x27;gold/fields_refined.e&#x27;
-    use_for_exodus_restart = true
-  []
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-  [strain_zz]
-  []
-[]
-
-[AuxVariables]
-  [d]
-  []
-  [Gc]
-    initial_from_file_var = Gc
-  []
-  [psic]
-    initial_from_file_var = psic
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-  []
-  [plane_stress]
-    type = ADWeakPlaneStress
-    variable = strain_zz
-  []
-  [react_x]
-    type = ADCoefMatReaction
-    variable = disp_x
-    coefficient = ${c}
-    prop_names = &#x27;g&#x27;
-  []
-  [react_y]
-    type = ADCoefMatReaction
-    variable = disp_y
-    coefficient = ${c}
-    prop_names = &#x27;g&#x27;
-  []
-[]
-
-[BCs]
-  [Periodic]
-    [x]
-      variable = disp_x
-      auto_direction = &#x27;x y&#x27;
-    []
-    [y]
-      variable = disp_y
-      auto_direction = &#x27;x y&#x27;
-    []
-  []
-[]
-
-[Materials]
-  # fracture
-  [fracture_toughness]
-    type = ADParsedMaterial
-    f_name = Gc
-    args = Gc
-    function = &#x27;Gc&#x27;
-  []
-  [critial_fracture_energy]
-    type = ADParsedMaterial
-    f_name = psic
-    args = psic
-    function = &#x27;psic&#x27;
-  []
-  [bulk_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l&#x27;
-    prop_values = &#x27;${K} ${G} ${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 1 0 1e-6&#x27;
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-  []
-  # elasticity
-  [eigen_strain]
-    type = ComputeEigenstrainFromFunctionInitialStress
-    initial_stress = &#x27;t t 0&#x27;
-    eigenstrain_name = &#x27;es&#x27;
-    bulk_modulus = K
-    shear_modulus = G
-  []
-  [strain]
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = strain_zz
-    eigenstrain_names = &#x27;es&#x27;
-  []
-  [elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    decomposition = NONE
-    output_properties = &#x27;psie_active&#x27;
-    outputs = exodus
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-  []
-  [interfacial_energy]
-    type = ThinFilmInterfaceEnergyDensity
-    phase_field = d
-    shear_lag_coef = ${c}
-    output_properties = &#x27;psii_active&#x27;
-    outputs = exodus
-  []
-[]
-
-[Postprocessors]
-  [delta_d]
-    type = SolutionChangeNorm
-    variable = d
-    outputs = none
-  []
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist&#x27;
-  dt = 0.0005
-  end_time = 0.22
-
-  nl_rel_tol = 1e-06
-  nl_abs_tol = 1e-08
-
-  automatic_scaling = true
-
-  picard_max_its = 10
-  picard_custom_pp = delta_d
-  disable_picard_residual_norm_check = true
-  custom_abs_tol = 1e-03
-  custom_rel_tol = 1e-03
-  accept_on_max_picard_iteration = true
-[]
-
-[Outputs]
-  print_linear_residuals = false
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="59828e3f-b89f-43ab-99a4-19275e7cb864"><div class="modal-content"><h4>(test/tests/crack_geometric_functions/linear.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
-  solve = false
-[]
-
-[Mesh]
-  [one]
-    type = GeneratedMeshGenerator
-    dim = 1
-  []
-[]
-
-[AuxVariables]
-  [d]
-  []
-[]
-
-[AuxKernels]
-  [d]
-    type = FunctionAux
-    variable = d
-    function = &#x27;t&#x27;
-  []
-[]
-
-[Materials]
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-[]
-
-[Postprocessors]
-  [d]
-    type = ElementAverageValue
-    variable = d
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [alpha]
-    type = ADElementAverageMaterialProperty
-    mat_prop = alpha
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [dalpha_dd]
-    type = ADElementAverageMaterialProperty
-    mat_prop = dalpha/dd
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [dalpha_dd_0]
-    type = ADElementAverageMaterialProperty
-    mat_prop = xi
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-  [c0]
-    type = ADElementAverageMaterialProperty
-    mat_prop = c0
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-  []
-[]
-
-[Executioner]
-  type = Transient
-  dt = 0.1
-  end_time = 1
-[]
-
-[Outputs]
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="9eb219ec-9eb1-4ae8-b637-e7411a10bd13"><div class="modal-content"><h4>(tutorials/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = &#x27;gold/fields_refined.e&#x27;
-    use_for_exodus_restart = true
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [psii_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [bounds_dummy]
-  []
-  [Gc]
-    initial_from_file_var = &#x27;Gc&#x27;
-  []
-  [psic]
-    initial_from_file_var = &#x27;psic&#x27;
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = d
-  []
-  [pff_react]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_toughness]
-    type = ADParsedMaterial
-    f_name = Gc
-    args = Gc
-    function = &#x27;Gc&#x27;
-  []
-  [critial_fracture_energy]
-    type = ADParsedMaterial
-    f_name = psic
-    args = psic
-    function = &#x27;psic&#x27;
-  []
-  [length_scale]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;l&#x27;
-    prop_values = &#x27;${l}&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 1 0 1e-6&#x27;
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psii_active)&#x27;
-    args = &#x27;d psie_active psii_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[BCs]
-  [Periodic]
-    [all]
-      variable = d
-      auto_direction = &#x27;x y&#x27;
-    []
-  []
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="11b7ef31-762f-4b43-959a-0a3daba148a1"><div class="modal-content"><h4>(tutorials/mode2_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [top_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = 0
-    ymax = 0.5
-    boundary_id_offset = 0
-    boundary_name_prefix = top_half
-  []
-  [top_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = top_half
-    new_boundary = top_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [bottom_half]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymin = -0.5
-    ymax = 0
-    boundary_id_offset = 5
-    boundary_name_prefix = bottom_half
-  []
-  [bottom_stitch]
-    type = BoundingBoxNodeSetGenerator
-    input = bottom_half
-    new_boundary = bottom_stitch
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  [stitch]
-    type = StitchedMeshGenerator
-    inputs = &#x27;top_stitch bottom_stitch&#x27;
-    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
-  []
-  construct_side_list_from_node_list = true
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = 2
-  stop_time = 0
-  max_h_level = 2
-  [Markers]
-    [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.65 -0.25 0&#x27;
-      length = 0.8
-      width = 0.2
-      height = 1
-      length_direction = &#x27;1 -1.5 0&#x27;
-      width_direction = &#x27;1.5 1 0&#x27;
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = d
-    fracture_toughness = Gc
-    regularization_length = l
-    normalization_constant = c0
-  []
-  [source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;Gc l&#x27;
-    prop_values = &#x27;${Gc} ${l}&#x27;
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = &#x27;p eta &#x27;
-    parameter_values = &#x27;2 1e-6&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d^2&#x27;
-    phase_field = d
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
-    args = &#x27;d psie_active&#x27;
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
-    derivative_order = 1
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-[]
-
-[Outputs]
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="52b930d7-a44a-4524-a012-2f9237f14439"><div class="modal-content"><h4>(benchmarks/soil_desiccation/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[MultiApps]
-  [mechanical]
-    type = TransientMultiApp
-    input_files = &#x27;mechanical.i&#x27;
-    app_type = raccoonApp
-  []
-[]
-
-[Transfers]
-  [get_we_active]
-    type = MultiAppMeshFunctionTransfer
-    multi_app = &#x27;mechanical&#x27;
-    direction = from_multiapp
-    source_variable = &#x27;we_active&#x27;
-    variable = &#x27;we_active&#x27;
-  []
-  [send_d]
-    type = MultiAppMeshFunctionTransfer
-    multi_app = &#x27;mechanical&#x27;
-    direction = to_multiapp
-    source_variable = d
-    variable = d
-  []
-[]
-
-[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = &#x27;gold/fields.e&#x27;
-    use_for_exodus_restart = true
-  []
-[]
-
-[Variables]
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [we_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [bounds_dummy]
-  []
-  [Gc]
-    initial_from_file_var = &#x27;Gc&#x27;
-  []
-  [psic]
-    initial_from_file_var = &#x27;psic&#x27;
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = d
-    mobility_name = L
-    kappa_name = kappa
-  []
-  [pff_react]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
-[]
-
-[Materials]
-  [energy_release_rate]
-    type = ADParsedMaterial
-    f_name = &#x27;Gc&#x27;
-    args = &#x27;Gc&#x27;
-    function = &#x27;Gc&#x27;
-  []
-  [critial_fracture_energy]
-    type = ADParsedMaterial
-    f_name = &#x27;psic&#x27;
-    args = &#x27;psic&#x27;
-    function = &#x27;psic&#x27;
-  []
-  [length_scale]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;l&#x27;
-    prop_values = &#x27;1&#x27;
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    d = d
-  []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    d = d
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 1 0 1e-6&#x27;
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-  []
-  [active_elastic_energy]
-    type = ADParsedMaterial
-    f_name = we_active
-    function = &#x27;we_active&#x27;
-    args = we_active
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha/c0/l+g*we_active/Gc&#x27;
-    args = d
-    material_property_names = &#x27;alpha(d) c0 l g(d) we_active Gc&#x27;
-    derivative_order = 1
-  []
-[]
-
-[BCs]
-  [Periodic]
-    [all]
-      variable = d
-      auto_direction = &#x27;x y&#x27;
-    []
-  []
-[]
-
-[Postprocessors]
-  [d_norm]
-    type = NodalSum
-    variable = d
-    outputs = none
-  []
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
-  dt = 1e-3
-  end_time = 0.22
-
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
-
-  picard_max_its = 10
-  disable_picard_residual_norm_check = true
-  picard_custom_pp = d_norm
-  custom_abs_tol = 1e-3
-  custom_rel_tol = 1e-3
-  accept_on_max_picard_iteration = true
-[]
-
-[Outputs]
-  exodus = true
-  print_linear_residuals = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="53c3d452-04e7-413b-8c69-8646c2069d08"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="d1975b12-d743-4d83-b0db-7a789e53d48e"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
@@ -2790,11 +3136,34 @@ l = 0.02
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="9817d7ec-c743-4db7-a3dc-241958d16ff8"><div class="modal-content"><h4>(benchmarks/soil_desiccation/mechanical.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = &#x27;gold/fields.e&#x27;
-    use_for_exodus_restart = true
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b6c0cd25-3ab3-4616-b7a7-6d8a05827b29"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening/elastoplasticity_fracture.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+R = 4
+
+psic = 15
+Gc = 1.38e5
+l = &#x27;${fparse R * a}&#x27;
+
+E = 6.88e4
+nu = 0.33
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+sigma_y = 320
+n = 5
+ep0 = 0.01
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+  volumetric_locking_correction = true
+[]
+
+[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 3
+    xmax = ${a}
+    ymax = ${a}
+    zmax = ${a}
   []
 []
 
@@ -2803,153 +3172,554 @@ l = 0.02
   []
   [disp_y]
   []
-  [strain_zz]
+  [disp_z]
+  []
+  [d]
   []
 []
 
 [AuxVariables]
-  [d]
+  [bounds_dummy]
   []
-  [we_active]
+  [stress]
     order = CONSTANT
     family = MONOMIAL
   []
-  [Gc]
-    initial_from_file_var = &#x27;Gc&#x27;
+  [F]
+    order = CONSTANT
+    family = MONOMIAL
   []
-  [psic]
-    initial_from_file_var = &#x27;psic&#x27;
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
   []
 []
 
 [AuxKernels]
-  [we_active]
-    type = ADMaterialRealAux
-    variable = &#x27;we_active&#x27;
-    property = &#x27;we_active&#x27;
-    execute_on = &#x27;TIMESTEP_END&#x27;
+  [stress]
+    type = ADRankTwoAux
+    variable = stress
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+  []
+  [F]
+    type = ADRankTwoAux
+    variable = F
+    rank_two_tensor = deformation_gradient
+    index_i = 1
+    index_j = 1
   []
 []
 
 [Kernels]
   [solid_x]
     type = ADStressDivergenceTensors
-    variable = &#x27;disp_x&#x27;
+    variable = disp_x
     component = 0
-    displacements = &#x27;disp_x disp_y&#x27;
+    use_displaced_mesh = true
   []
   [solid_y]
     type = ADStressDivergenceTensors
-    variable = &#x27;disp_y&#x27;
+    variable = disp_y
     component = 1
-    displacements = &#x27;disp_x disp_y&#x27;
+    use_displaced_mesh = true
   []
-  [plane_stress]
-    type = ADWeakPlaneStress
-    variable = &#x27;strain_zz&#x27;
-    displacements = &#x27;disp_x disp_y&#x27;
+  [solid_z]
+    type = ADStressDivergenceTensors
+    variable = disp_z
+    component = 2
+    use_displaced_mesh = true
   []
-  [react_x]
-    type = ADCoefMatReaction
-    variable = &#x27;disp_x&#x27;
-    coefficient = 0.1
-    prop_names = &#x27;g&#x27;
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = d
   []
-  [react_y]
-    type = ADCoefMatReaction
-    variable = &#x27;disp_y&#x27;
-    coefficient = 0.1
-    prop_names = &#x27;g&#x27;
-  []
-[]
-
-[BCs]
-  [Periodic]
-    [x]
-      variable = disp_x
-      auto_direction = &#x27;x y&#x27;
-    []
-    [y]
-      variable = disp_y
-      auto_direction = &#x27;x y&#x27;
-    []
+  [pff_source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
   []
 []
 
 [Materials]
-  [eigen_strain]
-    type = ADComputeEigenstrainFromFunctionEigenstress
-    eigen_stress = &#x27;t 0 0 0 t 0 0 0 0&#x27;
-    eigenstrain_name = &#x27;es&#x27;
-  []
-  [elasticity_tensor]
-    type = ADComputeIsotropicElasticityTensor
-    poissons_ratio = 0.2
-    youngs_modulus = 4
-  []
-  [strain]
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = &#x27;strain_zz&#x27;
-    eigenstrain_names = &#x27;es&#x27;
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [stress]
-    type = SmallStrainDegradedElasticPK2Stress_NoSplit
-    d = &#x27;d&#x27;
-    d_crit = 0.6
-  []
-
-  [energy_release_rate]
-    type = ADParsedMaterial
-    f_name = &#x27;Gc&#x27;
-    args = &#x27;Gc&#x27;
-    function = &#x27;Gc&#x27;
-  []
-  [critial_fracture_energy]
-    type = ADParsedMaterial
-    f_name = &#x27;psic&#x27;
-    args = &#x27;psic&#x27;
-    function = &#x27;psic&#x27;
-  []
-  [length_scale]
+  [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = &#x27;l&#x27;
-    prop_values = &#x27;1&#x27;
+    prop_names = &#x27;K G l Gc psic&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic}&#x27;
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
   []
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
     function = &#x27;d&#x27;
-    d = d
+    phase_field = d
   []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    d = d
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 1 0 1e-6&#x27;
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+  [defgrad]
+    type = ComputeDeformationGradient
+  []
+  [hencky]
+    type = HenckyIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+  []
+  [power_law_hardening]
+    type = PowerLawHardening
+    yield_stress = ${sigma_y}
+    exponent = ${n}
+    reference_plastic_strain = ${ep0}
+    phase_field = d
+    degradation_function = g
+  []
+  [J2]
+    type = LargeDeformationJ2Plasticity
+    hardening_model = power_law_hardening
+  []
+  [stress]
+    type = ComputeLargeDeformationStress
+    elasticity_model = hencky
+    plasticity_model = J2
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+psie+psip&#x27;
+    args = d
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l psie(d) psip(d)&#x27;
+    derivative_order = 1
+  []
+[]
+
+[BCs]
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = &#x27;left&#x27;
+    value = 0
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = &#x27;bottom&#x27;
+    value = 0
+  []
+  [zfix]
+    type = DirichletBC
+    variable = disp_z
+    boundary = &#x27;back&#x27;
+    value = 0
+  []
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = &#x27;top&#x27;
+    function = &#x27;t&#x27;
+    preset = false
+  []
+[]
+
+[Postprocessors]
+  [F]
+    type = ElementAverageValue
+    variable = F
+  []
+  [stress]
+    type = ElementAverageValue
+    variable = stress
+  []
+  [d]
+    type = ElementAverageValue
+    variable = d
+  []
+  [ep]
+    type = ADElementAverageMaterialProperty
+    mat_prop = effective_plastic_strain
   []
 []
 
 [Executioner]
   type = Transient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist&#x27;
-  dt = 1e-3
-  end_time = 0.22
 
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount&#x27;
+  petsc_options_value = &#x27;lu       vinewtonrsls NONZERO               1e-10&#x27;
+
+  line_search = none
+
+  nl_rel_tol = 1e-08
+  nl_abs_tol = 1e-10
+  nl_max_its = 50
+
+  dt = &#x27;${fparse 0.0001 * a}&#x27;
+  end_time = &#x27;${fparse 0.1 * a}&#x27;
 
   automatic_scaling = true
+
+  abort_on_solve_fail = true
+[]
+
+[Outputs]
+  file_base = stress_deformation
+  print_linear_residuals = false
+  csv = true
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="7d800893-0bd9-4b32-abfb-31f01bca80f7"><div class="modal-content"><h4>(test/tests/crack_geometric_functions/mixed.i)</h4><pre class="moose-pre"><code class="language-text">[Problem]
+  solve = false
+[]
+
+[Mesh]
+  [one]
+    type = GeneratedMeshGenerator
+    dim = 1
+  []
+[]
+
+[AuxVariables]
+  [d]
+  []
+[]
+
+[AuxKernels]
+  [d]
+    type = FunctionAux
+    variable = d
+    function = &#x27;t&#x27;
+  []
+[]
+
+[Materials]
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;xi*d+(1-xi)*d^2&#x27;
+    phase_field = d
+    parameter_names = &#x27;xi&#x27;
+    parameter_values = &#x27;2&#x27;
+    tolerance = 1e-8
+  []
+[]
+
+[Postprocessors]
+  [d]
+    type = ElementAverageValue
+    variable = d
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [alpha]
+    type = ADElementAverageMaterialProperty
+    mat_prop = alpha
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [dalpha_dd]
+    type = ADElementAverageMaterialProperty
+    mat_prop = dalpha/dd
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [dalpha_dd_0]
+    type = ADElementAverageMaterialProperty
+    mat_prop = xi
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+  [c0]
+    type = ADElementAverageMaterialProperty
+    mat_prop = c0
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+  []
+[]
+
+[Executioner]
+  type = Transient
+  dt = 0.1
+  end_time = 1
+[]
+
+[Outputs]
+  exodus = true
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="7501026b-3323-4d33-a238-5dd47d761aa1"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [gmg]
+    type = GeneratedMeshGenerator
+    dim = 3
+    xmax = ${a}
+    ymax = ${a}
+    zmax = ${a}
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [psip_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = d
+  []
+  [pff_source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [bulk_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;l Gc psic&#x27;
+    prop_values = &#x27;${l} ${Gc} ${psic}&#x27;
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
+    phase_field = d
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
+    args = &#x27;d psie_active psip_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -snes_type&#x27;
+  petsc_options_value = &#x27;lu vinewtonrsls&#x27;
+
+  nl_rel_tol = 1e-08
+  nl_abs_tol = 1e-10
+  nl_max_its = 50
+
+  automatic_scaling = true
+
+  abort_on_solve_fail = true
 []
 
 [Outputs]
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="bbf75471-fdf7-44ad-b75f-7b54b4bca9ec"><div class="modal-content"><h4>(tutorials/mode1_ductile_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="1c34e83a-04c6-434a-b4ea-cdead40da772"><div class="modal-content"><h4>(tutorials/mode2_brittle_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  [top_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = 0
+    ymax = 0.5
+    boundary_id_offset = 0
+    boundary_name_prefix = top_half
+  []
+  [top_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = top_half
+    new_boundary = top_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [bottom_half]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymin = -0.5
+    ymax = 0
+    boundary_id_offset = 5
+    boundary_name_prefix = bottom_half
+  []
+  [bottom_stitch]
+    type = BoundingBoxNodeSetGenerator
+    input = bottom_half
+    new_boundary = bottom_stitch
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  [stitch]
+    type = StitchedMeshGenerator
+    inputs = &#x27;top_stitch bottom_stitch&#x27;
+    stitch_boundaries_pairs = &#x27;top_stitch bottom_stitch&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Adaptivity]
+  marker = marker
+  initial_marker = marker
+  initial_steps = 2
+  stop_time = 0
+  max_h_level = 2
+  [Markers]
+    [marker]
+      type = OrientedBoxMarker
+      center = &#x27;0.65 -0.25 0&#x27;
+      length = 0.8
+      width = 0.2
+      height = 1
+      length_direction = &#x27;1 -1.5 0&#x27;
+      width_direction = &#x27;1.5 1 0&#x27;
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
+[Variables]
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = d
+    fracture_toughness = Gc
+    regularization_length = l
+    normalization_constant = c0
+  []
+  [source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
+  []
+[]
+
+[Materials]
+  [fracture_properties]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;Gc l&#x27;
+    prop_values = &#x27;${Gc} ${l}&#x27;
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = &#x27;p eta &#x27;
+    parameter_values = &#x27;2 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d^2&#x27;
+    phase_field = d
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
+    derivative_order = 1
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package -snes_type&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                  vinewtonrsls&#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+[]
+
+[Outputs]
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="9c337149-2f0d-439b-b7b5-193a848c3ae7"><div class="modal-content"><h4>(tutorials/mode1_cohesive_fracture/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [gen]
     type = GeneratedMeshGenerator
     dim = 2
@@ -2975,15 +3745,11 @@ l = 0.02
   max_h_level = 2
   [Markers]
     [marker]
-      type = OrientedBoxMarker
-      center = &#x27;0.75 0.25 0&#x27;
-      length = 0.8
-      width = 0.1
-      height = 1
-      length_direction = &#x27;1 1 0&#x27;
-      width_direction = &#x27;-1 1 0&#x27;
-      inside = REFINE
+      type = BoxMarker
+      bottom_left = &#x27;0.4 0 0&#x27;
+      top_right = &#x27;1 0.05 0&#x27;
       outside = DO_NOTHING
+      inside = REFINE
     []
   []
 []
@@ -2997,10 +3763,6 @@ l = 0.02
   [bounds_dummy]
   []
   [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [psip_active]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -3061,8 +3823,8 @@ l = 0.02
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
-    function = &#x27;alpha*Gc/c0/l+g*(psie_active+psip_active)&#x27;
-    args = &#x27;d psie_active psip_active&#x27;
+    function = &#x27;alpha*Gc/c0/l+g*psie_active&#x27;
+    args = &#x27;d psie_active&#x27;
     material_property_names = &#x27;alpha(d) g(d) Gc c0 l&#x27;
     derivative_order = 1
   []
