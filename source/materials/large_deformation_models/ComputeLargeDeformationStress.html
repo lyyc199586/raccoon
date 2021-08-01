@@ -1,4 +1,139 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>ComputeLargeDeformationStress | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/civet_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="../../../index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="62b4ea51-ab86-436d-849c-8b762cdbb97f" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="146a29bd-965d-40c9-ae4e-96863e6c3a70" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="3b1cbf9a-23ed-4855-b790-0705d02c2393" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="041b2a7e-0626-4fab-803b-c7efc01b56d2" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="733ee9bf-bd97-4c18-b7b9-27c459d9698b"><i class="material-icons">menu</i></a><ul class="sidenav" id="733ee9bf-bd97-4c18-b7b9-27c459d9698b"><li><a href="#!" class="dropdown-trigger" data-target="f5c999a4-ddb0-4bf6-916c-74b1bf43eaef" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="377900b7-7b27-4188-9bbc-3f2c704ec0da" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="4c695a0a-dec1-4fc5-8749-98f8559ff043" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="ee80ca67-792d-446e-b621-751c3df36847" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="62b4ea51-ab86-436d-849c-8b762cdbb97f"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/running.html">Running your first model</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="146a29bd-965d-40c9-ae4e-96863e6c3a70"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li></ul><ul class="dropdown-content" id="3b1cbf9a-23ed-4855-b790-0705d02c2393"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="041b2a7e-0626-4fab-803b-c7efc01b56d2"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="f5c999a4-ddb0-4bf6-916c-74b1bf43eaef"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/running.html">Running your first model</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="377900b7-7b27-4188-9bbc-3f2c704ec0da"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li></ul><ul class="dropdown-content" id="4c695a0a-dec1-4fc5-8749-98f8559ff043"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="ee80ca67-792d-446e-b621-751c3df36847"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="/index.md" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="77ccb67d-7910-4e51-8744-3fe6109e4933" data-section-level="1" data-section-text="ComputeLargeDeformationStress"><h1 id="computelargedeformationstress">ComputeLargeDeformationStress</h1><p>Stress calculator given an elasticity model, a plasticity model and a viscoelasticity model. Large deformation is assumed.</p><section id="b9a91b05-17d1-491e-837b-b9e050a05681" data-section-level="2" data-section-text="Overview"><h2 id="overview">Overview</h2><p>The input of this stress calculator are the mechanical deformation gradient <span class="moose-katex-inline-equation" id="moose-equation-a49b48c0-a643-4aba-ab71-3ed7e268beb8"><script>var element = document.getElementById("moose-equation-a49b48c0-a643-4aba-ab71-3ed7e268beb8");katex.render("\\bfF^m", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> and optionally its old value <span class="moose-katex-inline-equation" id="moose-equation-54103668-f063-4678-a8c6-c2d5d621a71e"><script>var element = document.getElementById("moose-equation-54103668-f063-4678-a8c6-c2d5d621a71e");katex.render("\\bfF^m_{n-1}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>. An elasticity model must be provided. A plasticity model and a viscoelasticity model can be optionally provided.</p><p>The stress calculator calls the elasticity model to compute the Cauchy stress given the mechanical deformation gradient.</p><p>If a plasticity model is provided, plastic deformation will be updated to bring the stress state back onto the yield surface.</p><p>If a viscoelasticity model is provided, the stress calculator will call the viscoelasticity model to compute the viscous stress. The viscous stress will be added to the equilibrium stress returned by the elasticity model.</p></section><section id="0607b61c-1260-4d01-8d59-5aadba5afc21" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="3bb9e34c-dd7c-43e6-9bc3-b38ffb488724" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="1cd34b74-cd8c-47c3-bb02-c6a165d450d3" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">elasticity_model</span><span class="moose-parameter-header-description">Name of the elastic stress-strain constitutive model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the elastic stress-strain constitutive model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="f6e1e07e-420a-49e2-b568-c71ed9376886" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">declare_suffix</span><span class="moose-parameter-header-description">An optional suffix parameter that can be appended to any declared properties. The suffix will be prepended with a '_' character.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>An optional suffix parameter that can be appended to any declared properties. The suffix will be prepended with a '_' character.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">plasticity_model</span><span class="moose-parameter-header-description">Name of the plasticity model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the plasticity model</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">prop_getter_suffix</span><span class="moose-parameter-header-description">An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">viscoelasticity_model</span><span class="moose-parameter-header-description">Name of the viscoelasticity model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the viscoelasticity model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="c66c7a45-62ed-4fdb-a5c6-e5112f0fefc7" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="2240a2c8-c373-498d-94b8-ca7ceed6dbfe" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section id="d27e8648-8d46-43bc-98d5-b217283b2a5d" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#81c4355c-edd4-49d8-bce7-1454dc585f24">(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening/elastoplasticity_fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#4411167a-658a-42a5-9631-925d93b77fa6">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#6fea8635-ac56-47b3-af18-29972ea1ddb5">(tutorials/homogeneous_cube/CNH_J2_powerlawhardening/elastoplasticity_fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#709952a9-5383-48a4-9d50-5d733bcb867b">(tutorials/three_point_bending/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#e6c6149c-5749-4bb8-bacd-f2db933d04cd">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#13b71b69-d401-4abb-8905-cd33cef8515b">(tutorials/homogeneous_cube/Hencky_J2_linearhardening/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#ace54929-d47c-4207-a1d0-c44f8eef4b2c">(tutorials/large_deformation/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#36797990-e8f0-4da7-882d-d4da52b46140">(tutorials/large_deformation/elasticity.i)</a></li></ul></section></section><div class="moose-modal modal" id="81c4355c-edd4-49d8-bce7-1454dc585f24"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening/elastoplasticity_fracture.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+<!DOCTYPE html><head><meta charset="UTF-8"><title>ComputeLargeDeformationStress | RACCOON</title><link rel="icon" type="image/x-icon" href="../../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../css/civet_moose.css" type="text/css" rel="stylesheet"></link><link href="../../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="../../../index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../../media/framework/github-logo.png" class="github-mark"></img><img src="../../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="71ea51f7-b49c-470c-9e9d-1ce4602053dd" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e549801b-1d82-4aeb-891a-b8ef87de57b2" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="f788994c-a7d3-4fbf-b6ca-66df388d9022" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="41bc2d9e-8626-44b8-b88e-951490770391" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="8cbd8753-5ab8-43f2-b11d-88318f9f0bf8"><i class="material-icons">menu</i></a><ul class="sidenav" id="8cbd8753-5ab8-43f2-b11d-88318f9f0bf8"><li><a href="#!" class="dropdown-trigger" data-target="56e6e555-aa19-4c41-bb1f-aa0df2e417a6" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e117acfa-dbf8-402e-bb69-aa60723f3039" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="e8e0997d-e50e-4671-9b1b-da717760c027" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="33a68ae5-a557-4720-9594-2ab4af15b179" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="71ea51f7-b49c-470c-9e9d-1ce4602053dd"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/running.html">Running your first model</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="e549801b-1d82-4aeb-891a-b8ef87de57b2"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li></ul><ul class="dropdown-content" id="f788994c-a7d3-4fbf-b6ca-66df388d9022"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="41bc2d9e-8626-44b8-b88e-951490770391"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="56e6e555-aa19-4c41-bb1f-aa0df2e417a6"><li><a href="../../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../../getting_started/running.html">Running your first model</a></li><li><a href="../../../getting_started/paraview.html">Visualization</a></li><li><a href="../../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="e117acfa-dbf8-402e-bb69-aa60723f3039"><li><a href="../../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li></ul><ul class="dropdown-content" id="e8e0997d-e50e-4671-9b1b-da717760c027"><li><a href="../../../theory/intro.html">Introduction</a></li><li><a href="../../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../../theory/minimization.html">The minimization problem</a></li><li><a href="../../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="33a68ae5-a557-4720-9594-2ab4af15b179"><li><a href="../../../modules/index.html">Physics modules</a></li><li><a href="../../../syntax/index.html">Complete syntax</a></li><li><a href="../../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="/index.md" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="3619524b-abb2-437c-aecd-e039f4100663" data-section-level="1" data-section-text="ComputeLargeDeformationStress"><h1 id="computelargedeformationstress">ComputeLargeDeformationStress</h1><p>Stress calculator given an elasticity model, a plasticity model and a viscoelasticity model. Large deformation is assumed.</p><section id="23c15ae8-5c26-4595-ad3a-458e04f00f0b" data-section-level="2" data-section-text="Overview"><h2 id="overview">Overview</h2><p>The input of this stress calculator are the mechanical deformation gradient <span class="moose-katex-inline-equation" id="moose-equation-b53e60d8-a05c-40f4-b46d-638d1463e94d"><script>var element = document.getElementById("moose-equation-b53e60d8-a05c-40f4-b46d-638d1463e94d");katex.render("\\bfF^m", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span> and optionally its old value <span class="moose-katex-inline-equation" id="moose-equation-8113fa49-d1a6-4431-a067-00ef8a8579ec"><script>var element = document.getElementById("moose-equation-8113fa49-d1a6-4431-a067-00ef8a8579ec");katex.render("\\bfF^m_{n-1}", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>. An elasticity model must be provided. A plasticity model and a viscoelasticity model can be optionally provided.</p><p>The stress calculator calls the elasticity model to compute the Cauchy stress given the mechanical deformation gradient.</p><p>If a plasticity model is provided, plastic deformation will be updated to bring the stress state back onto the yield surface.</p><p>If a viscoelasticity model is provided, the stress calculator will call the viscoelasticity model to compute the viscous stress. The viscous stress will be added to the equilibrium stress returned by the elasticity model.</p></section><section id="64b0e1e1-e5a1-4ecd-9746-dc130c1eefa2" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="5073bdc5-4b22-478d-b4eb-f66103049c43" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="48ab2797-9f32-45ce-bbf6-32ecd27db0cb" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">elasticity_model</span><span class="moose-parameter-header-description">Name of the elastic stress-strain constitutive model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the elastic stress-strain constitutive model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="ee7be05d-e4a6-4329-8bb1-66dfd8a31abc" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">base_name</span><span class="moose-parameter-header-description">Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::string</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Optional parameter that allows the user to define multiple mechanics material systems on the same block, i.e. for multiple phases</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of block ids (SubdomainID) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of block ids (SubdomainID) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundary IDs from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundary IDs from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">compute</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When false, MOOSE will not call compute methods on this material. The user must call computeProperties() after retrieving the MaterialBase via MaterialBasePropertyInterface::getMaterialBase(). Non-computed MaterialBases are not sorted for dependencies.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">constant_on</span><span class="moose-parameter-header-default">NONE</span><span class="moose-parameter-header-description">When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>NONE</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MooseEnum</p><p class="moose-parameter-description-options"><span>Options:</span>NONE, ELEMENT, SUBDOMAIN</p><p class="moose-parameter-description"><span>Description:</span>When ELEMENT, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps.When SUBDOMAIN, MOOSE will only call computeQpProperties() for the 0th quadrature point, and then copy that value to the other qps. Evaluations on element qps will be skipped</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">declare_suffix</span><span class="moose-parameter-header-description">An optional suffix parameter that can be appended to any declared properties. The suffix will be prepended with a '_' character.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>An optional suffix parameter that can be appended to any declared properties. The suffix will be prepended with a '_' character.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">plasticity_model</span><span class="moose-parameter-header-description">Name of the plasticity model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the plasticity model</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">prop_getter_suffix</span><span class="moose-parameter-header-description">An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">viscoelasticity_model</span><span class="moose-parameter-header-description">Name of the viscoelasticity model</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Name of the viscoelasticity model</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="2078866e-9ae5-4816-9934-daf99b93069f" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">implicit</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Determines whether this object is calculated using an implicit or explicit form</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Determines whether this object is calculated using an implicit or explicit form</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">seed</span><span class="moose-parameter-header-default">0</span><span class="moose-parameter-header-description">The seed for the master random number generator</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>0</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>unsigned int</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The seed for the master random number generator</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section><section id="01311933-511b-4998-8635-9386257957b6" data-section-level="3" data-section-text="Outputs Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">output_properties</span><span class="moose-parameter-header-description">List of material properties, from this material, to output (outputs must also be defined to an output type)</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>List of material properties, from this material, to output (outputs must also be defined to an output type)</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">outputs</span><span class="moose-parameter-header-default">none </span><span class="moose-parameter-header-description">Vector of output names were you would like to restrict the output of variables(s) associated with this object</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>none </p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;OutputName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Vector of output names were you would like to restrict the output of variables(s) associated with this object</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Outputs Parameters</h3></summary></details></section></section><section id="003811e3-7c01-4487-aab9-3967cd0b0b88" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#4e2595b9-ef50-409c-929b-4a839aa08d71">(tutorials/large_deformation/elasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#1689af60-7cbb-4e61-9a13-d62b80df6b71">(tutorials/homogeneous_cube/CNH_J2_powerlawhardening/elastoplasticity_fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#6db6f36b-3b35-4207-aa22-e1c7d5b32aca">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#01935b91-4407-4071-898c-ebfb94eead63">(tutorials/homogeneous_cube/Hencky_J2_linearhardening/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b38f0c2e-f650-46d3-87b8-2f295e316081">(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#c6ad3603-d835-4c2e-a21f-a0ddadef0f12">(tutorials/three_point_bending/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#6f88a1bb-f020-4039-86a4-383a828599d4">(tutorials/large_deformation/elastoplasticity.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b560ea02-039e-4db5-83ba-b009e7ddc5c0">(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening/elastoplasticity_fracture.i)</a></li></ul></section></section><div class="moose-modal modal" id="4e2595b9-ef50-409c-929b-4a839aa08d71"><div class="modal-content"><h4>(tutorials/large_deformation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
+G = &#x27;${fparse E/2/(1+nu)}&#x27;
+
+[GlobalParams]
+  displacements = &#x27;disp_x disp_y&#x27;
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 2
+    nx = 30
+    ny = 15
+    ymax = 0.5
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = &#x27;0.5 0 0&#x27;
+    top_right = &#x27;1 0 0&#x27;
+  []
+  construct_side_list_from_node_list = true
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+[]
+
+[AuxVariables]
+  [fy]
+  []
+  [d]
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    use_displaced_mesh = true
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+    use_displaced_mesh = true
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = &#x27;t&#x27;
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = noncrack
+    value = 0
+  []
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top
+    value = 0
+  []
+[]
+
+[Materials]
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;K G&#x27;
+    prop_values = &#x27;${K} ${G}&#x27;
+  []
+  [no_degradation]
+    type = NoDegradation
+    f_name = g
+    function = 1
+    phase_field = d
+  []
+  [defgrad]
+    type = ComputeDeformationGradient
+  []
+  [hencky]
+    type = HenckyIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+  []
+  [stress]
+    type = ComputeLargeDeformationStress
+    elasticity_model = hencky
+    output_properties = &#x27;stress&#x27;
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  automatic_scaling = true
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+
+  dt = 1e-5
+  end_time = 1e-4
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="1689af60-7cbb-4e61-9a13-d62b80df6b71"><div class="modal-content"><h4>(tutorials/homogeneous_cube/CNH_J2_powerlawhardening/elastoplasticity_fracture.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 R = 4
 
 psic = 15
@@ -141,7 +276,7 @@ ep0 = 0.01
     type = ComputeDeformationGradient
   []
   [hencky]
-    type = HenckyIsotropicElasticity
+    type = CNHIsotropicElasticity
     bulk_modulus = K
     shear_modulus = G
     phase_field = d
@@ -248,7 +383,7 @@ ep0 = 0.01
   csv = true
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="4411167a-658a-42a5-9631-925d93b77fa6"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="6db6f36b-3b35-4207-aa22-e1c7d5b32aca"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 ratio = 4
 
 psic = 15
@@ -514,7 +649,7 @@ eps = &#x27;${fparse E/100}&#x27;
   csv = true
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="6fea8635-ac56-47b3-af18-29972ea1ddb5"><div class="modal-content"><h4>(tutorials/homogeneous_cube/CNH_J2_powerlawhardening/elastoplasticity_fracture.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="01935b91-4407-4071-898c-ebfb94eead63"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_linearhardening/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 R = 4
 
 psic = 15
@@ -527,12 +662,44 @@ K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
 
 sigma_y = 320
-n = 5
-ep0 = 0.01
+H = 3.44e3
 
 [GlobalParams]
   displacements = &#x27;disp_x disp_y disp_z&#x27;
   volumetric_locking_correction = true
+[]
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = &#x27;fracture.i&#x27;
+    cli_args = &#x27;a=${a};psic=${psic};Gc=${Gc};l=${l};&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = d
+    source_variable = d
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psie_active
+    source_variable = psie_active
+  []
+  [to_psip_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = psip_active
+    source_variable = psip_active
+  []
 []
 
 [Mesh]
@@ -552,12 +719,10 @@ ep0 = 0.01
   []
   [disp_z]
   []
-  [d]
-  []
 []
 
 [AuxVariables]
-  [bounds_dummy]
+  [d]
   []
   [stress]
     order = CONSTANT
@@ -566,22 +731,6 @@ ep0 = 0.01
   [F]
     order = CONSTANT
     family = MONOMIAL
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
   []
 []
 
@@ -621,22 +770,13 @@ ep0 = 0.01
     component = 2
     use_displaced_mesh = true
   []
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = d
-  []
-  [pff_source]
-    type = ADPFFSource
-    variable = d
-    free_energy = psi
-  []
 []
 
 [Materials]
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l Gc psic&#x27;
-    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic}&#x27;
+    prop_names = &#x27;K G l Gc psic sigma_y H&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${sigma_y} ${H}&#x27;
   []
   [degradation]
     type = RationalDegradationFunction
@@ -657,36 +797,31 @@ ep0 = 0.01
     type = ComputeDeformationGradient
   []
   [hencky]
-    type = CNHIsotropicElasticity
+    type = HenckyIsotropicElasticity
     bulk_modulus = K
     shear_modulus = G
     phase_field = d
     degradation_function = g
+    output_properties = &#x27;psie_active&#x27;
+    outputs = exodus
   []
-  [power_law_hardening]
-    type = PowerLawHardening
-    yield_stress = ${sigma_y}
-    exponent = ${n}
-    reference_plastic_strain = ${ep0}
+  [linear_hardening]
+    type = LinearHardening
     phase_field = d
+    yield_stress = sigma_y
+    hardening_modulus = H
     degradation_function = g
+    output_properties = &#x27;psip_active&#x27;
+    outputs = exodus
   []
   [J2]
     type = LargeDeformationJ2Plasticity
-    hardening_model = power_law_hardening
+    hardening_model = linear_hardening
   []
   [stress]
     type = ComputeLargeDeformationStress
     elasticity_model = hencky
     plasticity_model = J2
-  []
-  [psi]
-    type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = &#x27;alpha*Gc/c0/l+psie+psip&#x27;
-    args = d
-    material_property_names = &#x27;alpha(d) g(d) Gc c0 l psie(d) psip(d)&#x27;
-    derivative_order = 1
   []
 []
 
@@ -741,282 +876,32 @@ ep0 = 0.01
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount&#x27;
-  petsc_options_value = &#x27;lu       vinewtonrsls NONZERO               1e-10&#x27;
-
-  line_search = none
+  petsc_options_iname = &#x27;-pc_type&#x27;
+  petsc_options_value = &#x27;lu&#x27;
 
   nl_rel_tol = 1e-08
   nl_abs_tol = 1e-10
   nl_max_its = 50
 
-  dt = &#x27;${fparse 0.0001 * a}&#x27;
+  dt = &#x27;${fparse 0.0005 * a}&#x27;
   end_time = &#x27;${fparse 0.1 * a}&#x27;
 
   automatic_scaling = true
 
+  fixed_point_max_its = 100
+  fixed_point_rel_tol = 1e-08
+  fixed_point_abs_tol = 1e-10
+  accept_on_max_fixed_point_iteration = true
   abort_on_solve_fail = true
 []
 
 [Outputs]
-  file_base = stress_deformation
+  file_base = &#x27;stress_deformation&#x27;
   print_linear_residuals = false
   csv = true
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="709952a9-5383-48a4-9d50-5d733bcb867b"><div class="modal-content"><h4>(tutorials/three_point_bending/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">mesh_file = &#x27;gold/beam.msh&#x27;
-
-psic = 90
-Gc = 20
-l = 0.027
-
-E = 7.25e4
-nu = 0.34
-K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
-G = &#x27;${fparse E/2/(1+nu)}&#x27;
-eta = 1
-
-sigma_y = 345
-n = 1
-ep0 = 0.345
-
-[GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
-  volumetric_locking_correction = true
-[]
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = &#x27;fracture.i&#x27;
-    cli_args = &#x27;mesh_file=${mesh_file};Gc=${Gc};psic=${psic};l=${l}&#x27;
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
-    source_variable = d
-    variable = d
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    source_variable = psie_active
-    variable = psie_active
-  []
-  [to_psip_active]
-    type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
-    source_variable = psip_active
-    variable = psip_active
-  []
-[]
-
-[Problem]
-  kernel_coverage_check = false
-  material_coverage_check = false
-[]
-
-[Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = ${mesh_file}
-  []
-  [active]
-    type = SubdomainBoundingBoxGenerator
-    input = fmg
-    block_id = 0
-    bottom_left = &#x27;0 0 0&#x27;
-    top_right = &#x27;100 16 0&#x27;
-  []
-  [inactive]
-    type = SubdomainBoundingBoxGenerator
-    input = active
-    block_id = 1
-    bottom_left = &#x27;100 0 0&#x27;
-    top_right = &#x27;200 16 0&#x27;
-  []
-[]
-
-[UserObjects]
-  [esm]
-    type = CoupledVarThresholdElementSubdomainModifier
-    coupled_var = d
-    threshold = 0.925
-    criterion_type = ABOVE
-    subdomain_id = 1
-    complement_subdomain_id = 0
-    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
-    apply_initial_conditions = false
-  []
-[]
-
-[Variables]
-  [disp_x]
-    block = 0
-  []
-  [disp_y]
-    block = 0
-  []
-[]
-
-[AuxVariables]
-  [d]
-  []
-  [fy]
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_x&#x27;
-    component = 0
-    use_displaced_mesh = true
-    block = 0
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_y&#x27;
-    component = 1
-    use_displaced_mesh = true
-    save_in = fy
-    block = 0
-  []
-[]
-
-[Materials]
-  [fracture_properties]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l Gc psic viscosity&#x27;
-    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${eta}&#x27;
-    block = 0
-  []
-  [degradation]
-    type = ADDerivativeParsedMaterial
-    f_name = g
-    args = d
-    function = &#x27;(1-d)^2/(1+(0.5*Gc/c0/l/psic-1)*d)^2*(1-eta)+eta&#x27;
-    material_property_names = &#x27;Gc c0 l psic&#x27;
-    constant_names = &#x27;eta &#x27;
-    constant_expressions = &#x27;5e-3&#x27;
-    derivative_order = 1
-    block = 0
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = &#x27;d&#x27;
-    phase_field = d
-    block = 0
-  []
-  [defgrad]
-    type = ComputeDeformationGradient
-    block = 0
-  []
-  [hencky]
-    type = HenckyIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    output_properties = &#x27;psie_active&#x27;
-    outputs = exodus
-    block = 0
-  []
-  [power_law_hardening]
-    type = PowerLawHardening
-    yield_stress = ${sigma_y}
-    exponent = ${n}
-    reference_plastic_strain = ${ep0}
-    phase_field = d
-    degradation_function = g
-    output_properties = &#x27;psip_active&#x27;
-    outputs = exodus
-    block = 0
-  []
-  [J2]
-    type = LargeDeformationJ2Plasticity
-    hardening_model = power_law_hardening
-    output_properties = &#x27;effective_plastic_strain&#x27;
-    outputs = exodus
-    block = 0
-  []
-  [newtonian_viscosity]
-    type = LargeDeformationNewtonianViscosity
-    block = 0
-  []
-  [stress]
-    type = ComputeLargeDeformationStress
-    elasticity_model = hencky
-    plasticity_model = J2
-    viscoelasticity_model = newtonian_viscosity
-    block = 0
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;left right&#x27;
-    function = &#x27;t&#x27;
-    preset = false
-  []
-  [top_xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top&#x27;
-    value = 0
-  []
-  [top_yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top&#x27;
-    value = 0
-  []
-[]
-
-[Postprocessors]
-  [force]
-    type = NodalSum
-    variable = fy
-    boundary = top
-  []
-[]
-
-[Executioner]
-  type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
-
-  nl_rel_tol = 1e-06
-  nl_abs_tol = 1e-06
-  nl_max_its = 50
-
-  automatic_scaling = true
-  [TimeStepper]
-    type = FunctionDT
-    function = &#x27;0.05&#x27;
-    growth_factor = 1.5
-    cutback_factor_at_failure = 0.5
-  []
-  end_time = 6.4
-[]
-
-[Outputs]
-  print_linear_residuals = false
-  csv = true
-  exodus = true
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="e6c6149c-5749-4bb8-bacd-f2db933d04cd"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b38f0c2e-f650-46d3-87b8-2f295e316081"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_arrheniuslawhardening_creep/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
 ratio = 4
 
 psic = 15
@@ -1294,23 +1179,24 @@ creep_coef = 1
   csv = true
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="13b71b69-d401-4abb-8905-cd33cef8515b"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_linearhardening/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
-R = 4
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="c6ad3603-d835-4c2e-a21f-a0ddadef0f12"><div class="modal-content"><h4>(tutorials/three_point_bending/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">mesh_file = &#x27;gold/beam.msh&#x27;
 
-psic = 15
-Gc = 1.38e5
-l = &#x27;${fparse R * a}&#x27;
+psic = 90
+Gc = 20
+l = 0.027
 
-E = 6.88e4
-nu = 0.33
+E = 7.25e4
+nu = 0.34
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
+eta = 1
 
-sigma_y = 320
-H = 688
+sigma_y = 345
+n = 1
+ep0 = 0.345
 
 [GlobalParams]
-  displacements = &#x27;disp_x disp_y disp_z&#x27;
+  displacements = &#x27;disp_x disp_y&#x27;
   volumetric_locking_correction = true
 []
 
@@ -1318,8 +1204,7 @@ H = 688
   [fracture]
     type = TransientMultiApp
     input_files = &#x27;fracture.i&#x27;
-    cli_args = &#x27;a=${a};psic=${psic};Gc=${Gc};l=${l};&#x27;
-    execute_on = &#x27;TIMESTEP_END&#x27;
+    cli_args = &#x27;mesh_file=${mesh_file};Gc=${Gc};psic=${psic};l=${l}&#x27;
   []
 []
 
@@ -1328,118 +1213,126 @@ H = 688
     type = MultiAppCopyTransfer
     multi_app = fracture
     direction = from_multiapp
-    variable = d
     source_variable = d
+    variable = d
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
     multi_app = fracture
     direction = to_multiapp
-    variable = psie_active
     source_variable = psie_active
+    variable = psie_active
   []
   [to_psip_active]
     type = MultiAppCopyTransfer
     multi_app = fracture
     direction = to_multiapp
-    variable = psip_active
     source_variable = psip_active
+    variable = psip_active
   []
 []
 
+[Problem]
+  kernel_coverage_check = false
+  material_coverage_check = false
+[]
+
 [Mesh]
-  [gmg]
-    type = GeneratedMeshGenerator
-    dim = 3
-    xmax = ${a}
-    ymax = ${a}
-    zmax = ${a}
+  [fmg]
+    type = FileMeshGenerator
+    file = ${mesh_file}
+  []
+  [active]
+    type = SubdomainBoundingBoxGenerator
+    input = fmg
+    block_id = 0
+    bottom_left = &#x27;0 0 0&#x27;
+    top_right = &#x27;100 16 0&#x27;
+  []
+  [inactive]
+    type = SubdomainBoundingBoxGenerator
+    input = active
+    block_id = 1
+    bottom_left = &#x27;100 0 0&#x27;
+    top_right = &#x27;200 16 0&#x27;
+  []
+[]
+
+[UserObjects]
+  [esm]
+    type = CoupledVarThresholdElementSubdomainModifier
+    coupled_var = d
+    threshold = 0.925
+    criterion_type = ABOVE
+    subdomain_id = 1
+    complement_subdomain_id = 0
+    execute_on = &#x27;INITIAL TIMESTEP_END&#x27;
+    apply_initial_conditions = false
   []
 []
 
 [Variables]
   [disp_x]
+    block = 0
   []
   [disp_y]
-  []
-  [disp_z]
+    block = 0
   []
 []
 
 [AuxVariables]
   [d]
   []
-  [stress]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [F]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-[]
-
-[AuxKernels]
-  [stress]
-    type = ADRankTwoAux
-    variable = stress
-    rank_two_tensor = stress
-    index_i = 1
-    index_j = 1
-  []
-  [F]
-    type = ADRankTwoAux
-    variable = F
-    rank_two_tensor = deformation_gradient
-    index_i = 1
-    index_j = 1
+  [fy]
   []
 []
 
 [Kernels]
   [solid_x]
     type = ADStressDivergenceTensors
-    variable = disp_x
+    variable = &#x27;disp_x&#x27;
     component = 0
     use_displaced_mesh = true
+    block = 0
   []
   [solid_y]
     type = ADStressDivergenceTensors
-    variable = disp_y
+    variable = &#x27;disp_y&#x27;
     component = 1
     use_displaced_mesh = true
-  []
-  [solid_z]
-    type = ADStressDivergenceTensors
-    variable = disp_z
-    component = 2
-    use_displaced_mesh = true
+    save_in = fy
+    block = 0
   []
 []
 
 [Materials]
-  [bulk_properties]
+  [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = &#x27;K G l Gc psic sigma_y H&#x27;
-    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${sigma_y} ${H}&#x27;
+    prop_names = &#x27;K G l Gc psic viscosity&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic} ${eta}&#x27;
+    block = 0
   []
   [degradation]
-    type = RationalDegradationFunction
+    type = ADDerivativeParsedMaterial
     f_name = g
-    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-    phase_field = d
-    material_property_names = &#x27;Gc psic xi c0 l &#x27;
-    parameter_names = &#x27;p a2 a3 eta &#x27;
-    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+    args = d
+    function = &#x27;(1-d)^2/(1+(0.5*Gc/c0/l/psic-1)*d)^2*(1-eta)+eta&#x27;
+    material_property_names = &#x27;Gc c0 l psic&#x27;
+    constant_names = &#x27;eta &#x27;
+    constant_expressions = &#x27;5e-3&#x27;
+    derivative_order = 1
+    block = 0
   []
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
     function = &#x27;d&#x27;
     phase_field = d
+    block = 0
   []
   [defgrad]
     type = ComputeDeformationGradient
+    block = 0
   []
   [hencky]
     type = HenckyIsotropicElasticity
@@ -1449,71 +1342,66 @@ H = 688
     degradation_function = g
     output_properties = &#x27;psie_active&#x27;
     outputs = exodus
+    block = 0
   []
-  [linear_hardening]
-    type = LinearHardening
+  [power_law_hardening]
+    type = PowerLawHardening
+    yield_stress = ${sigma_y}
+    exponent = ${n}
+    reference_plastic_strain = ${ep0}
     phase_field = d
-    yield_stress = sigma_y
-    hardening_modulus = H
     degradation_function = g
     output_properties = &#x27;psip_active&#x27;
     outputs = exodus
+    block = 0
   []
   [J2]
     type = LargeDeformationJ2Plasticity
-    hardening_model = linear_hardening
+    hardening_model = power_law_hardening
+    output_properties = &#x27;effective_plastic_strain&#x27;
+    outputs = exodus
+    block = 0
+  []
+  [newtonian_viscosity]
+    type = LargeDeformationNewtonianViscosity
+    block = 0
   []
   [stress]
     type = ComputeLargeDeformationStress
     elasticity_model = hencky
     plasticity_model = J2
+    viscoelasticity_model = newtonian_viscosity
+    block = 0
   []
 []
 
 [BCs]
-  [xfix]
-    type = DirichletBC
-    variable = disp_x
-    boundary = &#x27;left&#x27;
-    value = 0
-  []
-  [yfix]
-    type = DirichletBC
-    variable = disp_y
-    boundary = &#x27;bottom&#x27;
-    value = 0
-  []
-  [zfix]
-    type = DirichletBC
-    variable = disp_z
-    boundary = &#x27;back&#x27;
-    value = 0
-  []
   [ydisp]
     type = FunctionDirichletBC
-    variable = disp_y
-    boundary = &#x27;top&#x27;
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;left right&#x27;
     function = &#x27;t&#x27;
     preset = false
+  []
+  [top_xfix]
+    type = DirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;top&#x27;
+    value = 0
+  []
+  [top_yfix]
+    type = DirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;top&#x27;
+    value = 0
   []
 []
 
 [Postprocessors]
-  [F]
-    type = ElementAverageValue
-    variable = F
-  []
-  [stress]
-    type = ElementAverageValue
-    variable = stress
-  []
-  [d]
-    type = ElementAverageValue
-    variable = d
-  []
-  [ep]
-    type = ADElementAverageMaterialProperty
-    mat_prop = effective_plastic_strain
+  [force]
+    type = NodalSum
+    variable = fy
+    boundary = top
   []
 []
 
@@ -1521,32 +1409,29 @@ H = 688
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type&#x27;
-  petsc_options_value = &#x27;lu&#x27;
+  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
+  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
 
-  nl_rel_tol = 1e-08
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-06
+  nl_abs_tol = 1e-06
   nl_max_its = 50
 
-  dt = &#x27;${fparse 0.0005 * a}&#x27;
-  end_time = &#x27;${fparse 0.1 * a}&#x27;
-
   automatic_scaling = true
-
-  fixed_point_max_its = 100
-  fixed_point_rel_tol = 1e-08
-  fixed_point_abs_tol = 1e-10
-  accept_on_max_fixed_point_iteration = true
-  abort_on_solve_fail = true
+  [TimeStepper]
+    type = FunctionDT
+    function = &#x27;0.05&#x27;
+    growth_factor = 1.5
+    cutback_factor_at_failure = 0.5
+  []
+  end_time = 6.4
 []
 
 [Outputs]
-  file_base = &#x27;stress_deformation&#x27;
   print_linear_residuals = false
   csv = true
   exodus = true
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="ace54929-d47c-4207-a1d0-c44f8eef4b2c"><div class="modal-content"><h4>(tutorials/large_deformation/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="6f88a1bb-f020-4039-86a4-383a828599d4"><div class="modal-content"><h4>(tutorials/large_deformation/elastoplasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
@@ -1700,31 +1585,35 @@ ep0 = 0.001
   exodus = true
   print_linear_residuals = false
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="36797990-e8f0-4da7-882d-d4da52b46140"><div class="modal-content"><h4>(tutorials/large_deformation/elasticity.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b560ea02-039e-4db5-83ba-b009e7ddc5c0"><div class="modal-content"><h4>(tutorials/homogeneous_cube/Hencky_J2_powerlawhardening/elastoplasticity_fracture.i)</h4><pre class="moose-pre"><code class="language-text">a = 250
+R = 4
+
+psic = 15
+Gc = 1.38e5
+l = &#x27;${fparse R * a}&#x27;
+
+E = 6.88e4
+nu = 0.33
 K = &#x27;${fparse E/3/(1-2*nu)}&#x27;
 G = &#x27;${fparse E/2/(1+nu)}&#x27;
 
+sigma_y = 320
+n = 5
+ep0 = 0.01
+
 [GlobalParams]
-  displacements = &#x27;disp_x disp_y&#x27;
+  displacements = &#x27;disp_x disp_y disp_z&#x27;
+  volumetric_locking_correction = true
 []
 
 [Mesh]
-  [gen]
+  [gmg]
     type = GeneratedMeshGenerator
-    dim = 2
-    nx = 30
-    ny = 15
-    ymax = 0.5
+    dim = 3
+    xmax = ${a}
+    ymax = ${a}
+    zmax = ${a}
   []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = gen
-    new_boundary = noncrack
-    bottom_left = &#x27;0.5 0 0&#x27;
-    top_right = &#x27;1 0 0&#x27;
-  []
-  construct_side_list_from_node_list = true
 []
 
 [Variables]
@@ -1732,12 +1621,55 @@ G = &#x27;${fparse E/2/(1+nu)}&#x27;
   []
   [disp_y]
   []
+  [disp_z]
+  []
+  [d]
+  []
 []
 
 [AuxVariables]
-  [fy]
+  [bounds_dummy]
   []
-  [d]
+  [stress]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [F]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[AuxKernels]
+  [stress]
+    type = ADRankTwoAux
+    variable = stress
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+  []
+  [F]
+    type = ADRankTwoAux
+    variable = F
+    rank_two_tensor = deformation_gradient
+    index_i = 1
+    index_j = 1
   []
 []
 
@@ -1752,42 +1684,44 @@ G = &#x27;${fparse E/2/(1+nu)}&#x27;
     type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
-    save_in = fy
     use_displaced_mesh = true
   []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = disp_y
-    boundary = top
-    function = &#x27;t&#x27;
+  [solid_z]
+    type = ADStressDivergenceTensors
+    variable = disp_z
+    component = 2
+    use_displaced_mesh = true
   []
-  [yfix]
-    type = DirichletBC
-    variable = disp_y
-    boundary = noncrack
-    value = 0
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = d
   []
-  [xfix]
-    type = DirichletBC
-    variable = disp_x
-    boundary = top
-    value = 0
+  [pff_source]
+    type = ADPFFSource
+    variable = d
+    free_energy = psi
   []
 []
 
 [Materials]
-  [bulk]
+  [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = &#x27;K G&#x27;
-    prop_values = &#x27;${K} ${G}&#x27;
+    prop_names = &#x27;K G l Gc psic&#x27;
+    prop_values = &#x27;${K} ${G} ${l} ${Gc} ${psic}&#x27;
   []
-  [no_degradation]
-    type = NoDegradation
+  [degradation]
+    type = RationalDegradationFunction
     f_name = g
-    function = 1
+    function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
+    phase_field = d
+    material_property_names = &#x27;Gc psic xi c0 l &#x27;
+    parameter_names = &#x27;p a2 a3 eta &#x27;
+    parameter_values = &#x27;2 -0.5 0 1e-6&#x27;
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = &#x27;d&#x27;
     phase_field = d
   []
   [defgrad]
@@ -1800,19 +1734,77 @@ G = &#x27;${fparse E/2/(1+nu)}&#x27;
     phase_field = d
     degradation_function = g
   []
+  [power_law_hardening]
+    type = PowerLawHardening
+    yield_stress = ${sigma_y}
+    exponent = ${n}
+    reference_plastic_strain = ${ep0}
+    phase_field = d
+    degradation_function = g
+  []
+  [J2]
+    type = LargeDeformationJ2Plasticity
+    hardening_model = power_law_hardening
+  []
   [stress]
     type = ComputeLargeDeformationStress
     elasticity_model = hencky
-    output_properties = &#x27;stress&#x27;
-    outputs = exodus
+    plasticity_model = J2
+  []
+  [psi]
+    type = ADDerivativeParsedMaterial
+    f_name = psi
+    function = &#x27;alpha*Gc/c0/l+psie+psip&#x27;
+    args = d
+    material_property_names = &#x27;alpha(d) g(d) Gc c0 l psie(d) psip(d)&#x27;
+    derivative_order = 1
+  []
+[]
+
+[BCs]
+  [xfix]
+    type = DirichletBC
+    variable = disp_x
+    boundary = &#x27;left&#x27;
+    value = 0
+  []
+  [yfix]
+    type = DirichletBC
+    variable = disp_y
+    boundary = &#x27;bottom&#x27;
+    value = 0
+  []
+  [zfix]
+    type = DirichletBC
+    variable = disp_z
+    boundary = &#x27;back&#x27;
+    value = 0
+  []
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = &#x27;top&#x27;
+    function = &#x27;t&#x27;
+    preset = false
   []
 []
 
 [Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = fy
-    boundary = top
+  [F]
+    type = ElementAverageValue
+    variable = F
+  []
+  [stress]
+    type = ElementAverageValue
+    variable = stress
+  []
+  [d]
+    type = ElementAverageValue
+    variable = d
+  []
+  [ep]
+    type = ADElementAverageMaterialProperty
+    mat_prop = effective_plastic_strain
   []
 []
 
@@ -1820,19 +1812,27 @@ G = &#x27;${fparse E/2/(1+nu)}&#x27;
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = &#x27;-pc_type -pc_factor_mat_solver_package&#x27;
-  petsc_options_value = &#x27;lu       superlu_dist                 &#x27;
+  petsc_options_iname = &#x27;-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount&#x27;
+  petsc_options_value = &#x27;lu       vinewtonrsls NONZERO               1e-10&#x27;
+
+  line_search = none
+
+  nl_rel_tol = 1e-08
+  nl_abs_tol = 1e-10
+  nl_max_its = 50
+
+  dt = &#x27;${fparse 0.0001 * a}&#x27;
+  end_time = &#x27;${fparse 0.1 * a}&#x27;
+
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 1e-5
-  end_time = 1e-4
+  abort_on_solve_fail = true
 []
 
 [Outputs]
-  exodus = true
+  file_base = stress_deformation
   print_linear_residuals = false
+  csv = true
+  exodus = true
 []
 </code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div></div></div></main></div></body><script type="text/javascript" src="../../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../../js/init.js"></script><script type="text/javascript" src="../../../js/navigation.js"></script><script type="text/javascript" src="../../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../../js/search_index.js"></script><script type="text/javascript" src="../../../js/sqa_moose.js"></script>
