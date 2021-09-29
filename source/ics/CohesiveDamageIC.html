@@ -1,4 +1,208 @@
-<!DOCTYPE html><head><meta charset="UTF-8"><title>CohesiveDamageIC | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/civet_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="../../index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="c3006652-fb6a-4273-80d4-8fd9de01b86b" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="08c7f417-87eb-4673-8520-1df591c5d79c" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="1bfb9b09-1a8b-4aa5-b17e-acc2d9d271d4" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="bda148ee-8a26-4fae-ab17-9fb82d2fb030" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="5a547ab1-3727-4e4e-92f0-2dcbd37be126"><i class="material-icons">menu</i></a><ul class="sidenav" id="5a547ab1-3727-4e4e-92f0-2dcbd37be126"><li><a href="#!" class="dropdown-trigger" data-target="2cb432bf-598d-44a5-935f-be66346e1902" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="51d76b0e-b143-477c-bb1f-6fb2c5bb6b82" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="44230c3b-e761-42bf-9e0d-0774347b8d08" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="da624b9e-a227-461c-ab29-5107c69ef117" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="c3006652-fb6a-4273-80d4-8fd9de01b86b"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/running.html">Running your first model</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li><li><a href="../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="08c7f417-87eb-4673-8520-1df591c5d79c"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li><li><a href="../../tutorials/12_nucleation.html">12. Crack nucleation</a></li><li><a href="../../tutorials/13_traction_separation.html">13. Traction separation law</a></li></ul><ul class="dropdown-content" id="1bfb9b09-1a8b-4aa5-b17e-acc2d9d271d4"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="bda148ee-8a26-4fae-ab17-9fb82d2fb030"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="2cb432bf-598d-44a5-935f-be66346e1902"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/running.html">Running your first model</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li><li><a href="../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="51d76b0e-b143-477c-bb1f-6fb2c5bb6b82"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li><li><a href="../../tutorials/12_nucleation.html">12. Crack nucleation</a></li><li><a href="../../tutorials/13_traction_separation.html">13. Traction separation law</a></li></ul><ul class="dropdown-content" id="44230c3b-e761-42bf-9e0d-0774347b8d08"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="da624b9e-a227-461c-ab29-5107c69ef117"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="/index.md" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="8ee22bf0-5bcd-4758-bd0e-8ac4349edcc1" data-section-level="1" data-section-text="CohesiveDamageIC"><h1 id="cohesivedamageic">CohesiveDamageIC</h1><p>This class initializes the phase-field with the closed-form solution associated with a linear crack geometric function <span class="moose-katex-inline-equation" id="moose-equation-9731a850-852f-4a83-8174-069689d6f128"><script>var element = document.getElementById("moose-equation-9731a850-852f-4a83-8174-069689d6f128");katex.render("\\alpha(d) = d", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>, i.e. <span class="moose-katex-inline-equation" id="moose-equation-37a38921-3f47-44eb-b61e-0690461b6279"><script>var element = document.getElementById("moose-equation-37a38921-3f47-44eb-b61e-0690461b6279");katex.render("d(\\tau) = (1 - \\frac{\\tau}{2l})^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>.</p><section id="08971962-6024-42ef-87f8-2d56450b8063" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="57caf18d-5c32-4837-a1cb-eed0e5df09f3" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="6869549c-8fa6-4699-aafc-813dc37752c0" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">d0</span><span class="moose-parameter-header-description">Initial damage</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Initial damage</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">l</span><span class="moose-parameter-header-description">The phase-field regularization length</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The phase-field regularization length</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">variable</span><span class="moose-parameter-header-description">The variable this initial condition is supposed to provide values for.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>VariableName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The variable this initial condition is supposed to provide values for.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">x1</span><span class="moose-parameter-header-description">The abscissa values of crack starting points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The abscissa values of crack starting points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">x2</span><span class="moose-parameter-header-description">The abscissa values of crack ending points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The abscissa values of crack ending points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">y1</span><span class="moose-parameter-header-description">The ordinate values of crack starting points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The ordinate values of crack starting points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">y2</span><span class="moose-parameter-header-description">The ordinate values of crack ending points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The ordinate values of crack ending points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">z1</span><span class="moose-parameter-header-description">The applicate values of crack starting points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The applicate values of crack starting points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">z2</span><span class="moose-parameter-header-description">The applicate values of crack ending points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The applicate values of crack ending points</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="a21f7584-ee78-4f55-b905-ceb02005764b" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of blocks (ids or names) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of blocks (ids or names) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundaries (ids or names) from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundaries (ids or names) from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">prop_getter_suffix</span><span class="moose-parameter-header-description">An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="03edfe0e-88ea-47f1-929f-0217bc3ca535" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">ignore_uo_dependency</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">When set to true, a UserObject retrieved by this IC will not be executed before the this IC</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When set to true, a UserObject retrieved by this IC will not be executed before the this IC</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section></section><section id="12c381ce-0d09-4c95-a9d4-bec6a6f2ed85" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#df7f1f1e-c6e9-46f8-b5bc-56929de53fde">(benchmarks/mode1_initial_damage/mechanical_fracture_uo_quad4.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#6aecd5b2-67a6-4748-8bd4-a274637a5416">(benchmarks/mode1_initial_damage/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#6ed2c7e4-8a42-49c9-a551-5f7f0b73c786">(benchmarks/mode1_initial_damage/mechanical_fracture_uo_tri3.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#0d5a1bb0-9d86-4089-a621-d112ce8d9e98">(benchmarks/mode2_initial_damage/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#9bf1d687-655f-4efd-95d3-d4d09a01d084">(benchmarks/sneddon/master.i)</a></li></ul></section></section><div class="moose-modal modal" id="df7f1f1e-c6e9-46f8-b5bc-56929de53fde"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/mechanical_fracture_uo_quad4.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+<!DOCTYPE html><head><meta charset="UTF-8"><title>CohesiveDamageIC | RACCOON</title><link rel="icon" type="image/x-icon" href="../../media/raccoon_icon.png" sizes="16x16 32x32 64x64 128x128"></link><link href="../../contrib/materialize/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"></link><link href="../../contrib/prism/prism.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/devel_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/alert_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/content_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/sqa_moose.css" type="text/css" rel="stylesheet"></link><link href="../../css/civet_moose.css" type="text/css" rel="stylesheet"></link><link href="../../contrib/katex/katex.min.css" type="text/css" rel="stylesheet"></link><link href="../../css/katex_moose.css" type="text/css" rel="stylesheet"></link><script type="text/javascript" src="../../contrib/jquery/jquery.min.js"></script><script type="text/javascript" src="../../contrib/katex/katex.min.js"></script></head><body><div class="page-wrap"><header><nav><div class="nav-wrapper container"><a href="../../index.html" class="left moose-logo hide-on-med-and-down">RACCOON</a><a href="https://github.com/hugary1995/raccoon" class="right"><img src="../../media/framework/github-logo.png" class="github-mark"></img><img src="../../media/framework/github-mark.png" class="github-logo"></img></a><ul class="right hide-on-med-and-down"><li><a href="#!" class="dropdown-trigger" data-target="a4861bce-5b90-45e4-80b1-a27647215dff" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="ca0881a3-f6e6-46a4-8f1c-2fcdc0d230ad" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="9ad7a1d3-c40e-4bdd-ba3b-adb67d17f94e" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="db5b54ca-b0e5-4ed6-860f-7eb9abfb686a" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#" class="sidenav-trigger" data-target="8969e105-23a3-40c7-af81-f030cfde5d38"><i class="material-icons">menu</i></a><ul class="sidenav" id="8969e105-23a3-40c7-af81-f030cfde5d38"><li><a href="#!" class="dropdown-trigger" data-target="daf2c075-e78e-4279-bb99-f33d9021fa58" data-constrainWidth="false">Getting Started<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="ad69833a-1121-4c4c-8e2f-03866654e63a" data-constrainWidth="false">Tutorials<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="acada7df-7899-494d-b5dd-7e358114d570" data-constrainWidth="false">Theory<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="#!" class="dropdown-trigger" data-target="584629c5-9488-4db4-b9eb-eaa9d282b452" data-constrainWidth="false">Documentation<i class="material-icons right">arrow_drop_down</i></a></li><li><a href="../../contribute/index.html">Contribute</a></li></ul><a href="#moose-search" class="modal-trigger"><i class="material-icons">search</i></a></div><ul class="dropdown-content" id="a4861bce-5b90-45e4-80b1-a27647215dff"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/running.html">Running your first model</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li><li><a href="../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="ca0881a3-f6e6-46a4-8f1c-2fcdc0d230ad"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li><li><a href="../../tutorials/12_nucleation.html">12. Crack nucleation</a></li><li><a href="../../tutorials/13_traction_separation.html">13. Traction separation law</a></li></ul><ul class="dropdown-content" id="9ad7a1d3-c40e-4bdd-ba3b-adb67d17f94e"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="db5b54ca-b0e5-4ed6-860f-7eb9abfb686a"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul><ul class="dropdown-content" id="daf2c075-e78e-4279-bb99-f33d9021fa58"><li><a href="../../getting_started/install.html">Install RACCOON</a></li><li><a href="../../getting_started/update.html">Update RACCOON</a></li><li><a href="../../getting_started/running.html">Running your first model</a></li><li><a href="../../getting_started/paraview.html">Visualization</a></li><li><a href="../../getting_started/ide.html">Code development</a></li></ul><ul class="dropdown-content" id="ad69833a-1121-4c4c-8e2f-03866654e63a"><li><a href="../../tutorials/01_small_deformation_elasticity.html">1. Small deformation</a></li><li><a href="../../tutorials/02_mode1_brittle_fracture.html">2. Mode-I fracture</a></li><li><a href="../../tutorials/03_mode2_brittle_fracture.html">3. Mode-II fracture</a></li><li><a href="../../tutorials/04_fiber_reinforced_matrix.html">4. Fiber-reinforced matrix</a></li><li><a href="../../tutorials/05_soil_desiccation.html">5. Soil desiccation</a></li><li><a href="../../tutorials/06_large_deformation_elasticity.html">6. Large deformation</a></li><li><a href="../../tutorials/07_elastoplasticity.html">7. Elastoplasticity</a></li><li><a href="../../tutorials/08_ductile_fracture.html">8. Ductile fracture</a></li><li><a href="../../tutorials/09_three_point_bending.html">9. Three-point bending</a></li><li><a href="../../tutorials/10_quenching_bibeam.html">10. Quenching of bi-beam</a></li><li><a href="../../tutorials/11_adaptivity.html">11. Adaptive mesh refinement</a></li><li><a href="../../tutorials/12_nucleation.html">12. Crack nucleation</a></li><li><a href="../../tutorials/13_traction_separation.html">13. Traction separation law</a></li></ul><ul class="dropdown-content" id="acada7df-7899-494d-b5dd-7e358114d570"><li><a href="../../theory/intro.html">Introduction</a></li><li><a href="../../theory/kinematics.html">State variables and kinematics</a></li><li><a href="../../theory/thermodynamics.html">Thermodynamics</a></li><li><a href="../../theory/minimization.html">The minimization problem</a></li><li><a href="../../theory/constitutive_models.html">Constitutive Models</a></li></ul><ul class="dropdown-content" id="584629c5-9488-4db4-b9eb-eaa9d282b452"><li><a href="../../modules/index.html">Physics modules</a></li><li><a href="../../syntax/index.html">Complete syntax</a></li><li><a href="../../syntax/raccoon.html">RACCOON syntax</a></li><li><a href="../../syntax/tensor_mechanics.html">Tensor mechanics syntax</a></li><li><a href="../../syntax/phase_field.html">Phase field syntax</a></li><li><a href="../../syntax/heat_conduction.html">Heat conduction syntax</a></li></ul></nav><div class="modal modal-fixed-footer moose-search-modal" id="moose-search"><div class="modal-content container moose-search-modal-content"><div class="row"><div class="col l12"><div class="input-field"><input type_="text" onkeyup="mooseSearch()" placeholder="/index.md" id="moose-search-box"></input></div></div><div><div class="col s12" id="moose-search-results"></div></div></div></div><div class="modal-footer"><a href="#!" class="modal-close btn-flat">Close</a></div></div></header><main class="main"><div class="container"><div class="row"><div class="moose-content col s12 m12 l12"><section id="6620ceac-f887-4f19-a00c-be53d065c9e7" data-section-level="1" data-section-text="CohesiveDamageIC"><h1 id="cohesivedamageic">CohesiveDamageIC</h1><p>This class initializes the phase-field with the closed-form solution associated with a linear crack geometric function <span class="moose-katex-inline-equation" id="moose-equation-52592b35-7821-4b42-9a2c-eeda4e1bc4ca"><script>var element = document.getElementById("moose-equation-52592b35-7821-4b42-9a2c-eeda4e1bc4ca");katex.render("\\alpha(d) = d", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>, i.e. <span class="moose-katex-inline-equation" id="moose-equation-a81a5915-c352-4dab-a3a2-5a3072320356"><script>var element = document.getElementById("moose-equation-a81a5915-c352-4dab-a3a2-5a3072320356");katex.render("d(\\tau) = (1 - \\frac{\\tau}{2l})^2", element, {displayMode:false,throwOnError:false,macros:{"\\bs":"\\boldsymbol{#1}","\\normal":"\\bs{n}","\\grad":"\\bs{\\nabla}","\\divergence":"\\grad \\cdot","\\norm":"\\left\\lVert#1\\right\\rVert","\\abs":"\\left\\lvert#1\\right\\rvert","\\tr":"\\text{tr}","\\dev":"\\text{dev}","\\sym":"\\text{sym}","\\diff":"\\text{ d}#1","\\activepart":"{\\left< A \\right>}","\\inactivepart":"{\\left< I \\right>}","\\Gc":"{\\mathcal{G}_c}","\\strain":"\\bs{\\varepsilon}","\\stress":"\\bs{\\sigma}","\\macaulay":"\\left<#1\\right>","\\body":"\\Omega","\\bodyboundary":"{\\partial\\body}","\\ep":"{\\varepsilon^p}","\\epdot":"{\\dot{\\varepsilon}}^p","\\bfa":"\\boldsymbol{a}","\\bfb":"\\boldsymbol{b}","\\bfc":"\\boldsymbol{c}","\\bfd":"\\boldsymbol{d}","\\bfe":"\\boldsymbol{e}","\\bff":"\\boldsymbol{f}","\\bfg":"\\boldsymbol{g}","\\bfh":"\\boldsymbol{h}","\\bfi":"\\boldsymbol{i}","\\bfj":"\\boldsymbol{j}","\\bfk":"\\boldsymbol{k}","\\bfl":"\\boldsymbol{l}","\\bfm":"\\boldsymbol{m}","\\bfn":"\\boldsymbol{n}","\\bfo":"\\boldsymbol{o}","\\bfp":"\\boldsymbol{p}","\\bfq":"\\boldsymbol{q}","\\bfr":"\\boldsymbol{r}","\\bfs":"\\boldsymbol{s}","\\bft":"\\boldsymbol{t}","\\bfu":"\\boldsymbol{u}","\\bfv":"\\boldsymbol{v}","\\bfw":"\\boldsymbol{w}","\\bfx":"\\boldsymbol{x}","\\bfy":"\\boldsymbol{y}","\\bfz":"\\boldsymbol{z}","\\bfA":"\\boldsymbol{A}","\\bfB":"\\boldsymbol{B}","\\bfC":"\\boldsymbol{C}","\\bfD":"\\boldsymbol{D}","\\bfE":"\\boldsymbol{E}","\\bfF":"\\boldsymbol{F}","\\bfG":"\\boldsymbol{G}","\\bfH":"\\boldsymbol{H}","\\bfI":"\\boldsymbol{I}","\\bfJ":"\\boldsymbol{J}","\\bfK":"\\boldsymbol{K}","\\bfL":"\\boldsymbol{L}","\\bfM":"\\boldsymbol{M}","\\bfN":"\\boldsymbol{N}","\\bfO":"\\boldsymbol{O}","\\bfP":"\\boldsymbol{P}","\\bfQ":"\\boldsymbol{Q}","\\bfR":"\\boldsymbol{R}","\\bfS":"\\boldsymbol{S}","\\bfT":"\\boldsymbol{T}","\\bfU":"\\boldsymbol{U}","\\bfV":"\\boldsymbol{V}","\\bfW":"\\boldsymbol{W}","\\bfX":"\\boldsymbol{X}","\\bfY":"\\boldsymbol{Y}","\\bfZ":"\\boldsymbol{Z}"}});</script></span>.</p><section id="38a7f457-dd0a-4c60-8b0f-e4bd9647f2dc" data-section-level="2" data-section-text="Example Input File Syntax"><h2 id="example-input-file-syntax">Example Input File Syntax</h2></section><section id="67268786-2582-4be1-8dfd-64a3f2ee20fa" data-section-level="2" data-section-text="Input Parameters"><h2 id="input-parameters">Input Parameters</h2><section id="47afee02-cb3e-495f-9836-e46fd7869f89" data-section-level="3" data-section-text="Required Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">d0</span><span class="moose-parameter-header-description">Initial damage</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Initial damage</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">l</span><span class="moose-parameter-header-description">The phase-field regularization length</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>double</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The phase-field regularization length</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">variable</span><span class="moose-parameter-header-description">The variable this initial condition is supposed to provide values for.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>VariableName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The variable this initial condition is supposed to provide values for.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">x1</span><span class="moose-parameter-header-description">The abscissa values of crack starting points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The abscissa values of crack starting points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">x2</span><span class="moose-parameter-header-description">The abscissa values of crack ending points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The abscissa values of crack ending points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">y1</span><span class="moose-parameter-header-description">The ordinate values of crack starting points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The ordinate values of crack starting points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">y2</span><span class="moose-parameter-header-description">The ordinate values of crack ending points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The ordinate values of crack ending points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">z1</span><span class="moose-parameter-header-description">The applicate values of crack starting points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The applicate values of crack starting points</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">z2</span><span class="moose-parameter-header-description">The applicate values of crack ending points</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;double&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The applicate values of crack ending points</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Required Parameters</h3></summary></details></section><section id="e4c69228-d5b4-4640-9681-34b69e921200" data-section-level="3" data-section-text="Optional Parameters" data-details-open="open"><details class="moose-section-content" open="open"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">block</span><span class="moose-parameter-header-description">The list of blocks (ids or names) that this object will be applied</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;SubdomainName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of blocks (ids or names) that this object will be applied</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">boundary</span><span class="moose-parameter-header-description">The list of boundaries (ids or names) from the mesh where this boundary condition applies</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;BoundaryName&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>The list of boundaries (ids or names) from the mesh where this boundary condition applies</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">prop_getter_suffix</span><span class="moose-parameter-header-description">An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>MaterialPropertyName</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>An optional suffix parameter that can be appended to any attempt to retrieve/get material properties. The suffix will be prepended with a '_' character.</p></div></li></ul><summary><h3 data-details-open="open"><span class="moose-section-icon"></span>Optional Parameters</h3></summary></details></section><section id="ccaf734e-eb47-4adb-a031-ab1e6e3c3d18" data-section-level="3" data-section-text="Advanced Parameters" data-details-open="close"><details class="moose-section-content"><ul class="collapsible" data-collapsible="expandable"><li><div class="collapsible-header"><span class="moose-parameter-name">control_tags</span><span class="moose-parameter-header-description">Adds user-defined labels for accessing object parameters via control logic.</span></div><div class="collapsible-body"><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>std::vector&lt;std::string&gt;</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Adds user-defined labels for accessing object parameters via control logic.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">enable</span><span class="moose-parameter-header-default">True</span><span class="moose-parameter-header-description">Set the enabled status of the MooseObject.</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>True</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>Set the enabled status of the MooseObject.</p></div></li><li><div class="collapsible-header"><span class="moose-parameter-name">ignore_uo_dependency</span><span class="moose-parameter-header-default">False</span><span class="moose-parameter-header-description">When set to true, a UserObject retrieved by this IC will not be executed before the this IC</span></div><div class="collapsible-body"><p class="moose-parameter-description-default"><span>Default:</span>False</p><p class="moose-parameter-description-cpptype"><span>C++ Type:</span>bool</p><p class="moose-parameter-description-options"><span>Options:</span></p><p class="moose-parameter-description"><span>Description:</span>When set to true, a UserObject retrieved by this IC will not be executed before the this IC</p></div></li></ul><summary><h3 data-details-open="close"><span class="moose-section-icon"></span>Advanced Parameters</h3></summary></details></section></section><section id="00771a2f-4be3-483e-b895-5b6d26c038ac" data-section-level="2" data-section-text="Input Files"><h2 id="input-files">Input Files</h2><ul class="moose-list-inputs browser-default"><li><a class="moose-source-filename tooltipped modal-trigger" href="#f60eef66-7434-4ac3-8e79-7f0298968b9d">(benchmarks/mode1_initial_damage/mechanical_fracture_uo_tri3.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#345fa6cd-0101-40e2-8eb8-3d1ea414dfdb">(benchmarks/mode1_initial_damage/mechanical_fracture_uo_quad4.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#4c4753fa-34f2-4fca-8dd2-f7d45aedde22">(benchmarks/sneddon/master.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#b6933455-227e-407a-b0ef-045323d0d1d1">(benchmarks/mode2_initial_damage/fracture.i)</a></li><li><a class="moose-source-filename tooltipped modal-trigger" href="#7696d2c9-a22f-4e88-81d1-322b86140367">(benchmarks/mode1_initial_damage/fracture.i)</a></li></ul></section></section><div class="moose-modal modal" id="f60eef66-7434-4ac3-8e79-7f0298968b9d"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/mechanical_fracture_uo_tri3.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+Gc = 2.7
+l = 0.015
+psic = 14.88
+k = 1e-6
+dc = 0.6
+
+[Problem]
+  type = FixedPointProblem
+[]
+
+[Mesh]
+  type = FileMesh
+  file = &#x27;gold/geo.msh&#x27;
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+  [d]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+  []
+  [fy]
+  []
+[]
+
+[UserObjects]
+  [E_driving]
+    type = ADFPIMaterialPropertyUserObject
+    mat_prop = &#x27;E_el_active&#x27;
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = &#x27;bounds_dummy&#x27;
+    bounded_variable = &#x27;d&#x27;
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = &#x27;bounds_dummy&#x27;
+    bounded_variable = &#x27;d&#x27;
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = &#x27;disp_x&#x27;
+    component = 0
+    displacements = &#x27;disp_x disp_y&#x27;
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = &#x27;disp_y&#x27;
+    component = 1
+    displacements = &#x27;disp_x disp_y&#x27;
+    save_in = &#x27;fy&#x27;
+  []
+  [pff_diff]
+    type = ADPFFDiffusion
+    variable = &#x27;d&#x27;
+  []
+  [pff_barrier]
+    type = ADPFFBarrier
+    variable = &#x27;d&#x27;
+  []
+  [pff_react]
+    type = ADPFFReaction
+    variable = &#x27;d&#x27;
+    driving_energy_uo = &#x27;E_driving&#x27;
+    lag = false
+  []
+[]
+
+[BCs]
+  [ydisp]
+    type = FunctionDirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;top&#x27;
+    function = &#x27;t&#x27;
+  []
+  [xfix]
+    type = DirichletBC
+    variable = &#x27;disp_x&#x27;
+    boundary = &#x27;top bottom&#x27;
+    value = 0
+  []
+  [yfix]
+    type = DirichletBC
+    variable = &#x27;disp_y&#x27;
+    boundary = &#x27;bottom&#x27;
+    value = 0
+  []
+[]
+
+[ICs]
+  [d]
+    type = CohesiveDamageIC
+    variable = d
+    d0 = 1.0
+    l = ${l}
+    x1 = -0.5
+    y1 = 0
+    z1 = 0
+    x2 = 0
+    y2 = 0
+    z2 = 0
+  []
+[]
+
+[Materials]
+  [elasticity_tensor]
+    type = ADComputeIsotropicElasticityTensor
+    youngs_modulus = ${E}
+    poissons_ratio = ${nu}
+  []
+  [strain]
+    type = ADComputeSmallStrain
+    displacements = &#x27;disp_x disp_y&#x27;
+  []
+  [stress]
+    type = SmallStrainDegradedElasticPK2Stress_StrainSpectral
+    d = &#x27;d&#x27;
+    d_crit = ${dc}
+  []
+  [bulk]
+    type = ADGenericConstantMaterial
+    prop_names = &#x27;phase_field_regularization_length energy_release_rate critical_fracture_energy&#x27;
+    prop_values = &#x27;${l} ${Gc} ${psic}&#x27;
+  []
+  [local_dissipation]
+    type = LinearLocalDissipation
+    d = &#x27;d&#x27;
+  []
+  [fracture_properties]
+    type = ADFractureMaterial
+    local_dissipation_norm = 8/3
+  []
+  [degradation]
+    type = LorentzDegradation
+    d = &#x27;d&#x27;
+    residual_degradation = ${k}
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = &#x27;fy&#x27;
+    boundary = &#x27;top&#x27;
+  []
+[]
+
+[Executioner]
+  type = FixedPointTransient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels &#x27;
+                        &#x27;-snes_type&#x27;
+  petsc_options_value = &#x27;asm      ilu          200         200                0                     &#x27;
+                        &#x27;vinewtonrsls&#x27;
+  dt = 1e-4
+  end_time = 6e-3
+
+  nl_abs_tol = 1e-08
+  nl_rel_tol = 1e-06
+
+  automatic_scaling = true
+  compute_scaling_once = false
+
+  fp_max_its = 100
+  fp_tol = 1e-06
+  accept_on_max_fp_iteration = true
+[]
+
+[Outputs]
+  print_linear_residuals = false
+  print_linear_converged_reason = false
+  print_nonlinear_converged_reason = false
+  [csv]
+    type = CSV
+    delimiter = &#x27; &#x27;
+    file_base = &#x27;force_displacement&#x27;
+  []
+  [exodus]
+    type = Exodus
+    file_base = &#x27;visualize&#x27;
+  []
+  [console]
+    type = Console
+    outlier_variable_norms = false
+  []
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="345fa6cd-0101-40e2-8eb8-3d1ea414dfdb"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/mechanical_fracture_uo_quad4.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
 nu = 0.3
 Gc = 2.7
 l = 0.015
@@ -227,7 +431,202 @@ dc = 0.6
     outlier_variable_norms = false
   []
 []
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="6aecd5b2-67a6-4748-8bd4-a274637a5416"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="4c4753fa-34f2-4fca-8dd2-f7d45aedde22"><div class="modal-content"><h4>(benchmarks/sneddon/master.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
+nu = 0.3
+Gc = 2.7
+l = 0.015
+psic = 14.88
+k = 1e-09
+dc = 0.6
+
+[Problem]
+  solve = false
+[]
+
+[Mesh]
+  type = FileMesh
+  file = &#x27;gold/geo.msh&#x27;
+[]
+
+[MultiApps]
+  [./mechanical]
+    type = TransientMultiApp
+    input_files = &#x27;mechanical.i&#x27;
+    app_type = raccoonApp
+    execute_on = &#x27;TIMESTEP_BEGIN&#x27;
+    sub_cycling = true
+    detect_steady_state = true
+    steady_state_tol = 1e-6
+    cli_args = &#x27;E=${E};nu=${nu};Gc=${Gc};l=${l};psic=${psic};k=${k};dc=${dc}&#x27;
+  [../]
+[]
+
+[Transfers]
+  [./send_load]
+    type = MultiAppScalarToAuxScalarTransfer
+    multi_app = mechanical
+    direction = to_multiapp
+    source_variable = &#x27;load&#x27;
+    to_aux_scalar = &#x27;load&#x27;
+  [../]
+  [./get_d_ref]
+    type = MultiAppCopyTransfer
+    multi_app = mechanical
+    direction = from_multiapp
+    source_variable = &#x27;d&#x27;
+    variable = &#x27;d&#x27;
+    execute_on = &#x27;TIMESTEP_END&#x27;
+  [../]
+  [./send_d_ref]
+    type = MultiAppCopyTransfer
+    multi_app = mechanical
+    direction = to_multiapp
+    source_variable = &#x27;d&#x27;
+    variable = &#x27;d_ref&#x27;
+    execute_on = &#x27;TIMESTEP_BEGIN&#x27;
+  [../]
+[]
+
+[AuxVariables]
+  [./load]
+    family = SCALAR
+  [../]
+  [./d]
+  [../]
+[]
+
+[ICs]
+  [./d]
+    type = CohesiveDamageIC
+    variable = d
+    d0 = 1.0
+    l = ${l}
+    x1 = -0.5
+    y1 = 0
+    z1 = 0
+    x2 = 0
+    y2 = 0
+    z2 = 0
+  [../]
+[]
+
+[AuxScalarKernels]
+  [./load]
+    type = FunctionScalarAux
+    variable = &#x27;load&#x27;
+    function = &#x27;t&#x27;
+    execute_on = &#x27;INITIAL TIMESTEP_BEGIN&#x27;
+  [../]
+[]
+
+[Executioner]
+  type = Transient
+  dt = 1e-4
+  end_time = 6e-3
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="b6933455-227e-407a-b0ef-045323d0d1d1"><div class="modal-content"><h4>(benchmarks/mode2_initial_damage/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
+  type = FileMesh
+  file = &#x27;gold/geo.msh&#x27;
+[]
+
+[Variables]
+  [d]
+    [InitialCondition]
+      type = CohesiveDamageIC
+      d0 = 1.0
+      l = ${l}
+      x1 = -0.5
+      y1 = 0
+      z1 = 0
+      x2 = 0
+      y2 = 0
+      z2 = 0
+    []
+  []
+[]
+
+[AuxVariables]
+  [E_el_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [bounds_dummy]
+  []
+[]
+
+[Bounds]
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = &#x27;bounds_dummy&#x27;
+    bounded_variable = &#x27;d&#x27;
+    bound_type = lower
+  []
+  [upper]
+    type = ConstantBoundsAux
+    variable = &#x27;bounds_dummy&#x27;
+    bounded_variable = &#x27;d&#x27;
+    bound_type = upper
+    bound_value = 1
+  []
+[]
+
+[Kernels]
+  [diff]
+    type = ADPFFDiffusion
+    variable = &#x27;d&#x27;
+  []
+  [barrier]
+    type = ADPFFBarrier
+    variable = &#x27;d&#x27;
+  []
+  [react]
+    type = ADPFFReaction
+    variable = &#x27;d&#x27;
+    driving_energy_var = &#x27;E_el_active&#x27;
+  []
+[]
+
+[Materials]
+  [fracture_bulk]
+    type = ADGenericFunctionMaterial
+    prop_names = &#x27;energy_release_rate phase_field_regularization_length critical_fracture_energy&#x27;
+    prop_values = &#x27;${Gc} ${l} ${psic}&#x27;
+  []
+  [local_dissipation]
+    type = LinearLocalDissipation
+    d = d
+  []
+  [fracture_properties]
+    type = ADFractureMaterial
+    local_dissipation_norm = 8/3
+  []
+  [degradation]
+    type = LorentzDegradation
+    d = d
+    residual_degradation = ${k}
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = &#x27;NEWTON&#x27;
+  petsc_options_iname = &#x27;-pc_type -snes_type&#x27;
+  petsc_options_value = &#x27;lu       vinewtonrsls&#x27;
+
+  dt = 1e-4
+  nl_rel_tol = 1e-06
+  nl_abs_tol = 1e-08
+
+  relaxed_variables = d
+  relaxation_factor = 0.95
+[]
+
+[Outputs]
+  print_linear_residuals = false
+  print_linear_converged_reason = false
+  print_nonlinear_converged_reason = false
+[]
+</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="7696d2c9-a22f-4e88-81d1-322b86140367"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
   [square]
     type = GeneratedMeshGenerator
     dim = 2
@@ -348,404 +747,5 @@ dc = 0.6
   print_linear_residuals = false
   print_linear_converged_reason = false
   print_nonlinear_converged_reason = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="6ed2c7e4-8a42-49c9-a551-5f7f0b73c786"><div class="modal-content"><h4>(benchmarks/mode1_initial_damage/mechanical_fracture_uo_tri3.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-Gc = 2.7
-l = 0.015
-psic = 14.88
-k = 1e-6
-dc = 0.6
-
-[Problem]
-  type = FixedPointProblem
-[]
-
-[Mesh]
-  type = FileMesh
-  file = &#x27;gold/geo.msh&#x27;
-[]
-
-[Variables]
-  [disp_x]
-  []
-  [disp_y]
-  []
-  [d]
-  []
-[]
-
-[AuxVariables]
-  [bounds_dummy]
-  []
-  [fy]
-  []
-[]
-
-[UserObjects]
-  [E_driving]
-    type = ADFPIMaterialPropertyUserObject
-    mat_prop = &#x27;E_el_active&#x27;
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_x&#x27;
-    component = 0
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = &#x27;disp_y&#x27;
-    component = 1
-    displacements = &#x27;disp_x disp_y&#x27;
-    save_in = &#x27;fy&#x27;
-  []
-  [pff_diff]
-    type = ADPFFDiffusion
-    variable = &#x27;d&#x27;
-  []
-  [pff_barrier]
-    type = ADPFFBarrier
-    variable = &#x27;d&#x27;
-  []
-  [pff_react]
-    type = ADPFFReaction
-    variable = &#x27;d&#x27;
-    driving_energy_uo = &#x27;E_driving&#x27;
-    lag = false
-  []
-[]
-
-[BCs]
-  [ydisp]
-    type = FunctionDirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;top&#x27;
-    function = &#x27;t&#x27;
-  []
-  [xfix]
-    type = DirichletBC
-    variable = &#x27;disp_x&#x27;
-    boundary = &#x27;top bottom&#x27;
-    value = 0
-  []
-  [yfix]
-    type = DirichletBC
-    variable = &#x27;disp_y&#x27;
-    boundary = &#x27;bottom&#x27;
-    value = 0
-  []
-[]
-
-[ICs]
-  [d]
-    type = CohesiveDamageIC
-    variable = d
-    d0 = 1.0
-    l = ${l}
-    x1 = -0.5
-    y1 = 0
-    z1 = 0
-    x2 = 0
-    y2 = 0
-    z2 = 0
-  []
-[]
-
-[Materials]
-  [elasticity_tensor]
-    type = ADComputeIsotropicElasticityTensor
-    youngs_modulus = ${E}
-    poissons_ratio = ${nu}
-  []
-  [strain]
-    type = ADComputeSmallStrain
-    displacements = &#x27;disp_x disp_y&#x27;
-  []
-  [stress]
-    type = SmallStrainDegradedElasticPK2Stress_StrainSpectral
-    d = &#x27;d&#x27;
-    d_crit = ${dc}
-  []
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = &#x27;phase_field_regularization_length energy_release_rate critical_fracture_energy&#x27;
-    prop_values = &#x27;${l} ${Gc} ${psic}&#x27;
-  []
-  [local_dissipation]
-    type = LinearLocalDissipation
-    d = &#x27;d&#x27;
-  []
-  [fracture_properties]
-    type = ADFractureMaterial
-    local_dissipation_norm = 8/3
-  []
-  [degradation]
-    type = LorentzDegradation
-    d = &#x27;d&#x27;
-    residual_degradation = ${k}
-  []
-[]
-
-[Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = &#x27;fy&#x27;
-    boundary = &#x27;top&#x27;
-  []
-[]
-
-[Executioner]
-  type = FixedPointTransient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels &#x27;
-                        &#x27;-snes_type&#x27;
-  petsc_options_value = &#x27;asm      ilu          200         200                0                     &#x27;
-                        &#x27;vinewtonrsls&#x27;
-  dt = 1e-4
-  end_time = 6e-3
-
-  nl_abs_tol = 1e-08
-  nl_rel_tol = 1e-06
-
-  automatic_scaling = true
-  compute_scaling_once = false
-
-  fp_max_its = 100
-  fp_tol = 1e-06
-  accept_on_max_fp_iteration = true
-[]
-
-[Outputs]
-  print_linear_residuals = false
-  print_linear_converged_reason = false
-  print_nonlinear_converged_reason = false
-  [csv]
-    type = CSV
-    delimiter = &#x27; &#x27;
-    file_base = &#x27;force_displacement&#x27;
-  []
-  [exodus]
-    type = Exodus
-    file_base = &#x27;visualize&#x27;
-  []
-  [console]
-    type = Console
-    outlier_variable_norms = false
-  []
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="0d5a1bb0-9d86-4089-a621-d112ce8d9e98"><div class="modal-content"><h4>(benchmarks/mode2_initial_damage/fracture.i)</h4><pre class="moose-pre"><code class="language-text">[Mesh]
-  type = FileMesh
-  file = &#x27;gold/geo.msh&#x27;
-[]
-
-[Variables]
-  [d]
-    [InitialCondition]
-      type = CohesiveDamageIC
-      d0 = 1.0
-      l = ${l}
-      x1 = -0.5
-      y1 = 0
-      z1 = 0
-      x2 = 0
-      y2 = 0
-      z2 = 0
-    []
-  []
-[]
-
-[AuxVariables]
-  [E_el_active]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [bounds_dummy]
-  []
-[]
-
-[Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = lower
-  []
-  [upper]
-    type = ConstantBoundsAux
-    variable = &#x27;bounds_dummy&#x27;
-    bounded_variable = &#x27;d&#x27;
-    bound_type = upper
-    bound_value = 1
-  []
-[]
-
-[Kernels]
-  [diff]
-    type = ADPFFDiffusion
-    variable = &#x27;d&#x27;
-  []
-  [barrier]
-    type = ADPFFBarrier
-    variable = &#x27;d&#x27;
-  []
-  [react]
-    type = ADPFFReaction
-    variable = &#x27;d&#x27;
-    driving_energy_var = &#x27;E_el_active&#x27;
-  []
-[]
-
-[Materials]
-  [fracture_bulk]
-    type = ADGenericFunctionMaterial
-    prop_names = &#x27;energy_release_rate phase_field_regularization_length critical_fracture_energy&#x27;
-    prop_values = &#x27;${Gc} ${l} ${psic}&#x27;
-  []
-  [local_dissipation]
-    type = LinearLocalDissipation
-    d = d
-  []
-  [fracture_properties]
-    type = ADFractureMaterial
-    local_dissipation_norm = 8/3
-  []
-  [degradation]
-    type = LorentzDegradation
-    d = d
-    residual_degradation = ${k}
-  []
-[]
-
-[Executioner]
-  type = Transient
-  solve_type = &#x27;NEWTON&#x27;
-  petsc_options_iname = &#x27;-pc_type -snes_type&#x27;
-  petsc_options_value = &#x27;lu       vinewtonrsls&#x27;
-
-  dt = 1e-4
-  nl_rel_tol = 1e-06
-  nl_abs_tol = 1e-08
-
-  relaxed_variables = d
-  relaxation_factor = 0.95
-[]
-
-[Outputs]
-  print_linear_residuals = false
-  print_linear_converged_reason = false
-  print_nonlinear_converged_reason = false
-[]
-</code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div><div class="moose-modal modal" id="9bf1d687-655f-4efd-95d3-d4d09a01d084"><div class="modal-content"><h4>(benchmarks/sneddon/master.i)</h4><pre class="moose-pre"><code class="language-text">E = 2.1e5
-nu = 0.3
-Gc = 2.7
-l = 0.015
-psic = 14.88
-k = 1e-09
-dc = 0.6
-
-[Problem]
-  solve = false
-[]
-
-[Mesh]
-  type = FileMesh
-  file = &#x27;gold/geo.msh&#x27;
-[]
-
-[MultiApps]
-  [./mechanical]
-    type = TransientMultiApp
-    input_files = &#x27;mechanical.i&#x27;
-    app_type = raccoonApp
-    execute_on = &#x27;TIMESTEP_BEGIN&#x27;
-    sub_cycling = true
-    detect_steady_state = true
-    steady_state_tol = 1e-6
-    cli_args = &#x27;E=${E};nu=${nu};Gc=${Gc};l=${l};psic=${psic};k=${k};dc=${dc}&#x27;
-  [../]
-[]
-
-[Transfers]
-  [./send_load]
-    type = MultiAppScalarToAuxScalarTransfer
-    multi_app = mechanical
-    direction = to_multiapp
-    source_variable = &#x27;load&#x27;
-    to_aux_scalar = &#x27;load&#x27;
-  [../]
-  [./get_d_ref]
-    type = MultiAppCopyTransfer
-    multi_app = mechanical
-    direction = from_multiapp
-    source_variable = &#x27;d&#x27;
-    variable = &#x27;d&#x27;
-    execute_on = &#x27;TIMESTEP_END&#x27;
-  [../]
-  [./send_d_ref]
-    type = MultiAppCopyTransfer
-    multi_app = mechanical
-    direction = to_multiapp
-    source_variable = &#x27;d&#x27;
-    variable = &#x27;d_ref&#x27;
-    execute_on = &#x27;TIMESTEP_BEGIN&#x27;
-  [../]
-[]
-
-[AuxVariables]
-  [./load]
-    family = SCALAR
-  [../]
-  [./d]
-  [../]
-[]
-
-[ICs]
-  [./d]
-    type = CohesiveDamageIC
-    variable = d
-    d0 = 1.0
-    l = ${l}
-    x1 = -0.5
-    y1 = 0
-    z1 = 0
-    x2 = 0
-    y2 = 0
-    z2 = 0
-  [../]
-[]
-
-[AuxScalarKernels]
-  [./load]
-    type = FunctionScalarAux
-    variable = &#x27;load&#x27;
-    function = &#x27;t&#x27;
-    execute_on = &#x27;INITIAL TIMESTEP_BEGIN&#x27;
-  [../]
-[]
-
-[Executioner]
-  type = Transient
-  dt = 1e-4
-  end_time = 6e-3
 []
 </code></pre></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div></div></div></div></main></div></body><script type="text/javascript" src="../../contrib/materialize/materialize.min.js"></script><script type="text/javascript" src="../../contrib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="../../contrib/prism/prism.min.js"></script><script type="text/javascript" src="../../js/init.js"></script><script type="text/javascript" src="../../js/navigation.js"></script><script type="text/javascript" src="../../contrib/fuse/fuse.min.js"></script><script type="text/javascript" src="../../js/search_index.js"></script><script type="text/javascript" src="../../js/sqa_moose.js"></script>
