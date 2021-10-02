@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-10-01 16:16:13</td>
+            <td class="headerValue">2021-10-02 02:03:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -67,28 +67,28 @@
 <a name="5"><span class="lineNum">       5 </span>            : #include &quot;BaseNameInterface.h&quot;</a>
 <a name="6"><span class="lineNum">       6 </span>            : </a>
 <a name="7"><span class="lineNum">       7 </span>            : InputParameters</a>
-<a name="8"><span class="lineNum">       8 </span><span class="lineCov">       2838 : BaseNameInterface::validParams()</span></a>
+<a name="8"><span class="lineNum">       8 </span><span class="lineCov">       2828 : BaseNameInterface::validParams()</span></a>
 <a name="9"><span class="lineNum">       9 </span>            : {</a>
-<a name="10"><span class="lineNum">      10 </span><span class="lineCov">       2838 :   InputParameters params = emptyInputParameters();</span></a>
-<a name="11"><span class="lineNum">      11 </span><span class="lineCov">       5676 :   params.addParam&lt;std::string&gt;(&quot;base_name&quot;,</span></a>
+<a name="10"><span class="lineNum">      10 </span><span class="lineCov">       2828 :   InputParameters params = emptyInputParameters();</span></a>
+<a name="11"><span class="lineNum">      11 </span><span class="lineCov">       5656 :   params.addParam&lt;std::string&gt;(&quot;base_name&quot;,</span></a>
 <a name="12"><span class="lineNum">      12 </span>            :                                &quot;Optional parameter that allows the user to define &quot;</a>
 <a name="13"><span class="lineNum">      13 </span>            :                                &quot;multiple mechanics material systems on the same &quot;</a>
 <a name="14"><span class="lineNum">      14 </span>            :                                &quot;block, i.e. for multiple phases&quot;);</a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">       2838 :   return params;</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">       2828 :   return params;</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : }</a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        278 : BaseNameInterface::BaseNameInterface(const InputParameters &amp; params)</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        271 : BaseNameInterface::BaseNameInterface(const InputParameters &amp; params)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            :   : _params(params),</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        278 :     _base_name(_params.isParamValid(&quot;base_name&quot;) ? _params.get&lt;std::string&gt;(&quot;base_name&quot;) + &quot;_&quot; : &quot;&quot;)</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        271 :     _base_name(_params.isParamValid(&quot;base_name&quot;) ? _params.get&lt;std::string&gt;(&quot;base_name&quot;) + &quot;_&quot; : &quot;&quot;)</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        278 : }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        271 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span>            : const MaterialPropertyName</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        992 : BaseNameInterface::prependBaseName(const MaterialPropertyName s, const bool get_property_name) const</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        968 : BaseNameInterface::prependBaseName(const MaterialPropertyName s, const bool get_property_name) const</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        992 :   if (get_property_name)</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">       1098 :     return _base_name + _params.get&lt;MaterialPropertyName&gt;(s);</span></a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        886 :   return _base_name + s;</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        968 :   if (get_property_name)</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">       1068 :     return _base_name + _params.get&lt;MaterialPropertyName&gt;(s);</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        868 :   return _base_name + s;</span></a>
 <a name="30"><span class="lineNum">      30 </span>            : }</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span>            : const std::vector&lt;MaterialPropertyName&gt;</a>

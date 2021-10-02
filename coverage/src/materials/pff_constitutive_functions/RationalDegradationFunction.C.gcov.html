@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-10-01 16:16:13</td>
+            <td class="headerValue">2021-10-02 02:03:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -69,31 +69,31 @@
 <a name="7"><span class="lineNum">       7 </span>            : registerMooseObject(&quot;raccoonApp&quot;, RationalDegradationFunction);</a>
 <a name="8"><span class="lineNum">       8 </span>            : </a>
 <a name="9"><span class="lineNum">       9 </span>            : InputParameters</a>
-<a name="10"><span class="lineNum">      10 </span><span class="lineCov">        214 : RationalDegradationFunction::validParams()</span></a>
+<a name="10"><span class="lineNum">      10 </span><span class="lineCov">        206 : RationalDegradationFunction::validParams()</span></a>
 <a name="11"><span class="lineNum">      11 </span>            : {</a>
-<a name="12"><span class="lineNum">      12 </span><span class="lineCov">        214 :   InputParameters params = DegradationFunctionBase::validParams();</span></a>
-<a name="13"><span class="lineNum">      13 </span><span class="lineCov">        214 :   params.addClassDescription(</span></a>
+<a name="12"><span class="lineNum">      12 </span><span class="lineCov">        206 :   InputParameters params = DegradationFunctionBase::validParams();</span></a>
+<a name="13"><span class="lineNum">      13 </span><span class="lineCov">        206 :   params.addClassDescription(</span></a>
 <a name="14"><span class="lineNum">      14 </span>            :       &quot;Defines the rational degradation function $g(d) = &quot;</a>
 <a name="15"><span class="lineNum">      15 </span>            :       &quot;\\frac{(1-d)^p}{(1-d)^p+a_1d(1+a_2d+a_2a_3d^2)} (1-\\eta) + \\eta$ where $a_1 = &quot;</a>
 <a name="16"><span class="lineNum">      16 </span>            :       &quot;\\frac{\\Gc}{\\psi_c}\\frac{\\xi}{c_0l}$. $\\Gc$ is the fracture toughness, $\\psi_c$ is &quot;</a>
 <a name="17"><span class="lineNum">      17 </span>            :       &quot;the critical fracture energy, $\\xi$ is the derivative of the local fracture energy at &quot;</a>
 <a name="18"><span class="lineNum">      18 </span>            :       &quot;$\\d=0$, $c_0$ is the normalization constant, and $l$ is the regularization length.&quot;);</a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        214 :   params.set&lt;std::string&gt;(&quot;function&quot;) =</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        206 :   params.set&lt;std::string&gt;(&quot;function&quot;) =</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :       &quot;(1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta&quot;;</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        428 :   const std::vector&lt;std::string&gt; default_params = {&quot;p&quot;, &quot;a2&quot;, &quot;a3&quot;, &quot;eta&quot;};</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        214 :   params.set&lt;std::vector&lt;std::string&gt;&gt;(&quot;parameter_names&quot;) = default_params;</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        412 :   const std::vector&lt;std::string&gt; default_params = {&quot;p&quot;, &quot;a2&quot;, &quot;a3&quot;, &quot;eta&quot;};</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        206 :   params.set&lt;std::vector&lt;std::string&gt;&gt;(&quot;parameter_names&quot;) = default_params;</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        214 :   const std::vector&lt;std::string&gt; default_mat_props = {&quot;Gc&quot;, &quot;psic&quot;, &quot;xi&quot;, &quot;c0&quot;, &quot;l&quot;};</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        428 :   params.set&lt;std::vector&lt;std::string&gt;&gt;(&quot;material_property_names&quot;) = default_mat_props;</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        214 :   return params;</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        206 :   const std::vector&lt;std::string&gt; default_mat_props = {&quot;Gc&quot;, &quot;psic&quot;, &quot;xi&quot;, &quot;c0&quot;, &quot;l&quot;};</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        412 :   params.set&lt;std::vector&lt;std::string&gt;&gt;(&quot;material_property_names&quot;) = default_mat_props;</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        206 :   return params;</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : }</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         87 : RationalDegradationFunction::RationalDegradationFunction(const InputParameters &amp; parameters)</span></a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         87 :   : DegradationFunctionBase(parameters)</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         81 : RationalDegradationFunction::RationalDegradationFunction(const InputParameters &amp; parameters)</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         81 :   : DegradationFunctionBase(parameters)</span></a>
 <a name="33"><span class="lineNum">      33 </span>            : {</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         87 : }</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         81 : }</span></a>
 </pre>
       </td>
     </tr>
