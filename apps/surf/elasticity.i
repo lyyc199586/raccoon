@@ -13,18 +13,32 @@
 ## -----------------
 
 ## titania
-E = 250e3 #9.8Gpa
-nu = 0.29
+# E = 250e3 #250Gpa
+# nu = 0.29
+# K = '${fparse E/3/(1-2*nu)}'
+# G = '${fparse E/2/(1+nu)}'
+# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+
+# Gc = 3.6e-2 # 36N/m
+# l = 0.35
+# sigma_ts = 100
+# sigma_cs = 1232
+# delta = 4.41
+## ------------------
+
+## kalthoff: c-300 steel
+E = 190e3 #9.8Gpa
+nu = 0.3
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-Gc = 3.6e-2 # 91N/m
+Gc = 2.22e-2 # 22.2N/m
 l = 0.35
-sigma_ts = 100
-sigma_cs = 1232
-delta = 4.41
-## ------------------
+sigma_ts = 1056
+sigma_cs = 5280
+delta = 5
+## -------------------
 
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
@@ -254,7 +268,7 @@ refine = 3
 
 [Outputs]
   exodus = true
-  file_base = 'surf_titania'
+  file_base = 'surf_c300'
   print_linear_residuals = false
   interval = 1
 []
