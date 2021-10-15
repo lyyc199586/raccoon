@@ -13,7 +13,8 @@ K = '${fparse E*G/3/(3*G - E)}'
 rho = 2230 # 2.2e-3 g/mm^3
 
 Gc = 16 # 1.60 e-8 TPa.mm -> N/m
-l = 0.02 # 0.0211 mm?
+# l = 0.02 # 0.0211 mm?
+l = 0.2
 
 [MultiApps]
   [damage]
@@ -44,9 +45,9 @@ l = 0.02 # 0.0211 mm?
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 100
+  nx = 10000
   xmin = 0.0
-  xmax = 10.0
+  xmax = 1000.0
 []
 
 [GlobalParams]
@@ -63,14 +64,14 @@ l = 0.02 # 0.0211 mm?
   [../]
   [./vel_x]
   [../]
-  [./stress_xx]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./strain_xx]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+  # [./stress_xx]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # [../]
+  # [./strain_xx]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # [../]
   [d]
   []
 []
@@ -132,7 +133,7 @@ l = 0.02 # 0.0211 mm?
     variable = disp_x
     boundary = left
     beta = 0.25
-    function = 'if(t<=1, 0.01*sin(pi*t), 0)'
+    function = 'if(t<=1, -0.0001*sin(pi*t), 0)'
     velocity = vel_x
     acceleration = accel_x
   [../]
@@ -141,7 +142,7 @@ l = 0.02 # 0.0211 mm?
     variable = disp_x
     boundary = right
     beta = 0.25
-    function = 'if(t<=1, 0.01*sin(pi*t), 0)'
+    function = 'if(t<=1, 0.0001*sin(pi*t), 0)'
     # function = '0.01*t'
     velocity = vel_x
     acceleration = accel_x
@@ -241,7 +242,7 @@ l = 0.02 # 0.0211 mm?
 [Postprocessors]
   [./disp_x_rightBC]
     type = PointValue
-    point = '10 0 0'
+    point = '1000 0 0'
     variable = disp_x
   [../]
 []
