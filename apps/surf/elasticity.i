@@ -33,7 +33,7 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-Gc = 2.22e-2 # 22.2N/m
+Gc = 22.2 # 22.2N/mm
 l = 0.35
 sigma_ts = 1056
 sigma_cs = 5280
@@ -255,20 +255,20 @@ refine = 3
   dt = 2e-2
   end_time = 5e-1
 
-  # fixed_point_max_its = 20
-  # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
-
-  fixed_point_max_its = 100
+  fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
+
+  # fixed_point_max_its = 100
+  # accept_on_max_fixed_point_iteration = false
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
 []
 
 [Outputs]
   exodus = true
-  file_base = 'surf_c300'
+  file_base = 'surf_c300_it20'
   print_linear_residuals = false
   interval = 1
 []
