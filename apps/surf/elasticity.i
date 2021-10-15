@@ -1,11 +1,11 @@
 ## graphite
-# E = 9.8e3 #9.8Gpa
+# E = 9.8e3 # 9.8 GPa
 # nu = 0.13
 # K = '${fparse E/3/(1-2*nu)}'
 # G = '${fparse E/2/(1+nu)}'
 # Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-# Gc = 9.1e-2 # 91N/m
+# Gc = 9.1e-2 # 91 N/m
 # l = 0.35
 # sigma_ts = 27
 # sigma_cs = 77
@@ -13,32 +13,45 @@
 ## -----------------
 
 ## titania
-# E = 250e3 #250Gpa
+# E = 250e3 # 250 Gpa
 # nu = 0.29
 # K = '${fparse E/3/(1-2*nu)}'
 # G = '${fparse E/2/(1+nu)}'
 # Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-# Gc = 3.6e-2 # 36N/m
+# Gc = 3.6e-2 # 36 N/m
 # l = 0.35
 # sigma_ts = 100
 # sigma_cs = 1232
 # delta = 4.41
 ## ------------------
 
-## kalthoff: c-300 steel
-E = 190e3 #9.8Gpa
-nu = 0.3
+## c-300 steel
+# E = 190e3 # 190 Gpa
+# nu = 0.3
+# K = '${fparse E/3/(1-2*nu)}'
+# G = '${fparse E/2/(1+nu)}'
+# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+
+# Gc = 22.2 # 22.2 N/mm
+# l = 0.35
+# sigma_ts = 1056
+# sigma_cs = 5280
+# delta = 5
+## -------------------
+
+## glass
+E = 62.5e3 # 0.0625 TPa
+nu = 0.19
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-Gc = 22.2 # 22.2N/mm
+Gc = 1.6e-2 # 1.6e-8 TPa.mm
 l = 0.35
-sigma_ts = 1056
-sigma_cs = 5280
-delta = 5
-## -------------------
+sigma_ts = 50
+sigma_cs = 100
+delta = 0.89
 
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
@@ -255,20 +268,20 @@ refine = 3
   dt = 2e-2
   end_time = 5e-1
 
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
-
-  # fixed_point_max_its = 100
+  # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
+
+  fixed_point_max_its = 100
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 []
 
 [Outputs]
   exodus = true
-  file_base = 'surf_c300_it20'
+  file_base = 'surf_glass'
   print_linear_residuals = false
   interval = 1
 []
