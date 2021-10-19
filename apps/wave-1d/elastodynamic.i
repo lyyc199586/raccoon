@@ -5,16 +5,29 @@
 # The first term on the left is evaluated using the Inertial force kernel
 # The last term on the left is evaluated using StressDivergenceTensors
 
-# glass [L(m), T(s), M(kg)]
-E = 0.0625e12 # 0.0625 TPa
-G = 0.0262e12 # 0.0262 TPa
-nu = '${fparse E/2/G - 1}'
-K = '${fparse E*G/3/(3*G - E)}'
-rho = 2230 # 2.2e-3 g/mm^3
+## glass [L(m), T(s), M(kg)]
+# E = 0.0625e12 # 0.0625 TPa
+# G = 0.0262e12 # 0.0262 TPa
+# nu = '${fparse E/2/G - 1}'
+# K = '${fparse E*G/3/(3*G - E)}'
+# rho = 2230 # 2.2e-3 g/mm^3
 
-Gc = 16 # 1.60 e-8 TPa.mm -> N/m
-# l = 0.02 # 0.0211 mm?
-l = 0.2
+# Gc = 16 # 1.60 e-8 TPa.mm -> N/m
+# # l = 0.02 # 0.0211 mm?
+# l = 0.2
+
+## titania [MPa, N/mm]
+E = 250e3 # 250 Gpa
+nu = 0.29
+K = '${fparse E/3/(1-2*nu)}'
+G = '${fparse E/2/(1+nu)}'
+# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+rho = 3900 # 3900 kg/m^3
+Gc = 36 # 36 N/m
+l = 0.35
+# sigma_ts = 100
+# sigma_cs = 1232
+# delta = 4.41
 
 [MultiApps]
   [damage]
@@ -32,22 +45,22 @@ l = 0.2
     direction = from_multiapp
     source_variable = d
     variable = d
-  [../]
+  []
   [to_pise_active]
     type = MultiAppCopyTransfer
     multi_app = damage
     direction = to_multiapp
     source_variable = psie_active
     variable = psie_active
-  [../]
+  []
 []
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 10000
+  nx = 500
   xmin = 0.0
-  xmax = 1000.0
+  xmax = 10
 []
 
 [GlobalParams]
@@ -55,15 +68,15 @@ l = 0.2
 []
 
 [Variables]
-  [./disp_x]
-  [../]
+  [disp_x]
+  []
 []
 
 [AuxVariables] 
-  [./accel_x]
-  [../]
-  [./vel_x]
-  [../]
+  [accel_x]
+  []
+  [vel_x]
+  []
   # [./stress_xx]
   #   order = CONSTANT
   #   family = MONOMIAL
@@ -77,14 +90,14 @@ l = 0.2
 []
 
 [Kernels]
-  [./solid_x]
+  [solid_x]
     type = ADStressDivergenceTensors
     variable = disp_x
     displacements = 'disp_x'
     component = 0
     # stiffness_damping_coefficient = 0.000025
-  [../]
-  [./inertia_x] # M*accel + eta*M*vel
+  []
+  [inertia_x] # M*accel + eta*M*vel
     type = InertialForce
     variable = disp_x
     velocity = vel_x
@@ -92,25 +105,25 @@ l = 0.2
     beta = 0.25 # Newmark time integration
     gamma = 0.5 # Newmark time integration
     eta = 0.0
-  [../]
+  []
 []
 
 [AuxKernels]
-  [./accel_x] # Calculates and stores acceleration at the end of time step
+  [accel_x] # Calculates and stores acceleration at the end of time step
     type = NewmarkAccelAux
     variable = accel_x
     displacement = disp_x
     velocity = vel_x
     beta = 0.25
     execute_on = timestep_end
-  [../]
-  [./vel_x] # Calculates and stores velocity at the end of the time step
+  []
+  [vel_x] # Calculates and stores velocity at the end of the time step
     type = NewmarkVelAux
     variable = vel_x
     acceleration = accel_x
     gamma = 0.5
     execute_on = timestep_end
-  [../]
+  []
 #   [./stress_xx]
 #     type = RankTwoAux
 #     rank_two_tensor = stress
@@ -128,25 +141,27 @@ l = 0.2
 []
 
 [BCs]
-  [./leftBC]
-    type = ADFunctionDirichletBC
+  [leftBC]
+    # type = ADFunctionDirichletBC
+    type = ADFunctionNeumannBC
     variable = disp_x
     boundary = left
     beta = 0.25
-    function = 'if(t<=1, -0.0001*sin(pi*t), 0)'
+    function = 'if(t<=1, -0.2*sin(pi*t), 0)'
     velocity = vel_x
     acceleration = accel_x
-  [../]
-  [./rightBC]
-    type = ADFunctionDirichletBC
+  []
+  [rightBC]
+    # type = ADFunctionDirichletBC
+    type = ADFunctionNeumannBC
     variable = disp_x
     boundary = right
     beta = 0.25
-    function = 'if(t<=1, 0.0001*sin(pi*t), 0)'
+    function = 'if(t<=1, 0.2*sin(pi*t), 0)'
     # function = '0.01*t'
     velocity = vel_x
     acceleration = accel_x
-  [../]
+  []
 []
 
 # [Materials]
@@ -240,16 +255,26 @@ l = 0.2
 []
 
 [Postprocessors]
-  [./disp_x_rightBC]
+  [disp_x_rightBC]
     type = PointValue
-    point = '1000 0 0'
+    point = '10 0 0'
     variable = disp_x
-  [../]
+  []
+  [pf_d_right]
+    type = PointValue
+    point = '10 0 0'
+    variable = d
+  []
+  [pf_d_middle]
+    type = PointValue
+    point = '5 0 0'
+    variable = d
+  []
 []
 
 [Outputs]
   exodus = true
-  file_base = 'wave_1d'
+  file_base = 'wave_1d_titania'
   # [./csv]
   #   type = CSV 
   # [../]

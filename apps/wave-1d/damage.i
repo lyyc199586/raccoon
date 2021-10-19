@@ -19,9 +19,9 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 10000
+  nx = 500
   xmin = 0.0
-  xmax = 1000.0
+  xmax = 10
 []
 
 # [Adaptivity]
