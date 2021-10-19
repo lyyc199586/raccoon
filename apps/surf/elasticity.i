@@ -51,7 +51,9 @@ Gc = 1.6e-2 # 1.6e-8 TPa.mm
 l = 0.35
 sigma_ts = 50
 sigma_cs = 100
-delta = 0.89
+# delta = 0.89
+# delta = 1.375
+delta = -0.5
 
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
@@ -281,7 +283,7 @@ refine = 3
 
 [Outputs]
   exodus = true
-  file_base = 'surf_glass'
+  file_base = 'surf_glass_l0.35_delta-0.5'
   print_linear_residuals = false
   interval = 1
 []
