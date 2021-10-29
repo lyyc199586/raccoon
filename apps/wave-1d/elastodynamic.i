@@ -21,19 +21,20 @@ E = 250e3 # 250 Gpa
 nu = 0.29
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
-# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-rho = 3900 # 3900 kg/m^3
+Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+rho = 3900e-12 # 3900 kg/m^3 -> Mg/mm^3
 Gc = 36e-3 # 36 N/m
 l = 0.35
-# sigma_ts = 100
-# sigma_cs = 1232
-# delta = 4.41
+sigma_ts = 100
+sigma_cs = 1232
+delta = 4.41
 
 [MultiApps]
   [damage]
     type = TransientMultiApp
     input_files = damage.i
-    cli_args = 'Gc=${Gc};l=${l}'
+    # cli_args = 'Gc=${Gc};l=${l}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -50,8 +51,10 @@ l = 0.35
     type = MultiAppCopyTransfer
     multi_app = damage
     direction = to_multiapp
-    source_variable = psie_active
-    variable = psie_active
+    # source_variable = psie_active
+    # variable = psie_active
+    source_variable = 'psie_active ce'
+    variable = 'psie_active ce'
   []
 []
 
@@ -148,6 +151,7 @@ l = 0.35
     boundary = left
     beta = 0.25
     function = 'if(t<=1, -0.2*sin(pi*t), 0)'
+    # function = '-0.2*sin(pi*t)'
     velocity = vel_x
     acceleration = accel_x
   []
@@ -158,6 +162,7 @@ l = 0.35
     boundary = right
     beta = 0.25
     function = 'if(t<=1, 0.2*sin(pi*t), 0)'
+    # function = '0.2*sin(pi*t)'
     # function = '0.01*t'
     velocity = vel_x
     acceleration = accel_x
@@ -190,8 +195,8 @@ l = 0.35
 [Materials]
   [bulk]
     type = ADGenericConstantMaterial
-    prop_names = 'K G'
-    prop_values = '${K} ${G}'
+    prop_names = 'E K G lambda Gc l'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
   []
   [degradation]
     type = PowerDegradationFunction
@@ -199,7 +204,7 @@ l = 0.35
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 0'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -222,11 +227,27 @@ l = 0.35
     output_properties = 'stress'
     outputs = exodus
   []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
+  []
   [denstiy]
     type = GenericConstantMaterial
     block = 0
     prop_names = density
     prop_values = '${rho}'
+  []
+  [kumar_material]
+    type = NucleationMicroForce
+    normalization_constant = c0
+    tensile_strength = '${sigma_ts}'
+    compressive_strength = '${sigma_cs}'
+    delta = '${delta}'
+    external_driving_force_name = ce
+    output_properties = 'ce'
+    outputs = exodus
   []
 []
 
@@ -274,7 +295,7 @@ l = 0.35
 
 [Outputs]
   exodus = true
-  file_base = 'wave_1d_titania'
+  file_base = 'wave_1d_titania_kumar'
   # [./csv]
   #   type = CSV 
   # [../]

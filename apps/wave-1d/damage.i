@@ -53,14 +53,25 @@
     order = CONSTANT
     family = MONOMIAL
   []
+  [ce]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
+  # [irreversibility]
+  #   type = VariableOldValueBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   bound_type = lower
+  # []
+  [conditional]
+    type = ConditionalBoundsAux
     variable = bounds_dummy
     bounded_variable = d
-    bound_type = lower
+    fixed_bound_value = 0
+    threshold_value = 0.95
   []
   [upper]
     type = ConstantBoundsAux
@@ -89,8 +100,8 @@
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'Gc l'
-    prop_values = '${Gc} ${l}'
+    prop_names = 'E K G lambda Gc l'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
   []
   [degradation]
     type = PowerDegradationFunction
@@ -98,7 +109,7 @@
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 0'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -106,11 +117,19 @@
     function = 'd^2'
     phase_field = d
   []
+  # [psi]
+  #   type = ADDerivativeParsedMaterial
+  #   f_name = psi
+  #   function = 'alpha*Gc/c0/l+g*psie_active'
+  #   args = 'd psie_active'
+  #   material_property_names = 'alpha(d) g(d) Gc c0 l'
+  #   derivative_order = 1
+  # []
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
-    function = 'alpha*Gc/c0/l+g*psie_active'
-    args = 'd psie_active'
+    function = 'g*psie_active+(ce+Gc/c0/l)*alpha'
+    args = 'd psie_active ce'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []

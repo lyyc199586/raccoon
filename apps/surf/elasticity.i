@@ -27,34 +27,34 @@
 ## ------------------
 
 ## c-300 steel
-# E = 190e3 # 190 Gpa
-# nu = 0.3
-# K = '${fparse E/3/(1-2*nu)}'
-# G = '${fparse E/2/(1+nu)}'
-# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-
-# Gc = 22.2 # 22.2 N/mm
-# l = 0.35
-# sigma_ts = 1056
-# sigma_cs = 5280
-# delta = 5
-## -------------------
-
-## glass
-E = 62.5e3 # 0.0625 TPa
-nu = 0.19
+E = 190e3 # 190 Gpa
+nu = 0.3
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-Gc = 1.6e-2 # 1.6e-8 TPa.mm
-# l = 0.35
-l = 0.15
-sigma_ts = 50
-sigma_cs = 100
-# delta = 0.89
-# delta = 1.375
-delta = -0.25
+Gc = 22.2 # 22.2 N/mm
+l = 1
+sigma_ts = 1158
+sigma_cs = 5280 # 11580
+delta = 4
+## -------------------
+
+## glass
+# E = 62.5e3 # 0.0625 TPa
+# nu = 0.19
+# K = '${fparse E/3/(1-2*nu)}'
+# G = '${fparse E/2/(1+nu)}'
+# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+
+# Gc = 1.6e-2 # 1.6e-8 TPa.mm
+# # l = 0.35
+# l = 0.15
+# sigma_ts = 50
+# sigma_cs = 100
+# # delta = 0.89
+# # delta = 1.375
+# delta = -0.25
 
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
@@ -285,7 +285,7 @@ refine = 4
 
 [Outputs]
   exodus = true
-  file_base = 'surf_glass_l0.15_delta-0.25'
+  file_base = 'surf_c300_l1_delta4'
   print_linear_residuals = false
   interval = 1
 []
