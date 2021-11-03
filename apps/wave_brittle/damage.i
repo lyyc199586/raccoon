@@ -79,10 +79,11 @@
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
-    function = 'd^2'
+    # function = 'd^2' # AT2
+    function = 'd' # AT1
     phase_field = d
   []
-  [psi] # brittle ?
+  [psi] # brittle
     type = ADDerivativeParsedMaterial
     f_name = psi
     function = 'alpha*Gc/c0/l+g*psie_active'
@@ -104,12 +105,12 @@
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -snes_type'
+  petsc_options_value = 'lu vinewtonrsls'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-06
+  nl_abs_tol = 1e-08
 []
 
 [Outputs]

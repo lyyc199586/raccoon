@@ -45,7 +45,7 @@ delta = 4
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './gold/kal.msh'
+    file = './gold/kal_tri.msh'
   []
 []
 [Variables]
@@ -230,8 +230,8 @@ delta = 4
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  # dt = 5e-7
-  dt = 5e-9
+  dt = 5e-7
+  # dt = 5e-9
   end_time = 9e-5 # 90 us
 
     [TimeIntegrator]
@@ -240,8 +240,8 @@ delta = 4
     # use_constant_mass = true # need to set to be false
 
     type = NewmarkBeta
-    # gamma = '${fparse 5/6}'
-    # beta = '${fparse 4/9}'
+    gamma = '${fparse 5/6}'
+    beta = '${fparse 4/9}'
     []
   # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
@@ -255,9 +255,9 @@ delta = 4
 []
 [Outputs]
 #  file_base = 'exodusfiles/kalthoff/kal_elastic_v200_HHT'
-  file_base = './kal_l1_delta4_c10'
+  file_base = './kal_l1_delta4_c5'
   print_linear_residuals = false
   exodus = true
-  # interval = 5
-  interval = 100
+  interval = 5
+  # interval = 100
 []
