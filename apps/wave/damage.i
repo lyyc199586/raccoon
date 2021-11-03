@@ -79,7 +79,7 @@
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
-    function = 'd^2'
+    function = 'd'
     phase_field = d
   []
   # [psi] # brittle ?

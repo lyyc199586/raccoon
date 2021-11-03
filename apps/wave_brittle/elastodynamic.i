@@ -113,33 +113,66 @@ delta = 4
   []
 []
 
+[Functions]
+  [right_force_bc_func]
+    type = ParsedFunction
+    value = 'if(t<T, amp*sin(pi*t/T), 0)'
+    vars = 'amp T'
+    vals = '-750 1e-4'
+  []
+  [left_force_bc_func]
+    type = ParsedFunction
+    value = 'if(t<T, amp*sin(pi*t/T), 0)'
+    vars = 'amp T'
+    vals = '-750 1e-4'
+  []
+[]
+
 [BCs]
+  # [leftBC]
+  #   # type = ADFunctionDirichletBC
+  #   type = ADFunctionNeumannBC
+  #   variable = disp_x
+  #   boundary = left
+  #   beta = 0.25
+  #   # function = 'if(t<=1e-6, 1e-6/pi*cos(pi*1e6*t), -1e-6/pi)'
+  #   function = 'if(t<=1e-4, -0.2*sin(1e4*pi*t), 0)'
+  #   # function = '1e-6/pi*cos(pi*1e5*t)'
+  #   # function = '-0.2*sin(pi*t)'
+  #   velocity = vel_x
+  #   acceleration = accel_x
+  # []
+  # [rightBC]
+  #   # type = ADFunctionDirichletBC
+  #   type = ADFunctionNeumannBC
+  #   variable = disp_x
+  #   boundary = right
+  #   beta = 0.25
+  #   # function = 'if(t<=1e-6, -1e-6/pi*cos(pi*1e6*t), 1e-6/pi)'
+  #   # # function = '-1e-6/pi*cos(pi*1e5*t)'
+  #   function = 'if(t<=1e-4, 0.2*sin(1e4*pi*t), 0)'
+  #   # function = '0.2*sin(pi*t)'
+  #   # function = '0.01*t'
+  #   velocity = vel_x
+  #   acceleration = accel_x
+  # []
   [leftBC]
-    # type = ADFunctionDirichletBC
-    type = ADFunctionNeumannBC
+    type = ADPressure
     variable = disp_x
+    component = 0
     boundary = left
-    beta = 0.25
-    # function = 'if(t<=1e-6, 1e-6/pi*cos(pi*1e6*t), -1e-6/pi)'
-    function = 'if(t<=1e-4, -0.2*sin(1e4*pi*t), 0)'
-    # function = '1e-6/pi*cos(pi*1e5*t)'
-    # function = '-0.2*sin(pi*t)'
-    velocity = vel_x
-    acceleration = accel_x
+    function = left_force_bc_func
+    # velocity = vel_x
+    # acceleration = accel_x
   []
   [rightBC]
-    # type = ADFunctionDirichletBC
-    type = ADFunctionNeumannBC
+    type = ADPressure
     variable = disp_x
+    component = 0
     boundary = right
-    beta = 0.25
-    # function = 'if(t<=1e-6, -1e-6/pi*cos(pi*1e6*t), 1e-6/pi)'
-    # # function = '-1e-6/pi*cos(pi*1e5*t)'
-    function = 'if(t<=1e-4, 0.2*sin(1e4*pi*t), 0)'
-    # function = '0.2*sin(pi*t)'
-    # function = '0.01*t'
-    velocity = vel_x
-    acceleration = accel_x
+    function = right_force_bc_func
+    # velocity = vel_x
+    # acceleration = accel_x
   []
 []
 
@@ -181,7 +214,7 @@ delta = 4
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
-    function = 'd'
+    function = 'd^2'
     phase_field = d
   []
   [denstiy]
@@ -207,8 +240,10 @@ delta = 4
   start_time = 0
   # end_time = 5e-6 # 5 us
   # dt = 5e-8       # 0.05 us
-  end_time = 2e-3 # 1 ms
-  dt = 1e-5       # 0.05 us
+  # end_time = 2e-3 # 1 ms
+  end_time = 1.4e-4
+  # dt = 1e-5       # 0.05 us
+  dt = 1e-6
 
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
@@ -259,7 +294,7 @@ delta = 4
 
 [Outputs]
   exodus = true
-  file_base = 'wave_c300_brittle'
+  file_base = 'wave_c300_at1'
   interval = 1
   [./csv]
     type = CSV 
