@@ -69,3 +69,7 @@ Surface Loop(1) = {1, 2, 3, 4, 5, 6, 7, 8};
 Volume(1) = {1};
 
 Physical Volume("all") = {1};
+
+Geometry.PointNumbers = 1;
+Geometry.LineNumbers = 1;
+Geometry.SurfaceNumbers = 1;
