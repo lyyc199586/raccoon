@@ -7,7 +7,7 @@
 
 Gc = 22.2
 # l = 0.35
-l = 1
+l = 1.5
 # psic = 7.9
 E = 1.9e5
 nu = 0.3
@@ -16,10 +16,10 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-sigma_ts = 1158 # MPa
-sigma_cs = 5840 # MPa
+# sigma_ts = 1158 # MPa
+# sigma_cs = 5840 # MPa
 # sigma_cs = 10340
-delta = 4
+# delta = 4
 
 [MultiApps]
   [damage]
@@ -118,13 +118,13 @@ delta = 4
     type = ParsedFunction
     value = 'if(t<T, amp*sin(pi*t/T), 0)'
     vars = 'amp T'
-    vals = '-750 1e-4'
+    vals = '-600 1e-4'
   []
   [left_force_bc_func]
     type = ParsedFunction
     value = 'if(t<T, amp*sin(pi*t/T), 0)'
     vars = 'amp T'
-    vals = '-750 1e-4'
+    vals = '-600 1e-4'
   []
 []
 
@@ -214,7 +214,7 @@ delta = 4
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
-    function = 'd^2'
+    function = 'd'
     phase_field = d
   []
   [denstiy]

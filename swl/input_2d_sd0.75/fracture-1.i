@@ -10,6 +10,10 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 ###############################################################################
 
+# [Problem]
+#   coord_type = RZ
+# []
+
 [MultiApps]
   [./elastodynamic]
     type = TransientMultiApp
@@ -40,7 +44,7 @@ G = '${fparse E/2/(1+nu)}'
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/3d/inner_coarse.msh'
+     file = '../mesh/2d/inner.msh'
    [../]
 []
 
