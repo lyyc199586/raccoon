@@ -7,7 +7,7 @@
 
 Gc = 22.2
 # l = 0.35
-l = 1
+l = 1.5
 psic = 7.9
 E = 1.9e5
 nu = 0.3
@@ -52,18 +52,28 @@ delta = 4
 
 [Mesh]
   type = GeneratedMesh
-  dim = 1
+  dim = 3
   nx = 2000
+  ny = 1
+  nz = 1
   xmin = 0.0
   xmax = 1000
+  ymin = 0
+  ymax = 1
+  zmin = 0
+  zmax = 1
 []
 
 [GlobalParams]
-  displacements = 'disp_x'
+  displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
   [disp_x]
+  []
+  [disp_y]
+  []
+  [disp_z]
   []
 []
 
@@ -71,6 +81,14 @@ delta = 4
   [accel_x]
   []
   [vel_x]
+  []
+  [accel_y]
+  []
+  [vel_y]
+  []
+  [accel_z]
+  []
+  [vel_z]
   []
   [d]
   []
@@ -85,10 +103,42 @@ delta = 4
     # stiffness_damping_coefficient = 0.000025
   []
   [inertia_x] # M*accel + eta*M*vel
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_x
     velocity = vel_x
     acceleration = accel_x
+    beta = 0.25 # Newmark time integration
+    gamma = 0.5 # Newmark time integration
+    eta = 0.0
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    displacements = 'disp_y'
+    component = 1
+    # stiffness_damping_coefficient = 0.000025
+  []
+  [inertia_y] # M*accel + eta*M*vel
+    type = InertialForce
+    variable = disp_y
+    velocity = vel_y
+    acceleration = accel_y
+    beta = 0.25 # Newmark time integration
+    gamma = 0.5 # Newmark time integration
+    eta = 0.0
+  []
+  [solid_z]
+    type = ADStressDivergenceTensors
+    variable = disp_z
+    displacements = 'disp_z'
+    component = 2
+    # stiffness_damping_coefficient = 0.000025
+  []
+  [inertia_z] # M*accel + eta*M*vel
+    type = InertialForce
+    variable = disp_z
+    velocity = vel_z
+    acceleration = accel_z
     beta = 0.25 # Newmark time integration
     gamma = 0.5 # Newmark time integration
     eta = 0.0
@@ -111,6 +161,36 @@ delta = 4
     gamma = 0.5
     execute_on = timestep_end
   []
+  [accel_y] # Calculates and stores acceleration at the end of time step
+    type = NewmarkAccelAux
+    variable = accel_y
+    displacement = disp_y
+    velocity = vel_y
+    beta = 0.25
+    execute_on = timestep_end
+  []
+  [vel_y] # Calculates and stores velocity at the end of the time step
+    type = NewmarkVelAux
+    variable = vel_y
+    acceleration = accel_y
+    gamma = 0.5
+    execute_on = timestep_end
+  []
+  [accel_z] # Calculates and stores acceleration at the end of time step
+    type = NewmarkAccelAux
+    variable = accel_z
+    displacement = disp_z
+    velocity = vel_z
+    beta = 0.25
+    execute_on = timestep_end
+  []
+  [vel_z] # Calculates and stores velocity at the end of the time step
+    type = NewmarkVelAux
+    variable = vel_z
+    acceleration = accel_z
+    gamma = 0.5
+    execute_on = timestep_end
+  []
 []
 
 [Functions]
@@ -118,13 +198,13 @@ delta = 4
     type = ParsedFunction
     value = 'if(t<T, amp*sin(pi*t/T), 0)'
     vars = 'amp T'
-    vals = '-0.2 1e-4'
+    vals = '-574.3875 1e-4'
   []
   [left_force_bc_func]
     type = ParsedFunction
     value = 'if(t<T, amp*sin(pi*t/T), 0)'
     vars = 'amp T'
-    vals = '-0.2 1e-4'
+    vals = '-574.3875 1e-4'
   []
 []
 
@@ -179,8 +259,8 @@ delta = 4
 [Materials]
   [bulk]
     type = ADGenericConstantMaterial
-    prop_names = 'density E K G lambda Gc l psic'
-    prop_values = '${rho} ${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${psic}'
+    prop_names = 'E K G lambda Gc l psic'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${psic}'
   []
   # [degradation]
   #   type = PowerDegradationFunction
@@ -202,7 +282,7 @@ delta = 4
   [strain]
     type = ADComputeSmallStrain
     # block = 0
-    displacements = 'disp_x'
+    # displacements = 'disp_x'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -226,12 +306,12 @@ delta = 4
     function = 'd'
     phase_field = d
   []
-  # [denstiy]
-  #   type = GenericConstantMaterial
-  #   block = 0
-  #   prop_names = 'rho'
-  #   prop_values = '${rho}'
-  # []
+  [denstiy]
+    type = GenericConstantMaterial
+    block = 0
+    prop_names = density
+    prop_values = '${rho}'
+  []
   # [kumar_material]
   #   type = NucleationMicroForce
   #   normalization_constant = c0
@@ -249,8 +329,8 @@ delta = 4
   start_time = 0
   # end_time = 5e-6 # 5 us
   # dt = 5e-8       # 0.05 us
-  end_time = 2e-3 # 1 ms
-  dt = 1e-5       # 0.05 us
+  end_time = 1.6e-4 # 1 ms
+  dt = 1e-6       # 0.05 us
 
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
@@ -260,10 +340,10 @@ delta = 4
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  fixed_point_max_its = 20
+  fixed_point_max_its = 100
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-8
-  fixed_point_abs_tol = 1e-10
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 []
 
 [Postprocessors]
@@ -287,6 +367,11 @@ delta = 4
     point = '1000 0 0'
     variable = stress_00
   []
+  [stress_x_middle]
+    type = PointValue
+    point = '500 0 0'
+    variable = stress_00
+  []
   [pf_d_right]
     type = PointValue
     point = '1000 0 0'
@@ -301,7 +386,7 @@ delta = 4
 
 [Outputs]
   exodus = true
-  file_base = 'wave_c300_cohesive'
+  file_base = 'wave_c300_cohesive_3d'
   interval = 1
   [./csv]
     type = CSV 

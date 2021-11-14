@@ -22,7 +22,7 @@ Physical Line("bottom") = {1};
 Physical Line("top") = {3};
 Physical Line("axial") = {4};
 Physical Line("curved") = {2};
-Physical Line("outer_BC") = {1, 2, 3}
+Physical Line("outer_BC") = {1, 2, 3};
 
 Geometry.PointNumbers = 1;
 Geometry.LineNumbers = 1;

@@ -17,6 +17,7 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 sigma_ts = 1158 # MPa
+# sigma_ts = 1900
 sigma_cs = 5840 # MPa
 # sigma_cs = 10340
 delta = 4
@@ -52,18 +53,28 @@ delta = 4
 
 [Mesh]
   type = GeneratedMesh
-  dim = 1
+  dim = 3
   nx = 2000
+  ny = 1
+  nz = 1
   xmin = 0.0
   xmax = 1000
+  ymin = 0
+  ymax = 1
+  zmin = 0
+  zmax = 1
 []
 
 [GlobalParams]
-  displacements = 'disp_x'
+  displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
   [disp_x]
+  []
+  [disp_y]
+  []
+  [disp_z]
   []
 []
 
@@ -71,6 +82,14 @@ delta = 4
   [accel_x]
   []
   [vel_x]
+  []
+  [accel_y]
+  []
+  [vel_y]
+  []
+  [accel_z]
+  []
+  [vel_z]
   []
   [d]
   []
@@ -93,6 +112,38 @@ delta = 4
     gamma = 0.5 # Newmark time integration
     eta = 0.0
   []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    displacements = 'disp_y'
+    component = 1
+    # stiffness_damping_coefficient = 0.000025
+  []
+  [inertia_y] # M*accel + eta*M*vel
+    type = InertialForce
+    variable = disp_y
+    velocity = vel_y
+    acceleration = accel_y
+    beta = 0.25 # Newmark time integration
+    gamma = 0.5 # Newmark time integration
+    eta = 0.0
+  []
+  [solid_z]
+    type = ADStressDivergenceTensors
+    variable = disp_z
+    displacements = 'disp_z'
+    component = 2
+    # stiffness_damping_coefficient = 0.000025
+  []
+  [inertia_z] # M*accel + eta*M*vel
+    type = InertialForce
+    variable = disp_z
+    velocity = vel_z
+    acceleration = accel_z
+    beta = 0.25 # Newmark time integration
+    gamma = 0.5 # Newmark time integration
+    eta = 0.0
+  []
 []
 
 [AuxKernels]
@@ -111,6 +162,36 @@ delta = 4
     gamma = 0.5
     execute_on = timestep_end
   []
+  [accel_y] # Calculates and stores acceleration at the end of time step
+    type = NewmarkAccelAux
+    variable = accel_y
+    displacement = disp_y
+    velocity = vel_y
+    beta = 0.25
+    execute_on = timestep_end
+  []
+  [vel_y] # Calculates and stores velocity at the end of the time step
+    type = NewmarkVelAux
+    variable = vel_y
+    acceleration = accel_y
+    gamma = 0.5
+    execute_on = timestep_end
+  []
+  [accel_z] # Calculates and stores acceleration at the end of time step
+    type = NewmarkAccelAux
+    variable = accel_z
+    displacement = disp_z
+    velocity = vel_z
+    beta = 0.25
+    execute_on = timestep_end
+  []
+  [vel_z] # Calculates and stores velocity at the end of the time step
+    type = NewmarkVelAux
+    variable = vel_z
+    acceleration = accel_z
+    gamma = 0.5
+    execute_on = timestep_end
+  []
 []
 
 [Functions]
@@ -118,13 +199,13 @@ delta = 4
     type = ParsedFunction
     value = 'if(t<T, amp*sin(pi*t/T), 0)'
     vars = 'amp T'
-    vals = '-600 1e-4'
+    vals = '-574.385 1e-4'
   []
   [left_force_bc_func]
     type = ParsedFunction
     value = 'if(t<T, amp*sin(pi*t/T), 0)'
     vars = 'amp T'
-    vals = '-600 1e-4'
+    vals = '-574.385 1e-4'
   []
 []
 
@@ -241,7 +322,7 @@ delta = 4
   # end_time = 5e-6 # 5 us
   # dt = 5e-8       # 0.05 us
   # end_time = 2e-3 # 1 ms
-  end_time = 1.4e-4 # 0.2 us
+  end_time = 6e-4 # 0.2 us
   # dt = 1e-5       # 0.05 us
   dt = 1e-6
 
@@ -250,8 +331,8 @@ delta = 4
   petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
   fixed_point_max_its = 100
   accept_on_max_fixed_point_iteration = true
@@ -294,7 +375,7 @@ delta = 4
 
 [Outputs]
   exodus = true
-  file_base = 'wave_c300_kumar'
+  file_base = 'wave_c300_kumar_3d'
   interval = 1
   # interval = 5
   [./csv]

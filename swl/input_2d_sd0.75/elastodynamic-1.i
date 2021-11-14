@@ -1,12 +1,15 @@
 [GlobalParams]
-  displacements = 'disp_x disp_y disp_z'
+  displacements = 'disp_x disp_y'
 []
 
+# [Problem]
+#   coord_type = RZ
+# []
 
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/3d/inner_coarse.msh'
+     file = '../mesh/2d/inner.msh'
    [../]
 []
 
@@ -64,9 +67,9 @@
 [Variables]
   [./disp_x]
   [../]
+  # [./disp_y]
+  # [../]
   [./disp_y]
-  [../]
-  [./disp_z]
   [../]
 []
 
@@ -93,11 +96,11 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
+  # [./stress_yy]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # [../]
   [./stress_yy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./stress_zz]
     order = CONSTANT
     family = MONOMIAL
   [../]
@@ -113,32 +116,32 @@
   [./solid_x]
      type = ADStressDivergenceTensors
      variable = 'disp_x'
-     displacements = 'disp_x disp_y disp_z'
+    #  displacements = 'disp_r disp_z'
      component = 0
   [../]
+  # [./solid_y]
+  #    type = ADStressDivergenceTensors
+  #    variable = 'disp_y'
+  #    displacements = 'disp_x disp_y disp_z'
+  #    component = 1
+  # [../]
   [./solid_y]
      type = ADStressDivergenceTensors
      variable = 'disp_y'
-     displacements = 'disp_x disp_y disp_z'
+    #  displacements = 'disp_r disp_z'
      component = 1
-  [../]
-  [./solid_z]
-     type = ADStressDivergenceTensors
-     variable = 'disp_z'
-     displacements = 'disp_x disp_y disp_z'
-     component = 2
   [../]
   [./inertia_x]
     type = InertialForce
     variable = 'disp_x'
   [../]
+  # [./inertia_y]
+  #   type = InertialForce
+  #   variable = 'disp_y'
+  # [../]
   [./inertia_y]
     type = InertialForce
     variable = 'disp_y'
-  [../]
-  [./inertia_z]
-    type = InertialForce
-    variable = 'disp_z'
   [../]
 []
 
@@ -183,20 +186,20 @@
     index_j = 0
     execute_on = 'TIMESTEP_END'
   [../]
+  # [./stress_yy]
+  #   type = ADRankTwoAux
+  #   variable = 'stress_yy'
+  #   rank_two_tensor = 'stress'
+  #   index_i = 1
+  #   index_j = 1
+  #   execute_on = 'TIMESTEP_END'
+  # [../]
   [./stress_yy]
     type = ADRankTwoAux
     variable = 'stress_yy'
     rank_two_tensor = 'stress'
     index_i = 1
     index_j = 1
-    execute_on = 'TIMESTEP_END'
-  [../]
-  [./stress_zz]
-    type = ADRankTwoAux
-    variable = 'stress_zz'
-    rank_two_tensor = 'stress'
-    index_i = 2
-    index_j = 2
     execute_on = 'TIMESTEP_END'
   [../]
   [./psie_active]
@@ -215,19 +218,19 @@
     pressure = 'pre_wave'
     component = 0
   [../]
+  # [./curved_y]
+  #   type = CoupledPressureBC
+  #   variable = 'disp_y'
+  #   boundary = 'curved'
+  #   pressure = 'pre_wave'
+  #   component = 1
+  # [../]
   [./curved_y]
     type = CoupledPressureBC
     variable = 'disp_y'
     boundary = 'curved'
     pressure = 'pre_wave'
     component = 1
-  [../]
-  [./curved_z]
-    type = CoupledPressureBC
-    variable = 'disp_z'
-    boundary = 'curved'
-    pressure = 'pre_wave'
-    component = 2
   [../]
   [./top_y]
     type = CoupledPressureBC
@@ -243,18 +246,18 @@
     pressure = 'pre_wave'
     component = 1
   [../]
-  [./left_x]
+  [./axial_x]
     type = DirichletBC
     variable = 'disp_x'
-    boundary = 'left'
+    boundary = 'axial'
     value = 0
   [../]
-  [./back_z]
-    type = DirichletBC
-    variable = 'disp_z'
-    boundary = 'back'
-    value = 0
-  [../]
+  # [./back_z]
+  #   type = DirichletBC
+  #   variable = 'disp_z'
+  #   boundary = 'back'
+  #   value = 0
+  # [../]
 []
 
 # Bogostone material properties
@@ -298,6 +301,7 @@
   []
   [stress]
     type = ComputeSmallDeformationStress
+    # type = ADComputeLinearElasticStress
     elasticity_model = elasticity
     output_properties = 'stress'
     # outputs = exodus

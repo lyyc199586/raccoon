@@ -1,9 +1,13 @@
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/3d/outer_coarse.msh'
+     file = '../mesh/2d/outer.msh'
    [../]
 []
+
+# [Problem]
+#   coord_type = RZ
+# []
 
 [Variables]
   [./p]
@@ -18,8 +22,6 @@
   [./accel_x]
   [../]
   [./accel_y]
-  [../]
-  [./accel_z]
   [../]
 []
 
