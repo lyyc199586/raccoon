@@ -106,16 +106,37 @@
   []
 []
 
+[Preconditioning]
+  active = 'smp'
+  [./smp]
+    type = SMP
+    full = true
+  [../]
+[]
+
 [Executioner]
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels -snes_type'
+  petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
   automatic_scaling = true
 
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-9
+  # nl_abs_tol = 1e-11
+
+  # solve_type = PJFNK
+  # petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
+  # petsc_options_value = 'asm      31                  preonly       lu           1'
+
+  # l_max_its = 20
+  # nl_max_its = 20
+  
+  # l_tol = 1e-9
 []
 
 [Outputs]

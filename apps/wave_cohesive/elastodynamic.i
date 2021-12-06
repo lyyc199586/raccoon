@@ -6,9 +6,10 @@
 # The last term on the left is evaluated using StressDivergenceTensors
 
 Gc = 22.2
-# l = 0.35
-l = 1.5
-psic = 7.9
+# l = 0.13
+l = 0.35
+# psic = 7.9
+psic = 2.5
 E = 1.9e5
 nu = 0.3
 rho = 8e-9 # [Mg/mm^3]
@@ -98,7 +99,7 @@ delta = 4
   [solid_x]
     type = ADStressDivergenceTensors
     variable = disp_x
-    displacements = 'disp_x'
+    displacements = 'disp_x disp_y disp_z'
     component = 0
     # stiffness_damping_coefficient = 0.000025
   []
@@ -114,7 +115,7 @@ delta = 4
   [solid_y]
     type = ADStressDivergenceTensors
     variable = disp_y
-    displacements = 'disp_y'
+    displacements = 'disp_x disp_y disp_z'
     component = 1
     # stiffness_damping_coefficient = 0.000025
   []
@@ -130,7 +131,7 @@ delta = 4
   [solid_z]
     type = ADStressDivergenceTensors
     variable = disp_z
-    displacements = 'disp_z'
+    displacements = 'disp_x disp_y disp_z'
     component = 2
     # stiffness_damping_coefficient = 0.000025
   []
@@ -196,15 +197,15 @@ delta = 4
 [Functions]
   [right_force_bc_func]
     type = ParsedFunction
-    value = 'if(t<T, amp*sin(pi*t/T), 0)'
+    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
     vars = 'amp T'
-    vals = '-574.3875 1e-4'
+    vals = '-580.5 1e-4'
   []
   [left_force_bc_func]
     type = ParsedFunction
-    value = 'if(t<T, amp*sin(pi*t/T), 0)'
+    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
     vars = 'amp T'
-    vals = '-574.3875 1e-4'
+    vals = '-580.5 1e-4'
   []
 []
 
@@ -290,7 +291,8 @@ delta = 4
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = NONE
+    # decomposition = NONE
+    decomposition = SPECTRAL
     output_properties = 'elastic_strain psie_active'
     outputs = exodus
   []
@@ -324,27 +326,52 @@ delta = 4
   # []
 []
 
+[Preconditioning]
+  active = 'smp'
+  [./smp]
+    type = SMP
+    full = true
+  [../]
+[]
+
 [Executioner]
   type = Transient
+  solve_type = PJFNK
+  petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
+  petsc_options_value = 'asm      31                  preonly       lu           1'
   start_time = 0
-  # end_time = 5e-6 # 5 us
-  # dt = 5e-8       # 0.05 us
-  end_time = 1.6e-4 # 1 ms
-  dt = 1e-6       # 0.05 us
-
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  automatic_scaling = true
-
+  end_time = 1e-3
+  # end_time = 5.5e-4
+  l_max_its = 50
+  nl_max_its = 20
+  # l_tol = 1e-9
+  # nl_rel_tol = 1e-12
+  l_tol = 1e-6
   nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  fixed_point_max_its = 100
-  accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  dt = 1e-6
 []
+
+# [Executioner]
+#   type = Transient
+#   start_time = 0
+#   # end_time = 5e-6 # 5 us
+#   # dt = 5e-8       # 0.05 us
+#   end_time = 1.6e-4 # 1 ms
+#   dt = 1e-6       # 0.05 us
+
+#   solve_type = NEWTON
+#   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+#   petsc_options_value = 'lu       superlu_dist                 '
+#   automatic_scaling = true
+
+#   nl_rel_tol = 1e-8
+#   nl_abs_tol = 1e-10
+
+#   fixed_point_max_its = 100
+#   accept_on_max_fixed_point_iteration = true
+#   fixed_point_rel_tol = 1e-6
+#   fixed_point_abs_tol = 1e-8
+# []
 
 [Postprocessors]
   [disp_x_rightBC]
@@ -361,11 +388,6 @@ delta = 4
     type = PointValue
     point = '1000 0 0'
     variable = accel_x
-  []
-  [stress_x_rightBC]
-    type = PointValue
-    point = '1000 0 0'
-    variable = stress_00
   []
   [stress_x_middle]
     type = PointValue
@@ -386,7 +408,7 @@ delta = 4
 
 [Outputs]
   exodus = true
-  file_base = 'wave_c300_cohesive_3d'
+  file_base = 'wave_c300_cohesive_0.25T'
   interval = 1
   [./csv]
     type = CSV 
