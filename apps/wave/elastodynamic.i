@@ -99,7 +99,7 @@ delta = 4
   [solid_x]
     type = ADStressDivergenceTensors
     variable = disp_x
-    displacements = 'disp_x'
+    displacements = 'disp_x disp_y disp_z'
     component = 0
     # stiffness_damping_coefficient = 0.000025
   []
@@ -115,7 +115,7 @@ delta = 4
   [solid_y]
     type = ADStressDivergenceTensors
     variable = disp_y
-    displacements = 'disp_y'
+    displacements = 'disp_x disp_y disp_z'
     component = 1
     # stiffness_damping_coefficient = 0.000025
   []
@@ -131,7 +131,7 @@ delta = 4
   [solid_z]
     type = ADStressDivergenceTensors
     variable = disp_z
-    displacements = 'disp_z'
+    displacements = 'disp_x disp_y disp_z'
     component = 2
     # stiffness_damping_coefficient = 0.000025
   []
@@ -197,16 +197,21 @@ delta = 4
 [Functions]
   [right_force_bc_func]
     type = ParsedFunction
-    value = 'if(t<T, amp*sin(pi*t/T), 0)'
+    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
     vars = 'amp T'
-    vals = '-574.385 1e-4'
+    vals = '-569.5 1e-4'
   []
   [left_force_bc_func]
     type = ParsedFunction
-    value = 'if(t<T, amp*sin(pi*t/T), 0)'
+    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
     vars = 'amp T'
-    vals = '-574.385 1e-4'
+    vals = '-569.5 1e-4'
   []
+  # [timestepper]
+  #   type = PiecewiseLinear
+  #   x = '0    1e-4 1.1e-4 1.13e-4 1.5e-4'
+  #   y = '1e-6 1e-6 1e-8   1e-8    1e-6'
+  # []
 []
 
 [BCs]
@@ -269,7 +274,7 @@ delta = 4
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 1e-6'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -316,28 +321,59 @@ delta = 4
   []
 []
 
+# [Executioner]
+#   type = Transient
+#   start_time = 0
+#   # end_time = 5e-6 # 5 us
+#   # dt = 5e-8       # 0.05 us
+#   # end_time = 2e-3 # 1 ms
+#   end_time = 1.5e-4 # 0.2 us
+#   # dt = 1e-5       # 0.05 us
+#   dt = 1e-6
+#   # [TimeStepper]
+#   #   type = FunctionDT
+#   #   function = timestepper
+#   #   # dt = 0.001
+#   # []
+
+#   automatic_scaling = true
+
+#   solve_type = NEWTON
+#   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+#   petsc_options_value = 'asm       superlu_dist                 '
+
+#   nl_rel_tol = 1e-6
+#   nl_abs_tol = 1e-8
+
+#   fixed_point_max_its = 20
+#   accept_on_max_fixed_point_iteration = false
+#   fixed_point_rel_tol = 1e-6
+#   fixed_point_abs_tol = 1e-8
+# []
+
+[Preconditioning]
+  active = 'smp'
+  [./smp]
+    type = SMP
+    full = true
+  [../]
+[]
+
 [Executioner]
   type = Transient
+  solve_type = PJFNK
+  petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
+  petsc_options_value = 'asm      31                  preonly       lu           1'
   start_time = 0
-  # end_time = 5e-6 # 5 us
-  # dt = 5e-8       # 0.05 us
-  # end_time = 2e-3 # 1 ms
-  end_time = 6e-4 # 0.2 us
-  # dt = 1e-5       # 0.05 us
+  # end_time = 1e-3
+  end_time = 6e-4
+  l_max_its = 50
+  nl_max_its = 20
+  # l_tol = 1e-9
+  # nl_rel_tol = 1e-12
+  l_tol = 1e-6
+  nl_rel_tol = 1e-8
   dt = 1e-6
-
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-
-  fixed_point_max_its = 100
-  accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
 []
 
 [Postprocessors]
@@ -356,9 +392,9 @@ delta = 4
     point = '1000 0 0'
     variable = accel_x
   []
-  [stress_x_rightBC]
+  [stress_x_middle]
     type = PointValue
-    point = '1000 0 0'
+    point = '500 0 0'
     variable = stress_00
   []
   [pf_d_right]
@@ -375,7 +411,7 @@ delta = 4
 
 [Outputs]
   exodus = true
-  file_base = 'wave_c300_kumar_3d'
+  file_base = 'wave_c300_kumar_0.25T'
   interval = 1
   # interval = 5
   [./csv]
