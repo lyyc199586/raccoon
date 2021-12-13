@@ -1,9 +1,6 @@
 ## graphite
 # E = 9.8e3 # 9.8 GPa
 # nu = 0.13
-# K = '${fparse E/3/(1-2*nu)}'
-# G = '${fparse E/2/(1+nu)}'
-# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 # Gc = 9.1e-2 # 91 N/m
 # l = 0.35
@@ -15,9 +12,6 @@
 ## titania
 # E = 250e3 # 250 Gpa
 # nu = 0.29
-# K = '${fparse E/3/(1-2*nu)}'
-# G = '${fparse E/2/(1+nu)}'
-# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 # Gc = 3.6e-2 # 36 N/m
 # l = 0.35
@@ -27,25 +21,19 @@
 ## ------------------
 
 ## c-300 steel
-E = 190e3 # 190 Gpa
-nu = 0.3
-K = '${fparse E/3/(1-2*nu)}'
-G = '${fparse E/2/(1+nu)}'
-Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+# E = 190e3 # 190 Gpa
+# nu = 0.3
 
-Gc = 22.2 # 22.2 N/mm
-l = 1
-sigma_ts = 1158
-sigma_cs = 5280 # 11580
-delta = 4
+# Gc = 22.2 # 22.2 N/mm
+# l = 1
+# sigma_ts = 1158
+# sigma_cs = 5280 # 11580
+# delta = 4
 ## -------------------
 
 ## glass
 # E = 62.5e3 # 0.0625 TPa
 # nu = 0.19
-# K = '${fparse E/3/(1-2*nu)}'
-# G = '${fparse E/2/(1+nu)}'
-# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 # Gc = 1.6e-2 # 1.6e-8 TPa.mm
 # # l = 0.35
@@ -56,6 +44,22 @@ delta = 4
 # # delta = 1.375
 # delta = -0.25
 
+# dynamic branching
+
+E = 32e3 # 32 GPa
+nu = 0.2
+rho = 2.54e-9 # Mg/mm^3
+Gc = 0.003
+sigma_ts = 3.08 # MPa
+sigma_cs = 30.8
+# psic = '${fparse sigma_ts^2/2/E}'
+l = 1.5 # L = 1.25mm, l_ch = 11 mm
+delta = 5
+# ---------------------------------
+
+K = '${fparse E/3/(1-2*nu)}'
+G = '${fparse E/2/(1+nu)}'
+Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
@@ -285,7 +289,10 @@ refine = 4
 
 [Outputs]
   exodus = true
-  file_base = 'surf_c300_l1_delta4'
+  file_base = 'surf_branch_l1.5_delta5'
   print_linear_residuals = false
   interval = 1
+  [./csv]
+    type = CSV 
+  [../]
 []
