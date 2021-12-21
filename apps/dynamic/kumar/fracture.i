@@ -2,10 +2,10 @@
   [gen]
     type = GeneratedMeshGenerator
     dim = 2
-    # nx = 400
-    # ny = 160
-    nx = 800
-    ny = 320
+    nx = 400
+    ny = 160
+    # nx = 800
+    # ny = 320
     xmin = 0
     xmax = 100
     ymin = -20
@@ -36,19 +36,19 @@
 []
 
 [Bounds]
-  # [irreversibility]
-  #   type = VariableOldValueBoundsAux
-  #   variable = bounds_dummy
-  #   bounded_variable = d
-  #   bound_type = lower
-  # []
-  [conditional]
-    type = ConditionalBoundsAux
-    variable = 'bounds_dummy'
-    bounded_variable = 'd'
-    fixed_bound_value = 0
-    threshold_value = 0.95
+  [irreversibility]
+    type = VariableOldValueBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = lower
   []
+  # [conditional]
+  #   type = ConditionalBoundsAux
+  #   variable = 'bounds_dummy'
+  #   bounded_variable = 'd'
+  #   fixed_bound_value = 0
+  #   threshold_value = 0.95
+  # []
   [upper]
     type = ConstantBoundsAux
     variable = bounds_dummy
@@ -125,7 +125,9 @@
 
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'ilu       superlu_dist                  vinewtonrsls'
+  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -snes_type'
+  # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
   nl_rel_tol = 1e-8
