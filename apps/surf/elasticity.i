@@ -53,8 +53,8 @@ Gc = 0.003
 sigma_ts = 3.08 # MPa
 sigma_cs = 30.8
 # psic = '${fparse sigma_ts^2/2/E}'
-l = 1.5 # L = 1.25mm, l_ch = 11 mm
-delta = 5
+l = 2 # L = 1.25mm, l_ch = 11 mm
+delta = 4.75
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -289,7 +289,7 @@ refine = 4
 
 [Outputs]
   exodus = true
-  file_base = 'surf_branch_l1.5_delta5'
+  file_base = 'surf_branch_l2_delta4.5'
   print_linear_residuals = false
   interval = 1
   [./csv]

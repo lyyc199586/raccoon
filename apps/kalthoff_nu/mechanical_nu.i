@@ -9,10 +9,10 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-sigma_ts = 1158 # MPa
+sigma_ts = 1733 # MPa
 # sigma_ts = 1852 # 1.6*1158, 2000
-sigma_cs = 5840 # MPa
-# sigma_cs = 10340
+# sigma_cs = 5840 # MPa
+sigma_cs = 17330
 delta = 4
 
 [GlobalParams]
@@ -238,9 +238,9 @@ delta = 4
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  dt = 5e-7
+  dt = 5e-8
   # dt = 5e-9
-  end_time = 9e-5 # 90 us
+  end_time = 2.1e-5 # 90 us
 
     [TimeIntegrator]
     # type = CentralDifference
@@ -251,21 +251,31 @@ delta = 4
     gamma = '${fparse 5/6}'
     beta = '${fparse 4/9}'
     []
-  # fixed_point_max_its = 20
-  # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
-
-  fixed_point_max_its = 100
+  fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
+
+  # fixed_point_max_its = 100
+  # accept_on_max_fixed_point_iteration = false
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
 []
 [Outputs]
 #  file_base = 'exodusfiles/kalthoff/kal_elastic_v200_HHT'
-  file_base = './kal_l1_delta4_c5'
+  file_base = './kal_l1_delta4_c10'
   print_linear_residuals = false
-  exodus = true
+  [./exodus]
+    type = Exodus
+    start_step = 400
+    end_step = 500
+  []
+  # sync_times = '2e-5 2.005e-5 2.01e-5 2.015e-5 2.02e-5 2.025e-5 2.03e-5'
   interval = 1
   # interval = 100
+  [./csv]
+    type = CSV 
+    # start_step = 400
+    # end_step = 500
+  [../]
 []

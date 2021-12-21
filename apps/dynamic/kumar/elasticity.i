@@ -47,10 +47,10 @@ delta = 4
   [gen]
     type = GeneratedMeshGenerator
     dim = 2
-    # nx = 400
-    # ny = 160
-    nx = 800
-    ny = 320
+    nx = 400
+    ny = 160
+    # nx = 800
+    # ny = 320
     xmin = 0
     xmax = 100
     ymin = -20
@@ -208,6 +208,8 @@ delta = 4
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type'
+  # petsc_options_value = 'asm'
   automatic_scaling = true
 
   nl_rel_tol = 1e-8
@@ -231,6 +233,9 @@ delta = 4
 [Outputs]
   exodus = true
   print_linear_residuals = false
-  file_base = './kumar_branch_fine'
-  interval = 2
+  file_base = './kumar_branch_irr'
+  interval = 1
+  [./csv]
+    type = CSV 
+  [../]
 []
