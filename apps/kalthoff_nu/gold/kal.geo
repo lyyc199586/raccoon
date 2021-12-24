@@ -44,3 +44,7 @@ Physical Line("load") = {1};
 Physical Line("bottom") = {8,9};
 //+
 Physical Curve("other") = {4, 5, 7, 6};
+
+Geometry.PointNumbers = 1;
+Geometry.LineNumbers = 1;
+Geometry.SurfaceNumbers = 1;
