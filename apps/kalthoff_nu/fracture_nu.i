@@ -1,11 +1,15 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = ./gold/kal_tri.msh
+    file = ./gold/kal_pd.msh
   []
 []
 [Variables]
   [d]
+    [InitialCondition]
+      type = FunctionIC
+      function = 'if(y=25&x>=0&x<=50,1,0)'
+    []
   []
 []
 [AuxVariables]
