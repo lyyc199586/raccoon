@@ -1,7 +1,7 @@
 Gc = 22.2
 # l = 0.35
 l = 1
-psic = 7.9
+# psic = 7.9
 E = 1.9e5
 nu = 0.3
 rho = 8e-9 # [Mg/mm^3]
@@ -10,9 +10,10 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 sigma_ts = 1733 # MPa
-# sigma_ts = 1852 # 1.6*1158, 2000
-# sigma_cs = 5840 # MPa
-sigma_cs = 17330
+# sigma_cs = 17330
+# sigma_cs = 8665
+# sigma_cs = 5199
+sigma_cs = 3466
 delta = 4
 
 [GlobalParams]
@@ -46,7 +47,7 @@ delta = 4
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './gold/kal_pd.msh'
+    file = './gold/kal.msh'
   []
 []
 [Variables]
@@ -239,6 +240,7 @@ delta = 4
   nl_abs_tol = 1e-10
 
   dt = 5e-8
+  # dt = 5e-9
   # end_time = 2.1e-5 
   end_time = 9e-5 # 90 us
 
@@ -253,17 +255,17 @@ delta = 4
     []
   # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
 
   fixed_point_max_its = 100
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
 []
 [Outputs]
 #  file_base = 'exodusfiles/kalthoff/kal_elastic_v200_HHT'
-  file_base = './kal_l1_delta4_c10_pd'
+  file_base = './kal_l1_delta4_c2'
   print_linear_residuals = false
   [./exodus]
     type = Exodus
@@ -271,7 +273,7 @@ delta = 4
     # end_step = 500
   []
   interval = 5
-  # interval = 100
+  # interval = 50
   [./csv]
     type = CSV 
     # start_step = 400
