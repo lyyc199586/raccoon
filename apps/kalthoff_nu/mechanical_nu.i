@@ -255,13 +255,13 @@ delta = 4
     []
   # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
 
   fixed_point_max_its = 100
   accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 []
 [Outputs]
 #  file_base = 'exodusfiles/kalthoff/kal_elastic_v200_HHT'
