@@ -1,13 +1,25 @@
 [Mesh]
-   [./fmg]
-     type = FileMeshGenerator
-     file = '../mesh/2d/outer.msh'
-   [../]
+  type = GeneratedMesh
+  dim = 2
+  xmin = 0
+  xmax = 3
+  ymin = 1
+  ymax = 4
+  nx = 100
+  ny = 100
 []
 
-# [Problem]
-#   coord_type = RZ
+# [Mesh]
+#    [./fmg]
+#      type = FileMeshGenerator
+#      file = '../mesh/2d/outer.msh'
+#    [../]
 # []
+
+
+[Problem]
+  coord_type = RZ
+[]
 
 [Variables]
   [./p]
@@ -41,8 +53,8 @@
   [./monopole_source]
     type = DiracSource
     variable = p
-    point = '0.0 1.75 0.0'
-    dim  = 3
+    point = '0 1.75 0'
+    dim  = 2
     #####################################
     fL = 8.33e-2
     t1 = 0.07
@@ -73,11 +85,21 @@
   [../]
 []
 
+[BCs]
+  [axial]
+    type = DiffusionFluxBC
+    variable = p
+    boundary = left
+  []
+[]
+
+
 [Postprocessors]
   [./p_1]
     type = PointValue
     variable = p
-    point = '0.0 1.01 0.0'
+    # point = '0.5 1.01 0.0'
+    point = '0 1.75 0'
   [../]
 []
 
@@ -91,6 +113,8 @@
   # automatic_scaling = true
   end_time = 2.1
   dt = 1.5e-3
+  # end_time = 1
+  # dt = 1e-3
   [TimeIntegrator]
     type = NewmarkBeta
   []
@@ -108,4 +132,3 @@
     file_base = fluid
   [../]
 []
-
