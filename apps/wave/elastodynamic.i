@@ -297,11 +297,13 @@ delta = 4
     output_properties = 'stress'
     outputs = exodus
   []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
-    phase_field = d
+  [crack_geometric] type = InertialForce
+    variable = disp_z
+    velocity = vel_z
+    acceleration = accel_z
+    beta = 0.25 # Newmark time integration
+    gamma = 0.5 # Newmark time integration
+    eta = 0.0
   []
   [denstiy]
     type = GenericConstantMaterial
