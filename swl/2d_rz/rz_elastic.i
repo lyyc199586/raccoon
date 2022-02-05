@@ -242,7 +242,7 @@
  [./exodus]
    type = Exodus
    interval = 50
-   file_base = solid-1
+   file_base = solid_dirac
  [../]
  [./console]
    type = Console

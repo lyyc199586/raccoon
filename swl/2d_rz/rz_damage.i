@@ -174,6 +174,6 @@ G = '${fparse E/2/(1+nu)}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-1'
+  file_base = 'damage_dirac'
 []
 

@@ -68,14 +68,31 @@
 # []
 
 [Functions]
-  [s_func]
+  # [s_func]
+  #   type = ParsedFunction
+  #   value = 'r:=sqrt(x^2+(y-1.75)^2);
+  #           h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
+  #           a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*5500; 
+  #           if(r<0.1, a0, 0)'
+  #   vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho'
+  #   vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3'
+  # []
+  [dirac_func]
     type = ParsedFunction
     value = 'r:=sqrt(x^2+(y-1.75)^2);
             h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
-            a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*5500;
-            if(r<0.1, a0, 0)'
+            1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)'
     vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho'
     vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3'
+  []
+[]
+
+[DiracKernels]
+  [point_source]
+    type = FunctionDiracSource
+    variable = p
+    function = dirac_func
+    point = '0.0 1.75 0.0'
   []
 []
 
@@ -90,11 +107,11 @@
     prop_names = 'Diff'
     prop_values = '1000'
   [../]
-  [source]
-    type = ADGenericFunctionMaterial
-    prop_names = 's'
-    prop_values = 's_func'
-  []
+  # [source]
+  #   type = ADGenericFunctionMaterial
+  #   prop_names = 's'
+  #   prop_values = 's_func'
+  # []
 []
 
 # [BCs]
@@ -141,6 +158,6 @@
   [./exodus]
     type = Exodus
     interval = 100
-    file_base = fluid
+    file_base = fluid_dirac
   [../]
 []
