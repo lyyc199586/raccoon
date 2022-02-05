@@ -1,20 +1,9 @@
 [Mesh]
-  type = GeneratedMesh
-  dim = 2
-  xmin = 0
-  xmax = 3
-  ymin = 1
-  ymax = 4
-  nx = 100
-  ny = 100
+   [./fmg]
+     type = FileMeshGenerator
+     file = '../mesh/2d/outer_vol_src.msh'
+   [../]
 []
-
-# [Mesh]
-#    [./fmg]
-#      type = FileMeshGenerator
-#      file = '../mesh/2d/outer.msh'
-#    [../]
-# []
 
 
 [Problem]
@@ -26,16 +15,16 @@
   [../]
 []
 
-[AuxVariables]
-  [./vel_p]
-  [../]
-  [./accel_p]
-  [../]
-  [./accel_x]
-  [../]
-  [./accel_y]
-  [../]
-[]
+# [AuxVariables]
+#   [./vel_p]
+#   [../]
+#   [./accel_p]
+#   [../]
+#   [./accel_x]
+#   [../]
+#   [./accel_y]
+#   [../]
+# []
 
 [Kernels]
   [./inertia_p]
@@ -47,51 +36,74 @@
     variable = 'p'
     prop_names = 'Diff'
   [../]
+  [source_p]
+    type = ADCoefMatSource
+    variable = p
+    prop_names = 's'
+    coefficient = -1
+  []
 []
 
-[DiracKernels]
-  [./monopole_source]
-    type = DiracSource
-    variable = p
-    point = '0 1.75 0'
-    dim  = 2
-    #####################################
-    fL = 8.33e-2
-    t1 = 0.07
-    tRT = 0.01
-    tL  = 0.8
-    tP  = 1.0
-    p0  = 2.1e-8
-    # p0 = 5.26e-8
-    d1  = 9
-    upcoeff = 12.2189
-    downcoeff = 0.9404
-    num_shots = 1
-    #####################################
-    rho = 1e-3
-  [../]
+# [DiracKernels]
+#   [./monopole_source]
+#     type = DiracSource
+#     variable = p
+#     point = '0 1.75 0'
+#     dim  = 2
+#     #####################################
+#     fL = 8.33e-2
+#     t1 = 0.07
+#     tRT = 0.01
+#     tL  = 0.8
+#     tP  = 1.0
+#     p0  = 2.1e-8
+#     # p0 = 5.26e-8
+#     d1  = 9
+#     upcoeff = 12.2189
+#     downcoeff = 0.9404
+#     num_shots = 1
+#     #####################################
+#     rho = 1e-3
+#   [../]
+# []
+
+[Functions]
+  [s_func]
+    type = ParsedFunction
+    value = 'r:=sqrt(x^2+(y-1.75)^2);
+            h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
+            a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*5500;
+            if(r<0.1, a0, 0)'
+    vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho'
+    vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3'
+  []
 []
 
 [Materials]
-  [./density]
+  [density]
     type = GenericConstantMaterial
     prop_names = 'density'
     prop_values = '444.44'
   [../]
-  [./diff]
+  [diff]
     type = ADGenericConstantMaterial
     prop_names = 'Diff'
     prop_values = '1000'
   [../]
-[]
-
-[BCs]
-  [axial]
-    type = DiffusionFluxBC
-    variable = p
-    boundary = left
+  [source]
+    type = ADGenericFunctionMaterial
+    prop_names = 's'
+    prop_values = 's_func'
   []
 []
+
+# [BCs]
+#   [axial]
+#     type = DiffusionFluxBC
+#     variable = p
+#     boundary = left
+#   []
+# []
 
 
 [Postprocessors]

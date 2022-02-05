@@ -36,10 +36,35 @@
   []
 []
 
+# [DiracKernels]
+#   [point_source]
+#     type = FunctionDiracSource
+#     variable = p
+#     function = switch_off
+#     point = '0.0 1.75 0.0'
+#   []
+# []
+
+# [Functions]
+#   [./switch_off]
+#     type = ParsedFunction
+#     value = 'if(t < 0.1, 5e-4, 0)'
+#   [../]
+# []
+
 [Functions]
+  # [s_func]
+  #   type = ParsedFunction
+  #   value = 'r:=sqrt(x^2+(y-1.75)^2); if(t<0.1,if(r<0.25,5e-4,0),0)'
+  # []
   [s_func]
     type = ParsedFunction
-    value = 'r:=sqrt(x^2+(y-1.75)^2); if(t<0.1,if(r<0.25,5e-4,0),0)'
+    value = 'r:=sqrt(x^2+(y-1.75)^2);
+            h:=(1+tanh((t-t1)/tr))*exp(-(t-t1)/tl)*cos(2*pi*fl*(t-t1)+pi/3);
+            s0:=c1/c2*p0*d1*(abs(h)+h)/2;
+            if(r<0.1, s0, 0)'
+    vars = 'c1 c2 d1 t1 tr tl fl p0'
+    vals = '12.2189 0.9404 9 0.07 0.01 0.8 0.0833 1.0'
   []
 []
 
@@ -93,6 +118,6 @@
   [./exodus]
     type = Exodus
     interval = 100
-    file_base = fluid
+    file_base = fluid_vol_test
   []
 []
