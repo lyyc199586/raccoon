@@ -77,7 +77,7 @@
   [./p_1]
     type = PointValue
     variable = p
-    point = '0.0 1.01 0.0'
+    point = '0.0 1.75 0.0'
   [../]
 []
 

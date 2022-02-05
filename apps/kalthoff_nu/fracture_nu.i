@@ -6,10 +6,10 @@
 []
 [Variables]
   [d]
-    # [InitialCondition]
-    #   type = FunctionIC
-    #   function = 'if(y>24.7&y<25.3&x>=0&x<=50,1,0)'
-    # []
+    [InitialCondition]
+      type = FunctionIC
+      function = 'if(y>24.9&y<25.1&x>=45&x<=50,1,0)'
+    []
   []
 []
 [AuxVariables]

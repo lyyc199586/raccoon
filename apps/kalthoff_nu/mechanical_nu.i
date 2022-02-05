@@ -12,8 +12,9 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 sigma_ts = 1733 # MPa
 # sigma_cs = 17330
 # sigma_cs = 8665
-# sigma_cs = 5199
-sigma_cs = 3466
+sigma_cs = 5199
+# sigma_cs = 3466
+# sigma_cs = 5025.7
 delta = 4
 
 [GlobalParams]
@@ -253,19 +254,19 @@ delta = 4
     gamma = '${fparse 5/6}'
     beta = '${fparse 4/9}'
     []
-  # fixed_point_max_its = 20
-  # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
-
-  fixed_point_max_its = 100
+  fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
+
+  # fixed_point_max_its = 100
+  # accept_on_max_fixed_point_iteration = false
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
 []
 [Outputs]
 #  file_base = 'exodusfiles/kalthoff/kal_elastic_v200_HHT'
-  file_base = './kal_l1_delta4_c2'
+  file_base = './kal_l1_delta4_c3_pd2'
   print_linear_residuals = false
   [./exodus]
     type = Exodus
