@@ -36,19 +36,19 @@
 []
 
 [Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
-  # [conditional]
-  #   type = ConditionalBoundsAux
-  #   variable = 'bounds_dummy'
-  #   bounded_variable = 'd'
-  #   fixed_bound_value = 0
-  #   threshold_value = 0.95
+  # [irreversibility]
+  #   type = VariableOldValueBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   bound_type = lower
   # []
+  [conditional]
+    type = ConditionalBoundsAux
+    variable = 'bounds_dummy'
+    bounded_variable = 'd'
+    fixed_bound_value = 0
+    threshold_value = 0.95
+  []
   [upper]
     type = ConstantBoundsAux
     variable = bounds_dummy
