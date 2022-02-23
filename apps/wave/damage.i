@@ -28,6 +28,8 @@
     order = CONSTANT
     family = MONOMIAL
   []
+  [d_max]
+  []
 []
 
 [Bounds]
@@ -65,6 +67,12 @@
     type = ADPFFSource
     variable = d
     free_energy = psi
+  []
+[]
+
+[AuxKernels]
+  [hist]
+    
   []
 []
 

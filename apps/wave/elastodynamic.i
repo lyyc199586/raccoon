@@ -37,8 +37,8 @@ delta = 4
     type = MultiAppCopyTransfer
     multi_app = damage
     direction = from_multiapp
-    source_variable = d
-    variable = d
+    source_variable = 'd d_max'
+    variable = 'd d_max'
   []
   [to_pise_active]
     type = MultiAppCopyTransfer
@@ -92,6 +92,8 @@ delta = 4
   [vel_z]
   []
   [d]
+  []
+  [d_max]
   []
 []
 
@@ -215,33 +217,6 @@ delta = 4
 []
 
 [BCs]
-  # [leftBC]
-  #   type = ADFunctionDirichletBC
-  #   # type = ADFunctionNeumannBC
-  #   variable = disp_x
-  #   boundary = left
-  #   beta = 0.25
-  #   # function = 'if(t<=1e-4, -0.1*(-1e-4/pi*cos(1e4*pi*t) + 1e-4/pi), -0.195*2e-4/pi)'
-  #   # function = 'if(t<=1e-4, -0.2*sin(1e4*pi*t), 0)'
-  #   # function = '1e-6/pi*cos(pi*1e5*t)'
-  #   function = '-0.01*sin(1e4*pi*t)'
-  #   velocity = vel_x
-  #   acceleration = accel_x
-  # []
-  # [rightBC]
-  #   type = ADFunctionDirichletBC
-  #   # type = ADFunctionNeumannBC
-  #   variable = disp_x
-  #   boundary = right
-  #   beta = 0.25
-  #   # function = 'if(t<=1e-4, 0.195*(-1e-4/pi*cos(1e4*pi*t) + 1e-4/pi), 0.195*2e-4/pi)'
-  #   # function = '-1e-6/pi*cos(pi*1e5*t)'
-  #   # function = 'if(t<=1e-4, 0.2*sin(1e4*pi*t), 0)'
-  #   function = '0.01*sin(1e4*pi*t)'
-  #   # function = '0.01*t'
-  #   velocity = vel_x
-  #   acceleration = accel_x
-  # []
   [leftBC]
     type = ADPressure
     variable = disp_x
@@ -297,13 +272,11 @@ delta = 4
     output_properties = 'stress'
     outputs = exodus
   []
-  [crack_geometric] type = InertialForce
-    variable = disp_z
-    velocity = vel_z
-    acceleration = accel_z
-    beta = 0.25 # Newmark time integration
-    gamma = 0.5 # Newmark time integration
-    eta = 0.0
+  [crack_geometric] 
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = d
+    phase_field = d
   []
   [denstiy]
     type = GenericConstantMaterial
@@ -323,36 +296,6 @@ delta = 4
   []
 []
 
-# [Executioner]
-#   type = Transient
-#   start_time = 0
-#   # end_time = 5e-6 # 5 us
-#   # dt = 5e-8       # 0.05 us
-#   # end_time = 2e-3 # 1 ms
-#   end_time = 1.5e-4 # 0.2 us
-#   # dt = 1e-5       # 0.05 us
-#   dt = 1e-6
-#   # [TimeStepper]
-#   #   type = FunctionDT
-#   #   function = timestepper
-#   #   # dt = 0.001
-#   # []
-
-#   automatic_scaling = true
-
-#   solve_type = NEWTON
-#   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-#   petsc_options_value = 'asm       superlu_dist                 '
-
-#   nl_rel_tol = 1e-6
-#   nl_abs_tol = 1e-8
-
-#   fixed_point_max_its = 20
-#   accept_on_max_fixed_point_iteration = false
-#   fixed_point_rel_tol = 1e-6
-#   fixed_point_abs_tol = 1e-8
-# []
-
 [Preconditioning]
   active = 'smp'
   [./smp]
@@ -367,8 +310,8 @@ delta = 4
   petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
   petsc_options_value = 'asm      31                  preonly       lu           1'
   start_time = 0
-  # end_time = 1e-3
-  end_time = 6e-4
+  end_time = 1e-3
+  # end_time = 6e-4
   l_max_its = 50
   nl_max_its = 20
   # l_tol = 1e-9
