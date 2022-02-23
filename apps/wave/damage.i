@@ -72,7 +72,9 @@
 
 [AuxKernels]
   [hist]
-    
+    type = HistoryField
+    variable = d_max
+    source = d
   []
 []
 

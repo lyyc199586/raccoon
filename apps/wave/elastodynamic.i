@@ -352,11 +352,16 @@ delta = 4
     point = '500 0 0'
     variable = d
   []
+  [pf_d_max_middle]
+    type = PointValue
+    point = '500 0 0'
+    variable = d
+  []
 []
 
 [Outputs]
   exodus = true
-  file_base = 'wave_c300_kumar_0.25T'
+  file_base = 'wave_c300_kumar_hist'
   interval = 1
   # interval = 5
   [./csv]
