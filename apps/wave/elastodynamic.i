@@ -263,7 +263,7 @@ delta = 4
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'elastic_strain psie_active'
+    output_properties = 'psie_active psie'
     outputs = exodus
   []
   [stress]
@@ -355,7 +355,7 @@ delta = 4
   [pf_d_max_middle]
     type = PointValue
     point = '500 0 0'
-    variable = d
+    variable = d_max
   []
 []
 

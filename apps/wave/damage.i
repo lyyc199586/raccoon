@@ -51,7 +51,7 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    bound_value = 1
+    bound_value = 0.1052
   []
 []
 
