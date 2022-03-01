@@ -2,16 +2,16 @@
   type = GeneratedMesh
   dim = 3
   xmin = 0
-  xmax = 1
-  ymin = 0
+  xmax = 2
+  ymin = -1
   ymax = 1
-  zmin = 1
-  zmax = -1
-  nx = 100
-  ny = 100
-  nz = 200
+  zmin = -1
+  zmax = 1
+  nx = 30
+  ny = 30
+  nz = 30
 []
-# h = 0.01
+# h = 0.02
 
 # [Problem]
 #   coord_type = RZ
@@ -88,19 +88,25 @@
   [./p_1]
     type = PointValue
     variable = p
-    point = '0.25 0.0 0.0'
+    point = '0.5 0.0 0.0'
     # point = '0 1.75 0'
   [../]
   [./p_2]
     type = PointValue
     variable = p
-    point = '0.5 0.0 0.0'
+    point = '0.6 0.0 0.0'
     # point = '0 1.75 0'
   [../]
   [./p_3]
     type = PointValue
     variable = p
-    point = '0.75 0.0 0.0'
+    point = '0.7 0.0 0.0'
+    # point = '0 1.75 0'
+  [../]
+  [./p_4]
+    type = PointValue
+    variable = p
+    point = '0.8 0.0 0.0'
     # point = '0 1.75 0'
   [../]
 []
@@ -112,8 +118,8 @@
   petsc_options_value = 'lu'
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
-  end_time = 2.1
-  dt = 1.5e-3
+  end_time = 1.5
+  dt = 1e-3
   [TimeIntegrator]
     type = NewmarkBeta
   []
