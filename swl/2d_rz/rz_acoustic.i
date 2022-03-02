@@ -97,15 +97,6 @@
   []
 []
 
-# [BCs]
-#   [axial]
-#     type = DiffusionFluxBC
-#     variable = p
-#     boundary = left
-#   []
-# []
-
-
 [Postprocessors]
   [./p_1]
     type = PointValue
