@@ -76,10 +76,14 @@ NucleationMicroForce::computeQpProperties()
   // Invariants of the stress
   ADReal I1 = _stress[_qp].trace();
   ADRankTwoTensor stress_dev = _stress[_qp].deviatoric();
-  ADReal J2 = stress_dev.doubleContraction(stress_dev);
+  ADReal J2 = 0.5 * stress_dev.doubleContraction(stress_dev);
 
   // Just to be extra careful... J2 is for sure non-negative.
   mooseAssert(J2 >= 0, "Negative J2");
+
+  // define zero J2's derivative
+  if (MooseUtils::absoluteFuzzyEqual(J2, 0))
+    J2.value() = libMesh::TOLERANCE * libMesh::TOLERANCE;
 
   // Compute the external driving force required to recover the desired strength envelope.
   ADReal beta_0 = _delta * M;
