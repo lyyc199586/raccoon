@@ -8,11 +8,7 @@
 #include "RankTwoTensor.h"
 #include "BaseNameInterface.h"
 
-<<<<<<< HEAD
-class PhaseFieldJIntegral : public SideIntegralPostprocessor
-=======
 class PhaseFieldJIntegral : public SideIntegralPostprocessor, public BaseNameInterface
->>>>>>> Revert "Merge branch 'master' into master"
 {
 public:
   static InputParameters validParams();
@@ -22,13 +18,7 @@ public:
 protected:
   virtual Real computeQpIntegral() override;
 
-<<<<<<< HEAD
-  /// base name of stress
-  const std::string _base_name;
-  /// stress tensor
-=======
   /// The stress tensor
->>>>>>> Revert "Merge branch 'master' into master"
   const ADMaterialProperty<RankTwoTensor> & _stress;
   /// The strain energy density
   const ADMaterialProperty<Real> & _psie;
