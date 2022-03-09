@@ -45,12 +45,16 @@ G = '${fparse E/2/(1+nu)}'
 [Mesh]
   [./fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    #  file = '../mesh/2d/inner.msh'
+    use_for_exodus_restart = true
+    file = './damage-19.e'
   [../]
 []
 
 [Variables]
   [./d]
+    initial_from_file_var = 'd' # for restart
+    initial_from_file_timestep = LATEST # for restart
   [../]
 []
 
@@ -64,6 +68,8 @@ G = '${fparse E/2/(1+nu)}'
   [./alpha_bar]
     order = CONSTANT
     family = MONOMIAL
+    initial_from_file_var = 'alpha_bar'
+    initial_from_file_timestep = LATEST
   [../]
   [./f_alpha]
     order = CONSTANT
@@ -156,6 +162,7 @@ G = '${fparse E/2/(1+nu)}'
     elastic_energy_var = psie_active
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
+    initial_alpha_bar = "alpha_bar" # for restart
   [../]
 []
 
@@ -175,6 +182,6 @@ G = '${fparse E/2/(1+nu)}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-1'
+  file_base = 'damage-20'
 []
 
