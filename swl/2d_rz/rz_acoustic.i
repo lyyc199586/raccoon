@@ -70,9 +70,9 @@
 [Functions]
   [s_func]
     type = ParsedFunction
-    value = 'r:=sqrt(x^2+(y-1.75)^2);
+    value = 'r:=sqrt(x^2+(y-2.0)^2);
             h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
-            a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*5500;
+            a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000;
             if(r<0.1, a0, 0)'
     vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho'
     vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3'
@@ -102,7 +102,7 @@
     type = PointValue
     variable = p
     # point = '0.5 1.01 0.0'
-    point = '0 1.75 0'
+    point = '0 1.50 0'
   [../]
 []
 
