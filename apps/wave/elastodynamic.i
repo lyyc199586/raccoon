@@ -54,7 +54,7 @@ delta = 4
 [Mesh]
   type = GeneratedMesh
   dim = 3
-  nx = 2000
+  nx = 2500
   ny = 1
   nz = 1
   xmin = 0.0
@@ -201,13 +201,13 @@ delta = 4
     type = ParsedFunction
     value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
     vars = 'amp T'
-    vals = '-569.5 1e-4'
+    vals = '-575 1e-4'
   []
   [left_force_bc_func]
     type = ParsedFunction
     value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
     vars = 'amp T'
-    vals = '-569.5 1e-4'
+    vals = '-575 1e-4'
   []
   # [timestepper]
   #   type = PiecewiseLinear

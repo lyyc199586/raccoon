@@ -17,6 +17,7 @@ HistoryFieldBoundsAux::validParams()
   params.addRequiredParam<Real>("search_radius",
                                 "The search radius for the maximum history field value");
   params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
+  // params.addRequiredCoupledVar("history_variable", "The history variable");
   params.set<MooseEnum>("bound_type") = "lower";
   params.suppressParameter<MooseEnum>("bound_type");
   return params;
@@ -96,7 +97,6 @@ HistoryFieldBoundsAux::getBound()
   // for debug
   // std::cout << "cur_node_id = " << _current_node->id() << std::endl;
 
-  // TODO: need modification to query infor from other processors
   for (const auto near_node_id : _node_to_near_nodes_map[_current_node->id()])
   {
     const Node & near_node = _mesh.nodeRef(near_node_id);

@@ -31,9 +31,11 @@ protected:
   /// history field variable
   MooseVariable & _hist_var;
 
-  /// 
+  /// The Mesh
+  // const MooseMesh & _mesh;
+
   bool _first;
 
-  /// neighbor nodes map
+  // neighbor nodes map
   std::map<dof_id_type, std::vector<dof_id_type>> _node_to_near_nodes_map;
 };

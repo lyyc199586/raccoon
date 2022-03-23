@@ -1,7 +1,7 @@
 [Mesh]
   type = GeneratedMesh
   dim = 3
-  nx = 2000
+  nx = 2500
   ny = 1
   nz = 1
   xmin = 0.0
@@ -39,19 +39,28 @@
   #   bounded_variable = d
   #   bound_type = lower
   # []
-  [conditional]
-    type = ConditionalBoundsAux
+  # [conditional]
+  #   type = ConditionalBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   fixed_bound_value = 0
+  #   threshold_value = 0.95
+  # []
+  [history]
+    type = HistoryFieldBoundsAux
     variable = bounds_dummy
     bounded_variable = d
+    history_variable = d_max
     fixed_bound_value = 0
-    threshold_value = 0.95
+    search_radius = 1
+    threshold_ratio = 0.95
   []
   [upper]
     type = ConstantBoundsAux
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    bound_value = 0.1052
+    bound_value = 0.1025
   []
 []
 
@@ -74,7 +83,7 @@
   [hist]
     type = HistoryField
     variable = d_max
-    source = d
+    source_variable = d
   []
 []
 
