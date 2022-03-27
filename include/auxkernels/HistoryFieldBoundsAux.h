@@ -26,10 +26,14 @@ protected:
   Real _search_radius;
 
   /// Name of history field variable
-  NonlinearVariableName _hist_var_name;
+  // NonlinearVariableName _hist_var_name;
+
+  /// serializede solution
+  const NumericVector<Number> * const & _serialized_solution;
 
   /// history field variable
-  MooseVariable & _hist_var;
+  // MooseVariable & _hist_var;
+  unsigned int _hist_var;
 
   /// The Mesh
   // const MooseMesh & _mesh;

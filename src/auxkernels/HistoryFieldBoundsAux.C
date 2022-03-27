@@ -1,6 +1,7 @@
 #include "HistoryFieldBoundsAux.h"
 #include "KDTree.h"
 #include "MooseMesh.h"
+#include "SystemBase.h"
 #include "libmesh/node.h"
 
 registerMooseObject("raccoonApp", HistoryFieldBoundsAux);
@@ -16,8 +17,13 @@ HistoryFieldBoundsAux::validParams()
       "threshold_ratio", "The threshold ratio for conditional history bound for the variable");
   params.addRequiredParam<Real>("search_radius",
                                 "The search radius for the maximum history field value");
+<<<<<<< HEAD
   params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
   // params.addRequiredCoupledVar("history_variable", "The history variable");
+=======
+  // params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
+  params.addRequiredCoupledVar("history_variable", "The history value to get the value of.");
+>>>>>>> try modify to support parallel
   params.set<MooseEnum>("bound_type") = "lower";
   params.suppressParameter<MooseEnum>("bound_type");
   return params;
@@ -28,8 +34,10 @@ HistoryFieldBoundsAux::HistoryFieldBoundsAux(const InputParameters & parameters)
     _fixed_bound_value(getParam<Real>("fixed_bound_value")),
     _threshold_ratio(getParam<Real>("threshold_ratio")),
     _search_radius(getParam<Real>("search_radius")),
-    _hist_var_name(parameters.get<NonlinearVariableName>("history_variable")),
-    _hist_var(_subproblem.getStandardVariable(_tid, _hist_var_name)),
+    // _hist_var_name(parameters.get<NonlinearVariableName>("history_variable")),
+    // _hist_var(_subproblem.getStandardVariable(_tid, _hist_var_name)),
+    _serialized_solution(_nl_sys.currentSolution()),
+    _hist_var(coupled("history_variable")),
     _first(true),
     _node_to_near_nodes_map()
 {
@@ -104,7 +112,10 @@ HistoryFieldBoundsAux::getBound()
     // for debug
     // std::cout << "  near_node_id = " << near_node_id << std::endl;
 
-    Real d_hist = _hist_var.getNodalValue(near_node);
+    dof_id_type dof_number = near_node.dof_number(_nl_sys.number(), _hist_var, 0);
+    Real d_hist = (*_serialized_solution)(dof_number);
+
+    // Real d_hist = _hist_var.getNodalValue(near_node);
     if (d_hist > d_max)
     {
       d_max = d_hist;
