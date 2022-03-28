@@ -161,8 +161,8 @@
   petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-9
   # nl_abs_tol = 1e-11
 

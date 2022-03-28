@@ -318,12 +318,12 @@ delta = 4
   start_time = 0
   end_time = 2e-6
   # end_time = 6e-4
-  l_max_its = 50
-  nl_max_its = 20
-  # l_tol = 1e-9
+  # l_max_its = 50
+  # nl_max_its = 20
+  # # l_tol = 1e-9
   # nl_rel_tol = 1e-12
-  l_tol = 1e-6
-  nl_rel_tol = 1e-8
+  # l_tol = 1e-6
+  # nl_rel_tol = 1e-8
   dt = 1e-6
 []
 
