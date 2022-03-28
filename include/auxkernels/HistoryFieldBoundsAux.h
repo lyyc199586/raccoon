@@ -26,18 +26,17 @@ protected:
   Real _search_radius;
 
   /// Name of history field variable
-  // NonlinearVariableName _hist_var_name;
-
-  /// serializede solution
-  const NumericVector<Number> * const & _serialized_solution;
+  NonlinearVariableName _hist_var_name;
 
   /// history field variable
-  // MooseVariable & _hist_var;
-  unsigned int _hist_var;
+  MooseVariable & _hist_var;
 
+<<<<<<< HEAD
   /// The Mesh
   // const MooseMesh & _mesh;
 
+=======
+>>>>>>> revert historyfiledbound to serial
   bool _first;
 
   // neighbor nodes map
