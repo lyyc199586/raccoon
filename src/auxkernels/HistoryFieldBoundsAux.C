@@ -1,7 +1,6 @@
 #include "HistoryFieldBoundsAux.h"
 #include "KDTree.h"
 #include "MooseMesh.h"
-#include "SystemBase.h"
 #include "libmesh/node.h"
 
 registerMooseObject("raccoonApp", HistoryFieldBoundsAux);
@@ -17,8 +16,7 @@ HistoryFieldBoundsAux::validParams()
       "threshold_ratio", "The threshold ratio for conditional history bound for the variable");
   params.addRequiredParam<Real>("search_radius",
                                 "The search radius for the maximum history field value");
-  // params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
-  params.addRequiredCoupledVar("history_variable", "The history value to get the value of.");
+  params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
   params.set<MooseEnum>("bound_type") = "lower";
   params.suppressParameter<MooseEnum>("bound_type");
   return params;
@@ -29,10 +27,8 @@ HistoryFieldBoundsAux::HistoryFieldBoundsAux(const InputParameters & parameters)
     _fixed_bound_value(getParam<Real>("fixed_bound_value")),
     _threshold_ratio(getParam<Real>("threshold_ratio")),
     _search_radius(getParam<Real>("search_radius")),
-    // _hist_var_name(parameters.get<NonlinearVariableName>("history_variable")),
-    // _hist_var(_subproblem.getStandardVariable(_tid, _hist_var_name)),
-    _serialized_solution(_nl_sys.currentSolution()),
-    _hist_var(coupled("history_variable")),
+    _hist_var_name(parameters.get<NonlinearVariableName>("history_variable")),
+    _hist_var(_subproblem.getStandardVariable(_tid, _hist_var_name)),
     _first(true),
     _node_to_near_nodes_map()
 {
@@ -80,17 +76,17 @@ HistoryFieldBoundsAux::getBound()
     }
 
     // debug: print map
-    // for (std::map<dof_id_type, std::vector<dof_id_type>>::const_iterator it =
-    //          node_to_near_nodes_map.begin();
-    //      it != node_to_near_nodes_map.end();
-    //      ++it)
-    // {
-    //   std::cout << "node id: " << it->first << " neighbor size: " << it->second.size() << std::endl;
-    //   for (const auto& elem : it->second) {
-    //     std::cout << " " << elem;
-    //   }
-    //   std::cout << std::endl;
-    // }
+    for (std::map<dof_id_type, std::vector<dof_id_type>>::const_iterator it =
+             _node_to_near_nodes_map.begin();
+         it != _node_to_near_nodes_map.end();
+         ++it)
+    {
+      std::cout << "node id: " << it->first << " neighbor size: " << it->second.size() << std::endl;
+      for (const auto& elem : it->second) {
+        std::cout << " " << elem;
+      }
+      std::cout << std::endl;
+    }
   }
 
   // get history field value from near points and find maximum local history field value
@@ -98,31 +94,27 @@ HistoryFieldBoundsAux::getBound()
   Real d_max = 0;
 
   // for debug
-  // std::cout << "cur_node_id = " << _current_node->id() << std::endl;
+  std::cout << "cur_node_id = " << _current_node->id() << std::endl;
 
-  // TODO: need modification to query infor from other processors
   for (const auto near_node_id : _node_to_near_nodes_map[_current_node->id()])
   {
     const Node & near_node = _mesh.nodeRef(near_node_id);
 
     // for debug
-    // std::cout << "  near_node_id = " << near_node_id << std::endl;
+    std::cout << "  near_node_id = " << near_node_id << std::endl;
 
-    dof_id_type dof_number = near_node.dof_number(_nl_sys.number(), _hist_var, 0);
-    Real d_hist = (*_serialized_solution)(dof_number);
-
-    // Real d_hist = _hist_var.getNodalValue(near_node);
+    Real d_hist = _hist_var.getNodalValue(near_node);
     if (d_hist > d_max)
     {
       d_max = d_hist;
 
       // for debug
-      // std::cout << "    update d_max = " << d_max << std::endl;
+      std::cout << "    update d_max = " << d_max << std::endl;
     }
   }
 
   // for debug
-  // std::cout << "final loacl d_max = " << d_max << std::endl;
+  std::cout << "final loacl d_max = " << d_max << std::endl;
 
   // return lower bound d_old or _fixed_bound_value;
   Real d_old = _var.getNodalValueOld(*_current_node);

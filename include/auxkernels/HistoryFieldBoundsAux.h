@@ -26,18 +26,13 @@ protected:
   Real _search_radius;
 
   /// Name of history field variable
-  // NonlinearVariableName _hist_var_name;
-
-  /// serializede solution
-  const NumericVector<Number> * const & _serialized_solution;
+  NonlinearVariableName _hist_var_name;
 
   /// history field variable
-  // MooseVariable & _hist_var;
-  unsigned int _hist_var;
+  MooseVariable & _hist_var;
 
-  /// 
   bool _first;
 
-  /// neighbor nodes map
+  // neighbor nodes map
   std::map<dof_id_type, std::vector<dof_id_type>> _node_to_near_nodes_map;
 };
