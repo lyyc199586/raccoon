@@ -154,22 +154,22 @@ delta = 4
   # []
 []
 
-[AuxKernels]
-  [accel_x] # Calculates and stores acceleration at the end of time step
-    type = NewmarkAccelAux
-    variable = accel_x
-    displacement = disp_x
-    velocity = vel_x
-    beta = 0.25
-    execute_on = timestep_end
-  []
-  [vel_x] # Calculates and stores velocity at the end of the time step
-    type = NewmarkVelAux
-    variable = vel_x
-    acceleration = accel_x
-    gamma = 0.5
-    execute_on = timestep_end
-  []
+# [AuxKernels]
+  # [accel_x] # Calculates and stores acceleration at the end of time step
+  #   type = NewmarkAccelAux
+  #   variable = accel_x
+  #   displacement = disp_x
+  #   velocity = vel_x
+  #   beta = 0.25
+  #   execute_on = timestep_end
+  # []
+  # [vel_x] # Calculates and stores velocity at the end of the time step
+  #   type = NewmarkVelAux
+  #   variable = vel_x
+  #   acceleration = accel_x
+  #   gamma = 0.5
+  #   execute_on = timestep_end
+  # []
   # [accel_y] # Calculates and stores acceleration at the end of time step
   #   type = NewmarkAccelAux
   #   variable = accel_y
@@ -200,27 +200,27 @@ delta = 4
   #   gamma = 0.5
   #   execute_on = timestep_end
   # []
-[]
+# []
 
-[Functions]
-  [right_force_bc_func]
-    type = ParsedFunction
-    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
-    vars = 'amp T'
-    vals = '-575 1e-4'
-  []
-  [left_force_bc_func]
-    type = ParsedFunction
-    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
-    vars = 'amp T'
-    vals = '-575 1e-4'
-  []
+# [Functions]
+  # [right_force_bc_func]
+  #   type = ParsedFunction
+  #   value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
+  #   vars = 'amp T'
+  #   vals = '-575 1e-4'
+  # []
+  # [left_force_bc_func]
+  #   type = ParsedFunction
+  #   value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
+  #   vars = 'amp T'
+  #   vals = '-575 1e-4'
+  # []
   # [timestepper]
   #   type = PiecewiseLinear
   #   x = '0    1e-4 1.1e-4 1.13e-4 1.5e-4'
   #   y = '1e-6 1e-6 1e-8   1e-8    1e-6'
   # []
-[]
+# []
 
 # [BCs]
 #   [leftBC]
@@ -313,10 +313,11 @@ delta = 4
 [Executioner]
   type = Transient
   solve_type = PJFNK
+  # solve_type = NEWTON
   petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
   petsc_options_value = 'asm      31                  preonly       lu           1'
   start_time = 0
-  end_time = 2e-6
+  end_time = 1e-6
   # end_time = 6e-4
   # l_max_its = 50
   # nl_max_its = 20
