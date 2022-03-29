@@ -22,7 +22,8 @@
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(x<=0.2, 1-5*x, 0)'
+      function = 'if(x<=0.21, 0.6-3*x, 0)'
+      # function = ic_func
     []
   []
 []
@@ -30,8 +31,8 @@
 [Functions]
   [ic_func]
     type = PiecewiseLinear
-    x = '0.5 1.0'
-    y = '1.0 0.0'
+    x = '0.0 0.2 1.0'
+    y = '1.0 0.0 0.0'
   []
 []
 
@@ -102,6 +103,7 @@
     type = HistoryField
     variable = d_max
     source_variable = d
+    execute_on = timestep_begin
   []
 []
 
@@ -155,11 +157,11 @@
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
-  petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels -snes_type'
-  petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
-  automatic_scaling = true
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels -snes_type'
+  # petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
+  # automatic_scaling = true
 
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
