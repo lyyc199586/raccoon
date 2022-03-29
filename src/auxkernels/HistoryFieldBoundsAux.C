@@ -76,58 +76,24 @@ HistoryFieldBoundsAux::getBound()
       _node_to_near_nodes_map.insert(
           std::pair<dof_id_type, std::vector<dof_id_type>>(node_id, near_nodes_ids));
     }
-
-    // debug: print map
-    for (std::map<dof_id_type, std::vector<dof_id_type>>::const_iterator it =
-             _node_to_near_nodes_map.begin();
-         it != _node_to_near_nodes_map.end();
-         ++it)
-    {
-      std::cout << "node id: " << it->first << " neighbor size: " << it->second.size() << std::endl;
-      for (const auto& elem : it->second) {
-        std::cout << " " << elem;
-      }
-      std::cout << std::endl;
-    }
   }
 
   // get history field value from near points and find maximum local history field value
-  // see NearestNodeValueAux.C
+  // see NearestNodeValueAux.C for reference
   Real d_max = 0;
-
-  // for debug
-  std::cout << "cur_node_id = " << _current_node->id() << std::endl;
 
   for (const auto near_node_id : _node_to_near_nodes_map[_current_node->id()])
   {
     const Node & near_node = _mesh.nodeRef(near_node_id);
 
-    // for debug
-    std::cout << "  near_node_id = " << near_node_id << std::endl;
-
-    // Real d_hist = _hist_var.getNodalValue(near_node);
-
     dof_id_type dof_number = near_node.dof_number(_aux_sys.number(), _hist_var.number(), 0);
-    
-    // for debug
-    std::cout << "  dof_number = " << dof_number << std::endl;
-
     Real d_hist = (_serialized_solution)(dof_number);
-
-    // for debug
-    std::cout << "  d_hist = " << d_hist << std::endl;
 
     if (d_hist > d_max)
     {
       d_max = d_hist;
-
-      // for debug
-      std::cout << "    update d_max = " << d_max << std::endl;
     }
   }
-
-  // for debug
-  std::cout << "final loacl d_max = " << d_max << std::endl;
 
   // return lower bound d_old or _fixed_bound_value;
   Real d_old = _var.getNodalValueOld(*_current_node);
