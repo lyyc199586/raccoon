@@ -18,6 +18,7 @@
     type = TransientMultiApp
     execute_on = 'TIMESTEP_END'
     input_files = 'rz_acoustic.i'
+    cli_args = 'SD=${SD};p_max=${p_max}'
   [../]
 []
 

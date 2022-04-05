@@ -3,10 +3,11 @@ E = 0.02735
 nu = 0.2
 Gc = 21.88e-9
 l = 0.1
-# psic = 7.0e-9
-psic = 5.0e-9
+psic = 7.0e-9
 k = 1e-09
 # alphaT = 8.0e-9
+SD = 1
+p_max = 1.4
 alphaT = 1
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -22,7 +23,7 @@ G = '${fparse E/2/(1+nu)}'
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};SD=${SD};p_max=${p_max}'
   [../]
 []
 
@@ -176,6 +177,6 @@ G = '${fparse E/2/(1+nu)}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-1'
+  file_base = 'damage-SD${SD}-p_max${p_max}'
 []
 
