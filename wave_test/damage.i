@@ -1,24 +1,38 @@
+# [Mesh]
+#   type = GeneratedMesh
+#   dim = 3
+#   nx = 2500
+#   ny = 1
+#   nz = 1
+#   xmin = 0.0
+#   xmax = 1000
+#   ymin = 0
+#   ymax = 1
+#   zmin = 0
+#   zmax = 1
+# []
+
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 400
-    ny = 160
-    # nx = 800
-    # ny = 320
-    xmin = 0
-    xmax = 100
-    ymin = -20
-    ymax = 20
-  []
+  type = GeneratedMesh
+  dim = 1
+  nx = 10
 []
 
 [Variables]
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(y=0&x>=0&x<=50,1,0)'
+      function = 'if(x<=0.21, 0.6-3*x, 0)'
+      # function = ic_func
     []
+  []
+[]
+
+[Functions]
+  [ic_func]
+    type = PiecewiseLinear
+    x = '0.0 0.2 1.0'
+    y = '1.0 0.0 0.0'
   []
 []
 
@@ -29,7 +43,7 @@
     order = CONSTANT
     family = MONOMIAL
   []
-  [ce] # add ce
+  [ce]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -46,8 +60,8 @@
   # []
   # [conditional]
   #   type = ConditionalBoundsAux
-  #   variable = 'bounds_dummy'
-  #   bounded_variable = 'd'
+  #   variable = bounds_dummy
+  #   bounded_variable = d
   #   fixed_bound_value = 0
   #   threshold_value = 0.95
   # []
@@ -57,7 +71,7 @@
     bounded_variable = d
     history_variable = d_max
     fixed_bound_value = 0
-    search_radius = 2
+    search_radius = 0.15
     threshold_ratio = 0.95
   []
   [upper]
@@ -87,7 +101,7 @@
 [AuxKernels]
   [hist]
     type = HistoryField
-    variable = d_max 
+    variable = d_max
     source_variable = d
     execute_on = timestep_begin
   []
@@ -96,32 +110,9 @@
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G Lambda Gc l'
+    prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
   []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
-    phase_field = d
-  []
-  # [degradation]
-  #   type = RationalDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p/((1-d)^p+(Gc/psic*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta
-  #   phase_field = d
-  #   material_property_names = 'Gc psic xi c0 l '
-  #   parameter_names = 'p a2 a3 eta '
-  #   parameter_values = '2 -0.5 0 1e-6'
-  # []
-  # [psi]
-  #   type = ADDerivativeParsedMaterial
-  #   f_name = psi
-  #   function = 'alpha*Gc/c0/l+g*psie_active'
-  #   args = 'd psie_active'
-  #   material_property_names = 'alpha(d) g(d) Gc c0 l'
-  #   derivative_order = 1
-  # []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
@@ -130,7 +121,21 @@
     parameter_names = 'p eta '
     parameter_values = '2 0'
   []
-  [psi]
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
+  []
+  # [psi] # brittle ?
+  #   type = ADDerivativeParsedMaterial
+  #   f_name = psi
+  #   function = 'alpha*Gc/c0/l+g*psie_active'
+  #   args = 'd psie_active'
+  #   material_property_names = 'alpha(d) g(d) Gc c0 l'
+  #   derivative_order = 1
+  # []
+  [psi] # kumar
     type = ADDerivativeParsedMaterial
     f_name = psi
     function = 'g*psie_active+(ce+Gc/c0/l)*alpha'
@@ -140,20 +145,40 @@
   []
 []
 
+[Preconditioning]
+  active = 'smp'
+  [./smp]
+    type = SMP
+    full = true
+  [../]
+[]
+
 [Executioner]
   type = Transient
 
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
-  # petsc_options_iname = '-pc_type -snes_type'
-  # petsc_options_value = 'asm      vinewtonrsls'
-  automatic_scaling = true
+  # petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels -snes_type'
+  # petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
+  # automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-9
+  # nl_abs_tol = 1e-11
+
+  # solve_type = PJFNK
+  # petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
+  # petsc_options_value = 'asm      31                  preonly       lu           1'
+
+  # l_max_its = 20
+  # nl_max_its = 20
+  
+  # l_tol = 1e-9
 []
 
 [Outputs]
   print_linear_residuals = false
 []
+
