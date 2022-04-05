@@ -7,7 +7,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.54e-9 # Mg/mm^3
 Gc = 0.003
 sigma_ts = 3.08 # MPa
-sigma_cs = 46.2
+sigma_cs = 9.24
 # psic = '${fparse sigma_ts^2/2/E}'
 # l = 1.25 # L = 1.25mm, l_ch = 11 mm
 l = 2

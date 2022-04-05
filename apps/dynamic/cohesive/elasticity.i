@@ -117,14 +117,14 @@ l = 1.25 # L = 1.25mm, l_ch = 11 mm
     variable = disp_y
     component = 1
     boundary = top
-    constant = -1
+    constant = -0.5
   []
   [ybottom]
     type = ADPressure
     variable = disp_y
     component = 1
     boundary = bottom
-    constant = -1
+    constant = -0.5
   []
 []
 
@@ -217,6 +217,6 @@ l = 1.25 # L = 1.25mm, l_ch = 11 mm
 [Outputs]
   exodus = true
   print_linear_residuals = false
-  file_base = './coh_branch'
+  file_base = './coh0.5'
   interval = 2
 []
