@@ -33,6 +33,8 @@
     order = CONSTANT
     family = MONOMIAL
   []
+  [d_max]
+  []
 []
 
 [Bounds]
@@ -42,12 +44,21 @@
   #   bounded_variable = d
   #   bound_type = lower
   # []
-  [conditional]
-    type = ConditionalBoundsAux
-    variable = 'bounds_dummy'
-    bounded_variable = 'd'
+  # [conditional]
+  #   type = ConditionalBoundsAux
+  #   variable = 'bounds_dummy'
+  #   bounded_variable = 'd'
+  #   fixed_bound_value = 0
+  #   threshold_value = 0.95
+  # []
+  [history]
+    type = HistoryFieldBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    history_variable = d_max
     fixed_bound_value = 0
-    threshold_value = 0.95
+    search_radius = 2
+    threshold_ratio = 0.95
   []
   [upper]
     type = ConstantBoundsAux
@@ -74,7 +85,10 @@
 []
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a6304303ba1803fc05b87dedcbd9f93401e67724
 [AuxKernels]
   [hist]
     type = HistoryField
@@ -85,7 +99,10 @@
   []
 []
 
+<<<<<<< HEAD
 >>>>>>> add.
+=======
+>>>>>>> a6304303ba1803fc05b87dedcbd9f93401e67724
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
