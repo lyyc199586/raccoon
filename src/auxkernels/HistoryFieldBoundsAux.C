@@ -18,25 +18,7 @@ HistoryFieldBoundsAux::validParams()
       "threshold_ratio", "The threshold ratio for conditional history bound for the variable");
   params.addRequiredParam<Real>("search_radius",
                                 "The search radius for the maximum history field value");
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
-  // params.addRequiredCoupledVar("history_variable", "The history variable");
-=======
-  // params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
-  params.addRequiredCoupledVar("history_variable", "The history value to get the value of.");
->>>>>>> try modify to support parallel
-=======
-  params.addRequiredParam<NonlinearVariableName>("history_variable", "The history variable");
->>>>>>> revert historyfiledbound to serial
-=======
-  params.addRequiredParam<AuxVariableName>("history_variable", "The history variable");
->>>>>>> implement parallel
-=======
-  params.addRequiredParam<AuxVariableName>("history_variable", "The history variable");
->>>>>>> a6304303ba1803fc05b87dedcbd9f93401e67724
+  params.addRequiredParam<AuxVariableName>("history_variable", "The variable to get the value of.");
   params.set<MooseEnum>("bound_type") = "lower";
   params.suppressParameter<MooseEnum>("bound_type");
   return params;
@@ -119,8 +101,4 @@ HistoryFieldBoundsAux::getBound()
     return d_old;
   else
     return _fixed_bound_value;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a6304303ba1803fc05b87dedcbd9f93401e67724
