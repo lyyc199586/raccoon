@@ -84,11 +84,6 @@
   []
 []
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a6304303ba1803fc05b87dedcbd9f93401e67724
 [AuxKernels]
   [hist]
     type = HistoryField
@@ -99,10 +94,6 @@
   []
 []
 
-<<<<<<< HEAD
->>>>>>> add.
-=======
->>>>>>> a6304303ba1803fc05b87dedcbd9f93401e67724
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
