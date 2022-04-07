@@ -89,7 +89,8 @@
     type = HistoryField
     variable = d_max 
     source_variable = d
-    execute_on = timestep_begin
+    # execute_on = timestep_begin
+    execute_on = linear
   []
 []
 
@@ -150,8 +151,10 @@
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 []
 
 [Outputs]
