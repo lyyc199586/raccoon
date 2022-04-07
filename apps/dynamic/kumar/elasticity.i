@@ -27,8 +27,8 @@ delta = 4
     type = MultiAppCopyTransfer
     multi_app = fracture
     direction = from_multiapp
-    variable = d
-    source_variable = d
+    variable = 'd d_max'
+    source_variable = 'd d_max'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
@@ -73,6 +73,8 @@ delta = 4
       type = FunctionIC
       function = 'if(y=0&x>=0&x<=50,1,0)'
     []
+  []
+  [d_max]
   []
 []
 
@@ -212,16 +214,20 @@ delta = 4
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
   dt = 5e-7
   end_time = 80e-6
 
   fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-8
-  fixed_point_abs_tol = 1e-10
+  # fixed_point_rel_tol = 1e-8
+  # fixed_point_abs_tol = 1e-10
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 
   [TimeIntegrator]
     type = NewmarkBeta
@@ -233,7 +239,7 @@ delta = 4
 [Outputs]
   exodus = true
   print_linear_residuals = false
-  file_base = './kumar15'
+  file_base = './kumar_hist_3'
   interval = 1
   [./csv]
     type = CSV 
