@@ -11,27 +11,31 @@
 []
 
 [Variables]
-  [./p]
-  [../]
+  [p]
+  []
+  [disp_r]
+  []
+  [disp_z]
+  []
 []
 
-# [AuxVariables]
-#   [./vel_p]
-#   [../]
-#   [./accel_p]
-#   [../]
-#   [./accel_x]
-#   [../]
-#   [./accel_y]
-#   [../]
-# []
+[AuxVariables]
+  [vel_r]
+  []
+  [vel_z]
+  []
+  [accel_r]
+  []
+  [accel_z]
+  []
+[]
 
 [Kernels]
-  [./inertia_p]
+  [inertia_p]
     type = InertialForce
-    variable = 'p'
+    variable = p
   [../]
-  [./diff_p]
+  [diff_p]
     type = ADCoefMatDiffusion
     variable = 'p'
     prop_names = 'Diff'
@@ -41,6 +45,74 @@
     variable = p
     prop_names = 's'
     coefficient = -1
+  []
+  [inertia_r] # M*accel + eta*M*vel
+    type = InertialForce
+    variable = disp_r
+    velocity = vel_r
+    acceleration = accel_r
+    density = water_density
+    beta = 0.25 
+    gamma = 0.5 
+    eta = 0.0
+  []
+  [inertia_z] # M*accel + eta*M*vel
+    type = InertialForce
+    variable = disp_z
+    velocity = vel_z
+    acceleration = accel_z
+    density = water_density
+    beta = 0.25 
+    gamma = 0.5 
+    eta = 0.0
+  []
+  [grad_p_r]
+    type = PressureGradient
+    variable = disp_r
+    # displacements = 'disp_r disp_z'
+    pressure = p
+    component = 0
+  []
+  [grad_p_z]
+    type = PressureGradient
+    variable = disp_z
+    # displacements = 'disp_r disp_z'
+    pressure = p
+    component = 1
+  []
+[]
+
+
+[AuxKernels]
+  [accel_r]
+    type = NewmarkAccelAux
+    variable = accel_r
+    displacement = disp_r
+    velocity = vel_r
+    beta = 0.25
+    execute_on = timestep_end
+  []
+  [vel_r]
+    type = NewmarkVelAux
+    variable = vel_r
+    acceleration = accel_r
+    gamma = 0.5
+    execute_on = timestep_end
+  []
+  [accel_z]
+    type = NewmarkAccelAux
+    variable = accel_z
+    displacement = disp_z
+    velocity = vel_z
+    beta = 0.25
+    execute_on = timestep_end
+  []
+  [vel_z]
+    type = NewmarkVelAux
+    variable = vel_z
+    acceleration = accel_z
+    gamma = 0.5
+    execute_on = timestep_end
   []
 []
 
@@ -84,12 +156,17 @@
     type = GenericConstantMaterial
     prop_names = 'density'
     prop_values = '444.44'
-  [../]
+  []
+  [water_density]
+    type = GenericConstantMaterial
+    prop_names = 'water_density'
+    prop_values = '1000'
+  []
   [diff]
     type = ADGenericConstantMaterial
     prop_names = 'Diff'
     prop_values = '1000'
-  [../]
+  []
   [source]
     type = ADGenericFunctionMaterial
     prop_names = 's'
