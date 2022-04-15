@@ -180,6 +180,27 @@
 #   [../]
 # []
 
+[Postprocessors]
+  [external_work]
+    type = ExternalWork 
+    displacements = 'disp_r disp_z'
+    forces = pre_wave
+  []
+  # [kinetic_energy]
+  #   type = KineticEnergy 
+  #   displacements = 'disp_r disp_z'
+  # []
+  [strain_energy]
+    type = ElementIntegralVariablePostprocessor
+    variable = psie_active
+  []
+  # [strain_energy_on_top]
+  #   type = NodalSum
+  #   variable = psie_active
+  #   boundary = top
+  # []
+[]
+
 [Materials]
   [./density]
     type = GenericConstantMaterial
@@ -249,4 +270,9 @@
    type = Console
    outlier_variable_norms = false
  [../]
+ [./csv]
+  type = CSV
+  delimiter = ','
+  file_base = 'strain_energy'
+  [../]
 []

@@ -3,7 +3,7 @@
 echo "Start: $(date)"
 echo "cwd: $(pwd)"
 
-arg1="rz_acoustic.i p_max=1 SD=0.75"
+arg1="rz_damage.i p_max=1 SD=0.75"
 
 mpirun -n 16 ../../raccoon-opt -i $arg1
 

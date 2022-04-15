@@ -32,6 +32,8 @@
   []
   [I_z]
   []
+  [acoustic_energy]
+  []
 []
 
 [Kernels]
@@ -132,8 +134,25 @@
     velocity = vel_z
     execute_on = timestep_end
   []
+  [e]
+    type = AcousticEnergy
+    variable = acoustic_energy
+    pressure = p
+    vel_x = vel_r
+    vel_y = vel_z
+    density = Diff
+    wavespeed = water_wavespeed
+  []
 []
 
+[BCs]
+  [axial_r]
+    type = DirichletBC
+    variable = disp_r
+    boundary = axial
+    value = 0
+  []
+[]
 # [DiracKernels]
 #   [./monopole_source]
 #     type = DiracSource
@@ -170,17 +189,22 @@
 []
 
 [Materials]
-  [density]
+  [density] # this is actually the coef = 1/rho/cf^2
     type = GenericConstantMaterial
-    prop_names = 'density'
-    prop_values = '444.44'
+    prop_names = density
+    prop_values = 444.44
   []
-  [water_density]
+  [water_density] # rho
     type = GenericConstantMaterial
-    prop_names = 'water_density'
-    prop_values = '1000'
+    prop_names = water_density
+    prop_values = 1000
   []
-  [diff]
+  [water_wavespeed] # cf
+    type = ADGenericConstantMaterial
+    prop_names = water_wavespeed
+    prop_values = 1.5
+  []
+  [diff] # this is actually the coef = 1/rho
     type = ADGenericConstantMaterial
     prop_names = 'Diff'
     prop_values = '1000'
@@ -192,14 +216,22 @@
   []
 []
 
-# [Postprocessors]
-#   [./p_1]
-#     type = PointValue
-#     variable = p
-#     # point = '0.5 1.01 0.0'
-#     point = '0 1.50 0'
-#   [../]
-# []
+[Postprocessors]
+  [total_acoustic_energy]
+    type = NodalSum
+    variable = acoustic_energy
+  []
+  [acoustic_energy_on_interface]
+    type = NodalSum
+    variable = acoustic_energy
+    boundary = inner_BC
+  []
+  [acoustic_energy_on_top]
+    type = NodalSum
+    variable = acoustic_energy
+    boundary = top
+  []
+[]
 
 [Executioner]
   type = Transient
@@ -222,7 +254,7 @@
   [./csv]
     type = CSV
     delimiter = ','
-    file_base = 'pressure_hist'
+    file_base = 'acoustic_energy'
   [../]
   [./exodus]
     type = Exodus

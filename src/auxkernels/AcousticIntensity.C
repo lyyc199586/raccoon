@@ -22,5 +22,5 @@ AcousticIntensity::AcousticIntensity(const InputParameters & parameters)
 Real
 AcousticIntensity::computeValue()
 {
-  return _pressure[0]*_velocity[0];
+  return _pressure[_qp] * _velocity[_qp];
 }
