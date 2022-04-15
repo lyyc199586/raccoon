@@ -28,6 +28,10 @@
   []
   [accel_z]
   []
+  [I_r]
+  []
+  [I_z]
+  []
 []
 
 [Kernels]
@@ -112,6 +116,20 @@
     variable = vel_z
     acceleration = accel_z
     gamma = 0.5
+    execute_on = timestep_end
+  []
+  [I_r]
+    type = AcousticIntensity
+    variable = I_r
+    pressure = p
+    velocity = vel_r
+    execute_on = timestep_end
+  []
+  [I_z]
+    type = AcousticIntensity
+    variable = I_z
+    pressure = p
+    velocity = vel_z
     execute_on = timestep_end
   []
 []
