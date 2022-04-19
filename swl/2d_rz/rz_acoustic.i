@@ -33,6 +33,8 @@
   [I_z]
   []
   [acoustic_energy]
+    # order = CONSTANT
+    # family = MONOMIAL
   []
 []
 
@@ -218,16 +220,19 @@
 
 [Postprocessors]
   [total_acoustic_energy]
+    # type = ElementIntegralVariablePostprocessor
     type = NodalSum
     variable = acoustic_energy
   []
   [acoustic_energy_on_interface]
     type = NodalSum
+    # type = SideIntegralVariablePostprocessor
     variable = acoustic_energy
     boundary = inner_BC
   []
   [acoustic_energy_on_top]
     type = NodalSum
+    # type = SideIntegralVariablePostprocessor
     variable = acoustic_energy
     boundary = top
   []

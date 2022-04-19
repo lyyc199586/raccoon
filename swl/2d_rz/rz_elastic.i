@@ -181,24 +181,33 @@
 # []
 
 [Postprocessors]
-  [external_work]
+  [w_ext_top]
     type = ExternalWork 
-    displacements = 'disp_r disp_z'
+    displacements = 'disp_z'
     forces = pre_wave
+    boundary = top
   []
-  # [kinetic_energy]
-  #   type = KineticEnergy 
-  #   displacements = 'disp_r disp_z'
-  # []
+  [w_ext_bottom]
+    type = ExternalWork 
+    displacements = 'disp_z'
+    forces = pre_wave
+    boundary = bottom
+  []
+  [w_ext_curved]
+    type = ExternalWork 
+    displacements = 'disp_r'
+    forces = pre_wave
+    boundary = curved
+  []
+  [kinetic_energy]
+    type = KineticEnergy 
+    displacements = 'disp_r disp_z'
+    density = ad_density
+  []
   [strain_energy]
     type = ElementIntegralVariablePostprocessor
     variable = psie_active
   []
-  # [strain_energy_on_top]
-  #   type = NodalSum
-  #   variable = psie_active
-  #   boundary = top
-  # []
 []
 
 [Materials]
@@ -207,6 +216,11 @@
     prop_names = 'density'
     prop_values = '1.995e-3'
   [../]
+  [ad_density]
+    type = ADGenericConstantMaterial
+    prop_names = 'ad_density'
+    prop_values = '1.995e-3'
+  []
   [bulk]
     type = ADGenericConstantMaterial
     prop_names = 'K G l Gc psic'
