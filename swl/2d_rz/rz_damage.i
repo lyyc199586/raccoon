@@ -2,13 +2,13 @@
 E = 0.02735
 nu = 0.2
 Gc_base = 21.88e-9
-gc_ratio = 0.5
+gc_ratio = 1
 l = 0.1
 psic = 7.0e-9
 k = 1e-09
 # alphaT = 8.0e-9
 SD = 0.75
-p_max = 1
+p_max = 3
 alphaT = 1.0
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -179,6 +179,6 @@ Gc = '${fparse Gc_base*gc_ratio}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-SD${SD}-gc${gc_ratio}'
+  file_base = 'damage-1'
 []
 

@@ -11,6 +11,11 @@
     ymin = -20
     ymax = 20
   []
+  # [./fmg]
+  #   type = FileMeshGenerator
+  #   use_for_exodus_restart = true
+  #   file = 'kumar_cond_3_l1.5_delta3.9_dt1e-7}.e'
+  # [../]
 []
 
 [Variables]
@@ -19,6 +24,8 @@
       type = FunctionIC
       function = 'if(y=0&x>=0&x<=50,1,0)'
     []
+    # initial_from_file_var = 'd' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
 []
 
@@ -28,12 +35,18 @@
   [psie_active]
     order = CONSTANT
     family = MONOMIAL
+    # initial_from_file_var = 'psie_active' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
   [ce] # add ce
     order = CONSTANT
     family = MONOMIAL
+    # initial_from_file_var = 'ce' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
   [d_max]
+    # initial_from_file_var = 'd_max' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
 []
 

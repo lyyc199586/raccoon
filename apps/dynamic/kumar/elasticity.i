@@ -10,8 +10,13 @@ sigma_ts = 3.08 # MPa
 sigma_cs = 9.24
 # psic = '${fparse sigma_ts^2/2/E}'
 # l = 1.25 # L = 1.25mm, l_ch = 11 mm
-l = 2
-delta = 4
+
+# l = 2
+# delta = 4
+# l = 1.5
+
+l = 0.5
+delta = 1
 
 [MultiApps]
   [fracture]
@@ -56,25 +61,40 @@ delta = 4
     ymin = -20
     ymax = 20
   []
+  # [./fmg]
+  #   type = FileMeshGenerator
+  #   use_for_exodus_restart = true
+  #   file = 'kumar_cond_3_l1.5_delta3.9_dt1e-7}.e'
+  # [../]
 []
 
 [Variables]
   [disp_x]
+    # initial_from_file_var = 'disp_x' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
   [disp_y]
+    # initial_from_file_var = 'disp_y' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
 []
 
 [AuxVariables]
   [fy]
+    # initial_from_file_var = 'fy' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
   [d]
     [InitialCondition]
       type = FunctionIC
       function = 'if(y=0&x>=0&x<=50,1,0)'
     []
+    # initial_from_file_var = 'd' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
   [d_max]
+    # initial_from_file_var = 'd_max' # for restart
+    # initial_from_file_timestep = 34 # for restart
   []
 []
 
@@ -219,11 +239,12 @@ delta = 4
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
 
+  # start_time = 1.7e-5 
   dt = 5e-7
   end_time = 80e-6
 
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
+  fixed_point_max_its = 1000
+  accept_on_max_fixed_point_iteration = false
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
@@ -239,7 +260,7 @@ delta = 4
 [Outputs]
   exodus = true
   print_linear_residuals = false
-  file_base = './kumar_hist_3'
+  file_base = './kumar_hist_3_l${l}_delta${delta}_dt5e-7'
   interval = 1
   [./csv]
     type = CSV 
