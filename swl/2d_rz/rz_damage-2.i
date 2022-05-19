@@ -1,15 +1,29 @@
-###############################################################################
-E = 0.02735
-nu = 0.2
-Gc_base = 21.88e-9
+# Begostone
+# E = 0.02735
+# nu = 0.2
+# Gc_base = 21.88e-9
+# gc_ratio = 1
+# l = 0.1
+# psic = 7.0e-9
+# k = 1e-09
+# # alphaT = 8.0e-9
+# SD = 0.75
+# p_max = 3
+# alphaT = 1
+
+# Glass
+E = 0.0625
+nu = 0.19
+Gc_base = 1.6e-8
 gc_ratio = 1
 l = 0.1
-psic = 7.0e-9
+psic = 2e-8
 k = 1e-09
 # alphaT = 8.0e-9
 SD = 0.75
-p_max = 3
-alphaT = 1
+p_max = 4
+alphaT = 1.0
+
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Gc = '${fparse Gc_base*gc_ratio}'
@@ -51,7 +65,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     type = FileMeshGenerator
     #  file = '../mesh/2d/inner.msh'
     use_for_exodus_restart = true
-    file = './damage-1.e'
+    file = './damage-19.e'
   [../]
 []
 
@@ -186,6 +200,6 @@ Gc = '${fparse Gc_base*gc_ratio}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-2'
+  file_base = 'damage-20'
 []
 
