@@ -13,14 +13,14 @@
 [AuxVariables]
   [./vel_p]
   [../]
-  [./accel_p]
-  [../]
-  [./accel_x]
-  [../]
-  [./accel_y]
-  [../]
-  [./accel_z]
-  [../]
+  # [./accel_p]
+  # [../]
+  # [./accel_x]
+  # [../]
+  # [./accel_y]
+  # [../]
+  # [./accel_z]
+  # [../]
 []
 
 [Kernels]
@@ -80,7 +80,8 @@
 
 [Executioner]
   type = Transient
-  solve_type = 'NEWTON'
+  # solve_type = 'NEWTON'
+  # solve_type = 'PJFNK'
   petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
   petsc_options_value = 'asm      31                  preonly       lu           1'
   nl_rel_tol = 1e-6
@@ -90,7 +91,12 @@
   dt = 1.5e-3
   [TimeIntegrator]
     type = NewmarkBeta
+    beta = 0.25
+    gamma = 0.5
   []
+  # [TimeIntegrator]
+  #   type = ActuallyExplicitEuler
+  # []
 []
 
 [Outputs]

@@ -51,19 +51,20 @@
 # rho = 2.54e-9 # Mg/mm^3
 # Gc = 0.003
 # sigma_ts = 3.08 # MPa
-# sigma_cs = 30.8
+# sigma_cs = 9.24
 # # psic = '${fparse sigma_ts^2/2/E}'
-# l = 2 # L = 1.25mm, l_ch = 11 mm
-# delta = 4.75
+# l = 1.5 # L = 1.25mm, l_ch = 11 mm
+# delta = 3.9
 
 # quasi-static branching
 E = 20e3
 nu = 0.3
 Gc = 8.9e-2
-sigma_ts = 137
-sigma_cs = 411
-l = 0.01
-delta = 5
+sigma_ts = 10
+sigma_cs = 30
+l = 0.1
+delta = 0
+
 
 # ---------------------------------
 
@@ -73,10 +74,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
-nx = 150
-ny = 50
+nx = 90
+ny = 30
 # refine = 3 # h = 0.03
-refine = 3
+refine = 4
 
 [Functions]
   [bc_func]
@@ -91,7 +92,8 @@ refine = 3
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};nx=${nx};ny=${ny};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};nx=${nx};ny=${ny};refine=${refi'
+               'ne}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -108,8 +110,8 @@ refine = 3
     type = MultiAppCopyTransfer
     multi_app = fracture
     direction = to_multiapp
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
+    variable = 'psie_active ce'
+    source_variable = 'psie_active ce'
   []
 []
 
@@ -123,29 +125,29 @@ refine = 3
     dim = 2
     nx = ${nx}
     ny = ${ny}
-    xmax = 3
-    ymin = -0.5
-    ymax = 0.5
+    xmax = 30
+    ymin = -5
+    ymax = 5
   []
   [gen2]
     type = ExtraNodesetGenerator
     input = gen
     new_boundary = fix_point
-    coord = '0 -0.5'
+    coord = '0 -5'
   []
 []
 
 [Adaptivity]
   marker = marker
   initial_marker = marker
-  initial_steps = ${refine}
+  initial_steps = 3
   stop_time = 0
   max_h_level = ${refine}
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -0.07 0'
-      top_right = '3 0.07 0'
+      bottom_left = '0 -0.7 0'
+      top_right = '30 0.7 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -165,7 +167,7 @@ refine = 3
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(y=0&x>=0&x<=0.5,1,0)'
+      function = 'if(y=0&x>=0&x<=5,1,0)'
     []
   []
 []
@@ -243,22 +245,22 @@ refine = 3
     elasticity_model = elasticity
     output_properties = 'stress'
   []
-  # [crack_geometric]
-  #   type = CrackGeometricFunction
-  #   f_name = alpha
-  #   function = 'd'
-  #   phase_field = d
-  # []
-  # [kumar_material]
-  #   type = NucleationMicroForce
-  #   normalization_constant = c0
-  #   tensile_strength = '${sigma_ts}'
-  #   compressive_strength = '${sigma_cs}'
-  #   delta = '${delta}'
-  #   external_driving_force_name = ce
-  #   output_properties = 'ce'
-  #   outputs = exodus
-  # []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
+  []
+  [kumar_material]
+    type = NucleationMicroForce
+    normalization_constant = c0
+    tensile_strength = '${sigma_ts}'
+    compressive_strength = '${sigma_cs}'
+    delta = '${delta}'
+    external_driving_force_name = ce
+    output_properties = 'ce'
+    outputs = exodus
+  []
 []
 
 [Postprocessors]
@@ -282,10 +284,8 @@ refine = 3
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  # dt = 2e-2
-  # end_time = 5e-1
-  dt = 2e-3
-  end_time = 5e-2
+  dt = 2e-2
+  end_time = 5e-1
 
   # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
@@ -294,10 +294,8 @@ refine = 3
 
   fixed_point_max_its = 100
   accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-4
-  fixed_point_abs_tol = 1e-6
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 []
 
 [Outputs]

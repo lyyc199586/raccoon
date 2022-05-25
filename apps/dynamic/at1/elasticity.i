@@ -1,0 +1,332 @@
+E = 3.24e3 # 32 GPa
+nu = 0.35
+K = '${fparse E/3/(1-2*nu)}'
+G = '${fparse E/2/(1+nu)}'
+Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+
+rho = 1.19e-9 # Mg/mm^3
+## case a
+
+case = a
+Gc = 1.588 # case a
+l = 0.2
+du = 0.06
+file = '../qs/at1_qs_a_l0.2.e'
+
+## case b
+
+# case = b
+# Gc = 5.063 # case b
+# l = 0.4
+# du = 0.1
+
+## case c
+
+# case = c
+# Gc = 9.420 # case c
+# l = 0.6
+# du = 0.14
+
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};file=${file}'
+    execute_on = 'TIMESTEP_END'
+    clone_master_mesh = True
+  []
+[]
+
+[Transfers]
+  [from_d]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = from_multiapp
+    variable = 'd'
+    source_variable = 'd'
+  []
+  [to_psie_active]
+    type = MultiAppCopyTransfer
+    multi_app = fracture
+    direction = to_multiapp
+    variable = 'psie_active'
+    source_variable = 'psie_active'
+  []
+[]
+
+[GlobalParams]
+  displacements = 'disp_x disp_y'
+[]
+
+[Mesh]
+  # [gen]
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 100
+  #   ny = 50
+  #   xmin = 0
+  #   xmax = 32
+  #   ymin = -8
+  #   ymax = 8
+  # []
+  [fmg]
+    type = FileMeshGenerator
+    use_for_exodus_restart = true
+    file = '${file}'
+  []
+[]
+
+# [Adaptivity]
+#   marker = marker
+#   initial_marker = marker
+#   initial_steps = 2
+#   stop_time = 0
+#   max_h_level = 2
+#   [Markers]
+#     [marker]
+#       type = BoxMarker
+#       bottom_left = '0 -2 0'
+#       top_right = '32 2 0'
+#       outside = DO_NOTHING
+#       inside = REFINE
+#     []
+#   []
+# []
+
+[UserObjects]
+  [sol]
+    type = SolutionUserObject
+    mesh = '${file}'
+    system_variables = 'disp_x disp_y d fy'
+    timestep = LATEST
+  []
+[]
+
+[Functions]
+  [d_ic]
+    type = SolutionFunction
+    solution = sol
+    from_variable = d
+  []
+  [disp_x_ic]
+    type = SolutionFunction
+    solution = sol
+    from_variable = disp_x
+  []
+  [disp_y_ic]
+    type = SolutionFunction
+    solution = sol
+    from_variable = disp_y
+  []
+  [fy_ic]
+    type = SolutionFunction
+    solution = sol
+    from_variable = fy
+  []
+[]
+
+[Variables]
+  [disp_x]
+    [InitialCondition]
+      type = FunctionIC
+      function = disp_x_ic
+    []
+  []
+  [disp_y]
+    [InitialCondition]
+      type = FunctionIC
+      function = disp_y_ic
+    []
+  []
+[]
+
+[AuxVariables]
+  [fy]
+    [InitialCondition]
+      type = FunctionIC
+      function = fy_ic
+    []
+  []
+  [d]
+    [InitialCondition]
+      type = FunctionIC
+      function = d_ic
+    []
+  []
+[]
+
+[Kernels]
+  [solid_x]
+    type = ADStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    # use_displaced_mesh = true
+  []
+  [solid_y]
+    type = ADStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+    # use_displaced_mesh = true
+  []
+  [inertia_x]
+    type = InertialForce
+    variable = disp_x
+    density = reg_density
+  []
+  [inertia_y]
+    type = InertialForce
+    variable = disp_y
+    density = reg_density
+  []
+[]
+
+[BCs]
+  [ytop]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = bc_top
+  []
+  [ybottom]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = bottom
+    function = bc_bottom
+  []
+[]
+
+[Functions]
+  [bc_top]
+    type = ParsedFunction
+    value = 'du'
+    vars = 'du'
+    vals = ${du}
+  []
+  [bc_bottom]
+    type = ParsedFunction
+    value = '-du'
+    vars = 'du'
+    vals = ${du}
+  []
+[]
+
+[Materials]
+  [bulk_properties]
+    type = ADGenericConstantMaterial
+    prop_names = 'E K G lambda l Gc density'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
+  []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-6'
+  []
+  [reg_density]
+    type = MaterialConverter
+    ad_props_in = 'density'
+    reg_props_out = 'reg_density'
+  []
+  [strain]
+    type = ADComputeSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+    output_properties = 'elastic_strain psie_active'
+    outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = 'stress'
+    outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = top
+  []
+  [out_disp_y]
+    type = PointValue
+    point = '0 8 0'
+    variable = disp_y
+  []
+  [Jint]
+    type = PhaseFieldJIntegral
+    J_direction = '1 0 0'
+    strain_energy_density = psie
+    displacements = 'disp_x disp_y'
+    boundary = 'left bottom right top' # ? need to define in mesh?
+  []
+  [external_work]
+    type = ExternalWork
+    boundary = 'top'
+    forces = 'fy'
+  []
+  [strain_energy]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie
+  []
+  [kinetic_energy]
+    type = KineticEnergy 
+    displacements = 'disp_x disp_y'
+    density = density
+  []
+[]
+
+[Executioner]
+  type = Transient
+
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
+  automatic_scaling = true
+
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
+
+  dt = 1e-7 # 1 us
+  start_time = 0
+  end_time = 100e-6 # 50 us
+
+  fixed_point_max_its = 100
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+
+  [TimeIntegrator]
+    type = NewmarkBeta
+    gamma = '${fparse 1/2}'
+    beta = '${fparse 1/4}'
+  []
+[]
+
+[Outputs]
+  exodus = true
+  print_linear_residuals = false
+  file_base = './at1_case_${case}_l${l}'
+  interval = 10
+  [./csv]
+    type = CSV 
+    interval = 1
+  [../]
+[]

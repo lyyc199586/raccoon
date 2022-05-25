@@ -19,7 +19,7 @@
 []
 
 [Transfers]
-  #[./to_accel_x]
+  # [./to_accel_x]
   #  type = MultiAppNearestNodeTransfer
   #  direction = to_multiapp
   #  multi_app = 'acoustic'
@@ -28,8 +28,8 @@
   #  source_boundary = 'curved'
   #  target_boundary = 'curved'
   #  execute_on = 'TIMESTEP_BEGIN'
-  #[../]
-  #[./to_accel_y]
+  # [../]
+  # [./to_accel_y]
   #  type = MultiAppNearestNodeTransfer
   #  direction = to_multiapp
   #  multi_app = 'acoustic'
@@ -38,8 +38,8 @@
   #  source_boundary = 'top_bottom'
   #  target_boundary = 'top_bottom'
   #  execute_on = 'TIMESTEP_BEGIN'
-  #[../]
-  #[./to_accel_z]
+  # [../]
+  # [./to_accel_z]
   #  type = MultiAppNearestNodeTransfer
   #  direction = to_multiapp
   #  multi_app = 'acoustic'
@@ -48,7 +48,7 @@
   #  source_boundary = 'curved'
   #  target_boundary = 'curved'
   #  execute_on = 'TIMESTEP_BEGIN'
-  #[../]
+  # [../]
   [./from_p]
     type = MultiAppNearestNodeTransfer
     direction = from_multiapp
@@ -73,12 +73,12 @@
 [AuxVariables]
   [./d]
   [../]
-  #[./accel_x]
-  #[../]
-  #[./accel_y]
-  #[../]
-  #[./accel_z]
-  #[../]
+  # [./accel_x]
+  # [../]
+  # [./accel_y]
+  # [../]
+  # [./accel_z]
+  # [../]
   [./pre_wave]
   [../]
   [./stress_h]
@@ -143,24 +143,24 @@
 []
 
 [AuxKernels]
-  #[./accel_x]
+  # [./accel_x]
   #  type = ExplicitAccelAux
   #  variable = 'accel_x'
   #  displacement = 'disp_x'
   #  execute_on = 'TIMESTEP_END'
-  #[../]
-  #[./accel_y]
+  # [../]
+  # [./accel_y]
   #  type = ExplicitAccelAux
   #  variable = 'accel_y'
   #  displacement = 'disp_y'
   #  execute_on = 'TIMESTEP_END'
-  #[../]
-  #[./accel_z]
+  # [../]
+  # [./accel_z]
   #  type = ExplicitAccelAux
   #  variable = 'accel_z'
   #  displacement = 'disp_z'
   #  execute_on = 'TIMESTEP_END'
-  #[../]
+  # [../]
   [./stress_h]
     type = ADRankTwoScalarAux
     rank_two_tensor = 'stress'

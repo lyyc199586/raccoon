@@ -1,38 +1,12 @@
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = ${nx}
-    ny = ${ny}
-    xmax = 3
-    ymin = -0.5
-    ymax = 0.5
-  []
-[]
-
-[Adaptivity]
-  marker = marker
-  initial_marker = marker
-  initial_steps = ${refine}
-  stop_time = 0
-  max_h_level = ${refine}
-  [Markers]
-    [marker]
-      type = BoxMarker
-      bottom_left = '0 -0.07 0'
-      top_right = '3 0.07 0'
-      outside = DO_NOTHING
-      inside = REFINE
-    []
+  [fmg]
+     type = FileMeshGenerator
+     file = '../../../mesh/branch_0.01.msh'
   []
 []
 
 [Variables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=0&x<=0.5,1,0)'
-    []
   []
 []
 
@@ -42,8 +16,6 @@
   [disp_x]
   []
   [disp_y]
-  []
-  [strain_zz]
   []
   [psie_active]
     order = CONSTANT
@@ -100,7 +72,7 @@
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 1e-6'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -111,7 +83,7 @@
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
-    function = 'g*psie_active+(Gc/c0/l)*alpha'
+    function = 'alpha*Gc/c0/l+g*psie_active'
     args = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
@@ -124,11 +96,10 @@
     delta = '${delta}'
     external_driving_force_name = ce
     output_properties = 'ce'
-    outputs = exodus
+    # outputs = exodus
   []
   [strain]
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    type = ADComputeSmallStrain
     displacements = 'disp_x disp_y'
   []
   [elasticity]
@@ -149,6 +120,12 @@
   []
 []
 
+# [Outputs]
+#   [exodus]
+#     type = Exodus
+#   []
+# []
+
 [Executioner]
   type = Transient
 
@@ -159,10 +136,6 @@
 
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-[]
-
-[Outputs]
-  print_linear_residuals = false
+  nl_rel_tol = 1e-3
+  nl_abs_tol = 1e-5
 []
