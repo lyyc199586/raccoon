@@ -214,14 +214,12 @@
   [./density]
     type = GenericConstantMaterial
     prop_names = 'density'
-    # prop_values = '1.995e-3'
-    prop_values = '2.2e-3'
+    prop_values = ${rho_s}
   [../]
   [ad_density]
     type = ADGenericConstantMaterial
     prop_names = 'ad_density'
-    # prop_values = '1.995e-3'
-    prop_values = '2.2e-3'
+    prop_values = ${rho_s}
   []
   [bulk]
     type = ADGenericConstantMaterial
