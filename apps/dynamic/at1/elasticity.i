@@ -1,17 +1,18 @@
-E = 3.24e3 # 32 GPa
+E = 3.09e3
 nu = 0.35
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-rho = 1.19e-9 # Mg/mm^3
+rho = 1.18e-9 # Mg/mm^3
 ## case a
 
 case = a
-Gc = 1.588 # case a
+# Gc = 0.8 # case as
+Gc = 1.2
 l = 0.2
 du = 0.06
-file = '../qs/at1_qs_a_l0.2.e'
+file = '../qs/el/at1_qs_a_l0.2.e'
 
 ## case b
 
@@ -33,7 +34,7 @@ file = '../qs/at1_qs_a_l0.2.e'
     input_files = fracture.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};file=${file}'
     execute_on = 'TIMESTEP_END'
-    clone_master_mesh = True
+    clone_master_mesh = true
   []
 []
 
@@ -56,6 +57,7 @@ file = '../qs/at1_qs_a_l0.2.e'
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  out_of_plane_strain = strain_zz
 []
 
 [Mesh]
@@ -97,7 +99,7 @@ file = '../qs/at1_qs_a_l0.2.e'
   [sol]
     type = SolutionUserObject
     mesh = '${file}'
-    system_variables = 'disp_x disp_y d fy'
+    system_variables = 'disp_x disp_y d fx fy'
     timestep = LATEST
   []
 []
@@ -118,11 +120,16 @@ file = '../qs/at1_qs_a_l0.2.e'
     solution = sol
     from_variable = disp_y
   []
-  [fy_ic]
-    type = SolutionFunction
-    solution = sol
-    from_variable = fy
-  []
+  # [fy_ic]
+  #   type = SolutionFunction
+  #   solution = sol
+  #   from_variable = fy
+  # []
+  # [fx_ic]
+  #   type = SolutionFunction
+  #   solution = sol
+  #   from_variable = fx
+  # []
 []
 
 [Variables]
@@ -138,14 +145,22 @@ file = '../qs/at1_qs_a_l0.2.e'
       function = disp_y_ic
     []
   []
+  [strain_zz]
+  []
 []
 
 [AuxVariables]
   [fy]
-    [InitialCondition]
-      type = FunctionIC
-      function = fy_ic
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = fy_ic
+    # []
+  []
+  [fx]
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = fx_ic
+    # []
   []
   [d]
     [InitialCondition]
@@ -160,39 +175,56 @@ file = '../qs/at1_qs_a_l0.2.e'
     type = ADStressDivergenceTensors
     variable = disp_x
     component = 0
-    # use_displaced_mesh = true
+    save_in = fx
   []
   [solid_y]
     type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = fy
-    # use_displaced_mesh = true
+  []
+  [plane_stress]
+     type = ADWeakPlaneStress
+     variable = strain_zz
   []
   [inertia_x]
     type = InertialForce
     variable = disp_x
     density = reg_density
+    use_displaced_mesh = false
   []
   [inertia_y]
     type = InertialForce
     variable = disp_y
     density = reg_density
+    use_displaced_mesh = false
   []
 []
 
 [BCs]
-  [ytop]
+  [y_top]
     type = FunctionDirichletBC
     variable = disp_y
     boundary = top
     function = bc_top
   []
-  [ybottom]
-    type = FunctionDirichletBC
+  # [y_bottom]
+  #   type = FunctionDirichletBC
+  #   variable = disp_y
+  #   boundary = bottom
+  #   function = bc_bottom
+  # []
+  [y_center]
+    type = DirichletBC
     variable = disp_y
-    boundary = bottom
-    function = bc_bottom
+    boundary = noncrack
+    value = 0
+  []
+  [fix_x]
+    type = DirichletBC
+    variable = disp_x
+    boundary = fix_point
+    value = 0
   []
 []
 
@@ -223,6 +255,10 @@ file = '../qs/at1_qs_a_l0.2.e'
     function = 'd'
     phase_field = d
   []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
+    phase_field = d
+  []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
@@ -237,7 +273,8 @@ file = '../qs/at1_qs_a_l0.2.e'
     reg_props_out = 'reg_density'
   []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -255,12 +292,29 @@ file = '../qs/at1_qs_a_l0.2.e'
     output_properties = 'stress'
     outputs = exodus
   []
+  [fracture_energy_density]
+    type = ADParsedMaterial
+    f_name = psif
+    function = 'Gc * gamma'
+    material_property_names = 'Gc gamma'
+  []
+  [total_energy_density]
+    type = ADParsedMaterial
+    f_name = psie_psif
+    function = 'psie + psif'
+    material_property_names = 'psie psif'
+ [] 
 []
 
 [Postprocessors]
   [Fy]
     type = NodalSum
     variable = fy
+    boundary = top
+  []
+  [Fx]
+    type = NodalSum
+    variable = fx
     boundary = top
   []
   [out_disp_y]
@@ -273,12 +327,13 @@ file = '../qs/at1_qs_a_l0.2.e'
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
-    boundary = 'left bottom right top' # ? need to define in mesh?
+    boundary = 'left right top' # ? need to define in mesh?
   []
   [external_work]
     type = ExternalWork
     boundary = 'top'
     forces = 'fy'
+    displacements = 'disp_y'
   []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
@@ -288,6 +343,14 @@ file = '../qs/at1_qs_a_l0.2.e'
     type = KineticEnergy 
     displacements = 'disp_x disp_y'
     density = density
+  []
+  [fracture_energy]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psif
+  []
+  [total_energy] # strain energy + fracture energy
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie_psif
   []
 []
 
@@ -304,7 +367,7 @@ file = '../qs/at1_qs_a_l0.2.e'
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
 
-  dt = 1e-7 # 1 us
+  dt = 1e-6 # 1 us
   start_time = 0
   end_time = 100e-6 # 50 us
 
@@ -324,7 +387,7 @@ file = '../qs/at1_qs_a_l0.2.e'
   exodus = true
   print_linear_residuals = false
   file_base = './at1_case_${case}_l${l}'
-  interval = 10
+  interval = 1
   [./csv]
     type = CSV 
     interval = 1

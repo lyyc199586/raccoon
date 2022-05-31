@@ -1,33 +1,26 @@
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 640
-    ny = 320
-    xmin = 0
-    xmax = 32
-    ymin = -8
-    ymax = 8
-  []
+  # [gen]
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 200
+  #   ny = 50
+  #   xmin = 0
+  #   xmax = 32
+  #   ymin = 0
+  #   ymax = 8
+  # []
 []
 
 # [Adaptivity]
-#   marker = marker2
+#   marker = marker1
 #   initial_marker = marker1
-#   initial_steps = 1
+#   initial_steps = 2
 #   stop_time = 0
-#   max_h_level = 1
+#   max_h_level = 3
 #   [Markers]
 #     [marker1]
 #       type = BoxMarker
-#       bottom_left = '0 -2 0'
-#       top_right = '32 2 0'
-#       outside = DO_NOTHING
-#       inside = REFINE
-#     []
-#     [marker2]
-#       type = BoxMarker
-#       bottom_left = '0 -1 0'
+#       bottom_left = '0 0 0'
 #       top_right = '32 1 0'
 #       outside = DO_NOTHING
 #       inside = REFINE
@@ -37,10 +30,10 @@
 
 [Variables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=0&x<=4,1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=0&x<=4,1,0)'
+    # []
   []
 []
 
@@ -65,7 +58,7 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    bound_value = 1
+    bound_value = 0
   []
 []
 
@@ -124,10 +117,10 @@
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
 []
 
 [Outputs]

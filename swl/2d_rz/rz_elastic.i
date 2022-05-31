@@ -213,15 +213,15 @@
 [Materials]
   [./density]
     type = GenericConstantMaterial
-    prop_names = 'density'
-    # prop_values = '1.995e-3'
-    prop_values = '2.2e-3'
+    prop_names = 'density' 
+    prop_values = '1.995e-3' # begostone
+    # prop_values = '2.2e-3' # glass
   [../]
   [ad_density]
     type = ADGenericConstantMaterial
     prop_names = 'ad_density'
-    # prop_values = '1.995e-3'
-    prop_values = '2.2e-3'
+    prop_values = '1.995e-3'
+    # prop_values = '2.2e-3'
   []
   [bulk]
     type = ADGenericConstantMaterial
@@ -272,7 +272,7 @@
     solve_type = lumped
   [../]
   
-  end_time = 2.1
+  end_time = 2.4
   dt = 0.75e-3
 []
 

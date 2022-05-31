@@ -1,28 +1,28 @@
 # Begostone
-# E = 0.02735
-# nu = 0.2
-# Gc_base = 21.88e-9
+E = 0.02735
+nu = 0.2
+Gc_base = 21.88e-9
+gc_ratio = 1
+l = 0.1
+psic = 7.0e-9
+# k = 1e-09
+# alphaT = 8.0e-9
+SD = 1.5
+p_max = 1
+alphaT = 1.0
+
+# Glass
+# E = 0.0625
+# nu = 0.19
+# Gc_base = 1.6e-8
 # gc_ratio = 1
 # l = 0.1
-# psic = 7.0e-9
+# psic = 2e-8
 # k = 1e-09
 # # alphaT = 8.0e-9
 # SD = 0.75
-# p_max = 1
+# p_max = 4
 # alphaT = 1.0
-
-# Glass
-E = 0.0625
-nu = 0.19
-Gc_base = 1.6e-8
-gc_ratio = 1
-l = 0.1
-psic = 2e-8
-k = 1e-09
-# alphaT = 8.0e-9
-SD = 0.75
-p_max = 4
-alphaT = 1.0
 ###############################################################################
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -39,7 +39,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};SD=${SD};p_max=${p_max};gc_ratio=${gc_ratio}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};SD=${SD};p_max=${p_max}'
   [../]
 []
 
@@ -186,7 +186,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
   nl_rel_tol = 1e-06
   automatic_scaling = true
   
-  end_time = 2.1
+  end_time = 2.4
   dt = 0.75e-3
 []
 

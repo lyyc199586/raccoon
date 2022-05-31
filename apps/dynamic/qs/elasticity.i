@@ -1,16 +1,17 @@
-E = 3.24e3 # 32 GPa
+E = 3.09e3 # 32 GPa
 nu = 0.35
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 # psic = '${fparse sigma_ts^2/2/E}'
 
-rho = 1.19e-9 # Mg/mm^3
+rho = 1.18e-9 # Mg/mm^3
 
 ## case a
 
 case = a
-Gc = 1.588 # case a
+# Gc = 1.549 # case a
+Gc = 1.2
 l = 0.2
 du = 0.06
 
@@ -34,6 +35,7 @@ du = 0.06
     input_files = fracture.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l}'
     execute_on = 'TIMESTEP_END'
+    clone_master_mesh = true
   []
 []
 
@@ -56,38 +58,50 @@ du = 0.06
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  out_of_plane_strain = strain_zz
 []
 
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 640
-    ny = 320
-    xmin = 0
-    xmax = 32
-    ymin = -8
-    ymax = 8
+  # [gen]
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 200
+  #   ny = 50
+  #   xmin = 0
+  #   xmax = 32
+  #   ymin = 0
+  #   ymax = 8
+  # []
+  [gen2]
+    type = ExtraNodesetGenerator
+    input = fmg
+    new_boundary = fix_point
+    coord = '0 8'
+  []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen2
+    new_boundary = noncrack
+    bottom_left = '4 0 0'
+    top_right = '32 0 0'
+  []
+  construct_side_list_from_node_list = true
+  [fmg]
+    type = FileMeshGenerator
+    file = '../mesh/half.msh'
   []
 []
 
 # [Adaptivity]
-#   marker = marker2
+#   marker = marker1
 #   initial_marker = marker1
-#   initial_steps = 1
+#   initial_steps = 2
 #   stop_time = 0
-#   max_h_level = 1
+#   max_h_level = 3
 #   [Markers]
 #     [marker1]
 #       type = BoxMarker
-#       bottom_left = '0 -2 0'
-#       top_right = '32 2 0'
-#       outside = DO_NOTHING
-#       inside = REFINE
-#     []
-#     [marker2]
-#       type = BoxMarker
-#       bottom_left = '0 -1 0'
+#       bottom_left = '0 0 0'
 #       top_right = '32 1 0'
 #       outside = DO_NOTHING
 #       inside = REFINE
@@ -100,16 +114,20 @@ du = 0.06
   []
   [disp_y]
   []
+  [strain_zz]
+  []
 []
 
 [AuxVariables]
+  [fx]
+  []
   [fy]
   []
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=0&x<=4,1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=0&x<=4,1,0)'
+    # []
   []
 []
 
@@ -118,42 +136,63 @@ du = 0.06
     type = ADStressDivergenceTensors
     variable = disp_x
     component = 0
-    # use_displaced_mesh = true
+    save_in = fx
   []
   [solid_y]
     type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = fy
-    # use_displaced_mesh = true
+  []
+  [plane_stress]
+     type = ADWeakPlaneStress
+     variable = strain_zz
   []
 []
 
 [BCs]
-  [ytop]
+  [y_top]
     type = FunctionDirichletBC
     variable = disp_y
     boundary = top
     function = bc_top
   []
-  [ybottom]
-    type = FunctionDirichletBC
+  # [x_top]
+  #   type = DirichletBC
+  #   variable = disp_x
+  #   boundary = top
+  #   value = 0
+  # []
+  # [y_bottom]
+  #   type = FunctionDirichletBC
+  #   variable = disp_y
+  #   boundary = bottom
+  #   function = bc_bottom
+  # []
+  [y_center]
+    type = DirichletBC
     variable = disp_y
-    boundary = bottom
-    function = bc_bottom
+    boundary = noncrack
+    value = 0
+  []
+  [fix_x]
+    type = DirichletBC
+    variable = disp_x
+    boundary = fix_point
+    value = 0
   []
 []
 
 [Functions]
   [bc_top]
     type = ParsedFunction
-    value = 'du*t'
+    value = 'if(t<1, du*t, du)'
     vars = 'du'
     vals = ${du}
   []
   [bc_bottom]
     type = ParsedFunction
-    value = '-du*t'
+    value = 'if(t<1, -du*t, -du)'
     vars = 'du'
     vals = ${du}
   []
@@ -171,6 +210,10 @@ du = 0.06
     function = 'd'
     phase_field = d
   []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
+    phase_field = d
+  []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
@@ -179,13 +222,9 @@ du = 0.06
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
   []
-  [reg_density]
-    type = MaterialConverter
-    ad_props_in = 'density'
-    reg_props_out = 'reg_density'
-  []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -194,7 +233,7 @@ du = 0.06
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'elastic_strain psie_active'
+    output_properties = 'elastic_strain psie_active psie'
     outputs = exodus
   []
   [stress]
@@ -203,12 +242,29 @@ du = 0.06
     output_properties = 'stress'
     outputs = exodus
   []
+  [fracture_energy_density]
+    type = ADParsedMaterial
+    f_name = psif
+    function = 'Gc * gamma'
+    material_property_names = 'Gc gamma'
+  []
+  [total_energy_density]
+    type = ADParsedMaterial
+    f_name = psie_psif
+    function = 'psie + psif'
+    material_property_names = 'psie psif'
+ [] 
 []
 
 [Postprocessors]
   [Fy]
     type = NodalSum
     variable = fy
+    boundary = top
+  []
+  [Fx]
+    type = NodalSum
+    variable = fx
     boundary = top
   []
   [out_disp_y]
@@ -221,7 +277,7 @@ du = 0.06
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
-    boundary = 'left bottom right top' # ? need to define in mesh?
+    boundary = 'left top right' # ? need to define in mesh?
   []
   [external_work]
     type = ExternalWork
@@ -234,8 +290,15 @@ du = 0.06
   []
   [kinetic_energy]
     type = KineticEnergy 
-    displacements = 'disp_x disp_y'
     density = density
+  []
+  [fracture_energy]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psif
+  []
+  [total_energy] # strain energy + fracture energy
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie_psif
   []
 []
 
@@ -247,10 +310,10 @@ du = 0.06
   petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
 
   dt = 0.1
   end_time = 1
@@ -264,9 +327,9 @@ du = 0.06
 
 [Outputs]
   exodus = true
-  checkpoint = true
+  # checkpoint = true
   print_linear_residuals = false
-  file_base = './at1_qs_${case}_l${l}'
+  file_base = './el/at1_qs_${case}_l${l}'
   interval = 1
   [./csv]
     type = CSV 

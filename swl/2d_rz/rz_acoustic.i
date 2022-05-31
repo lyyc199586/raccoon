@@ -246,7 +246,7 @@
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   # automatic_scaling = true
-  end_time = 2.1
+  end_time = 2.4
   dt = 1.5e-3
   # end_time = 1
   # dt = 1e-3
