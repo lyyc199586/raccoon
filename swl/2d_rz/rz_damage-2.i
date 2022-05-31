@@ -12,17 +12,17 @@
 # alphaT = 1
 
 # Glass
-E = 0.0625
-nu = 0.19
-Gc_base = 1.6e-8
-gc_ratio = 1
-l = 0.1
-psic = 2e-8
-k = 1e-09
-# alphaT = 8.0e-9
-SD = 0.75
-p_max = 4
-alphaT = 1.0
+# E = 0.0625
+# nu = 0.19
+# Gc_base = 1.6e-8
+# gc_ratio = 1
+# l = 0.1
+# psic = 2e-8
+# k = 1e-09
+# # alphaT = 8.0e-9
+# SD = 0.75
+# p_max = 4
+# alphaT = 1.0
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
