@@ -57,14 +57,22 @@
 # delta = 3.9
 
 # quasi-static branching
-E = 20e3
-nu = 0.3
-Gc = 8.9e-2
+#E = 20e3
+#nu = 0.3
+#Gc = 8.9e-2
+#sigma_ts = 10
+#sigma_cs = 30
+#l = 0.1
+#delta = 0
+
+# BegoStone
+E = 2.735e4
+nu = 0.2
+Gc = 2.188e-2
 sigma_ts = 10
-sigma_cs = 30
+sigma_cs = 50
 l = 0.1
 delta = 0
-
 
 # ---------------------------------
 
@@ -77,7 +85,7 @@ c2 = '${fparse (3-nu)/(1+nu)}'
 nx = 90
 ny = 30
 # refine = 3 # h = 0.03
-refine = 4
+refine = 3
 
 [Functions]
   [bc_func]
@@ -300,7 +308,7 @@ refine = 4
 
 [Outputs]
   exodus = true
-  file_base = 'surf_qs-branch_l${l}_delta${delta}'
+  file_base = 'surf_begostone_l${l}_delta${delta}'
   print_linear_residuals = false
   interval = 1
   [./csv]

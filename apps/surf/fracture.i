@@ -4,9 +4,9 @@
     dim = 2
     nx = ${nx}
     ny = ${ny}
-    xmax = 3
-    ymin = -0.5
-    ymax = 0.5
+    xmax = 60
+    ymin = -10
+    ymax = 10
   []
 []
 
@@ -19,8 +19,8 @@
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -0.07 0'
-      top_right = '3 0.07 0'
+      bottom_left = '0 -1.5 0'
+      top_right = '60 1.5 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -31,7 +31,7 @@
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(y=0&x>=0&x<=0.5,1,0)'
+      function = 'if(y=0&x>=0&x<=10,1,0)'
     []
   []
 []
@@ -124,7 +124,7 @@
     delta = '${delta}'
     external_driving_force_name = ce
     output_properties = 'ce'
-    outputs = exodus
+    #outputs = exodus
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -164,5 +164,8 @@
 []
 
 [Outputs]
+  #[exodus]
+  #  type = Exodus
+  #[]
   print_linear_residuals = false
 []

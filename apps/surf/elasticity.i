@@ -57,14 +57,22 @@
 # delta = 4.75
 
 # quasi-static branching
-E = 20e3
-nu = 0.3
-Gc = 8.9e-2
-sigma_ts = 137
-sigma_cs = 411
-l = 0.01
-delta = 5
+# E = 20e3
+# nu = 0.3
+# Gc = 8.9e-2
+# sigma_ts = 137
+# sigma_cs = 411
+# l = 0.01
+# delta = 5
 
+# BegoStone
+E = 2.735e4
+nu = 0.2
+Gc = 2.188e-2
+sigma_ts = 10
+sigma_cs = 50
+l = 0.8
+delta = 8
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -73,10 +81,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
-nx = 150
-ny = 50
+# nx = 150
+# ny = 50
+nx = 300
+ny = 100
 # refine = 3 # h = 0.03
-refine = 3
+refine = 2
 
 [Functions]
   [bc_func]
@@ -123,15 +133,15 @@ refine = 3
     dim = 2
     nx = ${nx}
     ny = ${ny}
-    xmax = 3
-    ymin = -0.5
-    ymax = 0.5
+    xmax = 60
+    ymin = -10
+    ymax = 10
   []
   [gen2]
     type = ExtraNodesetGenerator
     input = gen
     new_boundary = fix_point
-    coord = '0 -0.5'
+    coord = '0 -10'
   []
 []
 
@@ -144,8 +154,8 @@ refine = 3
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -0.07 0'
-      top_right = '3 0.07 0'
+      bottom_left = '0 -1.5 0'
+      top_right = '60 1.5 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -165,7 +175,7 @@ refine = 3
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(y=0&x>=0&x<=0.5,1,0)'
+      function = 'if(y=0&x>=0&x<=10,1,0)'
     []
   []
 []
@@ -269,11 +279,16 @@ refine = 3
     displacements = 'disp_x disp_y'
     boundary = 'left top right bottom'
   []
+  [Jint_over_Gc]
+    type = ParsedPostprocessor
+    function = 'Jint/${Gc}'
+    pp_names = 'Jint'
+    use_t = false
+  []
 []
 
 [Executioner]
   type = Transient
-
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
@@ -284,8 +299,9 @@ refine = 3
 
   # dt = 2e-2
   # end_time = 5e-1
-  dt = 2e-3
-  end_time = 5e-2
+  dt = 2e-2
+  # end_time = 5e-1
+  end_time = 1
 
   # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
@@ -301,8 +317,10 @@ refine = 3
 []
 
 [Outputs]
-  exodus = true
-  file_base = 'surf_qs-branch_l${l}_delta${delta}'
+  [exodus]
+    type = Exodus
+  []
+  file_base = 'surf_begostone_width60_l${l}_delta${delta}'
   print_linear_residuals = false
   interval = 1
   [./csv]
