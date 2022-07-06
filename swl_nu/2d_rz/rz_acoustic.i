@@ -74,20 +74,20 @@
     gamma = 0.5 
     eta = 0.0
   []
-  [grad_p_r]
-    type = PressureGradient
-    variable = disp_r
-    # displacements = 'disp_r disp_z'
-    pressure = p
-    component = 0
-  []
-  [grad_p_z]
-    type = PressureGradient
-    variable = disp_z
-    # displacements = 'disp_r disp_z'
-    pressure = p
-    component = 1
-  []
+  # [grad_p_r]
+  #   type = PressureGradient
+  #   variable = disp_r
+  #   # displacements = 'disp_r disp_z'
+  #   pressure = p
+  #   component = 0
+  # []
+  # [grad_p_z]
+  #   type = PressureGradient
+  #   variable = disp_z
+  #   # displacements = 'disp_r disp_z'
+  #   pressure = p
+  #   component = 1
+  # []
 []
 
 
