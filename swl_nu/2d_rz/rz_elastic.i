@@ -166,20 +166,6 @@
   [../]
 []
 
-# [Materials]
-#   [./elasticity]
-#     type = ADComputeIsotropicElasticityTensor
-#     poissons_ratio = 0.3
-#     youngs_modulus = 1e10
-#   [../]
-#   [./strain]
-#     type = ADComputeAxisymmetricRZSmallStrain
-#   [../]
-#   [./stress]
-#     type = ADComputeLinearElasticStress
-#   [../]
-# []
-
 [Postprocessors]
   [w_ext_top]
     type = ExternalWork 
