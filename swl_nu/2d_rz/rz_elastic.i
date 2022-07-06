@@ -1,7 +1,7 @@
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/2d/inner.msh'
+     file = '../mesh/2d/inner_pr.msh'
    [../]
 []
 

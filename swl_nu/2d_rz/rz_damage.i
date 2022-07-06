@@ -15,7 +15,7 @@ rho_s = 1.995e-3
 
 l = 0.8
 delta = 8
-r = 0.03
+r = 0.4
 
 # Glass
 # E = 0.0625
@@ -71,7 +71,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [./fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    file = '../mesh/2d/inner_pr.msh'
   [../]
 []
 
@@ -124,14 +124,23 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   fixed_bound_value = 0
   #   threshold_value = 0.95
   # []
+  # [history]
+  #   type = HistoryFieldBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   history_variable = d_max
+  #   fixed_bound_value = 0
+  #   search_radius = ${r}
+  #   threshold_ratio = 0.95
+  # []
   [history]
-    type = HistoryFieldBoundsAux
+    type = ConditionalHistoryBoundsAux
     variable = bounds_dummy
     bounded_variable = d
     history_variable = d_max
     fixed_bound_value = 0
     search_radius = ${r}
-    threshold_ratio = 0.95
+    threshold_value = 0.95
   []
 []
 
@@ -244,6 +253,6 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage_l${l}_delta${delta}_r${r}'
+  file_base = './gold/cond_hist_bd/damage_l${l}_delta${delta}_r${r}'
 []
 

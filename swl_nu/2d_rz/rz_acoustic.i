@@ -1,7 +1,7 @@
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/2d/outer_vol_src.msh'
+     file = '../mesh/2d/outer_pr.msh'
    [../]
 []
 
@@ -155,28 +155,6 @@
     value = 0
   []
 []
-# [DiracKernels]
-#   [./monopole_source]
-#     type = DiracSource
-#     variable = p
-#     point = '0 1.75 0'
-#     dim  = 2
-#     #####################################
-#     fL = 8.33e-2
-#     t1 = 0.07
-#     tRT = 0.01
-#     tL  = 0.8
-#     tP  = 1.0
-#     p0  = 2.1e-8
-#     # p0 = 5.26e-8
-#     d1  = 9
-#     upcoeff = 12.2189
-#     downcoeff = 0.9404
-#     num_shots = 1
-#     #####################################
-#     rho = 1e-3
-#   [../]
-# []
 
 # p0=2.18e-9
 [Functions]
