@@ -1,35 +1,42 @@
-# Begostone
-E = 0.02735
-nu = 0.2
-Gc_base = 21.88e-9
-gc_ratio = 1
-psic = 7.0e-9
-sigma_ts = 10e-6
-sigma_cs = 50e-6
-k = 1e-09
-# alphaT = 8.0e-9
-SD = 0.75
-p_max = 1
-alphaT = 1.0
-rho_s = 1.995e-3
-
-l = 0.8
-delta = 8
-r = 0.4
-
-# Glass
-# E = 0.0625
-# nu = 0.19
-# Gc_base = 1.6e-8
+# Begostone: us, mm, TPa
+# E = 0.02735
+# nu = 0.2
+# # Gc_base = 21.88e-9
+# Gc_base = 52.66e-9
 # gc_ratio = 1
-# l = 0.1
-# psic = 2e-8
+# psic = 7.0e-9
+# sigma_ts = 10e-6
+# sigma_cs = 50e-6
 # k = 1e-09
 # # alphaT = 8.0e-9
-# SD = 0.75
-# p_max = 4
+# SD = 1
+# p0 = 3e-7
+# p_ratio = 1
 # alphaT = 1.0
-# rho_s = 2.2e-3
+# rho_s = 1.995e-3
+
+# l = 0.8
+# delta = 8
+# r = 0.4
+
+# Glass
+E = 0.0625
+nu = 0.19
+Gc_base = 1.6e-8
+gc_ratio = 1
+psic = 2e-8
+sigma_ts = 50e-6
+sigma_cs = 100e-6
+k = 1e-09
+# alphaT = 8.0e-9
+SD = 1
+p0 = 4.8e-7
+p_ratio = 1
+alphaT = 1.0
+rho_s = 2.2e-3
+l = 0.04
+delta = 2
+r = 0.02
 ###############################################################################
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -47,7 +54,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};lambda=${Lambda};G=${G};K=${K};Gc=${Gc};l=${l};delta=${delta};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max};gc_ratio=${gc_ratio}'
+    cli_args = 'sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};lambda=${Lambda};G=${G};K=${K};Gc=${Gc};l=${l};delta=${delta};psic=${psic};rho_s=${rho_s};SD=${SD};p0=${p0};p_ratio=${p_ratio};gc_ratio=${gc_ratio}'
   [../]
 []
 
@@ -71,7 +78,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [./fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner_pr.msh'
+    file = '../mesh/2d/inner_pr_glass.msh'
   [../]
 []
 
@@ -253,6 +260,6 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = './gold/cond_hist_bd/damage_l${l}_delta${delta}_r${r}'
+  file_base = './gold/glass/damage_l${l}_delta${delta}_r${r}'
 []
 

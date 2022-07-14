@@ -1,7 +1,7 @@
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/2d/inner_pr.msh'
+     file = '../mesh/2d/inner_pr_glass.msh'
    [../]
 []
 
@@ -18,7 +18,7 @@
     type = TransientMultiApp
     execute_on = 'TIMESTEP_END'
     input_files = 'rz_acoustic.i'
-    cli_args = 'SD=${SD};p_max=${p_max}'
+    cli_args = 'SD=${SD};p_ratio=${p_ratio};p0=${p0}'
   [../]
 []
 
