@@ -270,7 +270,8 @@
     solve_type = lumped
   [../]
   
-  end_time = 2.4
+  # end_time = 2.4
+  end_time = 2.1
   dt = 0.75e-3
 []
 

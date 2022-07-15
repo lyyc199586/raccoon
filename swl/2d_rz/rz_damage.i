@@ -1,13 +1,15 @@
 # Begostone
 E = 0.02735
 nu = 0.2
-Gc_base = 21.88e-9
+# Gc_base = 21.88e-9
+Gc_base = 1e-40
 gc_ratio = 1
 l = 0.1
-psic = 7.0e-9
+# psic = 7.0e-9
+psic = 1e-40
 k = 1e-09
 # alphaT = 8.0e-9
-SD = 1.25
+SD = 1
 p_max = 1
 alphaT = 1.0
 rho_s = 1.995e-3
@@ -188,7 +190,8 @@ Gc = '${fparse Gc_base*gc_ratio}'
   nl_rel_tol = 1e-06
   automatic_scaling = true
   
-  end_time = 2.4
+  # end_time = 2.4
+  end_time = 2.1
   dt = 0.75e-3
 []
 
