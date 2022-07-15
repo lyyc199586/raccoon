@@ -1,7 +1,7 @@
 [Mesh]
    [./fmg]
      type = FileMeshGenerator
-     file = '../mesh/2d/outer_pr_glass.msh'
+     file = '../mesh/2d/outer_pr.msh'
    [../]
 []
 
@@ -210,7 +210,7 @@
   petsc_options_value = 'asm      31                  preonly       lu           1'
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
-  # automatic_scaling = true
+  automatic_scaling = true
   end_time = 2.1
   dt = 1.5e-3
   # end_time = 1
@@ -221,11 +221,11 @@
 []
 
 [Outputs]
-  [./csv]
-    type = CSV
-    delimiter = ','
-    file_base = 'acoustic_energy'
-  [../]
+  # [./csv]
+  #   type = CSV
+  #   delimiter = ','
+  #   file_base = 'acoustic_energy'
+  # [../]
   [./exodus]
     type = Exodus
     interval = 100

@@ -20,20 +20,21 @@
 # r = 0.4
 
 # Glass
-E = 0.0625
-nu = 0.19
+E = 0.064
+nu = 0.2
 Gc_base = 1.6e-8
 gc_ratio = 1
 psic = 2e-8
-sigma_ts = 50e-6
-sigma_cs = 100e-6
+# sigma_ts = 150e-6
+sigma_ts = 0
+sigma_cs = 1000e-6
 k = 1e-09
 # alphaT = 8.0e-9
-SD = 1
+SD = 1.5
 p0 = 4.8e-7
 p_ratio = 1
 alphaT = 1.0
-rho_s = 2.2e-3
+rho_s = 2.23e-3
 l = 0.04
 delta = 2
 r = 0.02
@@ -48,60 +49,70 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   coord_type = RZ
 []
 
+[GlobalParams]
+  displacements = 'disp_r disp_z'
+[]
+
 [MultiApps]
-  [./elastodynamic]
+  [elastodynamic]
     type = TransientMultiApp
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};lambda=${Lambda};G=${G};K=${K};Gc=${Gc};l=${l};delta=${delta};psic=${psic};rho_s=${rho_s};SD=${SD};p0=${p0};p_ratio=${p_ratio};gc_ratio=${gc_ratio}'
-  [../]
+    cli_args = 'sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};lambda=${Lambda};G=${G};K=${K};Gc=${Gc};l=$'
+               '{l};delta=${delta};psic=${psic};rho_s=${rho_s};SD=${SD};p0=${p0};p_ratio=${p_ratio};g'
+               'c_ratio=${gc_ratio}'
+  []
 []
 
 [Transfers]
-  [./to_d]
+  [to_d]
     type = MultiAppCopyTransfer
     multi_app = 'elastodynamic'
     direction = to_multiapp
     source_variable = 'd'
     variable = 'd'
-  [../]
-  [./from_psie_active]
+  []
+  [from_psie_active]
     type = MultiAppCopyTransfer
     multi_app = 'elastodynamic'
     direction = from_multiapp
-    source_variable = 'psie_active ce'
-    variable = 'psie_active ce'
-  [../]
+    source_variable = 'psie_active disp_r disp_z'
+    variable = 'psie_active disp_r disp_z'
+  []
 []
 
 [Mesh]
-  [./fmg]
+  [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner_pr_glass.msh'
-  [../]
+    file = '../mesh/2d/inner_pr.msh'
+  []
 []
 
 [Variables]
-  [./d]
-  [../]
+  [d]
+  []
 []
 
 [AuxVariables]
-  [./bounds_dummy]
-  [../]
-  [./psie_active]
+  [bounds_dummy]
+  []
+  [disp_r]
+  []
+  [disp_z]
+  []
+  [psie_active]
     order = CONSTANT
     family = MONOMIAL
-  [../]
-  [./alpha_bar]
+  []
+  [alpha_bar]
     order = CONSTANT
     family = MONOMIAL
-  [../]
-  [./f_alpha]
+  []
+  [f_alpha]
     order = CONSTANT
     family = MONOMIAL
-  [../]
+  []
   [ce] # add ce
     order = CONSTANT
     family = MONOMIAL
@@ -117,13 +128,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   bounded_variable = 'd'
   #   bound_type = lower
   # [../]
-  [./upper]
+  [upper]
     type = ConstantBoundsAux
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     bound_type = upper
     bound_value = 1
-  [../]
+  []
   # [conditional]
   #   type = ConditionalBoundsAux
   #   variable = 'bounds_dummy'
@@ -164,21 +175,26 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = d
     free_energy = psi
   []
+  [nuc_force]
+    type = ADCoefMatSource
+    variable = d
+    prop_names = 'ce'
+  []
 []
 
 [AuxKernels]
-  [./f_alpha]
+  [f_alpha]
     type = ADMaterialRealAux
     property = 'f_alpha'
     variable = 'f_alpha'
     execute_on = 'TIMESTEP_END'
-  [../]
-  [./alpha_bar]
+  []
+  [alpha_bar]
     type = ADMaterialRealAux
     property = 'alpha_bar'
     variable = 'alpha_bar'
     execute_on = 'TIMESTEP_END'
-  [../]
+  []
   [hist]
     type = HistoryField
     variable = d_max
@@ -189,8 +205,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'Gc l psic'
-    prop_values = '${Gc} ${l} ${psic}'
+    prop_names = 'E K G lambda Gc l psic'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${psic}'
   []
   # [degradation]
   #   type = RationalDegradationFunction
@@ -230,29 +246,59 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
+  [kumar_material]
+    type = NucleationMicroForce
+    normalization_constant = c0
+    tensile_strength = '${sigma_ts}'
+    compressive_strength = '${sigma_cs}'
+    delta = '${delta}'
+    external_driving_force_name = ce
+    output_properties = 'ce'
+    # outputs = exodus
+  []
   [Gc_deg]
     type = ADParsedMaterial
     f_name = Gc_deg
     function = 'f_alpha*Gc'
     material_property_names = 'f_alpha Gc'
-  [../]
-  [./fatigue_mobility]
+  []
+  [fatigue_mobility]
     type = ComputeFatigueDegradationFunction
     elastic_energy_var = psie_active
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
-  [../]
+  []
+  [strain]
+    type = ADComputeAxisymmetricRZSmallStrain
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+    output_properties = 'psie_active psie'
+    # outputs = exodus
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = 'stress'
+    # outputs = exodus
+  []
 []
 
 [Executioner]
   type = Transient
   solve_type = 'NEWTON'
-  petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels -snes_type'
-  petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
+  petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels '
+                        '-snes_type'
+  petsc_options_value = 'asm      ilu          200         200                0                     '
+                        'vinewtonrsls'
   nl_abs_tol = 1e-08
   nl_rel_tol = 1e-06
   automatic_scaling = true
-  
   end_time = 2.1
   dt = 0.75e-3
 []
