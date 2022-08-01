@@ -1,10 +1,9 @@
 [Mesh]
-   [./fmg]
-     type = FileMeshGenerator
-     file = '../mesh/2d/outer_pr.msh'
-   [../]
+  [fmg]
+    type = FileMeshGenerator
+    file = '../mesh/2d/outer_vol_src.msh'
+  []
 []
-
 
 [Problem]
   coord_type = RZ
@@ -42,12 +41,12 @@
   [inertia_p]
     type = InertialForce
     variable = p
-  [../]
+  []
   [diff_p]
     type = ADCoefMatDiffusion
     variable = 'p'
     prop_names = 'Diff'
-  [../]
+  []
   [source_p]
     type = ADCoefMatSource
     variable = p
@@ -75,7 +74,6 @@
   #   eta = 0.0
   # []
 []
-
 
 # [AuxKernels]
 #   [accel_r]
@@ -142,13 +140,17 @@
 #   []
 # []
 
-# p0=2.18e-9
+# p0 = 4.8e-7
+# p_ratio = 1
+# SD = 1.5
 [Functions]
   [s_func]
     type = ParsedFunction
     value = 'r:=sqrt(x^2+(y-1-SD)^2);
-            h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
-            a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_ratio;
+            h:=(1 + '
+            'tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
+            a0:=1 / tP * '
+            '4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_ratio;
             if(r<0.1, a0, 0)'
     vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho  p_ratio SD'
     vals = '8.33e-2 0.07 0.01 0.8 1.0 ${p0} 9  12.2189 0.9404 1e-3  ${p_ratio} ${SD}'
@@ -183,25 +185,30 @@
   []
 []
 
-# [Postprocessors]
-#   [total_acoustic_energy]
-#     # type = ElementIntegralVariablePostprocessor
-#     type = NodalSum
-#     variable = acoustic_energy
-#   []
-#   [acoustic_energy_on_interface]
-#     type = NodalSum
-#     # type = SideIntegralVariablePostprocessor
-#     variable = acoustic_energy
-#     boundary = inner_BC
-#   []
-#   [acoustic_energy_on_top]
-#     type = NodalSum
-#     # type = SideIntegralVariablePostprocessor
-#     variable = acoustic_energy
-#     boundary = top
-#   []
-# []
+[Postprocessors]
+  #   [total_acoustic_energy]
+  #     # type = ElementIntegralVariablePostprocessor
+  #     type = NodalSum
+  #     variable = acoustic_energy
+  #   []
+  #   [acoustic_energy_on_interface]
+  #     type = NodalSum
+  #     # type = SideIntegralVariablePostprocessor
+  #     variable = acoustic_energy
+  #     boundary = inner_BC
+  #   []
+  #   [acoustic_energy_on_top]
+  #     type = NodalSum
+  #     # type = SideIntegralVariablePostprocessor
+  #     variable = acoustic_energy
+  #     boundary = top
+  #   []
+  [p_1]
+    type = PointValue
+    variable = p
+    point = '0.0 1.0 0.0'
+  []
+[]
 
 [Executioner]
   type = Transient
@@ -210,7 +217,7 @@
   petsc_options_value = 'asm      31                  preonly       lu           1'
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
-  automatic_scaling = true
+  # automatic_scaling = true
   end_time = 2.1
   dt = 1.5e-3
   # end_time = 1
@@ -221,14 +228,14 @@
 []
 
 [Outputs]
-  # [./csv]
-  #   type = CSV
-  #   delimiter = ','
-  #   file_base = 'acoustic_energy'
-  # [../]
-  [./exodus]
+  [csv]
+    type = CSV
+    delimiter = ','
+    file_base = 'acoustic'
+  []
+  [exodus]
     type = Exodus
     interval = 100
     file_base = fluid
-  [../]
+  []
 []

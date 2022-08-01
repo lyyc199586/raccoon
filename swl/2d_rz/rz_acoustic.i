@@ -2,6 +2,7 @@
    [./fmg]
      type = FileMeshGenerator
      file = '../mesh/2d/outer_vol_src.msh'
+    # file = '../mesh/2d/outer_gc0d1.msh'
    [../]
 []
 
@@ -179,6 +180,8 @@
 #   [../]
 # []
 
+# p_max=1
+# SD=1.5
 [Functions]
   [s_func]
     type = ParsedFunction
@@ -219,25 +222,30 @@
   []
 []
 
-# [Postprocessors]
-#   [total_acoustic_energy]
-#     # type = ElementIntegralVariablePostprocessor
-#     type = NodalSum
-#     variable = acoustic_energy
-#   []
-#   [acoustic_energy_on_interface]
-#     type = NodalSum
-#     # type = SideIntegralVariablePostprocessor
-#     variable = acoustic_energy
-#     boundary = inner_BC
-#   []
-#   [acoustic_energy_on_top]
-#     type = NodalSum
-#     # type = SideIntegralVariablePostprocessor
-#     variable = acoustic_energy
-#     boundary = top
-#   []
-# []
+[Postprocessors]
+  # [total_acoustic_energy]
+  #   # type = ElementIntegralVariablePostprocessor
+  #   type = NodalSum
+  #   variable = acoustic_energy
+  # []
+  # [acoustic_energy_on_interface]
+  #   type = NodalSum
+  #   # type = SideIntegralVariablePostprocessor
+  #   variable = acoustic_energy
+  #   boundary = inner_BC
+  # []
+  # [acoustic_energy_on_top]
+  #   type = NodalSum
+  #   # type = SideIntegralVariablePostprocessor
+  #   variable = acoustic_energy
+  #   boundary = top
+  # []
+  [p_1]
+    type = PointValue
+    variable = p
+    point = '0.0 1.0 0.0'
+  []
+[]
 
 [Executioner]
   type = Transient
@@ -258,11 +266,11 @@
 []
 
 [Outputs]
-  # [./csv]
-  #   type = CSV
-  #   delimiter = ','
-  #   file_base = 'acoustic_energy'
-  # [../]
+  [./csv]
+    type = CSV
+    delimiter = ','
+    file_base = 'acoustic'
+  [../]
   [./exodus]
     type = Exodus
     interval = 100

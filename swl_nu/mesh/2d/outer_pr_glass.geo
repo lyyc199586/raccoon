@@ -16,7 +16,7 @@ Point(9) = {           0,    0.5*y_size + 1,            0, h_def_f};
 // inner frame
 Point(5) = {      0, -0.5*y_size,      0, h_def_c};
 Point(6) = { x_size, -0.5*y_size,      0, h_def_c};
-Point(10) = { x_size,           0,      0, h_def_f};
+Point(10) = { x_size, 0.4*y_size,      0, h_def_f};
 Point(7) = { x_size,  0.5*y_size,      0, h_def_f};
 Point(8) = {      0,  0.5*y_size,      0, h_def_f};
 

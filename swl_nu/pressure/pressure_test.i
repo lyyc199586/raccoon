@@ -231,9 +231,29 @@ p0 = 4.8e-7
   [p_1]
     type = PointValue
     variable = p
-    point = '5.0 0.0 0.0'
+    point = '1.0 0.0 0.0'
   []
   [p_2]
+    type = PointValue
+    variable = p
+    point = '1.5 0.0 0.0'
+  []
+  [p_3]
+    type = PointValue
+    variable = p
+    point = '2.0 0.0 0.0'
+  []
+  [p_4]
+    type = PointValue
+    variable = p
+    point = '3.5 0.0 0.0'
+  []
+  [p_5]
+    type = PointValue
+    variable = p
+    point = '5.0 0.0 0.0'
+  []
+  [p_6]
     type = PointValue
     variable = p
     point = '7.5 0.0 0.0'

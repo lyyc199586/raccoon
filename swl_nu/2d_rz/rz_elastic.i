@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner_pr.msh'
+    file = '../mesh/2d/inner.msh'
   []
 []
 
@@ -65,10 +65,10 @@
   []
   [bounds_dummy]
   []
-  # [psie_active]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
+  [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Kernels]
@@ -245,8 +245,8 @@
     degradation_function = g
     # decomposition = SPECTRAL
     decomposition = NONE
-    output_properties = 'psie_active psie'
-    outputs = exodus
+    output_properties = 'elastic_strain psie_active psie'
+    # outputs = exodus
   []
   [stress]
     type = ComputeSmallDeformationStress

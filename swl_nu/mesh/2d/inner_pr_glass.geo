@@ -9,8 +9,8 @@ Point(2) = { x_size, -0.5*y_size,      0, h_def_c};
 Point(3) = { x_size,  0.5*y_size,      0, h_def_f};
 Point(4) = {      0,  0.5*y_size,      0, h_def_f};
 
-Point(5) = { x_size,  0.1*y_size,      0, h_def_f};
-Point(6) = {      0,  0.1*y_size,      0, h_def_f};
+Point(5) = { x_size,  0.4*y_size,      0, h_def_f};
+Point(6) = {      0,  0.4*y_size,      0, h_def_f};
 
 Line(1) = {1, 2};
 Line(2) = {2, 5};

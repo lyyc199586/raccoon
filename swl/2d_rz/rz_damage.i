@@ -1,12 +1,13 @@
 # Begostone
 E = 0.02735
 nu = 0.2
-# Gc_base = 21.88e-9
-Gc_base = 1e-40
+Gc_base = 21.88e-9
+# Gc_base = 1e-40
 gc_ratio = 1
-l = 0.1
-# psic = 7.0e-9
-psic = 1e-40
+l_base = 0.1
+psic_base = 7.0e-9
+psic_ratio = 0.1
+# psic = 1e-40
 k = 1e-09
 # alphaT = 8.0e-9
 SD = 1
@@ -27,10 +28,14 @@ rho_s = 1.995e-3
 # p_max = 4
 # alphaT = 1.0
 # rho_s = 2.2e-3
+
 ###############################################################################
+l_ratio = '${fparse gc_ratio/psic_ratio}'
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Gc = '${fparse Gc_base*gc_ratio}'
+psic = '${fparse psic_base*psic_ratio}'
+l = '${fparse if(l_ratio>1, l_base, l_base*l_ratio)}'
 ###############################################################################
 
 [Problem]
@@ -198,6 +203,6 @@ Gc = '${fparse Gc_base*gc_ratio}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-1'
+  file_base = 'damage-SD${SD}-psic${psic_ratio}-gc${gc_ratio}'
 []
 

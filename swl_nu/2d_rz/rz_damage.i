@@ -22,12 +22,12 @@
 # Glass
 E = 0.064
 nu = 0.2
-Gc_base = 1.6e-8
+Gc_base = 9.264e-9
 gc_ratio = 1
 psic = 2e-8
 # sigma_ts = 150e-6
-sigma_ts = 0
-sigma_cs = 1000e-6
+sigma_ts = 44e-6
+sigma_cs = 1400e-6
 k = 1e-09
 # alphaT = 8.0e-9
 SD = 1.5
@@ -85,7 +85,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner_pr.msh'
+    file = '../mesh/2d/inner.msh'
   []
 []
 

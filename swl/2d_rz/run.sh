@@ -8,5 +8,6 @@ echo "cwd: $(pwd)"
 # mpirun -n 16 ../../raccoon-opt -i $arg1
 
 mpirun -n 16 ../../raccoon-opt -i rz_damage.i
+# mpirun -n 16 ../../raccoon-opt -i rz_acoustic.i
 
 echo "End: $(date)"
