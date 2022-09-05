@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    file = '../mesh/2d/inner_pr.msh'
   []
 []
 
@@ -48,6 +48,10 @@
   [pre_wave]
   []
   [stress_h]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [stress_mp]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -98,6 +102,13 @@
     rank_two_tensor = 'stress'
     variable = 'stress_h'
     scalar_type = Hydrostatic
+    execute_on = 'TIMESTEP_END'
+  []
+  [stress_MaxPrincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = 'stress_mp'
+    scalar_type = MaxPrincipal
     execute_on = 'TIMESTEP_END'
   []
   [stress_VonMises]
@@ -275,7 +286,7 @@
     solve_type = lumped
   []
   automatic_scaling = true
-  end_time = 2.1
+  end_time = 2.5
   dt = 0.75e-3
 []
 

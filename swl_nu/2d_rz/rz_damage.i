@@ -1,43 +1,48 @@
 # Begostone: us, mm, TPa
-# E = 0.02735
-# nu = 0.2
-# # Gc_base = 21.88e-9
-# Gc_base = 52.66e-9
-# gc_ratio = 1
-# psic = 7.0e-9
-# sigma_ts = 10e-6
-# sigma_cs = 50e-6
-# k = 1e-09
-# # alphaT = 8.0e-9
-# SD = 1
-# p0 = 3e-7
-# p_ratio = 1
-# alphaT = 1.0
-# rho_s = 1.995e-3
+E = 0.02735
+nu = 0.2
+Gc_base = 21.88e-9
+# Gc_base = 52.66e-9 # from yingjie's draft
+gc_ratio = 1
+psic = 7.0e-9
+sigma_ts = 20e-6
+# sigma_ts = 2e-6
+sigma_cs = 100e-6
+k = 1e-09
+# alphaT = 8.0e-9
+SD = 2
+# p0 = 2.4e-7
+p0 = 1e-7
+# p0 = 2.1e-8
+p_ratio = 1
+alphaT = 1.0
+rho_s = 1.995e-3
 
 # l = 0.8
 # delta = 8
+l = 0.1
+delta = 0
 # r = 0.4
 
-# Glass
-E = 0.064
-nu = 0.2
-Gc_base = 9.264e-9
-gc_ratio = 1
-psic = 2e-8
-# sigma_ts = 150e-6
-sigma_ts = 44e-6
-sigma_cs = 1400e-6
-k = 1e-09
-# alphaT = 8.0e-9
-SD = 1.5
-p0 = 4.8e-7
-p_ratio = 1
-alphaT = 1.0
-rho_s = 2.23e-3
-l = 0.04
-delta = 2
-r = 0.02
+# # Glass
+# E = 0.064
+# nu = 0.2
+# Gc_base = 9.264e-9
+# gc_ratio = 1
+# psic = 2e-8
+# # sigma_ts = 150e-6
+# sigma_ts = 44e-6
+# sigma_cs = 1400e-6
+# k = 1e-09
+# # alphaT = 8.0e-9
+# SD = 1.5
+# p0 = 4.8e-7
+# p_ratio = 1
+# alphaT = 1.0
+# rho_s = 2.23e-3
+# l = 0.04
+# delta = 2
+# r = 0.02
 ###############################################################################
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -85,7 +90,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    file = '../mesh/2d/inner_pr.msh'
   []
 []
 
@@ -135,13 +140,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     bound_type = upper
     bound_value = 1
   []
-  # [conditional]
-  #   type = ConditionalBoundsAux
-  #   variable = 'bounds_dummy'
-  #   bounded_variable = 'd'
-  #   fixed_bound_value = 0
-  #   threshold_value = 0.95
-  # []
+  [conditional]
+    type = ConditionalBoundsAux
+    variable = 'bounds_dummy'
+    bounded_variable = 'd'
+    fixed_bound_value = 0
+    threshold_value = 0.95
+  []
   # [history]
   #   type = HistoryFieldBoundsAux
   #   variable = bounds_dummy
@@ -151,15 +156,15 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   search_radius = ${r}
   #   threshold_ratio = 0.95
   # []
-  [history]
-    type = ConditionalHistoryBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    history_variable = d_max
-    fixed_bound_value = 0
-    search_radius = ${r}
-    threshold_value = 0.95
-  []
+  # [history]
+  #   type = ConditionalHistoryBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   history_variable = d_max
+  #   fixed_bound_value = 0
+  #   search_radius = ${r}
+  #   threshold_value = 0.95
+  # []
 []
 
 [Kernels]
@@ -299,13 +304,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_abs_tol = 1e-08
   nl_rel_tol = 1e-06
   automatic_scaling = true
-  end_time = 2.1
+  end_time = 2.5
   dt = 0.75e-3
 []
 
 [Outputs]
   exodus = true
   interval = 100
-  file_base = './gold/glass/damage_l${l}_delta${delta}_r${r}'
+  file_base = './gold/begostone/damage_p0${p0}_SD${SD}_l${l}_delta${delta}'
 []
 

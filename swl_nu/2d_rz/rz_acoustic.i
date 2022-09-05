@@ -1,7 +1,8 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/outer_vol_src.msh'
+    # file = '../mesh/2d/outer_vol_src.msh'
+    file = '../mesh/2d/outer_pr.msh'
   []
 []
 
@@ -147,10 +148,8 @@
   [s_func]
     type = ParsedFunction
     value = 'r:=sqrt(x^2+(y-1-SD)^2);
-            h:=(1 + '
-            'tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
-            a0:=1 / tP * '
-            '4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_ratio;
+            h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
+            a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_ratio;
             if(r<0.1, a0, 0)'
     vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho  p_ratio SD'
     vals = '8.33e-2 0.07 0.01 0.8 1.0 ${p0} 9  12.2189 0.9404 1e-3  ${p_ratio} ${SD}'
@@ -218,7 +217,7 @@
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   # automatic_scaling = true
-  end_time = 2.1
+  end_time = 2.5
   dt = 1.5e-3
   # end_time = 1
   # dt = 1e-3

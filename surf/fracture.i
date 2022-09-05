@@ -4,9 +4,9 @@
     dim = 2
     nx = ${nx}
     ny = ${ny}
-    xmax = 3
-    ymin = -0.5
-    ymax = 0.5
+    xmax = ${length}
+    ymin = ${fparse -1*a}
+    ymax = ${a}
   []
 []
 
@@ -19,8 +19,8 @@
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -0.15 0'
-      top_right = '3 0.15 0'
+      bottom_left = '0 -1 0'
+      top_right = '${length} 1 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -31,7 +31,7 @@
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(y=0&x>=0&x<=0.5,1,0)'
+      function = 'if(y=0&x>=0&x<=${a},1,0)'
     []
   []
 []

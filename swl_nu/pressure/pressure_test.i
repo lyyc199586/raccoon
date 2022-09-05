@@ -1,6 +1,6 @@
 # calibrate the pressure in acoustic domain with the experiment data
 
-p0 = 4.8e-7
+p0 = 2.4e-7
 
 [Mesh]
   #  [./fmg]
@@ -246,7 +246,7 @@ p0 = 4.8e-7
   [p_4]
     type = PointValue
     variable = p
-    point = '3.5 0.0 0.0'
+    point = '2.5 0.0 0.0'
   []
   [p_5]
     type = PointValue
@@ -258,17 +258,17 @@ p0 = 4.8e-7
     variable = p
     point = '7.5 0.0 0.0'
   []
-  [p_3]
+  [p_7]
     type = PointValue
     variable = p
     point = '10 0.0 0.0'
   []
-  [p_4]
+  [p_8]
     type = PointValue
     variable = p
     point = '12.5 0.0 0.0'
   []
-  [p_5]
+  [p_9]
     type = PointValue
     variable = p
     point = '15 0.0 0.0'

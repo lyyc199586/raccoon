@@ -32,14 +32,14 @@
 ## -------------------
 
 ## glass
-E = 6.25e4 # 0.0625 TPa
-nu = 0.19
+# E = 6.25e4 # 0.0625 TPa
+# nu = 0.19
 
-Gc = 1.6e-2 # 1.6e-8 TPa.mm
-l = 0.04
-sigma_ts = 50
-sigma_cs = 100
-delta = 2
+# Gc = 1.6e-2 # 1.6e-8 TPa.mm
+# l = 0.04
+# sigma_ts = 50
+# sigma_cs = 100
+# delta = 2
 
 # dynamic branching
 
@@ -63,13 +63,16 @@ delta = 2
 # delta = 5
 
 # BegoStone
-# E = 2.735e4
-# nu = 0.2
+E = 2.735e4
+nu = 0.2
 # Gc = 2.188e-2
-# sigma_ts = 10
-# sigma_cs = 50
-# l = 0.8
-# delta = 8
+# Gc = 3.656e-3
+Gc = 3.656e-2
+sigma_ts = 10
+# sigma_ts = 4.74
+sigma_cs = 30
+l = 0.5
+delta = 15
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -78,12 +81,15 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
-nx = 150
-ny = 50
-# nx = 300
-# ny = 100
-# refine = 3 # h = 0.03
-refine = 2
+# shape and scale
+# a = 10 # crack length
+a = 5
+h = 0.2 # coase mesh size
+length = '${fparse 6*a}'
+width = '${fparse 2*a}'
+nx = '${fparse length/h}'
+ny = '${fparse width/h}'
+refine = 3 # fine mesh size: 0.025
 
 [Functions]
   [bc_func]
@@ -98,7 +104,7 @@ refine = 2
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};nx=${nx};ny=${ny};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};nx=${nx};ny=${ny};refine=${refine};length=${length};a=${a}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -130,15 +136,15 @@ refine = 2
     dim = 2
     nx = ${nx}
     ny = ${ny}
-    xmax = 3
-    ymin = -0.5
-    ymax = 0.5
+    xmax = ${length}
+    ymin = '${fparse -1*a}'
+    ymax = ${a}
   []
   [gen2]
     type = ExtraNodesetGenerator
     input = gen
     new_boundary = fix_point
-    coord = '0 -0.5'
+    coord = '0 ${fparse -1*a}'
   []
 []
 
@@ -151,8 +157,8 @@ refine = 2
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -0.15 0'
-      top_right = '3 0.15 0'
+      bottom_left = '0 -1 0'
+      top_right = '${length} 1 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -172,7 +178,7 @@ refine = 2
   [d]
     [InitialCondition]
       type = FunctionIC
-      function = 'if(y=0&x>=0&x<=0.5,1,0)'
+      function = 'if(y=0&x>=0&x<=${a},1,0)'
     []
   []
 []
@@ -294,34 +300,33 @@ refine = 2
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  # dt = 2e-2
-  # end_time = 5e-1
+  end_time = 5e-1 # for a = 5
   dt = 1e-3
-  # end_time = 5e-1
-  # end_time = 1 # a = 10
-  end_time = 0.05
+  # end_time = 1 # for a = 10
+  # dt = 1e-3
 
+  # fast
   # fixed_point_max_its = 20
   # accept_on_max_fixed_point_iteration = false
   # fixed_point_rel_tol = 1e-3
   # fixed_point_abs_tol = 1e-5
 
-  fixed_point_max_its = 20
+  # fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-5
-  fixed_point_abs_tol = 1e-6
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-5
+  # fixed_point_abs_tol = 1e-6
 []
 
 [Outputs]
   [exodus]
     type = Exodus
+    interval = 10
   []
-  file_base = 'surf_glass_width3_l${l}_delta${delta}'
+  file_base = 'surf_bg_a${a}_l${l}_delta${delta}'
   print_linear_residuals = false
-  interval = 1
-  [./csv]
-    type = CSV 
-  [../]
+  [csv]
+    type = CSV
+  []
 []
