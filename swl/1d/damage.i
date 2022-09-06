@@ -61,12 +61,12 @@ l = '${fparse if(l_ratio>1, l_base, l_base*l_ratio)}'
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 50
-    ny = 50
+    nx = 100
+    ny = 25
     xmin = 2
-    xmax = 3
+    xmax = 4
     ymin = 0
-    ymax = 1
+    ymax = 0.5
   []
 []
 

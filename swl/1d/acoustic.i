@@ -3,9 +3,9 @@
     type = GeneratedMeshGenerator
     dim = 2
     nx = 100
-    ny = 50
+    ny = 25
     xmax = 2
-    ymax = 1
+    ymax = 0.5
   []
 []
 
@@ -41,12 +41,16 @@
 
 # p_max = 1
 [Functions]
+  # [s_func]
+  #   type = ParsedFunction
+  #   value = 'h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
+  #           1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_max'
+  #   vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho  p_max'
+  #   vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3 ${p_max}'
+  # []
   [s_func]
     type = ParsedFunction
-    value = 'h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
-            1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_max'
-    vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho  p_max'
-    vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3 ${p_max}'
+    value = 'if(t<0.05, 5e-6, 0)'
   []
 []
 

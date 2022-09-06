@@ -2,18 +2,18 @@
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 50
-    ny = 50
+    nx = 100
+    ny = 25
     xmin = 2
-    xmax = 3
+    xmax = 4
     ymin = 0
-    ymax = 1
+    ymax = 0.5
   []
   [gen2]
     type = ExtraNodesetGenerator
     input = gmg
     new_boundary = fix_point
-    coord = '2.5 0'
+    coord = '3 0'
   []
 []
 
