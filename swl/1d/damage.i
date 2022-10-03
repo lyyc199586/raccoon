@@ -7,12 +7,12 @@ Gc_base = 21.88e-9
 gc_ratio = 1
 l_base = 0.1
 psic_base = 7.0e-9
-psic_ratio = 0.1
+psic_ratio = 1
 # psic = 1e-40
 k = 1e-09
 # alphaT = 8.0e-9
 # SD = 1
-p_max = 6e-7
+p_max = 1e-9
 alphaT = 1.0
 rho_s = 1.995e-3
 
@@ -61,8 +61,8 @@ l = '${fparse if(l_ratio>1, l_base, l_base*l_ratio)}'
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
-    ny = 25
+    nx = 200
+    ny = 50
     xmin = 2
     xmax = 4
     ymin = 0
@@ -188,14 +188,14 @@ l = '${fparse if(l_ratio>1, l_base, l_base*l_ratio)}'
   nl_abs_tol = 1e-08
   nl_rel_tol = 1e-06
   automatic_scaling = true
-  # end_time = 2.4
-  end_time = 2.1
-  dt = 0.75e-3
+  end_time = 2.2
+  # end_time = 2.5
+  dt = 0.5e-3
 []
 
 [Outputs]
   exodus = true
-  interval = 100
+  interval = 10
   file_base = 'damage'
 []
 

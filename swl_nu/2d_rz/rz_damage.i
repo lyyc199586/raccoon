@@ -5,14 +5,15 @@ Gc_base = 21.88e-9
 # Gc_base = 52.66e-9 # from yingjie's draft
 gc_ratio = 1
 psic = 7.0e-9
-sigma_ts = 20e-6
+sigma_ts = 15e-6
 # sigma_ts = 2e-6
-sigma_cs = 100e-6
+sigma_cs = 30e-6
 k = 1e-09
 # alphaT = 8.0e-9
 SD = 2
 # p0 = 2.4e-7
-p0 = 1e-7
+# p0 = 1e-7
+p0 = 4e-8
 # p0 = 2.1e-8
 p_ratio = 1
 alphaT = 1.0
@@ -20,8 +21,8 @@ rho_s = 1.995e-3
 
 # l = 0.8
 # delta = 8
-l = 0.1
-delta = 0
+l = 0.5
+delta = 15
 # r = 0.4
 
 # # Glass

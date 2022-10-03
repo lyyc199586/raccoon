@@ -2,8 +2,8 @@
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
-    ny = 25
+    nx = 200
+    ny = 50
     xmin = 2
     xmax = 4
     ymin = 0
@@ -53,6 +53,8 @@
   []
   [disp_y]
   []
+  # [strain_zz]
+  # []
 []
 
 [AuxVariables]
@@ -103,6 +105,11 @@
     type = InertialForce
     variable = 'disp_y'
   []
+  # [plane_stress]
+  #   type = ADWeakPlaneStress
+  #   variable = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  # []
 []
 
 [AuxKernels]
@@ -224,6 +231,9 @@
   [strain]
     # type = ADComputeAxisymmetricRZSmallStrain
     type = ADComputeSmallStrain
+    # type = ADComputePlaneSmallStrain
+    # out_of_plane_strain = 'strain_zz'
+    # displacements = 'disp_x disp_y'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -251,15 +261,15 @@
     type = CentralDifference
     solve_type = lumped
   []
-  # end_time = 2.4
-  end_time = 2.1
-  dt = 0.75e-3
+  end_time = 2.2
+  # end_time = 2.5
+  dt = 0.5e-3
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 50
+    interval = 10
     file_base = solid-1
   []
   [console]

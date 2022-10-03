@@ -2,8 +2,8 @@
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
-    ny = 25
+    nx = 200
+    ny = 50
     xmax = 2
     ymax = 0.5
   []
@@ -50,8 +50,15 @@
   # []
   [s_func]
     type = ParsedFunction
-    value = 'if(t<0.05, 5e-6, 0)'
+    value = 'if(t<0.25*T, amp*sin(pi*t/(0.25*T)), 0)'
+    vars = 'amp T'
+    # vals = '5e-6 1'
+    vals = '2e-5 1'
   []
+  # [s_func]
+  #   type = ParsedFunction
+  #   value = 'if(t<0.05, 5e-6, 0)'
+  # []
 []
 
 [Materials]
@@ -102,9 +109,9 @@
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   # automatic_scaling = true
-  # end_time = 2.4
-  end_time = 2.1
-  dt = 1.5e-3
+  end_time = 2.2
+  # end_time = 2.5
+  dt = 0.5e-3
   # end_time = 1
   # dt = 1e-3
   [TimeIntegrator]
@@ -120,7 +127,7 @@
   []
   [exodus]
     type = Exodus
-    interval = 100
+    interval = 10
     file_base = fluid
   []
 []

@@ -68,11 +68,11 @@ nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
-sigma_ts = 10
+sigma_ts = 7.5
 # sigma_ts = 4.74
 sigma_cs = 30
-l = 0.5
-delta = 15
+l = 2
+delta = 40
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -324,7 +324,7 @@ refine = 3 # fine mesh size: 0.025
     type = Exodus
     interval = 10
   []
-  file_base = 'surf_bg_a${a}_l${l}_delta${delta}'
+  file_base = 'surf_bg_a${a}_ts${sigma_ts}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV

@@ -1,7 +1,7 @@
 x_size = 3.25;
 y_size = 2.0;
 
-h_def_f = 0.02; // mesh size of top (impacted solid-fluid interface)
+h_def_f = 0.025; // mesh size of top (impacted solid-fluid interface)
 h_def_c = 0.1;  // mesh size of bottom 
 
 Point(1) = {      0, -0.5*y_size,      0, h_def_c};

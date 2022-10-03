@@ -3,7 +3,7 @@ y_size = 2.0;
 vgap   = 0.75;
 hgap   = 0.25;
 
-h_def_f = 0.02; // mesh size of bottom (impacted fluid-solid interface)
+h_def_f = 0.025; // mesh size of bottom (impacted fluid-solid interface)
 h_def_c = 0.1;  // mesh size of top
 
 // outer frame
