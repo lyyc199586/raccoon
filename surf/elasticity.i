@@ -63,16 +63,16 @@
 # delta = 5
 
 # BegoStone
-E = 2.735e4
+# E = 2.735e4
+E = 4.77e3
 nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
-sigma_ts = 7.5
-# sigma_ts = 4.74
-sigma_cs = 30
-l = 2
-delta = 40
+sigma_ts = 10
+sigma_cs = 22.27
+l = 0.3
+delta = 1
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'

@@ -1,6 +1,7 @@
 # calibrate the pressure in acoustic domain with the experiment data
 
-p0 = 2.4e-7
+# p0 = 2.4e-7
+p0 = 2.1e-8
 
 [Mesh]
   #  [./fmg]
