@@ -1,3 +1,5 @@
+# unit: MPa, mm, s
+
 # BegoStone
 # E = 2.735e4
 E = 4.77e3
@@ -5,6 +7,7 @@ nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
+# for plane strain G=K^2/E', E'=E/(1-nu^2)
 sigma_ts = 10
 sigma_cs = 22.27
 l = 0.3
@@ -26,15 +29,17 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Transfers]
   [from_d]
     type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
+    # multi_app = fracture
+    # direction = from_multiapp
+    from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
+    to_multi_app = fracture
+    # multi_app = fracture
+    # direction = to_multiapp
     variable = 'disp_x disp_y psie_active'
     source_variable = 'disp_x disp_y psie_active'
   []
@@ -53,12 +58,15 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = FileMeshGenerator
     file = '../mesh/scb_2d.msh'
   []
-  # [top_p]
-  #   type = ExtraNodesetGenerator
-  #   input = fmg
-  #   new_boundary = top_point
-  #   coord = '0 2.9 0'
-  # []
+  [top_p]
+    type = BoundingBoxNodeSetGenerator
+    input = fmg
+    new_boundary = top_point
+    # bottom_left = '-2.5 24.85 0'
+    # top_right = '2.5 25.1 0'
+    bottom_left = '-1 24.85 0'
+    top_right = '1 25.1 0'
+  []
   # [bot_p]
   #   type = ExtraNodesetGenerator
   #   input = top_p
@@ -68,19 +76,18 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [bot_left]
     type = BoundingBoxNodeSetGenerator
     new_boundary = bot_left
-    bottom_left = '-19 -0.1 0'
-    top_right = '-14 0.1 0'
-    input = fmg
+    bottom_left = '-17 -0.1 0'
+    top_right = '-16 0.1 0'
+    input = top_p
   []
   [bot_right]
     type = BoundingBoxNodeSetGenerator
     new_boundary = bot_right
-    bottom_left = '14 -0.1 0'
-    top_right = '19 0.1 0'
+    bottom_left = '16 -0.1 0'
+    top_right = '17 0.1 0'
     input = bot_left
   []
 []
-
 
 [Variables]
   [disp_x]
@@ -134,22 +141,23 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   value = 0
   # []
   [bot_left_y]
-    type = DirichletBC
+    type = ADFunctionDirichletBC
     variable = disp_y
     boundary = bot_left
-    value = 0
+    function = '0.12/2/60*t'
   []
   [bot_right_y]
-    type = DirichletBC
+    type = ADFunctionDirichletBC
     variable = disp_y
     boundary = bot_right
-    value = 0
+    function = '0.12/2/60*t'
   []
   [top_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    boundary = top
-    function = '-0.12/60*t'
+    # boundary = top
+    boundary = top_point
+    function = '-0.12/2/60*t'
   []
 []
 
@@ -169,7 +177,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
   [strain]
     type = ADComputeSmallStrain
-    output_properties = 'strain'
+    output_properties = 'total_strain'
     outputs = exodus
   []
   [elasticity]
@@ -223,7 +231,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [top_react]
     type = NodalSum
     variable = f_y
-    boundary = top
+    boundary = top_point
+  []
+  [top_disp]
+    type = NodalVariableValue
+    variable = disp_y
+    nodeid = 26856
   []
   [bot_react]
     type = NodalSum
@@ -235,13 +248,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     mat_prop = psie
   []
   [w_ext_top]
-    type = ExternalWork 
+    type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
     boundary = top
   []
   [w_ext_bottom]
-    type = ExternalWork 
+    type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
     boundary = bot_left
@@ -258,7 +271,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 60
+  end_time = 30
   dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
@@ -288,12 +301,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [exodus]
     type = Exodus
     interval = 10
-    start_time = 1
+    start_time = 0
   []
-  file_base = './gold/scb_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './scb_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = 'disk'
+    file_base = 'scb'
   []
 []
