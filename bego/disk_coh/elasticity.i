@@ -1,5 +1,3 @@
-# unit: MPa, mm, s
-
 # BegoStone
 # E = 2.735e4
 E = 4.77e3
@@ -7,7 +5,6 @@ nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
-# for plane strain G=K^2/E', E'=E/(1-nu^2)
 sigma_ts = 10
 sigma_cs = 22.27
 l = 0.3
@@ -15,13 +12,14 @@ delta = 1
 # ---------------------------------
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
-Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+psic = '${fparse sigma_ts^2/2/E}'
+# Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
+    cli_args = 'K=${K};G=${G};psic=${psic};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -52,36 +50,45 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/scb_2d_cw0.4.msh'
+    file = '../mesh/disk_2d.msh'
   []
-  [top_p]
-    type = BoundingBoxNodeSetGenerator
-    input = fmg
-    new_boundary = top_point
-    # bottom_left = '-2.5 24.85 0'
-    # top_right = '2.5 25.1 0'
-    bottom_left = '-1 24.85 0'
-    top_right = '1 25.1 0'
-  []
+  # [top_p]
+  #   type = ExtraNodesetGenerator
+  #   input = fmg
+  #   new_boundary = top_point
+  #   coord = '0 2.9 0'
+  # []
   # [bot_p]
   #   type = ExtraNodesetGenerator
   #   input = top_p
   #   new_boundary = bot_point
   #   coord = '0 -2.9 0'
   # []
-  [bot_left]
-    type = BoundingBoxNodeSetGenerator
-    new_boundary = bot_left
-    bottom_left = '-17 -0.1 0'
-    top_right = '-16 0.1 0'
-    input = top_p
+  # [top_p]
+  #   type = BoundingBoxNodeSetGenerator
+  #   new_boundary = top_point
+  #   bottom_left = '-1.63 2.4 0'
+  #   top_right = '1.63 2.91 0'
+  #   input = fmg
+  # []
+  # [bot_p]
+  #   type = BoundingBoxNodeSetGenerator
+  #   new_boundary = bot_point
+  #   bottom_left = '-1.63 -2.91 0'
+  #   top_right = '1.63 -2.4 0'
+  #   input = top_p
+  # []
+  [top_arc]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'x*x+y*y>2.895^2 & y>2.8'
+    new_sideset_name = 'top_arc'
+    input = fmg
   []
-  [bot_right]
-    type = BoundingBoxNodeSetGenerator
-    new_boundary = bot_right
-    bottom_left = '16 -0.1 0'
-    top_right = '17 0.1 0'
-    input = bot_left
+  [bot_arc]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-2.8'
+    new_sideset_name = 'bot_arc'
+    input = top_arc
   []
 []
 
@@ -89,6 +96,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [disp_x]
   []
   [disp_y]
+  []
+  [strain_zz]
   []
 []
 
@@ -121,60 +130,73 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     component = 1
     save_in = f_y
   []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
 []
 
 [BCs]
   # [bottom_x]
   #   type = DirichletBC
   #   variable = disp_x
-  #   boundary = bot_point
+  #   boundary = bot_arc
   #   value = 0
   # []
   # [top_x]
   #   type = DirichletBC
   #   variable = disp_x
-  #   boundary = top_point
+  #   boundary = top_arc
   #   value = 0
   # []
-  [bot_left_y]
+  [bottom_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    boundary = bot_left
-    # function = '0.12/2/60*t'
-    function = 0
-  []
-  [bot_right_y]
-    type = ADFunctionDirichletBC
-    variable = disp_y
-    boundary = bot_right
-    # function = '0.12/2/60*t'
-    function = 0
+    boundary = bot_arc
+    function = '0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
   []
   [top_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    # boundary = top
-    boundary = top_point
-    function = '-0.5/60*t'
+    boundary = top_arc
+    function = '-0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
   []
 []
 
 [Materials]
   [bulk]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    prop_names = 'K G Gc l psic'
+    prop_values = '${K} ${G} ${Gc} ${l} ${psic}'
+  []
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   f_name = g
+  #   function = (1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 0'
+  # []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
   []
   [degradation]
-    type = PowerDegradationFunction
+    type = RationalDegradationFunction
     f_name = g
-    function = (1-d)^p*(1-eta)+eta
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 0'
+    material_property_names = 'Gc psic xi c0 l'
+    parameter_names = 'p a2 a3 eta'
+    parameter_values = '2 1.0 0.0 1e-3'
   []
   [strain]
-    type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
+    displacements = 'disp_x disp_y'
+    # type = ADComputeSmallStrain
     output_properties = 'total_strain'
     outputs = exodus
   []
@@ -184,7 +206,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = NONE
+    decomposition = SPECTRAL
     output_properties = 'psie_active psie'
     outputs = exodus
   []
@@ -229,18 +251,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [top_react]
     type = NodalSum
     variable = f_y
-    boundary = top_point
-  []
-  [top_disp]
-    type = NodalVariableValue
-    variable = disp_y
-    # nodeid = 26856 # for scb_2d.msh
-    nodeid = 24156 # for scb_2d_cw0.4.msh
+    boundary = top_arc
   []
   [bot_react]
     type = NodalSum
     variable = f_y
-    boundary = bot_left
+    boundary = bot_arc
   []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
@@ -250,13 +266,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
-    boundary = top
+    boundary = top_arc
   []
   [w_ext_bottom]
     type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
-    boundary = bot_left
+    boundary = bot_arc
   []
 []
 
@@ -270,7 +286,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 15
+  end_time = 60
   dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
@@ -285,8 +301,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
   # fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-8
+  fixed_point_abs_tol = 1e-10
   # fixed_point_rel_tol = 1e-5
   # fixed_point_abs_tol = 1e-6
 []
@@ -302,10 +318,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     interval = 10
     start_time = 0
   []
-  file_base = './scb_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './disk_coh_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = 'scb'
+    file_base = 'disk'
   []
 []

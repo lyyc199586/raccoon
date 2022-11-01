@@ -71,8 +71,8 @@ nu = 0.2
 Gc = 3.656e-2
 sigma_ts = 10
 sigma_cs = 22.27
-l = 0.3
-delta = 1
+l = 0.1
+delta = 0
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -181,6 +181,10 @@ refine = 3 # fine mesh size: 0.025
       function = 'if(y=0&x>=0&x<=${a},1,0)'
     []
   []
+  [f_x]
+  []
+  [f_y]
+  []
 []
 
 [Kernels]
@@ -188,11 +192,13 @@ refine = 3 # fine mesh size: 0.025
     type = ADStressDivergenceTensors
     variable = disp_x
     component = 0
+    save_in = f_x
   []
   [solid_y]
     type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
+    save_in = f_y
   []
   [plane_stress]
     type = ADWeakPlaneStress
@@ -240,6 +246,8 @@ refine = 3 # fine mesh size: 0.025
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
+    output_properties = 'total_strain'
+    outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -255,6 +263,7 @@ refine = 3 # fine mesh size: 0.025
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
+    outputs = exodus
   []
   # [crack_geometric]
   #   type = CrackGeometricFunction
@@ -287,6 +296,16 @@ refine = 3 # fine mesh size: 0.025
     function = 'Jint/${Gc}'
     pp_names = 'Jint'
     use_t = false
+  []
+  [bot_react]
+    type = NodalSum
+    variable = f_y
+    boundary = bottom
+  []
+  [top_react]
+    type = NodalSum
+    variable = f_y
+    boundary = top
   []
 []
 

@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/scb_2d.msh'
+    file = '../mesh/scb_2d_cw0.4.msh'
   []
 []
 

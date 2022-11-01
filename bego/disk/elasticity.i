@@ -5,8 +5,9 @@ nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
-sigma_ts = 10
-sigma_cs = 22.27
+sigma_ts = 5
+# sigma_cs = 22.27
+sigma_cs = 100
 l = 0.3
 delta = 1
 # ---------------------------------
@@ -26,15 +27,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Transfers]
   [from_d]
     type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
+    from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
+    to_multi_app = fracture
     variable = 'disp_x disp_y psie_active'
     source_variable = 'disp_x disp_y psie_active'
   []
@@ -65,27 +64,40 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   new_boundary = bot_point
   #   coord = '0 -2.9 0'
   # []
-  [top_p]
-    type = BoundingBoxNodeSetGenerator
-    new_boundary = top_point
-    bottom_left = '-1 2.89 0'
-    top_right = '1 2.91 0'
+  # [top_p]
+  #   type = BoundingBoxNodeSetGenerator
+  #   new_boundary = top_point
+  #   bottom_left = '-1.63 2.4 0'
+  #   top_right = '1.63 2.91 0'
+  #   input = fmg
+  # []
+  # [bot_p]
+  #   type = BoundingBoxNodeSetGenerator
+  #   new_boundary = bot_point
+  #   bottom_left = '-1.63 -2.91 0'
+  #   top_right = '1.63 -2.4 0'
+  #   input = top_p
+  # []
+  [top_arc]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'x*x+y*y>2.895^2 & y>2.7'
+    new_sideset_name = 'top_arc'
     input = fmg
   []
-  [bot_p]
-    type = BoundingBoxNodeSetGenerator
-    new_boundary = bot_point
-    bottom_left = '-1 -2.91 0'
-    top_right = '1 -2.89 0'
-    input = top_p
+  [bot_arc]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-2.7'
+    new_sideset_name = 'bot_arc'
+    input = top_arc
   []
 []
-
 
 [Variables]
   [disp_x]
   []
   [disp_y]
+  []
+  [strain_zz]
   []
 []
 
@@ -118,32 +130,37 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     component = 1
     save_in = f_y
   []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
 []
 
 [BCs]
-  [bottom_x]
-    type = DirichletBC
-    variable = disp_x
-    boundary = bot_point
-    value = 0
-  []
-  [top_x]
-    type = DirichletBC
-    variable = disp_x
-    boundary = top_point
-    value = 0
-  []
+  # [bottom_x]
+  #   type = DirichletBC
+  #   variable = disp_x
+  #   boundary = bot_arc
+  #   value = 0
+  # []
+  # [top_x]
+  #   type = DirichletBC
+  #   variable = disp_x
+  #   boundary = top_arc
+  #   value = 0
+  # []
   [bottom_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    boundary = bot_point
-    function = '0.01/60/2*t'
+    boundary = bot_arc
+    function = '0.12/60/2*t*(sqrt(2.9^2-x^2)-2.7)/0.2'
   []
   [top_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    boundary = top_point
-    function = '-0.01/60/2*t'
+    boundary = top_arc
+    function = '-0.12/60/2*t*(sqrt(2.9^2-x^2)-2.7)/0.2'
   []
 []
 
@@ -162,8 +179,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     parameter_values = '2 0'
   []
   [strain]
-    type = ADComputeSmallStrain
-    output_properties = 'strain'
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
+    displacements = 'disp_x disp_y'
+    # type = ADComputeSmallStrain
+    output_properties = 'total_strain'
     outputs = exodus
   []
   [elasticity]
@@ -217,28 +237,28 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [top_react]
     type = NodalSum
     variable = f_y
-    boundary = top_point
+    boundary = top_arc
   []
   [bot_react]
     type = NodalSum
     variable = f_y
-    boundary = bot_point
+    boundary = bot_arc
   []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
   []
   [w_ext_top]
-    type = ExternalWork 
+    type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
-    boundary = top_point
+    boundary = top_arc
   []
   [w_ext_bottom]
-    type = ExternalWork 
+    type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
-    boundary = bot_point
+    boundary = bot_arc
   []
 []
 
@@ -252,8 +272,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 600
-  dt = 1
+  end_time = 60
+  dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
   #   function = 'if(t<60, 1, 0.01)'
@@ -267,8 +287,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
   # fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-8
+  fixed_point_abs_tol = 1e-10
   # fixed_point_rel_tol = 1e-5
   # fixed_point_abs_tol = 1e-6
 []
@@ -282,9 +302,9 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [exodus]
     type = Exodus
     interval = 10
-    start_time = 1
+    start_time = 0
   []
-  file_base = './gold/disk_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './disk_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
