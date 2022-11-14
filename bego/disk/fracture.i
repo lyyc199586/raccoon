@@ -41,12 +41,22 @@
     fixed_bound_value = 0
     threshold_value = 0.95
   []
+  [upper_fixed]
+    type = ConstantBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+    # bound_value = 0.1 # prevent damage
+    block = 'top bottom'
+  []
   [upper]
     type = ConstantBoundsAux
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = 'left center right'
   []
 []
 
@@ -82,7 +92,7 @@
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 0.5'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -105,7 +115,8 @@
     compressive_strength = '${sigma_cs}'
     delta = '${delta}'
     external_driving_force_name = ce
-    output_properties = 'ce'
+    f_sigma_name = f_sigma
+    output_properties = 'ce f_sigma'
     outputs = exodus
   []
   [strain]
@@ -151,6 +162,6 @@
    type = Exodus
    interval = 10
   []
-  file_base = 'nuc_force'
+  file_base = './disk_k0.5_nuc_force'
   print_linear_residuals = false
 []

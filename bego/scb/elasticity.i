@@ -3,6 +3,7 @@
 # BegoStone
 # E = 2.735e4
 E = 4.77e3
+# E = 4.77
 nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
@@ -52,17 +53,17 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/scb_2d_cw0.4.msh'
+    file = '../mesh/scb_2d_cw0.msh'
   []
-  [top_p]
-    type = BoundingBoxNodeSetGenerator
-    input = fmg
-    new_boundary = top_point
-    # bottom_left = '-2.5 24.85 0'
-    # top_right = '2.5 25.1 0'
-    bottom_left = '-1 24.85 0'
-    top_right = '1 25.1 0'
-  []
+  # [top_p]
+  #   type = BoundingBoxNodeSetGenerator
+  #   input = fmg
+  #   new_boundary = top_load
+  #   # bottom_left = '-2.5 24.85 0'
+  #   # top_right = '2.5 25.1 0'
+  #   bottom_left = '-0.75 24.85 0'
+  #   top_right = '0.5 25.1 0'
+  # []
   # [bot_p]
   #   type = ExtraNodesetGenerator
   #   input = top_p
@@ -74,7 +75,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     new_boundary = bot_left
     bottom_left = '-17 -0.1 0'
     top_right = '-16 0.1 0'
-    input = top_p
+    input = fmg
   []
   [bot_right]
     type = BoundingBoxNodeSetGenerator
@@ -90,6 +91,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
   [disp_y]
   []
+  [strain_zz]
+  []
 []
 
 [AuxVariables]
@@ -98,6 +101,18 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [f_x]
   []
   [f_y]
+  []
+  [s1]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [s2]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [s3]
+    order = CONSTANT
+    family = MONOMIAL
   []
 []
 
@@ -120,6 +135,35 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = disp_y
     component = 1
     save_in = f_y
+  []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
+[]
+
+[AuxKernels]
+  [maxprincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = s1
+    scalar_type = MaxPrincipal
+    execute_on = timestep_end
+  []
+  [midprincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = s2
+    scalar_type = MidPrincipal
+    execute_on = timestep_end
+  []
+  [minprincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = s3
+    scalar_type = MinPrincipal
+    execute_on = timestep_end
   []
 []
 
@@ -153,8 +197,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [top_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    # boundary = top
-    boundary = top_point
+    boundary = top
+    # boundary = top_point
     function = '-0.5/60*t'
   []
 []
@@ -173,8 +217,16 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     parameter_names = 'p eta '
     parameter_values = '2 0'
   []
-  [strain]
-    type = ADComputeSmallStrain
+  # [strain]
+  #   type = ADComputeSmallStrain
+  #   output_properties = 'total_strain'
+  #   outputs = exodus
+  # []
+  [strain] # plane stress
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
+    displacements = 'disp_x disp_y'
+    # type = ADComputeSmallStrain
     output_properties = 'total_strain'
     outputs = exodus
   []
@@ -229,14 +281,14 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [top_react]
     type = NodalSum
     variable = f_y
-    boundary = top_point
+    boundary = top
   []
-  [top_disp]
-    type = NodalVariableValue
-    variable = disp_y
-    # nodeid = 26856 # for scb_2d.msh
-    nodeid = 24156 # for scb_2d_cw0.4.msh
-  []
+  # [top_disp]
+  #   type = NodalVariableValue
+  #   variable = disp_y
+  #   # nodeid = 26856 # for scb_2d.msh
+  #   nodeid = 24156 # for scb_2d_cw0.4.msh
+  # []
   [bot_react]
     type = NodalSum
     variable = f_y
@@ -270,7 +322,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 15
+  end_time = 20
   dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
@@ -299,10 +351,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   # []
   [exodus]
     type = Exodus
-    interval = 10
+    interval = 1
     start_time = 0
   []
-  file_base = './scb_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './scb_cw0_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './scb_${E}_ts${sigma_ts}_cs${sigma_cs}'
   print_linear_residuals = false
   [csv]
     type = CSV

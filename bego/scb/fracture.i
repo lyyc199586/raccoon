@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/scb_2d_cw0.4.msh'
+    file = '../mesh/scb_2d_cw0.msh'
   []
 []
 
@@ -25,6 +25,8 @@
   []
   [disp_y]
   []
+  [strain_zz]
+  []
   [psie_active]
     order = CONSTANT
     family = MONOMIAL
@@ -45,6 +47,7 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    # bound_value = 0
   []
 []
 
@@ -103,11 +106,18 @@
     compressive_strength = '${sigma_cs}'
     delta = '${delta}'
     external_driving_force_name = ce
-    output_properties = 'ce'
+    f_sigma_name = f_sigma
+    output_properties = 'ce f_sigma'
     outputs = exodus
   []
+  # [strain]
+  #   type = ADComputeSmallStrain
+  # []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
+    displacements = 'disp_x disp_y'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -144,8 +154,9 @@
 [Outputs]
   [exodus]
    type = Exodus
-   interval = 10
+   interval = 1
   []
-  file_base = 'nuc_force'
+  # file_base = './scb_${E}_ts${sigma_ts}_cs${sigma_cs}_nuc_force'
+  file_base = './scb_cw0_nuc_force'
   print_linear_residuals = false
 []

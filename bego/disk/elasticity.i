@@ -5,9 +5,9 @@ nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
-sigma_ts = 5
-# sigma_cs = 22.27
-sigma_cs = 100
+sigma_ts = 10
+sigma_cs = 22.27
+# sigma_cs = 100
 l = 0.3
 delta = 1
 # ---------------------------------
@@ -52,44 +52,30 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = FileMeshGenerator
     file = '../mesh/disk_2d.msh'
   []
-  # [top_p]
-  #   type = ExtraNodesetGenerator
-  #   input = fmg
-  #   new_boundary = top_point
-  #   coord = '0 2.9 0'
-  # []
-  # [bot_p]
-  #   type = ExtraNodesetGenerator
-  #   input = top_p
-  #   new_boundary = bot_point
-  #   coord = '0 -2.9 0'
-  # []
-  # [top_p]
-  #   type = BoundingBoxNodeSetGenerator
-  #   new_boundary = top_point
-  #   bottom_left = '-1.63 2.4 0'
-  #   top_right = '1.63 2.91 0'
-  #   input = fmg
-  # []
-  # [bot_p]
-  #   type = BoundingBoxNodeSetGenerator
-  #   new_boundary = bot_point
-  #   bottom_left = '-1.63 -2.91 0'
-  #   top_right = '1.63 -2.4 0'
-  #   input = top_p
-  # []
-  [top_arc]
-    type = ParsedGenerateSideset
-    combinatorial_geometry = 'x*x+y*y>2.895^2 & y>2.7'
-    new_sideset_name = 'top_arc'
+  [top_p]
+    type = ExtraNodesetGenerator
     input = fmg
+    new_boundary = top_point
+    coord = '0 2.9 0'
   []
-  [bot_arc]
-    type = ParsedGenerateSideset
-    combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-2.7'
-    new_sideset_name = 'bot_arc'
-    input = top_arc
+  [bot_p]
+    type = ExtraNodesetGenerator
+    input = top_p
+    new_boundary = bot_point
+    coord = '0 -2.9 0'
   []
+  # [top_arc]
+  #   type = ParsedGenerateSideset
+  #   combinatorial_geometry = 'x*x+y*y>2.895^2 & y>2.8'
+  #   new_sideset_name = 'top_arc'
+  #   input = fmg
+  # []
+  # [bot_arc]
+  #   type = ParsedGenerateSideset
+  #   combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-2.8'
+  #   new_sideset_name = 'bot_arc'
+  #   input = top_arc
+  # []
 []
 
 [Variables]
@@ -108,14 +94,19 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
   [f_y]
   []
+  [s1]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [s2]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [s3]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
-
-# [Functions]
-#   [dts]
-#     type = ParsedFunction
-#     value = 'if(x<60, 1, 0.1)'
-#   []
-# []
 
 [Kernels]
   [solid_r]
@@ -137,31 +128,67 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
 []
 
+[AuxKernels]
+  [maxprincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = s1
+    scalar_type = MaxPrincipal
+    execute_on = timestep_end
+  []
+  [midprincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = s2
+    scalar_type = MidPrincipal
+    execute_on = timestep_end
+  []
+  [minprincipal]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = s3
+    scalar_type = MinPrincipal
+    execute_on = timestep_end
+  []
+[]
+
 [BCs]
-  # [bottom_x]
-  #   type = DirichletBC
-  #   variable = disp_x
-  #   boundary = bot_arc
-  #   value = 0
-  # []
-  # [top_x]
-  #   type = DirichletBC
-  #   variable = disp_x
-  #   boundary = top_arc
-  #   value = 0
-  # []
+  [bottom_x]
+    type = DirichletBC
+    variable = disp_x
+    boundary = bot_point
+    value = 0
+  []
+  [top_x]
+    type = DirichletBC
+    variable = disp_x
+    boundary = top_point
+    value = 0
+  []
   [bottom_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    boundary = bot_arc
-    function = '0.12/60/2*t*(sqrt(2.9^2-x^2)-2.7)/0.2'
+    boundary = bot_point
+    function = '0.5/60/2*t'
   []
   [top_y]
     type = ADFunctionDirichletBC
     variable = disp_y
-    boundary = top_arc
-    function = '-0.12/60/2*t*(sqrt(2.9^2-x^2)-2.7)/0.2'
+    boundary = top_point
+    function = '-0.5/60/2*t'
   []
+  # [bottom_y]
+  #   type = ADFunctionDirichletBC
+  #   variable = disp_y
+  #   boundary = bot_arc
+  #   function = '0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
+  # []
+  # [top_y]
+  #   type = ADFunctionDirichletBC
+  #   variable = disp_y
+  #   boundary = top_arc
+  #   function = '-0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
+  # []
 []
 
 [Materials]
@@ -176,7 +203,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 0.5'
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -237,12 +264,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [top_react]
     type = NodalSum
     variable = f_y
-    boundary = top_arc
+    boundary = top_point
   []
   [bot_react]
     type = NodalSum
     variable = f_y
-    boundary = bot_arc
+    boundary = bot_point
   []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
@@ -252,13 +279,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
-    boundary = top_arc
+    boundary = top_point
   []
   [w_ext_bottom]
     type = ExternalWork
     displacements = 'disp_y'
     forces = f_y
-    boundary = bot_arc
+    boundary = bot_point
   []
 []
 
@@ -272,7 +299,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 60
+  end_time = 100
   dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
@@ -304,10 +331,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     interval = 10
     start_time = 0
   []
-  file_base = './disk_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './disk_vd_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './disk_k0.5'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = 'disk'
+    # file_base = 'disk'
   []
 []
