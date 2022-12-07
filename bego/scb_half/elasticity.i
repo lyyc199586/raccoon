@@ -2,12 +2,15 @@
 
 # BegoStone
 # E = 2.735e4
-E = 4.77e3
-# E = 4.77
+# E = 4.77e3
+
+# E = 6.16e3
+# E = 6.417e3 # plane strain
+E = 6e3
 nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
-Gc = 3.656e-2
+Gc = 3.65e-2
 # for plane strain G=K^2/E', E'=E/(1-nu^2)
 sigma_ts = 10
 sigma_cs = 22.27
@@ -163,7 +166,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = ADFunctionDirichletBC
     variable = disp_y
     boundary = top
-    function = '-0.5/60*t'
+    function = '-0.12/60*t'
   []
 []
 
@@ -183,6 +186,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
   # [strain]
   #   type = ADComputeSmallStrain
+  #   displacements = 'disp_x disp_y'
   #   output_properties = 'total_strain'
   #   outputs = exodus
   # []
@@ -247,12 +251,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = f_y
     boundary = top
   []
-  # [top_disp]
-  #   type = NodalVariableValue
-  #   variable = disp_y
-  #   # nodeid = 26856 # for scb_2d.msh
-  #   nodeid = 24156 # for scb_2d_cw0.4.msh
-  # []
+  [top_disp]
+    type = NodalVariableValue
+    variable = disp_y
+    # nodeid = 26856 # for scb_2d.msh
+    # nodeid = 24156 # for scb_2d_cw0.4.msh
+    nodeid = 11210 # for scb_half_cw1
+  []
   [bot_react]
     type = NodalSum
     variable = f_y
@@ -286,8 +291,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 20
-  dt = 0.1
+  end_time = 50
+  dt = 0.2
   # [TimeStepper]
   #   type = FunctionDT 
   #   function = 'if(t<60, 1, 0.01)'
@@ -318,11 +323,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     interval = 1
     start_time = 0
   []
+  # file_base = './scb_cw1_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   file_base = './scb_cw1_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   # file_base = './scb_${E}_ts${sigma_ts}_cs${sigma_cs}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = 'scb'
+    # file_base = 'scb'
   []
 []

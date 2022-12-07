@@ -115,7 +115,7 @@
   # []
   [strain]
     # type = ADComputeSmallStrain
-    type = ADComputePlaneSmallStrain
+    type = ADComputePlaneSmallS                                            train
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
   []
@@ -156,7 +156,7 @@
    type = Exodus
    interval = 1
   []
-  # file_base = './scb_${E}_ts${sigma_ts}_cs${sigma_cs}_nuc_force'
-  file_base = './scb_cw1_nuc_force'
+  file_base = './scb_nuc_cw1_${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './scb_cw1_nuc_force'
   print_linear_residuals = false
 []

@@ -15,6 +15,10 @@
 
 [Variables]
   [d]
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(x=0&x>=-0.5&x<=0.5,1,0)'
+    # []
   []
 []
 
@@ -31,6 +35,17 @@
     order = CONSTANT
     family = MONOMIAL
   []
+  # [sigma_ts]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  #   [InitialCondition]
+  #     type = RandomIC
+  #     variable = sigma_ts
+  #     min = 8
+  #     max = 12
+  #     seed = 0
+  #   []
+  # []
 []
 
 [Bounds]
@@ -41,22 +56,21 @@
     fixed_bound_value = 0
     threshold_value = 0.95
   []
-  [upper_fixed]
-    type = ConstantBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1
-    # bound_value = 0.1 # prevent damage
-    block = 'top bottom'
-  []
+  # [upper_fixed]
+  #   type = ConstantBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   bound_type = upper
+  #   bound_value = 0
+  #   # bound_value = 0.1 # prevent damage
+  # []
   [upper]
     type = ConstantBoundsAux
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
     bound_value = 1
-    block = 'left center right'
+    # block = 1
   []
 []
 
@@ -81,6 +95,12 @@
 []
 
 [Materials]
+  # [sts]
+  #   type = ADParsedMaterial
+  #   f_name = sigma_ts
+  #   args = sigma_ts
+  #   function = sigma_ts
+  # []
   [fracture_properties]
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda Gc l'
@@ -92,7 +112,7 @@
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0.5'
+    parameter_values = '2 0'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -112,6 +132,7 @@
     type = NucleationMicroForce
     normalization_constant = c0
     tensile_strength = '${sigma_ts}'
+    # tensile_strength = sigma_ts
     compressive_strength = '${sigma_cs}'
     delta = '${delta}'
     external_driving_force_name = ce
@@ -132,6 +153,7 @@
     phase_field = d
     degradation_function = g
     decomposition = NONE
+    # decomposition = VOLDEV
     # output_properties = 'psie'
     # outputs = exodus
   []
@@ -160,8 +182,9 @@
 [Outputs]
   [exodus]
    type = Exodus
-   interval = 10
+   interval = 1
   []
-  file_base = './disk_k0.5_nuc_force'
+  # file_base = './disk_a${a}_nuc_l${l}_delta${delta}_d_center'
+  file_base = './disk_nuc_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
 []

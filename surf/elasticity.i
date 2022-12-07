@@ -64,15 +64,18 @@
 
 # BegoStone
 # E = 2.735e4
-E = 4.77e3
-nu = 0.2
+# E = 4.77e3
+E = 6.16e3
+nu = 0.1
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
 sigma_ts = 10
-sigma_cs = 22.27
+# sigma_cs = 22.27
+# sigma_cs = 100
+sigma_cs = 80
 l = 0.1
-delta = 0
+delta = 8
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -343,7 +346,7 @@ refine = 3 # fine mesh size: 0.025
     type = Exodus
     interval = 10
   []
-  file_base = 'surf_bg_a${a}_ts${sigma_ts}_l${l}_delta${delta}'
+  file_base = 'surf_bg_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV

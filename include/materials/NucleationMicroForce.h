@@ -23,9 +23,11 @@ protected:
 
   /// Name of the external driving force
   const MaterialPropertyName _ex_driving_name;
+  const MaterialPropertyName _f_sigma_name;
 
   /// The external driving force
   ADMaterialProperty<Real> & _ex_driving;
+  ADMaterialProperty<Real> & _f_sigma;
 
   ///@{ Phase field properties
   /// The fracture toughness

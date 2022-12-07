@@ -38,7 +38,10 @@ NucleationMicroForce::validParams()
       "external_driving_force_name",
       "ex_driving",
       "Name of the material that holds the external_driving_force");
-
+  params.addParam<MaterialPropertyName>(
+      "f_sigma_name",
+      "f_sigma",
+      "Name of the material that compute f(sigma)");
   return params;
 }
 
@@ -46,6 +49,7 @@ NucleationMicroForce::NucleationMicroForce(const InputParameters & parameters)
   : Material(parameters),
     BaseNameInterface(parameters),
     _ex_driving(declareADProperty<Real>(prependBaseName("external_driving_force_name", true))),
+    _f_sigma(declareADProperty<Real>(prependBaseName("f_sigma_name", true))),
     _Gc(getADMaterialProperty<Real>(prependBaseName("fracture_toughness", true))),
     _c0(getADMaterialProperty<Real>(prependBaseName("normalization_constant", true))),
     _L(getADMaterialProperty<Real>(prependBaseName("regularization_length", true))),
@@ -93,4 +97,7 @@ NucleationMicroForce::computeQpProperties()
                                     gamma_0 * (pow(_sigma_cs, 3) + pow(_sigma_ts, 3)));
   ADReal beta_3 = _L[_qp] * _sigma_ts / _mu[_qp] / K / _Gc[_qp];
   _ex_driving[_qp] = (beta_2 * std::sqrt(J2) + beta_1 * I1 + beta_0) / (1 + beta_3 * I1 * I1);
+
+  // yc: compute f(stress) (no phase field case)
+  _f_sigma[_qp] = sqrt(J2) + (_sigma_cs-_sigma_ts)/sqrt(3)/(_sigma_cs+_sigma_ts) * I1 - 2*_sigma_cs*_sigma_ts/sqrt(3)/(_sigma_cs+_sigma_ts);
 }

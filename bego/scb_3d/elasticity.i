@@ -9,7 +9,7 @@ Gc = 3.656e-2
 sigma_ts = 10
 sigma_cs = 22.27
 l = 0.3
-delta = 2
+delta = 1
 # ---------------------------------
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -177,6 +177,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = disp_y
     boundary = top
     function = '-0.5/60*t'
+    # function = 'h:=sqrt(3^2-0.5^2);
+    #             -0.5/60*t*(sqrt(3^2-x^2)-h)/(3-h)'
+    # function = 'f:=(cos(2*pi*x) + 1)/2;
+    #             -0.5/60*t*f'
+    # function = 'f:=1-1/20*x;
+    #             -0.5/60*t*f'
   []
 []
 
@@ -299,7 +305,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 20
+  end_time = 10
   dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
