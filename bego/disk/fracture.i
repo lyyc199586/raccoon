@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_2d.msh'
+    file = '../mesh/disk_2d_h0.0125.msh'
   []
 []
 

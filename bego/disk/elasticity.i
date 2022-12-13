@@ -9,7 +9,7 @@ Gc = 3.656e-2
 sigma_ts = 10
 # sigma_cs = 22.27
 sigma_cs = 80
-l = 0.1
+l = 0.05
 # delta = 4
 delta = 8
 # l = 0.1
@@ -55,7 +55,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_2d.msh'
+    file = '../mesh/disk_2d_h0.0125.msh'
   []
   # [top_p]
   #   type = ExtraNodesetGenerator

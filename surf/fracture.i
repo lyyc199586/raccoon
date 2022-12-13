@@ -19,8 +19,8 @@
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -1 0'
-      top_right = '${length} 1 0'
+      bottom_left = '0 -0.5 0'
+      top_right = '${length} 0.5 0'
       outside = DO_NOTHING
       inside = REFINE
     []

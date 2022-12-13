@@ -74,7 +74,7 @@ sigma_ts = 10
 # sigma_cs = 22.27
 # sigma_cs = 100
 sigma_cs = 80
-l = 0.1
+l = 0.05
 delta = 8
 # ---------------------------------
 
@@ -92,7 +92,8 @@ length = '${fparse 6*a}'
 width = '${fparse 2*a}'
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
-refine = 3 # fine mesh size: 0.025
+# refine = 3 # fine mesh size: 0.025
+refine = 4 # fine mesh size: 0.0125
 
 [Functions]
   [bc_func]
@@ -160,8 +161,8 @@ refine = 3 # fine mesh size: 0.025
   [Markers]
     [marker]
       type = BoxMarker
-      bottom_left = '0 -1 0'
-      top_right = '${length} 1 0'
+      bottom_left = '0 -0.5 0'
+      top_right = '${length} 0.5 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -346,7 +347,7 @@ refine = 3 # fine mesh size: 0.025
     type = Exodus
     interval = 10
   []
-  file_base = 'surf_bg_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = 'surf_h${refine}_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
