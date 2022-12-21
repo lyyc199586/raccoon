@@ -15,6 +15,10 @@
 
 [Variables]
   [d]
+    [InitialCondition]
+      type = FunctionIC
+      function = 'if(x=0&x>=-0.5&x<=0.5,1,0)'
+    []
   []
 []
 

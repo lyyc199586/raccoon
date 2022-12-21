@@ -105,6 +105,10 @@ psic = '${fparse sigma_ts^2/2/E}'
 
 [AuxVariables]
   [d]
+    [InitialCondition]
+      type = FunctionIC
+      function = 'if(x=0&x>=-0.5&x<=0.5,1,0)'
+    []
   []
   [f_x]
   []
@@ -364,7 +368,7 @@ psic = '${fparse sigma_ts^2/2/E}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 60
+  end_time = 80
   dt = 0.1
   # [TimeStepper]
   #   type = FunctionDT 
@@ -396,10 +400,10 @@ psic = '${fparse sigma_ts^2/2/E}'
     interval = 10
     start_time = 0
   []
-  file_base = './disk_coh_a${a}_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './disk_coh_id_a${a}_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = 'disk'
+    # file_base = 'disk'
   []
 []
