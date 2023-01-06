@@ -66,16 +66,16 @@
 # E = 2.735e4
 # E = 4.77e3
 E = 6.16e3
-nu = 0.1
+nu = 0.2
 # Gc = 2.188e-2
 # Gc = 3.656e-3
 Gc = 3.656e-2
-sigma_ts = 10
+sigma_ts = 5
 # sigma_cs = 22.27
 # sigma_cs = 100
-sigma_cs = 80
-l = 0.05
-delta = 8
+sigma_cs = 25
+l = 0.8
+delta = 12
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
