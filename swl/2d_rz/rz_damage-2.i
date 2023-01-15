@@ -34,81 +34,81 @@ Gc = '${fparse Gc_base*gc_ratio}'
 []
 
 [MultiApps]
-  [./elastodynamic]
+  [elastodynamic]
     type = TransientMultiApp
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
     cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};SD=${SD};p_max=${p_max};gc_ratio=${gc_ratio}'
-  [../]
+  []
 []
 
 [Transfers]
-  [./to_d]
+  [to_d]
     type = MultiAppCopyTransfer
     multi_app = 'elastodynamic'
     direction = to_multiapp
     source_variable = 'd'
     variable = 'd'
-  [../]
-  [./from_psie_active]
+  []
+  [from_psie_active]
     type = MultiAppCopyTransfer
     multi_app = 'elastodynamic'
     direction = from_multiapp
     source_variable = 'psie_active'
     variable = 'psie_active'
-  [../]
+  []
 []
 
 [Mesh]
-  [./fmg]
+  [fmg]
     type = FileMeshGenerator
     #  file = '../mesh/2d/inner.msh'
     use_for_exodus_restart = true
     file = './damage-19.e'
-  [../]
+  []
 []
 
 [Variables]
-  [./d]
+  [d]
     initial_from_file_var = 'd' # for restart
     initial_from_file_timestep = LATEST # for restart
-  [../]
+  []
 []
 
 [AuxVariables]
-  [./bounds_dummy]
-  [../]
-  [./psie_active]
+  [bounds_dummy]
+  []
+  [psie_active]
     order = CONSTANT
     family = MONOMIAL
-  [../]
-  [./alpha_bar]
+  []
+  [alpha_bar]
     order = CONSTANT
     family = MONOMIAL
     initial_from_file_var = 'alpha_bar'
     initial_from_file_timestep = LATEST
-  [../]
-  [./f_alpha]
+  []
+  [f_alpha]
     order = CONSTANT
     family = MONOMIAL
-  [../]
+  []
 []
 
 [Bounds]
-  [./irreversibility]
+  [irreversibility]
     type = VariableOldValueBoundsAux
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     bound_type = lower
-  [../]
-  [./upper]
+  []
+  [upper]
     type = ConstantBoundsAux
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     bound_type = upper
     bound_value = 1
-  [../]
+  []
 []
 
 [Kernels]
@@ -127,18 +127,18 @@ Gc = '${fparse Gc_base*gc_ratio}'
 []
 
 [AuxKernels]
-  [./f_alpha]
+  [f_alpha]
     type = ADMaterialRealAux
     property = 'f_alpha'
     variable = 'f_alpha'
     execute_on = 'TIMESTEP_END'
-  [../]
-  [./alpha_bar]
+  []
+  [alpha_bar]
     type = ADMaterialRealAux
     property = 'alpha_bar'
     variable = 'alpha_bar'
     execute_on = 'TIMESTEP_END'
-  [../]
+  []
 []
 
 [Materials]
@@ -151,7 +151,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     type = RationalDegradationFunction
     f_name = g
     phase_field = d
-    material_property_names = 'Gc psic xi c0 l'
+    material_property_names = 'Gc psic_deg xi c0 l'
     parameter_names = 'p a2 a3 eta'
     parameter_values = '2 1.0 0.0 1e-3'
   []
@@ -174,14 +174,20 @@ Gc = '${fparse Gc_base*gc_ratio}'
     f_name = Gc_deg
     function = 'f_alpha*Gc'
     material_property_names = 'f_alpha Gc'
-  [../]
-  [./fatigue_mobility]
+  []
+  [psic_deg]
+    type = ADParsedMaterial
+    f_name = psic_deg
+    function = 'f_alpha*psic'
+    material_property_names = 'f_alpha psic'
+  []
+  [fatigue_mobility]
     type = ComputeFatigueDegradationFunction
     elastic_energy_var = psie_active
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
     initial_alpha_bar = "alpha_bar" # for restart
-  [../]
+  []
 []
 
 [Executioner]
@@ -192,7 +198,6 @@ Gc = '${fparse Gc_base*gc_ratio}'
   nl_abs_tol = 1e-08
   nl_rel_tol = 1e-06
   automatic_scaling = true
-  
   end_time = 2.1
   dt = 0.75e-3
 []
