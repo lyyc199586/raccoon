@@ -135,18 +135,6 @@
     variable = 'psie_active'
     execute_on = 'TIMESTEP_END'
   []
-  [f_alpha]
-    type = ADMaterialRealAux
-    property = 'f_alpha'
-    variable = 'f_alpha'
-    execute_on = 'TIMESTEP_BEGIN'
-  []
-  [alpha_bar]
-    type = ADMaterialRealAux
-    property = 'alpha_bar'
-    variable = 'alpha_bar'
-    execute_on = 'TIMESTEP_BEGIN'
-  []
 []
 
 [BCs]
@@ -256,22 +244,10 @@
     type = RationalDegradationFunction
     f_name = g
     phase_field = d
-    function = '(1-d)^p/((1-d)^p+(Gc_deg/psic_deg*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta'
-    material_property_names = 'Gc_deg psic_deg xi c0 l'
+    # function = '(1-d)^p/((1-d)^p+(Gc_deg/psic_deg*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta'
+    material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
     parameter_values = '2 1.0 0.0 1e-3'
-  []
-  [Gc_deg]
-    type = ADParsedMaterial
-    f_name = Gc_deg
-    function = 'f_alpha*Gc'
-    material_property_names = 'f_alpha Gc'
-  []
-  [psic_deg]
-    type = ADParsedMaterial
-    f_name = psic_deg
-    function = 'f_alpha*psic'
-    material_property_names = 'f_alpha psic'
   []
   [strain]
     type = ADComputeAxisymmetricRZSmallStrain
@@ -292,12 +268,6 @@
     elasticity_model = elasticity
     output_properties = 'stress'
     # outputs = exodus
-  []
-  [fatigue_mobility]
-    type = ComputeFatigueDegradationFunction
-    elastic_energy_var = psie_active
-    f_alpha_type = 'asymptotic'
-    alpha_T = ${alphaT}
   []
 []
 

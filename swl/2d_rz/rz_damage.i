@@ -41,7 +41,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max};alphaT=${alphaT}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max}'
   []
 []
 

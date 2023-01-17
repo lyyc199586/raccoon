@@ -39,7 +39,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     input_files = 'rz_elastic-2.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max};alphaT=${alphaT}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max}'
   []
 []
 
@@ -83,17 +83,19 @@ Gc = '${fparse Gc_base*gc_ratio}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [alpha_bar]
+  [alpha_bar_init]
     order = CONSTANT
     family = MONOMIAL
     initial_from_file_var = 'alpha_bar'
     initial_from_file_timestep = LATEST
   []
+  [alpha_bar]
+    order = CONSTANT
+    family = MONOMIAL
+  []
   [f_alpha]
     order = CONSTANT
     family = MONOMIAL
-    initial_from_file_var = 'f_alpha'
-    initial_from_file_timestep = LATEST
   []
 []
 
@@ -189,7 +191,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     elastic_energy_var = psie_active
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
-    initial_alpha_bar = "alpha_bar" # for restart
+    initial_alpha_bar = "alpha_bar_init" # for restart
   []
 []
 
@@ -208,6 +210,6 @@ Gc = '${fparse Gc_base*gc_ratio}'
 [Outputs]
   exodus = true
   interval = 100
-  file_base = 'damage-2'
+  file_base = damage-2
 []
 
