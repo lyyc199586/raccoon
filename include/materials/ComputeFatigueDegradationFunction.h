@@ -50,8 +50,8 @@ protected:
   const VariableValue * _alpha_bar_init;
 
   /// degradation function and its old value
-  const ADMaterialProperty<Real> & _g;
-  const MaterialProperty<Real> & _g_old;
+  // const ADMaterialProperty<Real> & _g;
+  // const MaterialProperty<Real> & _g_old;
 
   /// Fatigue flag to check if fatigue has occured
   MaterialProperty<bool> & _fatigue_flag;

@@ -28,14 +28,14 @@
   []
   [accel_z]
   []
-  [I_r]
-  []
-  [I_z]
-  []
-  [acoustic_energy]
-    # order = CONSTANT
-    # family = MONOMIAL
-  []
+  # [I_r]
+  # []
+  # [I_z]
+  # []
+  # [acoustic_energy]
+  #   # order = CONSTANT
+  #   # family = MONOMIAL
+  # []
 []
 
 [Kernels]
@@ -74,20 +74,20 @@
     gamma = 0.5 
     eta = 0.0
   []
-  [grad_p_r]
-    type = PressureGradient
-    variable = disp_r
-    # displacements = 'disp_r disp_z'
-    pressure = p
-    component = 0
-  []
-  [grad_p_z]
-    type = PressureGradient
-    variable = disp_z
-    # displacements = 'disp_r disp_z'
-    pressure = p
-    component = 1
-  []
+  # [grad_p_r]
+  #   type = PressureGradient
+  #   variable = disp_r
+  #   # displacements = 'disp_r disp_z'
+  #   pressure = p
+  #   component = 0
+  # []
+  # [grad_p_z]
+  #   type = PressureGradient
+  #   variable = disp_z
+  #   # displacements = 'disp_r disp_z'
+  #   pressure = p
+  #   component = 1
+  # []
 []
 
 
@@ -122,29 +122,29 @@
     gamma = 0.5
     execute_on = timestep_end
   []
-  [I_r]
-    type = AcousticIntensity
-    variable = I_r
-    pressure = p
-    velocity = vel_r
-    execute_on = timestep_end
-  []
-  [I_z]
-    type = AcousticIntensity
-    variable = I_z
-    pressure = p
-    velocity = vel_z
-    execute_on = timestep_end
-  []
-  [e]
-    type = AcousticEnergy
-    variable = acoustic_energy
-    pressure = p
-    vel_x = vel_r
-    vel_y = vel_z
-    density = Diff
-    wavespeed = water_wavespeed
-  []
+  # [I_r]
+  #   type = AcousticIntensity
+  #   variable = I_r
+  #   pressure = p
+  #   velocity = vel_r
+  #   execute_on = timestep_end
+  # []
+  # [I_z]
+  #   type = AcousticIntensity
+  #   variable = I_z
+  #   pressure = p
+  #   velocity = vel_z
+  #   execute_on = timestep_end
+  # []
+  # [e]
+  #   type = AcousticEnergy
+  #   variable = acoustic_energy
+  #   pressure = p
+  #   vel_x = vel_r
+  #   vel_y = vel_z
+  #   density = Diff
+  #   wavespeed = water_wavespeed
+  # []
 []
 
 [BCs]
@@ -218,25 +218,25 @@
   []
 []
 
-[Postprocessors]
-  [total_acoustic_energy]
-    # type = ElementIntegralVariablePostprocessor
-    type = NodalSum
-    variable = acoustic_energy
-  []
-  [acoustic_energy_on_interface]
-    type = NodalSum
-    # type = SideIntegralVariablePostprocessor
-    variable = acoustic_energy
-    boundary = inner_BC
-  []
-  [acoustic_energy_on_top]
-    type = NodalSum
-    # type = SideIntegralVariablePostprocessor
-    variable = acoustic_energy
-    boundary = top
-  []
-[]
+# [Postprocessors]
+#   [total_acoustic_energy]
+#     # type = ElementIntegralVariablePostprocessor
+#     type = NodalSum
+#     variable = acoustic_energy
+#   []
+#   [acoustic_energy_on_interface]
+#     type = NodalSum
+#     # type = SideIntegralVariablePostprocessor
+#     variable = acoustic_energy
+#     boundary = inner_BC
+#   []
+#   [acoustic_energy_on_top]
+#     type = NodalSum
+#     # type = SideIntegralVariablePostprocessor
+#     variable = acoustic_energy
+#     boundary = top
+#   []
+# []
 
 [Executioner]
   type = Transient

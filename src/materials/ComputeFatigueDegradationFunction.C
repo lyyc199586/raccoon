@@ -58,8 +58,8 @@ ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(const Input
     _alpha_T(getParam<Real>("alpha_T")),
     _alpha_bar_init(isParamValid("initial_alpha_bar") ? &coupledValue("initial_alpha_bar")
                                                       : nullptr),
-    _g(getADMaterialProperty<Real>("degradation_mat")),
-    _g_old(getMaterialPropertyOld<Real>("degradation_mat")),
+    // _g(getADMaterialProperty<Real>("degradation_mat")),
+    // _g_old(getMaterialPropertyOld<Real>("degradation_mat")),
     _fatigue_flag(declareProperty<bool>("fatigue_flag"))
 {
 }
@@ -79,8 +79,12 @@ ComputeFatigueDegradationFunction::computeQpProperties()
       _E_el_active_old ? (*_E_el_active_old)[_qp] : (*_E_el_active_var_old)[_qp];
 
   // calculate degraded active elastic energy
-  ADReal alpha = _g[_qp] * E_el_active;
-  ADReal alpha_old = _g_old[_qp] * E_el_active_old;
+  // ADReal alpha = _g[_qp] * E_el_active;
+  // ADReal alpha_old = _g_old[_qp] * E_el_active_old;
+
+  // yc: change it to ungraded active elastic energy for now
+  ADReal alpha = E_el_active;
+  ADReal alpha_old = E_el_active_old;
 
   // update alpha_bar
   if (_fatigue_flag[_qp] == false)

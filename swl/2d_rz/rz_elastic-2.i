@@ -1,7 +1,9 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    # file = '../mesh/2d/inner.msh'
+    use_for_exodus_restart = true
+    file = './solid-1.e'
   []
 []
 
@@ -44,6 +46,8 @@
 
 [AuxVariables]
   [d]
+    initial_from_file_var = 'd' # for restart
+    initial_from_file_timestep = LATEST # for restart
   []
   [pre_wave]
   []
@@ -72,10 +76,14 @@
   [alpha_bar]
     order = CONSTANT
     family = MONOMIAL
+    initial_from_file_var = 'alpha_bar' # for restart only
+    initial_from_file_timestep = LATEST
   []
   [f_alpha]
     order = CONSTANT
     family = MONOMIAL
+    initial_from_file_var = 'f_alpha' # for restart only
+    initial_from_file_timestep = LATEST
   []
 []
 
@@ -316,7 +324,7 @@
   [exodus]
     type = Exodus
     interval = 50
-    file_base = solid-1
+    file_base = solid-2
   []
   [console]
     type = Console

@@ -5,7 +5,7 @@ Gc_base = 21.88e-9
 gc_ratio = 1
 l = 0.1 # h = 0.02
 psic = 7.0e-9
-k = 1e-09
+# k = 1e-09
 alphaT = 8.0e-9
 SD = 0.75
 p_max = 1
@@ -41,7 +41,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max};gc_ratio=${gc_ratio}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max};alphaT=${alphaT}'
   []
 []
 
@@ -147,7 +147,8 @@ Gc = '${fparse Gc_base*gc_ratio}'
     type = RationalDegradationFunction
     f_name = g
     phase_field = d
-    material_property_names = 'Gc psic_deg xi c0 l'
+    function = '(1-d)^p/((1-d)^p+(Gc_deg/psic_deg*xi/c0/l)*d*(1+a2*d+a2*a3*d^2))*(1-eta)+eta'
+    material_property_names = 'Gc_deg psic_deg xi c0 l'
     parameter_names = 'p a2 a3 eta'
     parameter_values = '2 1.0 0.0 1e-3'
   []
