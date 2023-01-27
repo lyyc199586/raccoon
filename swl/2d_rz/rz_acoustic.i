@@ -1,10 +1,9 @@
 [Mesh]
-   [./fmg]
-     type = FileMeshGenerator
-     file = '../mesh/2d/outer_vol_src.msh'
-   [../]
+  [fmg]
+    type = FileMeshGenerator
+    file = '../mesh/2d/outer_vol_src_h0.01.msh'
+  []
 []
-
 
 [Problem]
   coord_type = RZ
@@ -42,12 +41,12 @@
   [inertia_p]
     type = InertialForce
     variable = p
-  [../]
+  []
   [diff_p]
     type = ADCoefMatDiffusion
     variable = 'p'
     prop_names = 'Diff'
-  [../]
+  []
   [source_p]
     type = ADCoefMatSource
     variable = p
@@ -60,8 +59,8 @@
     velocity = vel_r
     acceleration = accel_r
     density = water_density
-    beta = 0.25 
-    gamma = 0.5 
+    beta = 0.25
+    gamma = 0.5
     eta = 0.0
   []
   [inertia_z] # M*accel + eta*M*vel
@@ -70,8 +69,8 @@
     velocity = vel_z
     acceleration = accel_z
     density = water_density
-    beta = 0.25 
-    gamma = 0.5 
+    beta = 0.25
+    gamma = 0.5
     eta = 0.0
   []
   # [grad_p_r]
@@ -89,7 +88,6 @@
   #   component = 1
   # []
 []
-
 
 [AuxKernels]
   [accel_r]
@@ -246,7 +244,7 @@
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   # automatic_scaling = true
-  end_time = 2.4
+  end_time = 2.1
   dt = 1.5e-3
   # end_time = 1
   # dt = 1e-3
@@ -256,14 +254,19 @@
 []
 
 [Outputs]
-  [./csv]
+  [csv]
     type = CSV
     delimiter = ','
     file_base = 'acoustic_energy'
-  [../]
-  [./exodus]
+  []
+  [exodus]
     type = Exodus
-    interval = 100
+    interval = 50
     file_base = fluid
-  [../]
+  []
+  # [my_checkpoint]
+  #   type = Checkpoint
+  #   num_files = 2
+  #   interval = 25
+  # []
 []

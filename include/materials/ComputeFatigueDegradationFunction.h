@@ -37,6 +37,8 @@ protected:
   /// fatigue degradation function
   ADMaterialProperty<Real> & _f_alpha;
 
+  const MaterialProperty<Real> & _f_alpha_old;
+
   /// fatigue degradation function type
   const MaterialPropertyName _f_alpha_type;
 
@@ -52,6 +54,8 @@ protected:
   /// degradation function and its old value
   // const ADMaterialProperty<Real> & _g;
   // const MaterialProperty<Real> & _g_old;
+
+  const ADMaterialProperty<Real> & _psic;
 
   /// Fatigue flag to check if fatigue has occured
   MaterialProperty<bool> & _fatigue_flag;

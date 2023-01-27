@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    file = '../mesh/2d/inner_h0.01.msh'
   []
 []
 
@@ -256,15 +256,15 @@
     type = CentralDifference
     solve_type = lumped
   []
-  end_time = 2.4
-  dt = 0.75e-3
+  end_time = 2.1
+  dt = 1.5e-3
 []
 
 [Outputs]
   [exodus]
     type = Exodus
     interval = 50
-    file_base = solid-2
+    file_base = 'solid-${np}'
   []
   [console]
     type = Console

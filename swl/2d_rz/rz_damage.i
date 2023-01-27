@@ -6,10 +6,10 @@ gc_ratio = 1
 l = 0.1 # h = 0.02
 psic = 7.0e-9
 # k = 1e-09
-alphaT = 8.0e-9
+# alphaT = 1 # just for testing
+alphaT = 0.02
 SD = 0.75
 p_max = 1
-# alphaT = 1.0
 rho_s = 1.995e-3
 
 # Glass
@@ -30,6 +30,10 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Gc = '${fparse Gc_base*gc_ratio}'
 ###############################################################################
+
+[Debug]
+  show_material_props = true
+[]
 
 [Problem]
   coord_type = RZ
@@ -65,7 +69,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    file = '../mesh/2d/inner_h0.01.msh'
   []
 []
 
@@ -80,12 +84,22 @@ Gc = '${fparse Gc_base*gc_ratio}'
   [psie_active]
     order = CONSTANT
     family = MONOMIAL
+    # order = SECOND
+    # family = L2_LAGRANGE
   []
   [alpha_bar]
     order = CONSTANT
     family = MONOMIAL
+    # order = SECOND
+    # family = L2_LAGRANGE
   []
   [f_alpha]
+    order = CONSTANT
+    family = MONOMIAL
+    # order = SECOND
+    # family = L2_LAGRANGE
+  []
+  [psie_moose_int]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -135,6 +149,12 @@ Gc = '${fparse Gc_base*gc_ratio}'
     variable = 'alpha_bar'
     execute_on = 'TIMESTEP_END'
   []
+  [TrapazoidalTimeIntegrator]
+    type = VariableTimeIntegrationAux
+    variable_to_integrate = psie_active
+    variable = psie_moose_int
+    order = 3
+  []
 []
 
 [Materials]
@@ -181,6 +201,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
   [fatigue_mobility]
     type = ComputeFatigueDegradationFunction
     elastic_energy_var = psie_active
+    energy_threshold = psic
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
   []
@@ -194,13 +215,28 @@ Gc = '${fparse Gc_base*gc_ratio}'
   nl_abs_tol = 1e-08
   nl_rel_tol = 1e-06
   automatic_scaling = true
-  end_time = 2.4
-  dt = 0.75e-3
+  end_time = 2.1
+  # dt = 0.75e-3
+  dt = 1.5e-3
 []
 
 [Outputs]
-  exodus = true
-  interval = 100
-  file_base = 'damage-1'
+  [damage-1]
+    type = Exodus
+    interval = 50
+    # interval = 25
+    file_base = 'damage-1'
+  []
+  [step_by_step]
+    type = Exodus
+    start_time = 0.92
+    end_time = 1.5
+    interval = 1
+  []
+  # [my_checkpoint]
+  #   type = Checkpoint
+  #   num_files = 2
+  #   interval = 25
+  # []
 []
 

@@ -29,9 +29,10 @@ ComputeFatigueDegradationFunction::validParams()
   params.addParam<Real>("kappa", 0, "parameter in logaritmic fatigue degaradtion function");
   params.addRequiredParam<Real>("alpha_T", "fatigue threshold");
   params.addCoupledVar("initial_alpha_bar", "initial value for alpha_bar");
+  // params.addParam<MaterialPropertyName>(
+  //     "degradation_mat", "g", "name of the material that holds the degradation");
   params.addParam<MaterialPropertyName>(
-      "degradation_mat", "g", "name of the material that holds the degradation");
-
+      "energy_threshold", "psic", "name of the energy threhold");
   return params;
 }
 
@@ -53,6 +54,7 @@ ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(const Input
     _alpha_bar(declareADProperty<Real>(getParam<MaterialPropertyName>("alpha_bar_name"))),
     _alpha_bar_old(getMaterialPropertyOld<Real>("alpha_bar_name")),
     _f_alpha(declareADProperty<Real>(getParam<MaterialPropertyName>("f_alpha_name"))),
+    _f_alpha_old(getMaterialPropertyOld<Real>("f_alpha_name")),
     _f_alpha_type(getParam<MaterialPropertyName>("f_alpha_type")),
     _kappa(getParam<Real>("kappa")),
     _alpha_T(getParam<Real>("alpha_T")),
@@ -60,6 +62,7 @@ ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(const Input
                                                       : nullptr),
     // _g(getADMaterialProperty<Real>("degradation_mat")),
     // _g_old(getMaterialPropertyOld<Real>("degradation_mat")),
+    _psic(getADMaterialProperty<Real>("energy_threshold")),
     _fatigue_flag(declareProperty<bool>("fatigue_flag"))
 {
 }
@@ -78,26 +81,40 @@ ComputeFatigueDegradationFunction::computeQpProperties()
   ADReal E_el_active_old =
       _E_el_active_old ? (*_E_el_active_old)[_qp] : (*_E_el_active_var_old)[_qp];
 
-  // calculate degraded active elastic energy
+  // calculate degraded active elastic energy // yc: comment
   // ADReal alpha = _g[_qp] * E_el_active;
   // ADReal alpha_old = _g_old[_qp] * E_el_active_old;
 
   // yc: change it to ungraded active elastic energy for now
-  ADReal alpha = E_el_active;
-  ADReal alpha_old = E_el_active_old;
+  ADReal alpha = (E_el_active - _psic[_qp] > 0) ? ((E_el_active - _psic[_qp])/_psic[_qp]) : 0;
+  ADReal alpha_old = (E_el_active_old - _psic[_qp] > 0 ) ? ((E_el_active_old - _psic[_qp])/_psic[_qp]) : 0;
+  // ADReal x = E_el_active - _psic[_qp];
+  // ADReal alpha = x * (std::tanh(x / (0.1 * _psic[_qp])) + 1) / 2;
+  // ADReal x_old = E_el_active_old - _psic[_qp];
+  // ADReal alpha_old = x_old * (tanh(x_old / (0.1 * _psic[_qp])) + 1) / 2;
 
   // update alpha_bar
-  if (_fatigue_flag[_qp] == false)
-  {
-    _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old);
-  }
+  // if (_fatigue_flag[_qp] == false) // alpha_bar < alpha_T
+  // {
+  //   // _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old); yc: -> this might cause alpha_bar to decrease? is that right?
+  //   if (alpha > alpha_old)
+  //     _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old);
+  //   else
+  //     _alpha_bar[_qp] = _alpha_bar_old[_qp];
+  // }
+  // else // alpha_bar > alpha_T
+  // {
+  //   if (alpha > alpha_old)
+  //     _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old);
+  //   else
+  //     _alpha_bar[_qp] = _alpha_bar_old[_qp];
+  // }
+  // undate alpha_bar with dt
+  // _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha + alpha_old)/2 * _dt;
+  if (alpha > alpha_old)
+    _alpha_bar[_qp] = _alpha_bar_old[_qp] + alpha * _dt;
   else
-  {
-    if (alpha > alpha_old)
-      _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old);
-    else
-      _alpha_bar[_qp] = _alpha_bar_old[_qp];
-  }
+    _alpha_bar[_qp] = _alpha_bar_old[_qp];
 
   if (_alpha_bar[_qp] > _alpha_T)
     _fatigue_flag[_qp] = true;
@@ -110,7 +127,8 @@ ComputeFatigueDegradationFunction::computeQpProperties()
     if (_alpha_bar[_qp] < _alpha_T)
       _f_alpha[_qp] = 1.0;
     else
-      _f_alpha[_qp] = std::pow(2 * _alpha_T / (_alpha_T + _alpha_bar[_qp]), 2.0);
+      // _f_alpha[_qp] = std::pow(2 * _alpha_T / (_alpha_T + _alpha_bar[_qp]), 2.0); // f1
+      _f_alpha[_qp] = std::pow(2 * _alpha_T / (1.8 * _alpha_T + 0.2 * _alpha_bar[_qp]), 2.0); //f2
 
   // logarithmic
   }

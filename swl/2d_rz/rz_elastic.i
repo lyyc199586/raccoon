@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/2d/inner.msh'
+    file = '../mesh/2d/inner_h0.01.msh'
   []
 []
 
@@ -68,15 +68,27 @@
   [psie_active]
     order = CONSTANT
     family = MONOMIAL
+    # order = SECOND
+    # family = L2_LAGRANGE
   []
-  [alpha_bar]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [f_alpha]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [alpha_bar]
+  #   order = CONSTANT
+  #   # order = SECOND
+  #   family = MONOMIAL
+  # []
+  # [f_alpha]
+  #   order = CONSTANT
+  #   # order = SECOND
+  #   family = MONOMIAL
+  # []
+  # [vel_r]
+  # []
+  # [vel_z]
+  # []
+  # [accel_r]
+  # []
+  # [accel_z]
+  # []
 []
 
 [Kernels]
@@ -93,10 +105,18 @@
   [inertia_rr]
     type = InertialForce
     variable = 'disp_r'
+    # velocity = 'vel_r'
+    # acceleration = 'accel_r'
+    # beta = 0.25
+    # gamma = 0.5
   []
   [inertia_zz]
     type = InertialForce
     variable = 'disp_z'
+    # velocity = 'vel_z'
+    # acceleration = 'accel_z'
+    # beta = 0.25
+    # gamma = 0.5
   []
 []
 
@@ -135,6 +155,53 @@
     variable = 'psie_active'
     execute_on = 'TIMESTEP_END'
   []
+  # [accel_r]
+  #   type = NewmarkAccelAux
+  #   variable = accel_r
+  #   displacement = disp_r
+  #   velocity = vel_r
+  #   beta = 0.25
+  #   execute_on = timestep_end
+  # []
+  # [vel_r]
+  #   type = NewmarkVelAux
+  #   variable = vel_r
+  #   acceleration = accel_r
+  #   gamma = 0.5
+  #   execute_on = timestep_end
+  # []
+  # [accel_z]
+  #   type = NewmarkAccelAux
+  #   variable = accel_z
+  #   displacement = disp_z
+  #   velocity = vel_z
+  #   beta = 0.25
+  #   execute_on = timestep_end
+  # []
+  # [vel_z]
+  #   type = NewmarkVelAux
+  #   variable = vel_z
+  #   acceleration = accel_z
+  #   gamma = 0.5
+  #   execute_on = timestep_end
+  # []
+  # [f_alpha]
+  #   type = ADMaterialRealAux
+  #   property = 'f_alpha'
+  #   variable = 'f_alpha'
+  #   execute_on = 'TIMESTEP_END'
+  # []
+  # [alpha_bar]
+  #   type = ADMaterialRealAux
+  #   property = 'alpha_bar'
+  #   variable = 'alpha_bar'
+  #   execute_on = 'TIMESTEP_END'
+  # []
+  # [./SimpsonsTimeIntegrator]
+  #   type = VariableTimeIntegrationAux
+  #   variable_to_integrate = u
+  #   variable = v_simpson
+  #   order 
 []
 
 [BCs]
@@ -269,6 +336,18 @@
     output_properties = 'stress'
     # outputs = exodus
   []
+  # [Gc_deg]
+  #   type = ADParsedMaterial
+  #   f_name = Gc_deg
+  #   function = 'f_alpha*Gc'
+  #   material_property_names = 'f_alpha Gc'
+  # []
+  # [psic_deg]
+  #   type = ADParsedMaterial
+  #   f_name = psic_deg
+  #   function = 'f_alpha*psic'
+  #   material_property_names = 'f_alpha psic'
+  # []
 []
 
 [Executioner]
@@ -277,15 +356,23 @@
   [TimeIntegrator]
     type = CentralDifference
     solve_type = lumped
+    # solve_type = consistent
   []
-  end_time = 2.4
-  dt = 0.75e-3
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   beta = 0.25
+  #   gamma = 0.5
+  # []
+  end_time = 2.1
+  # dt = 0.75e-3
+  dt = 1.5e-3
 []
 
 [Outputs]
   [exodus]
     type = Exodus
     interval = 50
+    # interval = 25
     file_base = solid-1
   []
   [console]
@@ -297,4 +384,9 @@
     delimiter = ','
     file_base = 'strain_energy'
   []
+  # [my_checkpoint]
+  #   type = Checkpoint
+  #   num_files = 2
+  #   interval = 25
+  # []
 []

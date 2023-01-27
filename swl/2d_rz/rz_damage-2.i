@@ -6,11 +6,13 @@ gc_ratio = 1
 l = 0.1
 psic = 7.0e-9
 # k = 1e-09
-alphaT = 8.0e-9
+# alphaT = 8.0e-9
+alphaT = 0.02
 SD = 0.75
 p_max = 1
 rho_s = 1.995e-3
 
+np = 2
 # Glass
 # E = 0.0625
 # nu = 0.19
@@ -39,7 +41,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     input_files = 'rz_elastic-2.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};rho_s=${rho_s};SD=${SD};p_max=${p_max};np=${np}'
   []
 []
 
@@ -65,7 +67,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
     type = FileMeshGenerator
     #  file = '../mesh/2d/inner.msh'
     use_for_exodus_restart = true
-    file = './damage-1.e'
+    file = './damage-${fparse np - 1}.e'
   []
 []
 
@@ -189,6 +191,7 @@ Gc = '${fparse Gc_base*gc_ratio}'
   [fatigue_mobility]
     type = ComputeFatigueDegradationFunction
     elastic_energy_var = psie_active
+    energy_threshold = psic
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
     initial_alpha_bar = "alpha_bar_init" # for restart
@@ -204,12 +207,12 @@ Gc = '${fparse Gc_base*gc_ratio}'
   nl_rel_tol = 1e-06
   automatic_scaling = true
   end_time = 2.1
-  dt = 0.75e-3
+  dt = 1.5e-3
 []
 
 [Outputs]
   exodus = true
-  interval = 100
-  file_base = damage-2
+  interval = 50
+  file_base = 'damage-${np}'
 []
 
