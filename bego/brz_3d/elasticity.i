@@ -276,6 +276,7 @@ psic = '${fparse sigma_ts^2/2/E}'
   #   output_properties = 'ce'
   #   outputs = exodus
   # []
+<<<<<<< HEAD
   [drucker_prager]
     type = ComputeStrengthSurface
     tensile_strength = '${sigma_ts}'
@@ -283,6 +284,8 @@ psic = '${fparse sigma_ts^2/2/E}'
     f_sigma_name = dp
     outputs = exodus
   []
+=======
+>>>>>>> add 3d brazilian test
 []
 
 [Postprocessors]
@@ -337,9 +340,15 @@ psic = '${fparse sigma_ts^2/2/E}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
+<<<<<<< HEAD
   end_time = 35
   # end_time = 1
   dt = 1
+=======
+  end_time = 10
+  # end_time = 1
+  dt = 0.1
+>>>>>>> add 3d brazilian test
   # [TimeStepper]
   #   type = FunctionDT 
   #   function = 'if(t<60, 1, 0.01)'
@@ -367,7 +376,11 @@ psic = '${fparse sigma_ts^2/2/E}'
   # []
   [exodus]
     type = Exodus
+<<<<<<< HEAD
     interval = 1
+=======
+    interval = 10
+>>>>>>> add 3d brazilian test
     start_time = 0
   []
   file_base = './disk_3d_elastic'
