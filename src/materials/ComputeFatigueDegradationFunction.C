@@ -128,7 +128,7 @@ ComputeFatigueDegradationFunction::computeQpProperties()
       _f_alpha[_qp] = 1.0;
     else
       // _f_alpha[_qp] = std::pow(2 * _alpha_T / (_alpha_T + _alpha_bar[_qp]), 2.0); // f1
-      _f_alpha[_qp] = std::pow(2 * _alpha_T / (1.8 * _alpha_T + 0.2 * _alpha_bar[_qp]), 2.0); //f2
+      _f_alpha[_qp] = 0.98 * std::pow(2 * _alpha_T / (1.4 * _alpha_T + 0.6   * _alpha_bar[_qp]), 2.0) + 0.02; //f2
 
   // logarithmic
   }
