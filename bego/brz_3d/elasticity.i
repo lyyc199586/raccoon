@@ -3,7 +3,7 @@ E = 6.16e3
 nu = 0.2
 Gc = 3.656e-2
 sigma_ts = 10
-# sigma_cs = 22.27
+sigma_cs = 22.27
 l = 0.3
 # delta = 1
 a = 10 # loading angle
@@ -276,6 +276,13 @@ psic = '${fparse sigma_ts^2/2/E}'
   #   output_properties = 'ce'
   #   outputs = exodus
   # []
+  [drucker_prager]
+    type = ComputeStrengthSurface
+    tensile_strength = '${sigma_ts}'
+    compressive_strength = '${sigma_cs}'
+    f_sigma_name = dp
+    outputs = exodus
+  []
 []
 
 [Postprocessors]
@@ -330,9 +337,9 @@ psic = '${fparse sigma_ts^2/2/E}'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  end_time = 10
+  end_time = 35
   # end_time = 1
-  dt = 0.1
+  dt = 1
   # [TimeStepper]
   #   type = FunctionDT 
   #   function = 'if(t<60, 1, 0.01)'
@@ -360,7 +367,7 @@ psic = '${fparse sigma_ts^2/2/E}'
   # []
   [exodus]
     type = Exodus
-    interval = 10
+    interval = 1
     start_time = 0
   []
   file_base = './disk_3d_elastic'
