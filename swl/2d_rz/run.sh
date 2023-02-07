@@ -7,7 +7,7 @@ echo "cwd: $(pwd)"
 
 # mpirun -n 16 ../../raccoon-opt -i $arg1
 
-mpirun -n 16 ../../raccoon-opt -i rz_damage.i
+mpirun -n 14 ../../raccoon-opt -i rz_damage.i
 
 # mpirun -n 16 ../../raccoon-opt -i rz_damage-2.i np=3
 

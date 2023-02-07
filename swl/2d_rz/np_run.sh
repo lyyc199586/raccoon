@@ -3,5 +3,5 @@
 for ((i=2; i<21; i++)); do
     arg1="rz_damage-2.i np="$i
     echo $arg1
-    mpirun -n 12 ../../raccoon-opt -i $arg1
+    mpirun -n 14 ../../raccoon-opt -i $arg1
 done
