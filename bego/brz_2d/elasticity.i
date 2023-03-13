@@ -24,7 +24,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'a=${a};E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -39,8 +39,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [to_psie_active]
     type = MultiAppCopyTransfer
     to_multi_app = fracture
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
+    variable = 'disp_x disp_y strain_zz psie_active'
+    source_variable = 'disp_x disp_y strain_zz psie_active'
   []
 []
 
@@ -52,10 +52,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_2d_h0.01_us.msh'
+    file = '../mesh/disk_2d_h0.0125.msh'
+    # file = '../mesh/Brazilian2.msh'
     ### for recover
     # use_for_exodus_restart = true
-    # file = './solid_a10_ts10_cs80_l0.1_delta8.e'
+    # file = './update_test/solid_g_eta0.e'
   []
   # [top_p]
   #   type = ExtraNodesetGenerator
@@ -81,6 +82,13 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     new_sideset_name = 'bot_arc'
     input = top_arc
   []
+  [fix_point]
+    type = BoundingBoxNodeSetGenerator
+    input = bot_arc
+    new_boundary = fix_point
+    bottom_left = '-1e-4 2.8999 0'
+    top_right = '1e-4 2.9001 0'
+  []
   # [subdomian1]
   #   type = ParsedSubdomainMeshGenerator
   #   input = bot_arc
@@ -101,15 +109,15 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Variables]
   [disp_x]
     # initial_from_file_var = 'disp_x' 
-    # initial_from_file_timestep = LATEST
+    # initial_from_file_timestep = 42
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
-    # initial_from_file_timestep = LATEST
+    # initial_from_file_timestep = 42
   []
   [strain_zz]
     # initial_from_file_var = 'strain_zz' 
-    # initial_from_file_timestep = LATEST
+    # initial_from_file_timestep = 42
   []
 []
 
@@ -208,18 +216,26 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   boundary = top_point
   #   function = '-0.5/60/2*t'
   # []
+  [top_x]
+    type = ADDirichletBC
+    variable = disp_x
+    boundary = fix_point
+    value = 0
+  []
   [bottom_y]
     type = ADFunctionDirichletBC
     variable = disp_y
     boundary = bot_arc
-    function = '0.5/60/2*t'
+    # function = '0.5/60/2*t'
+    function = '0.05*t'
     # function = '0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
   []
   [top_y]
     type = ADFunctionDirichletBC
     variable = disp_y
     boundary = top_arc
-    function = '-0.5/60/2*t'
+    # function = '-0.5/60/2*t'
+    function = '-0.05*t'
     # function = '-0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
   []
   ###### pressure 
@@ -271,13 +287,21 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
   []
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   f_name = g
+  #   function = (1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 1e-5'
+  # []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    function = (1-d)^p+eta #(1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 1e-5'
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -285,7 +309,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     displacements = 'disp_x disp_y'
     # type = ADComputeSmallStrain
     output_properties = 'total_strain'
-    outputs = exodus
+    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -295,7 +319,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     degradation_function = g
     decomposition = NONE
     # decomposition = VOLDEV
-    output_properties = 'psie_active psie'
+    output_properties = 'psie_active'
     outputs = exodus
   []
   [stress]
@@ -310,16 +334,6 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     function = 'd'
     phase_field = d
   []
-  # [kumar_material]
-  #   type = NucleationMicroForce
-  #   normalization_constant = c0
-  #   tensile_strength = '${sigma_ts}'
-  #   compressive_strength = '${sigma_cs}'
-  #   delta = '${delta}'
-  #   external_driving_force_name = ce
-  #   output_properties = 'ce'
-  #   outputs = exodus
-  # []
 []
 
 # [Dampers]
@@ -382,6 +396,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
+  line_search = bt
 
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
@@ -391,17 +406,19 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   # dt = 1
 
   ### for disp bc
-  end_time = 8.
-  # dt = 0.5
+  # dt = 0.05
+  # end_time = 1
+  end_time = 0.43
 
   ### restart
-  # start_time = 7
-  # end_time = 8
-  # dt = 0.1
+  # start_time = 0.42
+  # end_time = 0.43
+  # dt = 2e-3
 
   [TimeStepper]
     type = FunctionDT 
-    function = 'if(t<7.1, 0.5, 0.05)'
+    # function = 'if(t<4.6, 0.5, 0.01)'
+    function = 'if(t<0.35, 0.05, 2e-3)'
   []
 
   # fast
@@ -410,10 +427,16 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   # fixed_point_rel_tol = 1e-3
   # fixed_point_abs_tol = 1e-5
 
-  # fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-8
-  fixed_point_abs_tol = 1e-10
+  # # fixed_point_max_its = 50
+  # accept_on_max_fixed_point_iteration = false
+  # fixed_point_rel_tol = 1e-8
+  # fixed_point_abs_tol = 1e-10
+
+  fixed_point_max_its = 50
+  accept_on_max_fixed_point_iteration = true
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+
   # fixed_point_rel_tol = 1e-5
   # fixed_point_abs_tol = 1e-6
 []
@@ -427,11 +450,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [exodus]
     type = Exodus
     interval = 1
-    start_time = 0
   []
   # file_base = './disk_vd_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   # file_base = './disk_a${a}_l${l}_delta${delta}_d_center'
-  file_base = './output/solid_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_us_delta${delta}'
+  # file_base = './output/solid_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './update_test/solid_structure_mesh'
   print_linear_residuals = false
   [csv]
     type = CSV
