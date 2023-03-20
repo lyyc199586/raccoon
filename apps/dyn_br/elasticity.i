@@ -6,11 +6,11 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.54e-9 # Mg/mm^3
 Gc = 3e-3 # N/mm -> 3 J/m^2
-sigma_ts = 3 # MPa
-sigma_cs = 9
+sigma_ts = 3.08 # MPa, sts and scs from guessing
+sigma_cs = 9.24
 
-l = 0.5
-delta = 1
+l = 2
+delta = 4 # haven't tested
 
 [MultiApps]
   [fracture]
@@ -42,26 +42,37 @@ delta = 1
 []
 
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 400
-    ny = 160
-    # nx = 800
-    # ny = 320
-    xmin = 0
-    xmax = 100
-    ymin = -20
-    ymax = 20
+  # [gen]
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 400
+  #   ny = 160
+  #   # nx = 800
+  #   # ny = 320
+  #   xmin = 0
+  #   xmax = 100
+  #   ymin = -20
+  #   ymax = 20
+  # []
+  [gen1]
+    use_for_exodus_restart = true
+    type = FileMeshGenerator
+    file = './outputs/elasticity_ce2021_ts3.08_cs9.24_l2_delta4_dt5e-7.e'
   []
 []
 
 [Variables]
   [disp_x]
+    initial_from_file_var = 'disp_x' 
+    initial_from_file_timestep = LATEST
   []
   [disp_y]
+    initial_from_file_var = 'disp_y' 
+    initial_from_file_timestep = LATEST
   []
   [strain_zz]
+    initial_from_file_var = 'strain_zz' 
+    initial_from_file_timestep = LATEST
   []
 []
 
@@ -206,9 +217,12 @@ delta = 1
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
 
-  # start_time = 1.7e-5 
   dt = 5e-7
-  end_time = 80e-6
+  # end_time = 80e-6
+
+  # restart
+  start_time = 80e-6
+  end_time = 120e-6
 
   fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = true
@@ -219,8 +233,8 @@ delta = 1
 
   [TimeIntegrator]
     type = NewmarkBeta
-    gamma = '${fparse 0.5}'
-    beta = '${fparse 0.25}'
+    gamma = '${fparse 5/6}'
+    beta = '${fparse 4/9}'
   []
 []
 
@@ -230,7 +244,7 @@ delta = 1
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './ce2021_pmma_l${l}_delta${delta}_dt5e-7'
+  file_base = './outputs/elasticity_ce2021_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_dt5e-7_ctd'
   interval = 1
   [./csv]
     type = CSV 

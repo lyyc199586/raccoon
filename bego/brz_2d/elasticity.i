@@ -8,7 +8,7 @@ nu = 0.2
 Gc = 3.656e-2
 sigma_ts = 10
 # sigma_cs = 22.27
-sigma_cs = 80
+sigma_cs = 30
 l = 0.1
 delta = 6
 # delta = 8
@@ -24,7 +24,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};a=${a}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -408,7 +408,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   ### for disp bc
   # dt = 0.05
   # end_time = 1
-  end_time = 0.43
+  end_time = 0.55
 
   ### restart
   # start_time = 0.42
@@ -418,7 +418,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [TimeStepper]
     type = FunctionDT 
     # function = 'if(t<4.6, 0.5, 0.01)'
-    function = 'if(t<0.35, 0.05, 2e-3)'
+    # function = 'if(t<0.35, 0.05, 2e-3)'
+    function = 'if(t<0.4, 0.05, 2e-3)'
   []
 
   # fast
@@ -453,8 +454,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
   # file_base = './disk_vd_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   # file_base = './disk_a${a}_l${l}_delta${delta}_d_center'
-  # file_base = './output/solid_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './update_test/solid_structure_mesh'
+  file_base = './out/solid_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './update_test/solid_structure_mesh'
   print_linear_residuals = false
   [csv]
     type = CSV

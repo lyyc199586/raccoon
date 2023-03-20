@@ -221,6 +221,7 @@
   #  start_time = 4.5
   []
   # file_base = './disk_a${a}_nuc_l${l}_delta${delta}_d_center'
-  file_base = './update_test/fracture_structure_mesh'
+  # file_base = './update_test/fracture_structure_mesh'
+  file_base = './out/fracture_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
 []
