@@ -1,15 +1,20 @@
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 400
-    ny = 160
-    # nx = 800
-    # ny = 320
-    xmin = 0
-    xmax = 100
-    ymin = -20
-    ymax = 20
+  # [gen]
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 400
+  #   ny = 160
+  #   # nx = 800
+  #   # ny = 320
+  #   xmin = 0
+  #   xmax = 100
+  #   ymin = -20
+  #   ymax = 20
+  # []
+  [gen1]
+    use_for_exodus_restart = true
+    type = FileMeshGenerator
+    file = './outputs/fracture_ts3.08_cs9.24_l2_delta4_dt5e-7.e'
   []
 []
 
@@ -24,14 +29,24 @@
 
 [AuxVariables]
   [bounds_dummy]
+    initial_from_file_var = 'bounds_dummy' 
+    initial_from_file_timestep = LATEST
   []
   [disp_x]
+    initial_from_file_var = 'disp_x' 
+    initial_from_file_timestep = LATEST
   []
   [disp_y]
+    initial_from_file_var = 'disp_y' 
+    initial_from_file_timestep = LATEST
   []
   [strain_zz]
+    initial_from_file_var = 'strain_zz' 
+    initial_from_file_timestep = LATEST
   []
   [psie_active]
+    initial_from_file_var = 'psie_active' 
+    initial_from_file_timestep = LATEST
     order = CONSTANT
     family = MONOMIAL
   []
@@ -139,7 +154,7 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     output_properties = 'ce f_nu'
-    # outputs = exodus
+    outputs = exodus
   []
   [strain]
     # type = ADComputeSmallStrain
@@ -179,8 +194,25 @@
   # nl_abs_tol = 1e-10
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
+
+  # restart
+  start_time = 80e-6
+  end_time = 120e-6
 []
 
+# [Outputs]
+#   print_linear_residuals = false
+# []
+
 [Outputs]
+  [exodus]
+    type = Exodus
+    interval = 1
+  []
   print_linear_residuals = false
+  file_base = './outputs/fracture_ce2021_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_dt5e-7_ctd'
+  interval = 1
+  [./csv]
+    type = CSV 
+  [../]
 []
