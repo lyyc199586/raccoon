@@ -1,10 +1,10 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_2d_h0.0125.msh'
-    # file = '../mesh/Brazilian2.msh'
+    file = '../mesh/disk_2d_h0.01.msh'
+    ### for restart
     # use_for_exodus_restart = true
-    # file = './update_test/fracture_g_eta0.e'
+    # file = './out/fracture_R14.5_ts10_cs80_l0.25_delta25.e'
   []
 []
 
@@ -23,7 +23,7 @@
     #   function = 'if(x=0&x>=-0.5&x<=0.5,1,0)'
     # []
     # initial_from_file_var = 'd' # for restart
-    # initial_from_file_timestep = 42 # for restart
+    # initial_from_file_timestep = LATEST # for restart
   []
 []
 
@@ -40,18 +40,22 @@
     order = CONSTANT
     family = MONOMIAL
   []
-  # [sigma_ts]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  #   [InitialCondition]
-  #     type = RandomIC
-  #     variable = sigma_ts
-  #     min = 8
-  #     max = 12
-  #     seed = 0
-  #   []
-  # []
 []
+
+# [BCs]
+#   [top_arc_d]
+#     type = DirichletBC
+#     variable = d
+#     boundary = top_arc
+#     value = 0
+#   []
+#   [bot_arc_d]
+#     type = DirichletBC
+#     variable = d
+#     boundary = bot_arc
+#     value = 0
+#   []
+# []
 
 [Bounds]
   [conditional]
@@ -209,19 +213,16 @@
   # nl_abs_tol = 1e-8
 
   ### restart
-  # start_time = 0.42
-  # end_time = 0.43
+  # start_time = 0.492
+  # end_time = 0.6
   # dt = 2e-3
 []
 
 [Outputs]
   [exodus]
-   type = Exodus
-   interval = 1
-  #  start_time = 4.5
+    type = Exodus
+    interval = 1
   []
-  # file_base = './disk_a${a}_nuc_l${l}_delta${delta}_d_center'
-  # file_base = './update_test/fracture_structure_mesh'
-  file_base = './out/fracture_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/fracture_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
 []

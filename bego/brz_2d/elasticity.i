@@ -1,30 +1,48 @@
 # BegoStone
-# E = 2.735e4
-# E = 4.77e3
 E = 6.16e3
 nu = 0.2
-# Gc = 2.188e-2
-# Gc = 3.656e-3
 Gc = 3.656e-2
 sigma_ts = 10
-# sigma_cs = 22.27
-sigma_cs = 30
-l = 0.1
-delta = 6
-# delta = 8
-# l = 0.1
-# delta = 4
-a = 10
+sigma_cs = 80
+l = 0.25
+delta = 25
+## effective radius R = R*r2/(r2 - R)=R*a/(a-1)
+R = 2.9 # a=infty
+# R = 31.9 # a=1.1
+# R = 14.5 # a=1.25
+v = 0.05
+
 # ---------------------------------
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
+[Functions]
+  [bot_bc_func]
+    type = ParsedFunction
+    value = 'if(abs(x)<sqrt(R*v*t), v*t-x^2/2/R, 0)'
+    vars = 'R v'
+    vals = '${R} ${v}'
+  []
+  [top_bc_func]
+    type = ParsedFunction
+    value = 'if(abs(x)<sqrt(R*v*t), -v*t+x^2/2/R, 0)'
+    vars = 'R v'
+    vals = '${R} ${v}'
+  []
+  [p_func] # penalty function for contact boundary
+    type = ParsedFunction
+    value = 'if(abs(x)<sqrt(R*v*t), 1e6, 0)' # penalty value = 1e6
+    vars = 'R v'
+    vals = '${R} ${v}'
+  []
+[]
+
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};a=${a}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};R=${R}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -52,11 +70,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_2d_h0.0125.msh'
-    # file = '../mesh/Brazilian2.msh'
+    file = '../mesh/disk_2d_h0.01.msh'
     ### for recover
     # use_for_exodus_restart = true
-    # file = './update_test/solid_g_eta0.e'
+    # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
   []
   # [top_p]
   #   type = ExtraNodesetGenerator
@@ -72,13 +89,15 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   # []
   [top_arc]
     type = ParsedGenerateSideset
-    combinatorial_geometry = 'x*x+y*y>2.895^2 & y>2.9*cos(${a}/180*3.1415926)'
+    # combinatorial_geometry = 'x*x+y*y>2.895^2 & y>2.9*cos(${a}/180*3.1415926)'
+    combinatorial_geometry = 'x*x+y*y>2.895^2 & y>0.05'
     new_sideset_name = 'top_arc'
     input = fmg
   []
   [bot_arc]
     type = ParsedGenerateSideset
-    combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-2.9*cos(${a}/180*3.1415926)'
+    # combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-2.9*cos(${a}/180*3.1415926)'
+    combinatorial_geometry = 'x*x+y*y>2.895^2 & y<-0.05'
     new_sideset_name = 'bot_arc'
     input = top_arc
   []
@@ -109,15 +128,15 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 [Variables]
   [disp_x]
     # initial_from_file_var = 'disp_x' 
-    # initial_from_file_timestep = 42
+    # initial_from_file_timestep = LATEST
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
-    # initial_from_file_timestep = 42
+    # initial_from_file_timestep = LATEST
   []
   [strain_zz]
     # initial_from_file_var = 'strain_zz' 
-    # initial_from_file_timestep = 42
+    # initial_from_file_timestep = LATEST
   []
 []
 
@@ -127,10 +146,16 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     #   type = FunctionIC
     #   function = 'if(x=0&x>=-0.5&x<=0.5,1,0)'
     # []
+    # initial_from_file_var = 'd' # for restart
+    # initial_from_file_timestep = LATEST # for restart
   []
   [f_x]
+    # initial_from_file_var = 'f_x' # for restart
+    # initial_from_file_timestep = LATEST # for restart
   []
   [f_y]
+    # initial_from_file_var = 'f_y' # for restart
+    # initial_from_file_timestep = LATEST # for restart
   []
   [s1]
     order = CONSTANT
@@ -141,6 +166,20 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     family = MONOMIAL
   []
   [s3]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [p]
+    order = CONSTANT
+    family = MONOMIAL
+    # initial_from_file_var = 'p' # for restart
+    # initial_from_file_timestep = LATEST # for restart
+  []
+  [srr]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [stt]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -188,55 +227,61 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     scalar_type = MinPrincipal
     execute_on = timestep_end
   []
+  [radialstress]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = srr
+    scalar_type = RadialStress
+    execute_on = timestep_end
+  []
+  [hoopstress]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = stt
+    scalar_type = HoopStress
+    execute_on = timestep_end
+  []
+  [pressure]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = 'stress'
+    variable = p
+    scalar_type = Hydrostatic
+    execute_on = timestep_end
+  []
 []
 
 [BCs]
-  ########## displacement
-  # [bottom_x]
-  #   type = DirichletBC
-  #   variable = disp_x
-  #   boundary = bot_point
-  #   value = 0
-  # []
-  # [top_x]
-  #   type = DirichletBC
-  #   variable = disp_x
-  #   boundary = top_point
-  #   value = 0
-  # []
-  # [bottom_y]
+  # [top_arc_disp_y]
   #   type = ADFunctionDirichletBC
   #   variable = disp_y
-  #   boundary = bot_point
-  #   function = '0.5/60/2*t'
+  #   boundary = top_arc
+  #   function = top_bc_func
   # []
-  # [top_y]
+  # [bot_arc_disp_y]
   #   type = ADFunctionDirichletBC
   #   variable = disp_y
-  #   boundary = top_point
-  #   function = '-0.5/60/2*t'
+  #   boundary = bot_arc
+  #   function = bot_bc_func
   # []
-  [top_x]
+  [top_arc_disp_y]
+    type = ADFunctionContactBC
+    variable = disp_y
+    boundary = top_arc
+    function = top_bc_func
+    penalty_function = p_func
+  []
+  [bot_arc_disp_y]
+    type = ADFunctionContactBC
+    variable = disp_y
+    boundary = bot_arc
+    function = bot_bc_func
+    penalty_function = p_func
+  []
+  [fix_top_x]
     type = ADDirichletBC
     variable = disp_x
     boundary = fix_point
     value = 0
-  []
-  [bottom_y]
-    type = ADFunctionDirichletBC
-    variable = disp_y
-    boundary = bot_arc
-    # function = '0.5/60/2*t'
-    function = '0.05*t'
-    # function = '0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
-  []
-  [top_y]
-    type = ADFunctionDirichletBC
-    variable = disp_y
-    boundary = top_arc
-    # function = '-0.5/60/2*t'
-    function = '-0.05*t'
-    # function = '-0.12/60/2*t*(sqrt(2.9^2-x^2)-2.8)/0.1'
   []
   ###### pressure 
   # [top_pressure_x]
@@ -326,7 +371,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    outputs = exodus
+    # outputs = exodus
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -335,14 +380,6 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     phase_field = d
   []
 []
-
-# [Dampers]
-#   [disp_damp]
-#     type = ElementJacobianDamper
-#     max_increment = 0.1
-#     displacements = 'disp_x disp_y'
-#   []
-# []
 
 [Postprocessors]
   # [Jint]
@@ -407,19 +444,20 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
   ### for disp bc
   # dt = 0.05
-  # end_time = 1
-  end_time = 0.55
+  end_time = 1
+  # end_time = 1 # plane 
+  # end_time = 0.6
 
   ### restart
-  # start_time = 0.42
-  # end_time = 0.43
+  # start_time = 0.492
+  # end_time = 0.6
   # dt = 2e-3
 
   [TimeStepper]
-    type = FunctionDT 
-    # function = 'if(t<4.6, 0.5, 0.01)'
-    # function = 'if(t<0.35, 0.05, 2e-3)'
-    function = 'if(t<0.4, 0.05, 2e-3)'
+    type = FunctionDT
+    function = 'if(t<0.75, 0.05, 2e-3)' # r2/R = infty
+    # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
+    # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
   []
 
   # fast
@@ -443,19 +481,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 []
 
 [Outputs]
-  # [exodus1]
-  #   type = Exodus
-  #   interval = 10
-  #   end_time = 60
-  # []
   [exodus]
     type = Exodus
     interval = 1
   []
-  # file_base = './disk_vd_E${E}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  # file_base = './disk_a${a}_l${l}_delta${delta}_d_center'
-  file_base = './out/solid_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  # file_base = './update_test/solid_structure_mesh'
+  file_base = './out/solid_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
