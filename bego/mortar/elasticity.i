@@ -7,6 +7,10 @@ sigma_cs = 80
 l = 0.25
 delta = 25
 
+# steel (for anvil)
+E_s = 2e5 # 200 GPa
+nu_s = 0.31
+
 # R = 2.9 
 v = 0.05
 
@@ -15,29 +19,32 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
-    execute_on = 'TIMESTEP_END'
-  []
-[]
+K_s = '${fparse E_s/3/(1-2*nu_s)}'
+G_s = '${fparse E_s/2/(1+nu_s)}'
 
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    to_multi_app = fracture
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
-  []
-[]
+# [MultiApps]
+#   [fracture]
+#     type = TransientMultiApp
+#     input_files = fracture.i
+#     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
+#     execute_on = 'TIMESTEP_END'
+#   []
+# []
+
+# [Transfers]
+#   [from_d]
+#     type = MultiAppCopyTransfer
+#     from_multi_app = fracture
+#     variable = 'd'
+#     source_variable = 'd'
+#   []
+#   [to_psie_active]
+#     type = MultiAppCopyTransfer
+#     to_multi_app = fracture
+#     variable = 'disp_x disp_y strain_zz psie_active'
+#     source_variable = 'disp_x disp_y strain_zz psie_active'
+#   []
+# []
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -47,13 +54,16 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_mortar_flat.msh'
+    file = '../mesh/disk_mortar_flat_h0.082.msh'
     ### for recover
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
+    show_info = true
   []
-  patch_size = 10
+  patch_size = 4
   patch_update_strategy = always
+  # partitioner = centroid
+  # centroid_partitioner_direction = y
 []
 
 [Contact]
@@ -62,12 +72,16 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     secondary = top_arc
     model = frictionless
     formulation = mortar
+    correct_edge_dropping = true
+    c_normal = 10
   []
   [bottom_contact]
     primary = bottom_anvil_top
     secondary =  bottom_arc
     model = frictionless
     formulation = mortar
+    correct_edge_dropping = true
+    c_normal = 10
   []
 []
 
@@ -80,10 +94,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
   []
-  [strain_zz]
-    # initial_from_file_var = 'strain_zz' 
-    # initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   # initial_from_file_var = 'strain_zz' 
+  #   # initial_from_file_timestep = LATEST
+  # []
 []
 
 [AuxVariables]
@@ -144,11 +158,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     component = 1
     save_in = f_y
   []
-  [plane_stress]
-    type = ADWeakPlaneStress
-    variable = 'strain_zz'
-    displacements = 'disp_x disp_y'
-  []
+  # [plane_stress]
+  #   type = ADWeakPlaneStress
+  #   variable = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  #   block = 'disk'
+  # []
 []
 
 [AuxKernels]
@@ -158,6 +173,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = s1
     scalar_type = MaxPrincipal
     execute_on = timestep_end
+    block = 'disk'
   []
   [midprincipal]
     type = ADRankTwoScalarAux
@@ -165,6 +181,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = s2
     scalar_type = MidPrincipal
     execute_on = timestep_end
+    block = 'disk'
   []
   [minprincipal]
     type = ADRankTwoScalarAux
@@ -172,6 +189,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = s3
     scalar_type = MinPrincipal
     execute_on = timestep_end
+    block = 'disk'
   []
   [radialstress]
     type = ADRankTwoScalarAux
@@ -179,6 +197,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = srr
     scalar_type = RadialStress
     execute_on = timestep_end
+    block = 'disk'
   []
   [hoopstress]
     type = ADRankTwoScalarAux
@@ -186,6 +205,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = stt
     scalar_type = HoopStress
     execute_on = timestep_end
+    block = 'disk'
   []
   [pressure]
     type = ADRankTwoScalarAux
@@ -193,6 +213,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     variable = p
     scalar_type = Hydrostatic
     execute_on = timestep_end
+    block = 'disk'
   []
 []
 
@@ -222,87 +243,14 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     value = 0
   []
 []
-# [BCs]
-  # [top_arc_disp_y]
-  #   type = ADFunctionDirichletBC
-  #   variable = disp_y
-  #   boundary = top_arc
-  #   function = top_bc_func
-  # []
-  # [bot_arc_disp_y]
-  #   type = ADFunctionDirichletBC
-  #   variable = disp_y
-  #   boundary = bot_arc
-  #   function = bot_bc_func
-  # []
-  # [top_arc_disp_y]
-  #   type = ADFunctionContactBC
-  #   variable = disp_y
-  #   boundary = top_arc
-  #   function = top_bc_func
-  #   penalty_function = p_func
-  # []
-  # [bot_arc_disp_y]
-  #   type = ADFunctionContactBC
-  #   variable = disp_y
-  #   boundary = bot_arc
-  #   function = bot_bc_func
-  #   penalty_function = p_func
-  # []
-  # [fix_top_x]
-  #   type = ADDirichletBC
-  #   variable = disp_x
-  #   boundary = fix_point
-  #   value = 0
-  # []
-  ###### pressure 
-  # [top_pressure_x]
-  #   type = ADPressure
-  #   component = 0
-  #   variable = disp_x
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'top_arc'
-  #   function = '1*t'
-  #   # function = 'if(y>2.9*cos(0.1*t/180*3.1415926), t, 0)'
-  #   use_displaced_mesh = true
-  # []
-  # [top_pressure_y]
-  #   type = ADPressure
-  #   component = 1
-  #   variable = disp_y
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'top_arc'
-  #   function = '1*t'
-  #   # function = 'if(y>2.9*cos(0.1*t/180*3.1415926), t, 0)'
-  #   use_displaced_mesh = true
-  # []
-  # [bot_pressure_x]
-  #   type = ADPressure
-  #   component = 0
-  #   variable = disp_x
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'bot_arc'
-  #   function = '1*t'
-  #   # function = 'if(y<-2.9*cos(0.1*t/180*3.1415926), t, 0)'
-  #   use_displaced_mesh = true
-  # []
-  # [bot_pressure_y]
-  #   type = ADPressure
-  #   component = 1
-  #   variable = disp_y
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'bot_arc'
-  #   function = '1*t'
-  #   # function = 'if(y<-2.9*cos(0.1*t/180*3.1415926), t, 0)'
-  #   use_displaced_mesh = true
-  # []
-# []
 
 [Materials]
-  [bulk]
+  # bego
+  [bulk_properties_bego]
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
   []
   # [degradation]
   #   type = PowerDegradationFunction
@@ -312,23 +260,29 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   parameter_names = 'p eta '
   #   parameter_values = '2 1e-5'
   # []
-  [degradation]
-    type = PowerDegradationFunction
+  [nodegradation]
+    type = NoDegradation
     f_name = g
-    function = (1-d)^p+eta #(1-d)^p*(1-eta)+eta
+    function = 1
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
   []
-  [strain]
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    # [crack_geometric]
+  #   type = CrackGeometricFunction
+  #   f_name = alpha
+  #   function = 'd'
+  #   phase_field = d
+  # []
+  [strain_bego]
+    # type = ADComputePlaneSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    # type = ADComputeSmallStrain
+    type = ADComputeSmallStrain
     output_properties = 'total_strain'
-    # outputs = exodus
+    outputs = exodus
+    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
   []
-  [elasticity]
+  [elasticity_bego]
     type = SmallDeformationIsotropicElasticity
     bulk_modulus = K
     shear_modulus = G
@@ -338,18 +292,31 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     # decomposition = VOLDEV
     output_properties = 'psie_active'
     outputs = exodus
+    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
   []
-  [stress]
+  [stress_bego]
     type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
+    elasticity_model = elasticity_bego
     output_properties = 'stress'
+    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
     # outputs = exodus
   []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
-    phase_field = d
+
+  # steel
+  [elasticity_steel]
+    type = ADComputeIsotropicElasticityTensor
+    bulk_modulus = ${K_s}
+    shear_modulus = ${G_s}
+    block = 'top_anvil bottom_anvil top_contact_primary_subdomain bottom_contact_primary_subdomain'
+  []
+  [stress_steel]
+    type = ADComputeLinearElasticStress
+    block = 'top_anvil bottom_anvil top_contact_primary_subdomain bottom_contact_primary_subdomain'
+    # outputs = exodus
+  []
+  [strain_steel]
+    type = ADComputeSmallStrain
+    block = 'top_anvil bottom_anvil top_contact_primary_subdomain bottom_contact_primary_subdomain'
   []
 []
 
@@ -379,9 +346,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     # boundary = bot_point
     boundary = bottom_arc
   []
-  [strain_energy]
+  [strain_energy_post]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
+    block = 'disk'
   []
   [w_ext_top]
     type = ExternalWork
@@ -412,7 +380,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
   ### for disp bc
   dt = 0.01
-  end_time = 0.02
+  end_time = 0.2
 
   ### restart
   # start_time = 0.492
@@ -451,7 +419,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = Exodus
     interval = 1
   []
-  file_base = './out/mortar_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/nodamage/mortar_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV

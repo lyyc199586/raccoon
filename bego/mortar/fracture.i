@@ -7,7 +7,8 @@
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
   []
-  # patch_update_strategy = auto
+  patch_size = 10
+  patch_update_strategy = always
 []
 
 [Problem]
@@ -43,21 +44,6 @@
     family = MONOMIAL
   []
 []
-
-# [BCs]
-#   [top_arc_d]
-#     type = DirichletBC
-#     variable = d
-#     boundary = top_arc
-#     value = 0
-#   []
-#   [bot_arc_d]
-#     type = DirichletBC
-#     variable = d
-#     boundary = bot_arc
-#     value = 0
-#   []
-# []
 
 [Bounds]
   [conditional]
@@ -114,7 +100,7 @@
   [degradation]
     type = PowerDegradationFunction
     f_name = g
-    function = (1-d)^p+eta #(1-d)^p*(1-eta)+eta
+    function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
