@@ -3,10 +3,25 @@
     type = FileMeshGenerator
     file = './mesh/half.msh'
   []
+  # [toplayer]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = gmg
+  #   combinatorial_geometry = 'y > 74'
+  #   block_id = 1
+  #   block_name = top_layer
+  # []
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen
+    new_boundary = noncrack
+    bottom_left = '26.9 0 0'
+    top_right = '100.1 0 0'
+  []
+  construct_side_list_from_node_list = true
 []
 
 [Adaptivity]
-  initial_marker = damage_marker
+  initial_marker = initial_tip
   initial_steps = ${refine}
   marker = damage_marker
   max_h_level = ${refine}
@@ -16,15 +31,22 @@
       variable = d
       refine = 0.001
     []
+    [initial_tip]
+      type = BoxMarker
+      bottom_left = '26 0 0'
+      top_right = '28 1 0'
+      outside = DO_NOTHING
+      inside = REFINE
+    []
   []
 []
 
 [Variables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=19&x<=27,1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=19&x<=27,1,0)'
+    # []
   []
 []
 
@@ -145,7 +167,7 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     output_properties = 'ce f_nu'
-    # outputs = exodus
+    outputs = exodus
   []
   [strain]
     type = ADComputeSmallStrain
@@ -181,10 +203,12 @@
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
+  # line_search = bt
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
+  nl_abs_tol = 1e-6
 
   # restart
   # start_time = 80e-6
@@ -195,15 +219,15 @@
 #   print_linear_residuals = false
 # []
 
-# [Outputs]
-#   [exodus]
-#     type = Exodus
-#     interval = 1
-#   []
-#   print_linear_residuals = false
-#   file_base = './outputs/ce_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_dt5e-7_ctd'
-#   interval = 1
-#   [./csv]
-#     type = CSV 
-#   [../]
-# []
+[Outputs]
+  [exodus]
+    type = Exodus
+    interval = 10
+  []
+  print_linear_residuals = false
+  file_base = './out/free_top/pd_p${p}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  interval = 1
+  # [./csv]
+  #   type = CSV 
+  # [../]
+[]
