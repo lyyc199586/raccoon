@@ -22,29 +22,31 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 K_s = '${fparse E_s/3/(1-2*nu_s)}'
 G_s = '${fparse E_s/2/(1+nu_s)}'
 
-# [MultiApps]
-#   [fracture]
-#     type = TransientMultiApp
-#     input_files = fracture.i
-#     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
-#     execute_on = 'TIMESTEP_END'
-#   []
-# []
+[MultiApps]
+  [fracture]
+    type = TransientMultiApp
+    input_files = fracture.i
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta}'
+    execute_on = 'TIMESTEP_END'
+  []
+[]
 
-# [Transfers]
-#   [from_d]
-#     type = MultiAppCopyTransfer
-#     from_multi_app = fracture
-#     variable = 'd'
-#     source_variable = 'd'
-#   []
-#   [to_psie_active]
-#     type = MultiAppCopyTransfer
-#     to_multi_app = fracture
-#     variable = 'disp_x disp_y strain_zz psie_active'
-#     source_variable = 'disp_x disp_y strain_zz psie_active'
-#   []
-# []
+[Transfers]
+  [from_d]
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    from_multi_app = fracture
+    variable = 'd'
+    source_variable = 'd'
+    to_blocks = 'disk'
+  []
+  [to_psie_active]
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    to_multi_app = fracture
+    variable = 'disp_x disp_y psie_active'
+    source_variable = 'disp_x disp_y psie_active'
+    from_blocks = 'disk'
+  []
+[]
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -54,34 +56,71 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_mortar_flat_h0.082.msh'
+    file = '../mesh/disk_mortar_flat_h0.079.msh'
     ### for recover
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
     show_info = true
   []
-  patch_size = 4
+  [top_arc]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'abs(x*x+y*y - 2.9^2) < 0.01 & y> 2.7'
+    new_sideset_name = 'top_arc'
+    input = fmg
+  []
+  [bot_arc]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'abs(x*x+y*y - 2.9^2) < 0.01 & y< -2.7'
+    new_sideset_name = 'bot_arc'
+    input = top_arc
+  []
+  [fix_point]
+    type = BoundingBoxNodeSetGenerator
+    input = bot_arc
+    new_boundary = fix_point
+    bottom_left = '-1e-4 2.8999 0'
+    top_right = '1e-4 2.9001 0'
+    # bottom_left = '-0.1 2.8 0'
+    # top_right = '-0.09 2.9 0'
+  []
+  patch_size = 10
   patch_update_strategy = always
   # partitioner = centroid
   # centroid_partitioner_direction = y
 []
 
+[Adaptivity]
+  initial_marker = initial
+  initial_steps = 3
+  max_h_level = 3
+  stop_time = 0
+  [Markers]
+    [initial]
+      type = BoxMarker
+      bottom_left = '-1 -3 0'
+      top_right = '1 3 0'
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
+
 [Contact]
   [top_contact]
-    primary = top_anvil_bottom 
+    primary = top_anvil_bottom
     secondary = top_arc
     model = frictionless
     formulation = mortar
     correct_edge_dropping = true
-    c_normal = 10
+    c_normal = 1e3
   []
   [bottom_contact]
     primary = bottom_anvil_top
-    secondary =  bottom_arc
+    secondary = bot_arc
     model = frictionless
     formulation = mortar
     correct_edge_dropping = true
-    c_normal = 10
+    c_normal = 1e3
   []
 []
 
@@ -89,10 +128,12 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   [disp_x]
     # initial_from_file_var = 'disp_x' 
     # initial_from_file_timestep = LATEST
+    # block = 'disk top_anvil bottom_anvil'
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
+    # block = 'disk top_anvil bottom_anvil'
   []
   # [strain_zz]
   #   # initial_from_file_var = 'strain_zz' 
@@ -108,41 +149,44 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     # []
     # initial_from_file_var = 'd' # for restart
     # initial_from_file_timestep = LATEST # for restart
+    # block = 'disk top_anvil bottom_anvil'
   []
   [f_x]
     # initial_from_file_var = 'f_x' # for restart
     # initial_from_file_timestep = LATEST # for restart
+    # block = 'disk top_anvil bottom_anvil'
   []
   [f_y]
     # initial_from_file_var = 'f_y' # for restart
     # initial_from_file_timestep = LATEST # for restart
+    # block = 'disk top_anvil bottom_anvil'
   []
-  [s1]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s3]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [p]
-    order = CONSTANT
-    family = MONOMIAL
-    # initial_from_file_var = 'p' # for restart
-    # initial_from_file_timestep = LATEST # for restart
-  []
-  [srr]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [stt]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [s1]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s3]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [p]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  #   # initial_from_file_var = 'p' # for restart
+  #   # initial_from_file_timestep = LATEST # for restart
+  # []
+  # [srr]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [stt]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
 []
 
 [Kernels]
@@ -151,12 +195,14 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     variable = disp_x
     component = 0
     save_in = f_x
+    block = 'disk top_anvil bottom_anvil'
   []
   [solid_z]
     type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = f_y
+    block = 'disk top_anvil bottom_anvil'
   []
   # [plane_stress]
   #   type = ADWeakPlaneStress
@@ -166,56 +212,56 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   # []
 []
 
-[AuxKernels]
-  [maxprincipal]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = 'stress'
-    variable = s1
-    scalar_type = MaxPrincipal
-    execute_on = timestep_end
-    block = 'disk'
-  []
-  [midprincipal]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = 'stress'
-    variable = s2
-    scalar_type = MidPrincipal
-    execute_on = timestep_end
-    block = 'disk'
-  []
-  [minprincipal]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = 'stress'
-    variable = s3
-    scalar_type = MinPrincipal
-    execute_on = timestep_end
-    block = 'disk'
-  []
-  [radialstress]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = 'stress'
-    variable = srr
-    scalar_type = RadialStress
-    execute_on = timestep_end
-    block = 'disk'
-  []
-  [hoopstress]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = 'stress'
-    variable = stt
-    scalar_type = HoopStress
-    execute_on = timestep_end
-    block = 'disk'
-  []
-  [pressure]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = 'stress'
-    variable = p
-    scalar_type = Hydrostatic
-    execute_on = timestep_end
-    block = 'disk'
-  []
-[]
+# [AuxKernels]
+#   [maxprincipal]
+#     type = ADRankTwoScalarAux
+#     rank_two_tensor = 'stress'
+#     variable = s1
+#     scalar_type = MaxPrincipal
+#     execute_on = timestep_end
+#     block = 'disk'
+#   []
+#   [midprincipal]
+#     type = ADRankTwoScalarAux
+#     rank_two_tensor = 'stress'
+#     variable = s2
+#     scalar_type = MidPrincipal
+#     execute_on = timestep_end
+#     block = 'disk'
+#   []
+#   [minprincipal]
+#     type = ADRankTwoScalarAux
+#     rank_two_tensor = 'stress'
+#     variable = s3
+#     scalar_type = MinPrincipal
+#     execute_on = timestep_end
+#     block = 'disk'
+#   []
+#   [radialstress]
+#     type = ADRankTwoScalarAux
+#     rank_two_tensor = 'stress'
+#     variable = srr
+#     scalar_type = RadialStress
+#     execute_on = timestep_end
+#     block = 'disk'
+#   []
+#   [hoopstress]
+#     type = ADRankTwoScalarAux
+#     rank_two_tensor = 'stress'
+#     variable = stt
+#     scalar_type = HoopStress
+#     execute_on = timestep_end
+#     block = 'disk'
+#   []
+#   [pressure]
+#     type = ADRankTwoScalarAux
+#     rank_two_tensor = 'stress'
+#     variable = p
+#     scalar_type = Hydrostatic
+#     execute_on = timestep_end
+#     block = 'disk'
+#   []
+# []
 
 [BCs]
   [top_y]
@@ -242,6 +288,12 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     boundary = bottom_anvil_bottom
     value = 0
   []
+  [fix_top_x]
+    type = ADDirichletBC
+    variable = disp_x
+    boundary = fix_point
+    value = 0
+  []
 []
 
 [Materials]
@@ -250,7 +302,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
-    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
+    block = 'disk'
   []
   # [degradation]
   #   type = PowerDegradationFunction
@@ -265,9 +317,9 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     f_name = g
     function = 1
     phase_field = d
-    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
+    block = 'disk'
   []
-    # [crack_geometric]
+  # [crack_geometric]
   #   type = CrackGeometricFunction
   #   f_name = alpha
   #   function = 'd'
@@ -278,9 +330,9 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     type = ADComputeSmallStrain
-    output_properties = 'total_strain'
-    outputs = exodus
-    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
+    # output_properties = 'total_strain'
+    # outputs = exodus
+    block = 'disk'
   []
   [elasticity_bego]
     type = SmallDeformationIsotropicElasticity
@@ -292,14 +344,14 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     # decomposition = VOLDEV
     output_properties = 'psie_active'
     outputs = exodus
-    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
+    block = 'disk'
   []
   [stress_bego]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity_bego
     output_properties = 'stress'
-    block = 'disk top_contact_secondary_subdomain bottom_contact_secondary_subdomain'
-    # outputs = exodus
+    block = 'disk'
+    outputs = exodus
   []
 
   # steel
@@ -307,16 +359,16 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     type = ADComputeIsotropicElasticityTensor
     bulk_modulus = ${K_s}
     shear_modulus = ${G_s}
-    block = 'top_anvil bottom_anvil top_contact_primary_subdomain bottom_contact_primary_subdomain'
+    block = 'top_anvil bottom_anvil'
   []
   [stress_steel]
     type = ADComputeLinearElasticStress
-    block = 'top_anvil bottom_anvil top_contact_primary_subdomain bottom_contact_primary_subdomain'
+    block = 'top_anvil bottom_anvil'
     # outputs = exodus
   []
   [strain_steel]
     type = ADComputeSmallStrain
-    block = 'top_anvil bottom_anvil top_contact_primary_subdomain bottom_contact_primary_subdomain'
+    block = 'top_anvil bottom_anvil'
   []
 []
 
@@ -338,61 +390,75 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     type = NodalSum
     variable = f_y
     # boundary = top_point
-    boundary = top_arc
+    boundary = top_anvil_top
   []
   [bot_react]
     type = NodalSum
     variable = f_y
     # boundary = bot_point
-    boundary = bottom_arc
+    boundary = bottom_anvil_bottom
   []
-  [strain_energy_post]
-    type = ADElementIntegralMaterialProperty
-    mat_prop = psie
-    block = 'disk'
-  []
-  [w_ext_top]
-    type = ExternalWork
-    displacements = 'disp_y'
-    forces = f_y
-    # boundary = top_point
-    boundary = top_arc
-  []
-  [w_ext_bottom]
-    type = ExternalWork
-    displacements = 'disp_y'
-    forces = f_y
-    # boundary = bot_point
-    boundary = bottom_arc
-  []
+  # [strain_energy_post]
+  #   type = ADElementIntegralMaterialProperty
+  #   mat_prop = psie
+  #   block = 'disk'
+  # []
+  # [w_ext_top]
+  #   type = ExternalWork
+  #   displacements = 'disp_y'
+  #   forces = f_y
+  #   # boundary = top_point
+  #   boundary = top_arc
+  # []
+  # [w_ext_bottom]
+  #   type = ExternalWork
+  #   displacements = 'disp_y'
+  #   forces = f_y
+  #   # boundary = bot_point
+  #   boundary = bot_arc
+  # []
 []
 
 [Executioner]
   type = Transient
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  automatic_scaling = true
-  line_search = bt
+  # solve_type = NEWTON
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_linesearch_type'
+  # petsc_options_value = 'lu       superlu_dist                 basic'
+  # automatic_scaling = true
+  # line_search = none
 
+  # moose tutorial settings
+  solve_type = 'PJFNK'
+  petsc_options = '-snes_ksp_ew'
+
+  petsc_options_iname = '-pc_type -snes_linesearch_type -pc_factor_shift_type '
+                        '-pc_factor_shift_amount'
+  petsc_options_value = 'lu       basic                 NONZERO               1e-15'
+  line_search = 'none'
+  automatic_scaling = true
   nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_abs_tol = 1e-8
+  l_max_its = 40
+  l_abs_tol = 1e-08
+  l_tol = 1e-08
 
   ### for disp bc
-  dt = 0.01
-  end_time = 0.2
+  # dt = 0.01
+  # end_time = 0.2
+  # dt = 0.05
+  end_time = 0.95
 
   ### restart
   # start_time = 0.492
   # end_time = 0.6
   # dt = 2e-3
 
-  # [TimeStepper]
-  #   type = FunctionDT
-  #   function = 'if(t<0.75, 0.05, 2e-3)' # r2/R = infty
-  #   # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
-  #   # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
-  # []
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<0.75, 0.05, 5e-3)' # r2/R = infty
+    # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
+    # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
+  []
 
   # fast
   # fixed_point_max_its = 20
@@ -419,7 +485,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     type = Exodus
     interval = 1
   []
-  file_base = './out/nodamage/mortar_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/flat/mortar_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV

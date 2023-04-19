@@ -2,17 +2,33 @@
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_mortar_flat.msh'
+    file = '../mesh/disk_2d_h0.079.msh'
     ### for recover
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
   []
-  patch_size = 10
-  patch_update_strategy = always
+[]
+
+[Adaptivity]
+  initial_marker = initial
+  initial_steps = 3
+  max_h_level = 3
+  stop_time = 0
+  [Markers]
+    [initial]
+      type = BoxMarker
+      bottom_left = '-1 -3 0'
+      top_right = '1 3 0'
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
 []
 
 [Problem]
   coord_type = XYZ
+  # type = FEProblem
+  # solve = False
 []
 
 [GlobalParams]
@@ -37,8 +53,8 @@
   []
   [disp_y]
   []
-  [strain_zz]
-  []
+  # [strain_zz]
+  # []
   [psie_active]
     order = CONSTANT
     family = MONOMIAL
@@ -67,7 +83,6 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
-    # block = 1
   []
 []
 
@@ -131,12 +146,12 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     output_properties = 'ce f_nu'
-    # outputs = exodus
+    outputs = exodus
   []
   [strain]
-    # type = ADComputeSmallStrain
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    type = ADComputeSmallStrain
+    # type = ADComputePlaneSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
   []
   [elasticity]
@@ -164,6 +179,8 @@
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  # petsc_options_value = 'hypre boomeramg      vinewtonrsls'
   automatic_scaling = true
 
   line_search = bt
@@ -179,11 +196,11 @@
   # dt = 2e-3
 []
 
-# [Outputs]
-#   [exodus]
-#     type = Exodus
-#     interval = 1
-#   []
-#   file_base = './out/fracture_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-#   print_linear_residuals = false
-# []
+[Outputs]
+  [exodus]
+    type = Exodus
+    interval = 1
+  []
+  file_base = './out/flat/fracture_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  print_linear_residuals = false
+[]
