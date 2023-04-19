@@ -172,32 +172,32 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     # initial_from_file_var = 'f_y' # for restart
     # initial_from_file_timestep = LATEST # for restart
   []
-  [s1]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s3]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [p]
-    order = CONSTANT
-    family = MONOMIAL
-    # initial_from_file_var = 'p' # for restart
-    # initial_from_file_timestep = LATEST # for restart
-  []
-  [srr]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [stt]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [s1]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s3]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [p]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  #   # initial_from_file_var = 'p' # for restart
+  #   # initial_from_file_timestep = LATEST # for restart
+  # []
+  # [srr]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [stt]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   [f_nu_var]
     order = CONSTANT
     family = MONOMIAL
