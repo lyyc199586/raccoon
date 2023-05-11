@@ -6,11 +6,12 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 Gc = 8.89e-3 # N/mm -> 3 J/m^2
+# Gc = 9.5e-3
 # Gc = 8.7e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 25
+p = 17.5
 
 # l = 0.075
 # delta = -0.2 # haven't tested
@@ -18,6 +19,14 @@ refine = 6 # h=1, h_ref=0.015625
 
 l = 0.25
 delta = -0.6
+
+# putty
+E_p = 1.7
+nu_p = 0.4
+rho_p = 1e-9 
+K_p = '${fparse E_p/3/(1-2*nu_p)}'
+G_p = '${fparse E_p/2/(1+nu_p)}'
+
 [MultiApps]
   [fracture]
     type = TransientMultiApp
@@ -30,16 +39,18 @@ delta = -0.6
 
 [Transfers]
   [from_d]
-    type = MultiAppCopyTransfer
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
+    to_blocks = 0
   []
   [to_psie_active]
-    type = MultiAppCopyTransfer
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y psie_active'
     source_variable = 'disp_x disp_y psie_active'
+    from_blocks = 0
   []
 []
 
@@ -60,16 +71,16 @@ delta = -0.6
     type = FileMeshGenerator
     file = './mesh/half.msh'
   []
-  # [toplayer]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = gmg
-  #   combinatorial_geometry = 'y > 74'
-  #   block_id = 1
-  #   block_name = top_layer
-  # []
+  [toplayer]
+    type = ParsedSubdomainMeshGenerator
+    input = gen
+    combinatorial_geometry = 'y > 74'
+    block_id = 1
+    block_name = top_layer
+  []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = gen
+    input = toplayer
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -143,11 +154,25 @@ delta = -0.6
     type = InertialForce
     variable = disp_x
     density = reg_density
+    block = 0
   []
   [inertia_y]
     type = InertialForce
     variable = disp_y
     density = reg_density
+    block = 0
+  []
+  [inertia_x_putty]
+    type = InertialForce
+    variable = disp_x
+    density = density_p
+    block = 1
+  []
+  [inertia_y_putty]
+    type = InertialForce
+    variable = disp_y
+    density = density_p
+    block = 1
   []
   # [plane_stress]
   #   type = ADWeakPlaneStress
@@ -169,22 +194,6 @@ delta = -0.6
     boundary = top
     value = 0
   []
-  # [dashpot_top_x]
-  #   type = DashpotBC
-  #   boundary = top
-  #   component = 0
-  #   disp_x = disp_x
-  #   variable = disp_x
-  #   coefficient = 0.5
-  # []
-  # [dashpot_top_y]
-  #   type = DashpotBC
-  #   boundary = top
-  #   component = 1
-  #   disp_x = disp_x
-  #   variable = disp_y
-  #   coefficient = 0.5
-  # []
   [fix_center_y]
     type = DirichletBC
     variable = disp_y
@@ -210,16 +219,12 @@ delta = -0.6
 []
 
 [Materials]
+  # bego
   [bulk_properties]
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda l Gc density'
     prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
-    phase_field = d
+    block = 0
   []
   [degradation]
     type = PowerDegradationFunction
@@ -228,11 +233,20 @@ delta = -0.6
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
+    block = 0
   []
+  # [nodegradation] # test without d
+  #   type = NoDegradation
+  #   f_name = g 
+  #   function = 1
+  #   phase_field = d
+  #   block = 0
+  # []
   [reg_density]
     type = MaterialADConverter
     ad_props_in = 'density'
     reg_props_out = 'reg_density'
+    block = 0
   []
   [strain]
     # type = ADComputePlaneSmallStrain
@@ -240,6 +254,7 @@ delta = -0.6
     # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
+    block = 0
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -250,12 +265,36 @@ delta = -0.6
     decomposition = NONE
     output_properties = 'psie_active'
     outputs = exodus
+    block = 0
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
     outputs = exodus
+    block = 0
+  []
+
+  # putty
+  [elasticity_putty]
+    type = ADComputeIsotropicElasticityTensor
+    bulk_modulus = ${K_p}
+    shear_modulus = ${G_p}
+    block = 1
+  []
+  [density_putty]
+    type = GenericConstantMaterial
+    prop_names = 'density_p'
+    prop_values = '${rho_p}'
+    block = 1
+  []
+  [stress_putty]
+    type = ADComputeLinearElasticStress
+    block = 1
+  []
+  [strain_putty]
+    type = ADComputeSmallStrain
+    block = 1
   []
 []
 

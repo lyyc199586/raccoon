@@ -1,18 +1,23 @@
+[Problem]
+  kernel_coverage_check = false
+  material_coverage_check = false
+[]
+
 [Mesh]
   [gen]
     type = FileMeshGenerator
     file = './mesh/half.msh'
   []
-  # [toplayer]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = gmg
-  #   combinatorial_geometry = 'y > 74'
-  #   block_id = 1
-  #   block_name = top_layer
-  # []
+  [toplayer]
+    type = ParsedSubdomainMeshGenerator
+    input = gen
+    combinatorial_geometry = 'y > 74'
+    block_id = 1
+    block_name = top_layer
+  []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = gen
+    input = toplayer
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -47,6 +52,7 @@
     #   type = FunctionIC
     #   function = 'if(y=0&x>=19&x<=27,1,0)'
     # []
+    block = 0
   []
 []
 
@@ -54,14 +60,17 @@
   [bounds_dummy]
     # initial_from_file_var = 'bounds_dummy' 
     # initial_from_file_timestep = LATEST
+    block = 0
   []
   [disp_x]
     # initial_from_file_var = 'disp_x' 
     # initial_from_file_timestep = LATEST
+    block = 0
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
+    block = 0
   []
   # [strain_zz]
   #   initial_from_file_var = 'strain_zz' 
@@ -72,6 +81,7 @@
     # initial_from_file_timestep = LATEST
     order = CONSTANT
     family = MONOMIAL
+    block = 0
   []
 []
 
@@ -88,6 +98,7 @@
     bounded_variable = 'd'
     fixed_bound_value = 0
     threshold_value = 0.95
+    block = 0
   []
   # [history]
   #   type = HistoryFieldBoundsAux
@@ -104,6 +115,7 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = 0
   []
 []
 
@@ -114,16 +126,19 @@
     fracture_toughness = Gc
     regularization_length = l
     normalization_constant = c0
+    block = 0
   []
   [source]
     type = ADPFFSource
     variable = d
     free_energy = psi
+    block = 0
   []
   [nuc_force]
     type = ADCoefMatSource
     variable = d
     prop_names = 'ce'
+    block = 0
   []
 []
 
@@ -132,12 +147,14 @@
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    block = 0
   []
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
     function = 'd'
     phase_field = d
+    block = 0
   []
   [degradation]
     type = PowerDegradationFunction
@@ -146,6 +163,7 @@
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
+    block = 0
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -154,6 +172,7 @@
     args = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
+    block = 0
   []
   [kumar_material]
     type = LinearNucleationMicroForce2021
@@ -168,12 +187,14 @@
     stress_balance_name = f_nu
     output_properties = 'ce f_nu'
     outputs = exodus
+    block = 0
   []
   [strain]
     type = ADComputeSmallStrain
     # type = ADComputePlaneSmallStrain
     # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
+    block = 0
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -185,11 +206,13 @@
     # decomposition = VOLDEV
     # output_properties = 'psie'
     # outputs = exodus
+    block = 0
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
+    block = 0
   []
 []
 
