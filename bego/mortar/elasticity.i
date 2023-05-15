@@ -7,6 +7,8 @@ sigma_cs = 80
 l = 0.25
 delta = 25
 
+# soda-lime glasss
+
 # steel (for anvil)
 E_s = 2e5 # 200 GPa
 nu_s = 0.31
@@ -30,8 +32,13 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     execute_on = 'TIMESTEP_END'
   []
 []
-    variable = 'd'
-    source_variable = 'd'
+
+[Transfers]
+  [from_d]
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    from_multi_app = fracture
+    variable = 'd f_nu_var'
+    source_variable = 'd f_nu_var'
     to_blocks = 'disk'
   []
   [to_psie_active]
@@ -51,7 +58,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_mortar_flat_h0.079.msh'
+    file = '../mesh/disk_mortar_flat_h0.01.msh'
     ### for recover
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
@@ -59,13 +66,13 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   []
   [top_arc]
     type = ParsedGenerateSideset
-    combinatorial_geometry = 'abs(x*x+y*y - 2.9^2) < 0.01 & y> 2.7'
+    combinatorial_geometry = 'abs(x*x+y*y - 2.9^2) < 0.01 & y > 2.7'
     new_sideset_name = 'top_arc'
     input = fmg
   []
   [bot_arc]
     type = ParsedGenerateSideset
-    combinatorial_geometry = 'abs(x*x+y*y - 2.9^2) < 0.01 & y< -2.7'
+    combinatorial_geometry = 'abs(x*x+y*y - 2.9^2) < 0.01 & y < -2.7'
     new_sideset_name = 'bot_arc'
     input = top_arc
   []
@@ -75,30 +82,34 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     new_boundary = fix_point
     bottom_left = '-1e-4 2.8999 0'
     top_right = '1e-4 2.9001 0'
-    # bottom_left = '-0.1 2.8 0'
-    # top_right = '-0.09 2.9 0'
   []
+  # [refine_contact_sides]
+  #   type = RefineSidesetGenerator
+  #   input = fix_point
+  #   boundaries = 'top_anvil_bottom bottom_anvil_top'
+  #   refinement = 3
+  # []
   patch_size = 10
   patch_update_strategy = always
   # partitioner = centroid
   # centroid_partitioner_direction = y
 []
 
-[Adaptivity]
-  initial_marker = initial
-  initial_steps = 3
-  max_h_level = 3
-  stop_time = 0
-  [Markers]
-    [initial]
-      type = BoxMarker
-      bottom_left = '-1 -3 0'
-      top_right = '1 3 0'
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-  []
-[]
+# [Adaptivity]
+#   initial_marker = initial
+#   initial_steps = 3
+#   max_h_level = 3
+#   stop_time = 0
+#   [Markers]
+#     [initial]
+#       type = BoxMarker
+#       bottom_left = '-1 -3 0'
+#       top_right = '1 3 0'
+#       inside = REFINE
+#       outside = DO_NOTHING
+#     []
+#   []
+# []
 
 [Contact]
   [top_contact]
@@ -156,32 +167,10 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     # initial_from_file_timestep = LATEST # for restart
     # block = 'disk top_anvil bottom_anvil'
   []
-  # [s1]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [s2]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [s3]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [p]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  #   # initial_from_file_var = 'p' # for restart
-  #   # initial_from_file_timestep = LATEST # for restart
-  # []
-  # [srr]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [stt]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
+  [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Kernels]
@@ -368,50 +357,16 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
 []
 
 [Postprocessors]
-  # [Jint]
-  #   type = PhaseFieldJIntegral
-  #   J_direction = '1 0 0'
-  #   strain_energy_density = psie
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'left top right bottom'
-  # []
-  # [Jint_over_Gc]
-  #   type = ParsedPostprocessor
-  #   function = 'Jint/${Gc}'
-  #   pp_names = 'Jint'
-  #   use_t = false
-  # []
   [top_react]
     type = NodalSum
     variable = f_y
-    # boundary = top_point
     boundary = top_anvil_top
   []
   [bot_react]
     type = NodalSum
     variable = f_y
-    # boundary = bot_point
     boundary = bottom_anvil_bottom
   []
-  # [strain_energy_post]
-  #   type = ADElementIntegralMaterialProperty
-  #   mat_prop = psie
-  #   block = 'disk'
-  # []
-  # [w_ext_top]
-  #   type = ExternalWork
-  #   displacements = 'disp_y'
-  #   forces = f_y
-  #   # boundary = top_point
-  #   boundary = top_arc
-  # []
-  # [w_ext_bottom]
-  #   type = ExternalWork
-  #   displacements = 'disp_y'
-  #   forces = f_y
-  #   # boundary = bot_point
-  #   boundary = bot_arc
-  # []
 []
 
 [Executioner]
@@ -441,19 +396,20 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   # dt = 0.01
   # end_time = 0.2
   # dt = 0.05
-  end_time = 0.95
+  dt = 0.05
+  end_time = 0.8
 
   ### restart
   # start_time = 0.492
   # end_time = 0.6
   # dt = 2e-3
 
-  [TimeStepper]
-    type = FunctionDT
-    function = 'if(t<0.75, 0.05, 5e-3)' # r2/R = infty
-    # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
-    # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
-  []
+  # [TimeStepper]
+  #   type = FunctionDT
+  #   function = 'if(t<0.75, 0.05, 5e-3)' # r2/R = infty
+  #   # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
+  #   # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
+  # []
 
   # fast
   # fixed_point_max_its = 20
@@ -480,7 +436,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     type = Exodus
     interval = 1
   []
-  file_base = './out/flat/mortar_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/nodamage/flat/bego_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
