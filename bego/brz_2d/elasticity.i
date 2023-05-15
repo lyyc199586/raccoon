@@ -38,29 +38,29 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   []
 []
 
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};R=${R}'
-    execute_on = 'TIMESTEP_END'
-  []
-[]
+# [MultiApps]
+#   [fracture]
+#     type = TransientMultiApp
+#     input_files = fracture.i
+#     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};R=${R}'
+#     execute_on = 'TIMESTEP_END'
+#   []
+# []
 
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    to_multi_app = fracture
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
-  []
-[]
+# [Transfers]
+#   [from_d]
+#     type = MultiAppCopyTransfer
+#     from_multi_app = fracture
+#     variable = 'd'
+#     source_variable = 'd'
+#   []
+#   [to_psie_active]
+#     type = MultiAppCopyTransfer
+#     to_multi_app = fracture
+#     variable = 'disp_x disp_y strain_zz psie_active'
+#     source_variable = 'disp_x disp_y strain_zz psie_active'
+#   []
+# []
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -269,6 +269,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     boundary = top_arc
     function = top_bc_func
     penalty_function = p_func
+    use_displaced_mesh = true
   []
   [bot_arc_disp_y]
     type = ADFunctionContactBC
@@ -276,6 +277,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     boundary = bot_arc
     function = bot_bc_func
     penalty_function = p_func
+    use_displaced_mesh = true
   []
   [fix_top_x]
     type = ADDirichletBC
@@ -340,14 +342,20 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #   parameter_names = 'p eta '
   #   parameter_values = '2 1e-5'
   # []
-  [degradation]
-    type = PowerDegradationFunction
+  [nodegradation]
+    type = NoDegradation
     f_name = g
-    function = (1-d)^p+eta #(1-d)^p*(1-eta)+eta
+    function = 1
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
   []
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   f_name = g
+  #   function = (1-d)^p+eta #(1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 1e-5'
+  # []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -436,7 +444,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   line_search = bt
 
   nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_abs_tol = 1e-8
 
   #### for pressure bc
   # end_time = 200
@@ -444,7 +452,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
   ### for disp bc
   # dt = 0.05
-  end_time = 1
+  end_time = 0.88
   # end_time = 1 # plane 
   # end_time = 0.6
 
@@ -485,7 +493,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     type = Exodus
     interval = 1
   []
-  file_base = './out/solid_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/nodamage/solid_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV

@@ -223,6 +223,6 @@
     type = Exodus
     interval = 1
   []
-  file_base = './out/fracture_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/nodamage/fracture_R${R}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
 []
