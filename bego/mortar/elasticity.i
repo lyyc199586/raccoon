@@ -1,22 +1,11 @@
 # BegoStone
-# E = 6.16e3
-# nu = 0.2
-# # nu = 0.495
-# Gc = 3.656e-2
-# sigma_ts = 10
-# # sigma_cs = 80
-# sigma_cs = 30
-# l = 0.25
-# delta = 25
-
-# soda-lime glass
-E = 72e3
-nu = 0.25
-Gc = 8.89e-3
-sigma_ts = 30
-sigma_cs = 600
+E = 6.16e3
+nu = 0.2
+Gc = 3.656e-2
+sigma_ts = 10
+sigma_cs = 80
 l = 0.25
-delta = -0.6
+delta = 25
 
 # steel (for anvil)
 E_s = 2e5 # 200 GPa
@@ -24,8 +13,6 @@ nu_s = 0.31
 
 # R = 2.9 
 v = 0.05
-
-# offset = -0.0005
 
 # ---------------------------------
 K = '${fparse E/3/(1-2*nu)}'
@@ -43,13 +30,8 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     execute_on = 'TIMESTEP_END'
   []
 []
-
-[Transfers]
-  [from_d]
-    type = MultiAppGeneralFieldShapeEvaluationTransfer
-    from_multi_app = fracture
-    variable = 'd f_nu_var'
-    source_variable = 'd f_nu_var'
+    variable = 'd'
+    source_variable = 'd'
     to_blocks = 'disk'
   []
   [to_psie_active]
@@ -69,7 +51,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_mortar_flat_h0.01.msh'
+    file = '../mesh/disk_mortar_flat_h0.079.msh'
     ### for recover
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
@@ -98,34 +80,22 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   []
   patch_size = 10
   patch_update_strategy = always
-  # ghosting_patch_size = 500
   # partitioner = centroid
   # centroid_partitioner_direction = y
 []
 
 [Adaptivity]
-  initial_marker = combo
-  initial_steps = 4
-  max_h_level = 4
+  initial_marker = initial
+  initial_steps = 3
+  max_h_level = 3
   stop_time = 0
-  [Markers] # maybe change to boundary marker
-    [initial_top]
+  [Markers]
+    [initial]
       type = BoxMarker
-      bottom_left = '-1 2.9 0'
+      bottom_left = '-1 -3 0'
       top_right = '1 3 0'
       inside = REFINE
       outside = DO_NOTHING
-    []
-    [initial_bottom]
-      type = BoxMarker
-      bottom_left = '-1 -3 0'
-      top_right = '1 -2.9 0'
-      inside = REFINE
-      outside = DO_NOTHING
-    []
-    [combo]
-      type = ComboMarker
-      markers = 'initial_top initial_bottom'
     []
   []
 []
@@ -136,9 +106,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     secondary = top_arc
     model = frictionless
     formulation = mortar
-    # mapped_primary_gap_offset = offset
-    # secondary_gap_offset = offset
-    # correct_edge_dropping = true
+    correct_edge_dropping = true
     c_normal = 1e3
   []
   [bottom_contact]
@@ -146,9 +114,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     secondary = bot_arc
     model = frictionless
     formulation = mortar
-    # mapped_primary_gap_offset = offset
-    # secondary_gap_offset = offset
-    # correct_edge_dropping = true
+    correct_edge_dropping = true
     c_normal = 1e3
   []
 []
@@ -190,36 +156,32 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     # initial_from_file_timestep = LATEST # for restart
     # block = 'disk top_anvil bottom_anvil'
   []
-  [s1]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s3]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [s1]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s3]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   # [p]
   #   order = CONSTANT
   #   family = MONOMIAL
   #   # initial_from_file_var = 'p' # for restart
   #   # initial_from_file_timestep = LATEST # for restart
   # []
-  [srr]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [stt]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [f_nu_var]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [srr]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [stt]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
 []
 
 [Kernels]
@@ -246,12 +208,6 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
 []
 
 # [AuxKernels]
-  # [gap_offset]
-  #   type = ConstantAux
-  #   variable = offset
-  #   value = 0.0005
-  #   boundary = 'top_arc bot_arc'
-  # []
 #   [maxprincipal]
 #     type = ADRankTwoScalarAux
 #     rank_two_tensor = 'stress'
@@ -308,7 +264,6 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     variable = disp_y
     boundary = top_anvil_top
     function = '-${v}*t'
-    preset = false
   []
   [top_x]
     type = ADDirichletBC
@@ -321,7 +276,6 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     variable = disp_y
     boundary = bottom_anvil_bottom
     function = '${v}*t'
-    preset = false
   []
   [bottom_x]
     type = ADDirichletBC
@@ -439,16 +393,6 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     # boundary = bot_point
     boundary = bottom_anvil_bottom
   []
-  # [top_contact_force]
-  #   type = NodalSum
-  #   variable = top_contact_normal_lm
-  #   boundary = top_arc
-  # []
-  # [bot_contact_force]
-  #   type = NodalSum
-  #   variable = bottom_contact_normal_lm
-  #   boundary = bot_arc
-  # []
   # [strain_energy_post]
   #   type = ADElementIntegralMaterialProperty
   #   mat_prop = psie
@@ -496,20 +440,20 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
   ### for disp bc
   # dt = 0.01
   # end_time = 0.2
-  dt = 0.05
-  end_time = 0.8
+  # dt = 0.05
+  end_time = 0.95
 
   ### restart
   # start_time = 0.492
   # end_time = 0.6
   # dt = 2e-3
 
-  # [TimeStepper]
-  #   type = FunctionDT
-  #   function = 'if(t<0.75, 0.05, 5e-3)' # r2/R = infty
-  #   # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
-  #   # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
-  # []
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<0.75, 0.05, 5e-3)' # r2/R = infty
+    # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
+    # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
+  []
 
   # fast
   # fixed_point_max_its = 20
@@ -536,7 +480,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
     type = Exodus
     interval = 1
   []
-  file_base = './out/nodamage/flat/glass_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/flat/mortar_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV

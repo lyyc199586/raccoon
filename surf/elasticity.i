@@ -63,30 +63,19 @@
 # delta = 5
 
 # BegoStone
-# # E = 2.735e4
-# # E = 4.77e3
-# E = 6.16e3
-# nu = 0.2
-# # Gc = 2.188e-2
-# # Gc = 3.656e-3
-# Gc = 3.656e-2
-# sigma_ts = 10
-# # sigma_cs = 22.27
-# # sigma_cs = 100
-# sigma_cs = 80
-# l = 0.25
-# delta = 25
-
-# soda-lime glass
-E = 72e3 # 32 GPa
-nu = 0.25
-# Gc = 8.89e-3 
-Gc = 9.5e-3
-# sigma_ts = 41 # MPa
-sigma_ts = 30
-sigma_cs = 330
-l = 0.25
-delta = -0.6 # haven't tested
+# E = 2.735e4
+# E = 4.77e3
+E = 6.16e3
+nu = 0.2
+# Gc = 2.188e-2
+# Gc = 3.656e-3
+Gc = 3.656e-2
+sigma_ts = 5
+# sigma_cs = 22.27
+# sigma_cs = 100
+sigma_cs = 25
+l = 0.8
+delta = 12
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -97,16 +86,14 @@ c2 = '${fparse (3-nu)/(1+nu)}'
 
 # shape and scale
 # a = 10 # crack length
-# a = 5
-# h = 0.2 # coase mesh size
-a = 4
-h = 0.125
+a = 5
+h = 0.2 # coase mesh size
 length = '${fparse 6*a}'
 width = '${fparse 2*a}'
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
-refine = 3 # fine mesh size: a=4, h=0.125 -> h=0.015625
-# refine = 4 # fine mesh size: a=5, h=0.0125; a=4, h=0.01
+# refine = 3 # fine mesh size: 0.025
+refine = 4 # fine mesh size: 0.0125
 
 [Functions]
   [bc_func]
@@ -165,30 +152,19 @@ refine = 3 # fine mesh size: a=4, h=0.125 -> h=0.015625
   []
 []
 
-# [Adaptivity]
-#   marker = marker
-#   initial_marker = marker
-#   initial_steps = ${refine}
-#   stop_time = 0
-#   max_h_level = ${refine}
-#   [Markers]
-#     [marker]
-#       type = BoxMarker
-#       bottom_left = '0 -0.5 0'
-#       top_right = '${length} 0.5 0'
-#       outside = DO_NOTHING
-#       inside = REFINE
-#     []
-#   []
-# []
 [Adaptivity]
-  marker = damage_marker
+  marker = marker
+  initial_marker = marker
+  initial_steps = ${refine}
+  stop_time = 0
   max_h_level = ${refine}
   [Markers]
-    [damage_marker]
-      type = ValueThresholdMarker
-      variable = d
-      refine = 0.001
+    [marker]
+      type = BoxMarker
+      bottom_left = '0 -0.5 0'
+      top_right = '${length} 0.5 0'
+      outside = DO_NOTHING
+      inside = REFINE
     []
   []
 []
@@ -353,15 +329,17 @@ refine = 3 # fine mesh size: a=4, h=0.125 -> h=0.015625
   # dt = 1e-3
 
   # fast
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-4
-  fixed_point_abs_tol = 1e-6
+  # fixed_point_max_its = 20
+  # accept_on_max_fixed_point_iteration = false
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
 
   # fixed_point_max_its = 50
-  # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-5
+  # fixed_point_abs_tol = 1e-6
 []
 
 [Outputs]
@@ -369,7 +347,7 @@ refine = 3 # fine mesh size: a=4, h=0.125 -> h=0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/soda/surf_h${refine}_a${a}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = 'surf_h${refine}_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
