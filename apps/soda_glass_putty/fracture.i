@@ -83,6 +83,11 @@
     family = MONOMIAL
     block = 0
   []
+  [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+    block = 0
+  []
 []
 
 [Bounds]
@@ -142,6 +147,15 @@
   []
 []
 
+[AuxKernels]
+  [get_f_nu]
+    type = ADMaterialRealAux
+    property = f_nu
+    variable = f_nu_var
+    block = 0
+  []
+[]
+
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
@@ -186,7 +200,7 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     output_properties = 'ce f_nu'
-    outputs = exodus
+    # outputs = exodus
     block = 0
   []
   [strain]
@@ -242,15 +256,15 @@
 #   print_linear_residuals = false
 # []
 
-[Outputs]
-  [exodus]
-    type = Exodus
-    interval = 10
-  []
-  print_linear_residuals = false
-  file_base = './out/fix_top/pd_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  interval = 1
-  # [./csv]
-  #   type = CSV 
-  # [../]
-[]
+# [Outputs]
+#   [exodus]
+#     type = Exodus
+#     interval = 10
+#   []
+#   print_linear_residuals = false
+#   file_base = './out/fix_top/pd_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+#   interval = 1
+#   # [./csv]
+#   #   type = CSV 
+#   # [../]
+# []

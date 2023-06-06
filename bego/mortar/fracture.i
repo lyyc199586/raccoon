@@ -2,28 +2,33 @@
   coord_type = XYZ
   [fmg]
     type = FileMeshGenerator
-    file = '../mesh/disk_2d_h0.01.msh'
+    # file = '../mesh/disk_2d_h0.01.msh'
+    file = '../mesh/disk_2d_h0.082.msh'
     ### for recover
     # use_for_exodus_restart = true
     # file = './out/solid_R14.5_ts10_cs80_l0.25_delta25.e'
   []
 []
 
-# [Adaptivity]
-#   initial_marker = initial
-#   initial_steps = 3
-#   max_h_level = 3
-#   stop_time = 0
-#   [Markers]
-#     [initial]
-#       type = BoxMarker
-#       bottom_left = '-1 -3 0'
-#       top_right = '1 3 0'
-#       inside = REFINE
-#       outside = DO_NOTHING
-#     []
-#   []
-# []
+[Adaptivity]
+  initial_marker = initial
+  initial_steps = 3
+  max_h_level = 3
+  stop_time = 0
+  [Markers]
+    [initial]
+      type = BoxMarker
+      # bottom_left = '-1 -3 0'
+      # top_right = '1 3 0'
+      # bottom_left = '-1.2 -2.901 0'
+      # top_right = '1.2 2.901 0'
+      bottom_left = '-2 -2.901 0'
+      top_right = '2 2.901 0'
+      inside = REFINE
+      outside = DO_NOTHING
+    []
+  []
+[]
 
 [Problem]
   coord_type = XYZ
@@ -53,8 +58,8 @@
   []
   [disp_y]
   []
-  # [strain_zz]
-  # []
+  [strain_zz]
+  []
   [psie_active]
     order = CONSTANT
     family = MONOMIAL
@@ -86,7 +91,8 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    bound_value = 1
+    # bound_value = 1
+    bound_value = 0 # no damage
   []
 []
 
@@ -167,9 +173,9 @@
     # outputs = exodus
   []
   [strain]
-    type = ADComputeSmallStrain
-    # type = ADComputePlaneSmallStrain
-    # out_of_plane_strain = 'strain_zz'
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
   []
   [elasticity]

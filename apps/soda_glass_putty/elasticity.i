@@ -23,7 +23,7 @@ delta = -0.6
 # putty
 E_p = 1.7
 nu_p = 0.4
-rho_p = 1e-9 
+rho_p = 1e-9
 K_p = '${fparse E_p/3/(1-2*nu_p)}'
 G_p = '${fparse E_p/2/(1+nu_p)}'
 
@@ -31,8 +31,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};'
-      'sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine};p=${p}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -41,8 +40,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [from_d]
     type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
+    variable = 'd f_nu_var'
+    source_variable = 'd f_nu_var'
     to_blocks = 0
   []
   [to_psie_active]
@@ -64,6 +63,10 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  use_displaced_mesh = false # small strain
+  beta = 0.25
+  gamma = 0.5
+  eta = 19.63
 []
 
 [Mesh]
@@ -135,19 +138,45 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     #   function = 'if(y=0&x>=19&x<=27,1,0)'
     # []
   []
+  [accel_x]
+  []
+  [accel_y]
+  []
+  [vel_x]
+  []
+  [vel_y]
+  []
+  [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Kernels]
+  # [solid_x]
+  #   type = ADStressDivergenceTensors
+  #   variable = disp_x
+  #   component = 0
+  #   save_in = fx
+  # []
+  # [solid_y]
+  #   type = ADStressDivergenceTensors
+  #   variable = disp_y
+  #   component = 1
+  #   save_in = fy
+  # []
   [solid_x]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
+    alpha = 0.11
     save_in = fx
   []
   [solid_y]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
+    alpha = 0.11
     save_in = fy
   []
   [inertia_x]
@@ -155,30 +184,67 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     variable = disp_x
     density = reg_density
     block = 0
+    velocity = vel_x
+    acceleration = accel_x
   []
   [inertia_y]
     type = InertialForce
     variable = disp_y
     density = reg_density
     block = 0
+    velocity = vel_y
+    acceleration = accel_y
   []
   [inertia_x_putty]
     type = InertialForce
     variable = disp_x
     density = density_p
     block = 1
+    velocity = vel_x
+    acceleration = accel_x
   []
   [inertia_y_putty]
     type = InertialForce
     variable = disp_y
     density = density_p
     block = 1
+    velocity = vel_y
+    acceleration = accel_y
   []
   # [plane_stress]
   #   type = ADWeakPlaneStress
   #   variable = 'strain_zz'
   #   displacements = 'disp_x disp_y'
   # []
+[]
+
+[AuxKernels]
+  [accel_x] # Calculates and stores acceleration at the end of time step
+    type = NewmarkAccelAux
+    variable = accel_x
+    displacement = disp_x
+    velocity = vel_x
+    execute_on = timestep_end
+  []
+  [vel_x] # Calculates and stores velocity at the end of the time step
+    type = NewmarkVelAux
+    variable = vel_x
+    acceleration = accel_x
+    execute_on = timestep_end
+  []
+  [accel_y]
+    type = NewmarkAccelAux
+    variable = accel_y
+    displacement = disp_y
+    velocity = vel_y
+    execute_on = timestep_end
+  []
+  [vel_y]
+    type = NewmarkVelAux
+    variable = vel_y
+    acceleration = accel_y
+    execute_on = timestep_end
+  []
 []
 
 [BCs]
@@ -309,10 +375,25 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     variable = fx
     boundary = v-partial
   []
-  [disp_x]
+  # [disp_x]
+  #   type = PointValue
+  #   point = '0 8.493 0'
+  #   variable = disp_x
+  # []
+  [open_disp_y]
     type = PointValue
     point = '0 8.493 0'
-    variable = disp_x
+    variable = disp_y
+  []
+  [max_d]
+    type = NodalExtremeValue
+    variable = d
+    value_type = max
+  []
+  [max_f_nu]
+    type = ElementExtremeValue
+    variable = f_nu_var
+    value_type = max
   []
   # [Jint]
   #   type = PhaseFieldJIntegral
@@ -348,13 +429,13 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
 
-  [TimeIntegrator]
-    type = NewmarkBeta
-    # gamma = '${fparse 5/6}'
-    # beta = '${fparse 4/9}'
-    gamma = 0.5
-    beta = 0.25
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   # gamma = '${fparse 5/6}'
+  #   # beta = '${fparse 4/9}'
+  #   gamma = 0.5
+  #   beta = 0.25
+  # []
 []
 
 [Outputs]
@@ -363,7 +444,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  file_base = './out/fix_top/soda_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/hht/soda_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   interval = 1
   [csv]
     type = CSV

@@ -90,6 +90,11 @@
     family = MONOMIAL
     block = 0
   []
+  [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+    block = 0
+  []
 []
 
 [Bounds]
@@ -145,6 +150,15 @@
     type = ADCoefMatSource
     variable = d
     prop_names = 'ce'
+    block = 0
+  []
+[]
+
+[AuxKernels]
+  [get_f_nu]
+    type = ADMaterialRealAux
+    property = f_nu
+    variable = f_nu_var
     block = 0
   []
 []
