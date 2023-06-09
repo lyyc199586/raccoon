@@ -6,13 +6,12 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 Gc = 8.89e-3 # N/mm -> 3 J/m^2
-# Gc = 4e-3
 # Gc = 9.5e-3
 # Gc = 8.7e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 25
+p = 22.5
 
 # l = 0.075
 # delta = -0.2 # haven't tested
@@ -23,7 +22,6 @@ delta = 0
 
 # putty
 E_p = 1.7
-# E_p = 1700
 nu_p = 0.4
 rho_p = 1e-9
 K_p = '${fparse E_p/3/(1-2*nu_p)}'
@@ -61,16 +59,6 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     x = '0 15e-6 60e-6 75e-6 80e-6'
     y = '0 ${p} ${p} 0 0'
   []
-  # [spatial] # only part of v notch (x<13.1)
-  #   type = PiecewiseLinear
-  #   axis = x
-  #   x = '0 13 13.5 19'
-  #   y = '1 1 0 0'
-  # []
-  # [p_func]
-  #   type = CompositeFunction
-  #   functions = 'temporal spatial'
-  # []
 []
 
 [GlobalParams]
@@ -78,13 +66,13 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   use_displaced_mesh = false # small strain
   beta = 0.25
   gamma = 0.5
-  # eta = 19.63
+  eta = 19.63
 []
 
 [Mesh]
   [gen]
     type = FileMeshGenerator
-    file = './mesh/full.msh'
+    file = '../mesh/full.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
@@ -100,26 +88,19 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     block_id = 2
     block_name = bottom_layer
   []
-  # [noncrack]
-  #   type = BoundingBoxNodeSetGenerator
-  #   input = toplayer
-  #   new_boundary = noncrack
-  #   bottom_left = '26.9 0 0'
-  #   top_right = '100.1 0 0'
-  # []
   [vpartialtop]
     type = ParsedGenerateSideset
     input = bottomlayer
     included_boundaries = 'v-entire-top'
     new_sideset_name = 'v-load-top'
-    combinatorial_geometry = 'x < 13.5'
+    combinatorial_geometry = 'x < 13.6'
   []
   [vpartialbottom]
     type = ParsedGenerateSideset
     input = vpartialtop
     included_boundaries = 'v-entire-bottom'
     new_sideset_name = 'v-load-bottom'
-    combinatorial_geometry = 'x < 13.5'
+    combinatorial_geometry = 'x < 13.6'
   []
   construct_side_list_from_node_list = true
 []
@@ -133,7 +114,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      refine = 0.001
+      refine = 0.0001
     []
     [initial_tip]
       type = BoxMarker
@@ -171,6 +152,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     #   function = 'if(y=0&x>=19&x<=27,1,0)'
     # []
   []
+  [d_dist]
+  []
   [accel_x]
   []
   [accel_y]
@@ -186,32 +169,32 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 []
 
 [Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-    save_in = fx
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    save_in = fy
-  []
   # [solid_x]
-  #   type = ADDynamicStressDivergenceTensors
+  #   type = ADStressDivergenceTensors
   #   variable = disp_x
   #   component = 0
-  #   # alpha = 0.11
   #   save_in = fx
   # []
   # [solid_y]
-  #   type = ADDynamicStressDivergenceTensors
+  #   type = ADStressDivergenceTensors
   #   variable = disp_y
   #   component = 1
-  #   # alpha = 0.11
   #   save_in = fy
   # []
+  [solid_x]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    alpha = 0.11
+    save_in = fx
+  []
+  [solid_y]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    alpha = 0.11
+    save_in = fy
+  []
   [inertia_x]
     type = InertialForce
     variable = disp_x
@@ -277,6 +260,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     variable = vel_y
     acceleration = accel_y
     execute_on = timestep_end
+  []
+  [dist_to_initial_tip]
+    type = ParsedAux
+    variable = d_dist
+    coupled_variables = d
+    expression = 'if(d > d_cr, sqrt((x - 27)^2 + y^2), -1)'
+    use_xyzt = true
+    constant_names = d_cr
+    constant_expressions = 0.95
   []
 []
 
@@ -445,6 +437,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   # nl_abs_tol = 1e-8
 
   dt = 5e-8 # 0.05 us
+  dtmin = 1e-8
   end_time = 80e-6
 
   # restart
@@ -473,7 +466,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  file_base = './out/newmark/partial_v_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = '../out/full_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   interval = 1
   [csv]
     type = CSV

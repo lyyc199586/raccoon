@@ -6,7 +6,7 @@
 [Mesh]
   [gen]
     type = FileMeshGenerator
-    file = './mesh/full.msh'
+    file = '../mesh/full.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
@@ -41,7 +41,7 @@
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      refine = 0.001
+      refine = 0.0001
     []
     [initial_tip]
       type = BoxMarker
