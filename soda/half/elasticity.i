@@ -11,11 +11,11 @@ Gc = 8.89e-3 # N/mm -> 3 J/m^2
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 25
+p = 20
 
 # l = 0.075
 # delta = -0.2 # haven't tested
-refine = 0 # h=1, h_ref=0.015625
+refine = 6 # h=1, h_ref=0.015625=1/2^6
 
 l = 0.25
 delta = 0
@@ -451,8 +451,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  # file_base = '../out/hht/soda_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = '../out/hht_half_test'
+  file_base = '../out/hht_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = '../out/hht_half_test'
   interval = 1
   [csv]
     type = CSV
