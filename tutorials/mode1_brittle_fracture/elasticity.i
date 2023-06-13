@@ -83,6 +83,8 @@ l = 0.02
   []
   [d]
   []
+  [d_dist]
+  []
 []
 
 [Kernels]
@@ -96,6 +98,18 @@ l = 0.02
     variable = disp_y
     component = 1
     save_in = fy
+  []
+[]
+
+[AuxKernels]
+  [d_dist]
+    type = ParsedAux
+    variable = d_dist
+    coupled_variables = d
+    expression = 'if(d > d_cr, sqrt((x-0.5)^2+y^2), -1)'
+    constant_names = d_cr
+    constant_expressions = 0.95
+    use_xyzt = true
   []
 []
 
@@ -160,6 +174,35 @@ l = 0.02
     type = NodalSum
     variable = fy
     boundary = top
+    outputs = pp
+  []
+  [dist_max_value]
+    type = NodalExtremeValue
+    variable = d_dist
+    outputs = pp
+  []
+  [dist_max_id]
+    type = NodalMaxValueId
+    variable = d_dist
+    outputs = pp
+  []
+  [tip_x]
+    type = NodalMaxValuePosition
+    variable = d_dist
+    coord = x
+    outputs = tip
+  []
+  [tip_y]
+    type = NodalMaxValuePosition
+    variable = d_dist
+    coord = y
+    outputs = tip
+  []
+  [tip_z]
+    type = NodalMaxValuePosition
+    variable = d_dist
+    coord = z
+    outputs = tip
   []
 []
 
@@ -185,5 +228,12 @@ l = 0.02
 
 [Outputs]
   exodus = true
+  [pp]
+    type = CSV
+  []
+  [tip]
+    file_base = crack_tip
+    type = CSV
+  []
   print_linear_residuals = false
 []
