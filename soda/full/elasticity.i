@@ -261,11 +261,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     acceleration = accel_y
     execute_on = timestep_end
   []
-  [dist_to_initial_tip]
+  [d_dist]
     type = ParsedAux
     variable = d_dist
     coupled_variables = d
-    expression = 'if(d > d_cr, sqrt((x - 27)^2 + y^2), -1)'
+    expression = 'if(d > d_cr & y > 0, sqrt((x - 27)^2 + y^2), -1)'
     use_xyzt = true
     constant_names = d_cr
     constant_expressions = 0.95
@@ -391,37 +391,73 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 []
 
 [Postprocessors]
-  # [Fy_top]
-  #   type = NodalSum
-  #   variable = fy
-  #   boundary = v-partial-top
-  # []
-  # [Fx_top]
-  #   type = NodalSum
-  #   variable = fx
-  #   boundary = v-partial-top
-  # []
-  [open_disp_y]
-    type = PointValue
-    point = '0 8.493 0'
-    variable = disp_y
+  [Fy_top]
+    type = NodalSum
+    variable = fy
+    boundary = v-load-top
+    outputs = pp
   []
-  # [Jint]
-  #   type = PhaseFieldJIntegral
-  #   J_direction = '1 0 0'
-  #   strain_energy_density = psie
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'left bottom right top' # ? need to define in mesh?
-  # []
   [max_d]
     type = NodalExtremeValue
     variable = d
     value_type = max
+    outputs = pp
   []
   [max_f_nu]
     type = ElementExtremeValue
     variable = f_nu_var
     value_type = max
+    outputs = pp
+  []
+  # crack_tip tracking
+  [tip_x]
+    type = PDCrackTipTracker
+    variable = d_dist
+    component = 0
+    initial_coord = 27
+    outputs = tip
+    execute_on = 'initial timestep_begin'
+  []
+  [tip_y]
+    type = PDCrackTipTracker
+    variable = d_dist
+    component = 1
+    initial_coord = 0
+    outputs = tip
+    execute_on = 'initial timestep_begin'
+  []
+  [tip_z]
+    type = PDCrackTipTracker
+    variable = d_dist
+    component = 2
+    initial_coord = 0
+    outputs = tip
+    execute_on = TIMESTEP_END
+  []
+  [dx]
+    type = ChangeOverTimePostprocessor
+    postprocessor = tip_x
+    outputs = none
+  []
+  [dy]
+    type = ChangeOverTimePostprocessor
+    postprocessor = tip_y
+    outputs = none
+  []
+  [dz]
+    type = ChangeOverTimePostprocessor
+    postprocessor = tip_z
+    outputs = none
+  []
+  [dt]
+    type = TimestepSize
+    outputs = none
+  []
+  [tip_velocity]
+    type = ParsedPostprocessor
+    pp_names = 'dx dy dz dt'
+    function = 'sqrt(dx^2 + dy^2 + dz^2)/dt'
+    outputs = tip
   []
 []
 
@@ -468,7 +504,12 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   print_linear_residuals = false
   file_base = '../out/full_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   interval = 1
-  [csv]
+  [pp]
     type = CSV
+    file_base = '../out/csv/pp_full_tip_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  []
+  [tip]
+    type = CSV
+    file_base = '../out/csv/tip_full_tip_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   []
 []
