@@ -37,7 +37,7 @@ tf = 1
   []
   [bottom]
     type = ParsedGenerateSideset
-    input =  fmg
+    input = fmg
     new_sideset_name = bottom
     combinatorial_geometry = 'y < 1e-4'
   []
@@ -226,18 +226,25 @@ tf = 1
 [Executioner]
   type = Transient
   solve_type = 'PJFNK'
+  # solve_type = LINEAR
 
   l_max_its = 50
   nl_max_its = 50
-  nl_rel_tol = 1e-12
-  nl_abs_tol = 1e-10
-  l_tol = 1e-9
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-6
+  l_tol = 1e-6
 
   start_time = 0
   n_startup_steps = 1
   end_time = ${tf}
   dt = 0.01
   dtmin = 0.001
+
+  line_search = none
+  automatic_scaling = true
+
+  petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart -pc_hypre_boomeramg_strong_threshold'
+petsc_options_value = 'hypre    boomeramg      31                 0.7'
 []
 
 [Outputs]
