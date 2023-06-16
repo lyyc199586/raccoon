@@ -63,19 +63,30 @@
 # delta = 5
 
 # BegoStone
-# E = 2.735e4
-# E = 4.77e3
-E = 6.16e3
-nu = 0.2
-# Gc = 2.188e-2
-# Gc = 3.656e-3
-Gc = 3.656e-2
-sigma_ts = 5
-# sigma_cs = 22.27
-# sigma_cs = 100
-sigma_cs = 25
-l = 0.8
-delta = 12
+# # E = 2.735e4
+# # E = 4.77e3
+# E = 6.16e3
+# nu = 0.2
+# # Gc = 2.188e-2
+# # Gc = 3.656e-3
+# Gc = 3.656e-2
+# sigma_ts = 5
+# # sigma_cs = 22.27
+# # sigma_cs = 100
+# sigma_cs = 25
+# l = 0.8
+# delta = 12
+
+# soda-lime glass
+E = 72e3
+nu = 0.25
+Gc = 9e-3
+sigma_ts = 30
+sigma_cs = 330
+
+l = 0.25
+delta = 0
+
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -87,13 +98,13 @@ c2 = '${fparse (3-nu)/(1+nu)}'
 # shape and scale
 # a = 10 # crack length
 a = 5
-h = 0.2 # coase mesh size
+h = 0.25 # coase mesh size
 length = '${fparse 6*a}'
 width = '${fparse 2*a}'
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
 # refine = 3 # fine mesh size: 0.025
-refine = 4 # fine mesh size: 0.0125
+refine = 4 # fine mesh size: 0.015625
 
 [Functions]
   [bc_func]
@@ -118,8 +129,8 @@ refine = 4 # fine mesh size: 0.0125
     type = MultiAppCopyTransfer
     multi_app = fracture
     direction = from_multiapp
-    variable = 'd'
-    source_variable = 'd'
+    variable = 'd f_nu_var'
+    source_variable = 'd f_nu_var'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
@@ -148,21 +159,25 @@ refine = 4 # fine mesh size: 0.0125
     type = ExtraNodesetGenerator
     input = gen
     new_boundary = fix_point
-    coord = '0 ${fparse -1*a}'
+    coord = '0 ${fparse -1*a}' # fix left bottom point
   []
 []
 
 [Adaptivity]
-  marker = marker
-  initial_marker = marker
+  initial_marker = initial_tip
   initial_steps = ${refine}
-  stop_time = 0
+  marker = damage_marker
   max_h_level = ${refine}
   [Markers]
-    [marker]
+    [damage_marker]
+      type = ValueThresholdMarker
+      variable = d
+      refine = 0.0001
+    []
+    [initial_tip]
       type = BoxMarker
-      bottom_left = '0 -0.5 0'
-      top_right = '${length} 0.5 0'
+      bottom_left = '0 -${fparse 2*l} 0'
+      top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -250,8 +265,8 @@ refine = 4 # fine mesh size: 0.0125
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    output_properties = 'total_strain'
-    outputs = exodus
+    # output_properties = 'total_strain'
+    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -260,31 +275,15 @@ refine = 4 # fine mesh size: 0.0125
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active psie'
-    outputs = exodus
+    output_properties = 'psie_active'
+    # outputs = exodus
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    outputs = exodus
+    # outputs = exodus
   []
-  # [crack_geometric]
-  #   type = CrackGeometricFunction
-  #   f_name = alpha
-  #   function = 'd'
-  #   phase_field = d
-  # []
-  # [kumar_material]
-  #   type = NucleationMicroForce
-  #   normalization_constant = c0
-  #   tensile_strength = '${sigma_ts}'
-  #   compressive_strength = '${sigma_cs}'
-  #   delta = '${delta}'
-  #   external_driving_force_name = ce
-  #   output_properties = 'ce'
-  #   outputs = exodus
-  # []
 []
 
 [Postprocessors]
@@ -323,6 +322,7 @@ refine = 4 # fine mesh size: 0.0125
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
+  start_time = 0
   end_time = 5e-1 # for a = 5
   dt = 1e-3
   # end_time = 1 # for a = 10
@@ -347,7 +347,7 @@ refine = 4 # fine mesh size: 0.0125
     type = Exodus
     interval = 10
   []
-  file_base = 'surf_h${refine}_a${a}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/soda_gc${Gc}_l${l}_delta${delta}/soda_gc${Gc}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
