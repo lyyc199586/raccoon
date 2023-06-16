@@ -204,6 +204,10 @@ refine = 4 # fine mesh size: 0.015625
   []
   [f_y]
   []
+  [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Kernels]
@@ -275,8 +279,8 @@ refine = 4 # fine mesh size: 0.015625
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active'
-    # outputs = exodus
+    output_properties = 'psie psie_active'
+    outputs = exodus
   []
   [stress]
     type = ComputeSmallDeformationStress
