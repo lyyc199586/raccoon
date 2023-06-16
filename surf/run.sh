@@ -1,5 +1,5 @@
 echo "Start: $(date)"
 echo "cwd: $(pwd)"
-mpirun -n 8 ~/projects/raccoon/raccoon-opt -i elasticity.i
+nohup mpirun -n 8 ~/projects/raccoon/raccoon-opt -i elasticity.i > log.txt 2>&1 &
 
 echo "End: $(date)"

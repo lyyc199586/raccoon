@@ -11,16 +11,20 @@
 []
 
 [Adaptivity]
-  marker = marker
-  initial_marker = marker
+  initial_marker = initial_tip
   initial_steps = ${refine}
-  stop_time = 0
+  marker = damage_marker
   max_h_level = ${refine}
   [Markers]
-    [marker]
+    [damage_marker]
+      type = ValueThresholdMarker
+      variable = d
+      refine = 0.0001
+    []
+    [initial_tip]
       type = BoxMarker
-      bottom_left = '0 -0.5 0'
-      top_right = '${length} 0.5 0'
+      bottom_left = '0 -${fparse 2*l} 0'
+      top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -46,6 +50,10 @@
   [strain_zz]
   []
   [psie_active]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [f_nu_var]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -88,6 +96,14 @@
   []
 []
 
+[AuxKernels]
+  [get_f_nu]
+    type = ADMaterialRealAux
+    property = f_nu
+    variable = f_nu_var
+  []
+[]
+
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
@@ -116,15 +132,29 @@
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
+  # [kumar_material]
+  #   type = NucleationMicroForce
+  #   normalization_constant = c0
+  #   tensile_strength = '${sigma_ts}'
+  #   compressive_strength = '${sigma_cs}'
+  #   delta = '${delta}'
+  #   external_driving_force_name = ce
+  #   output_properties = 'ce'
+  #   #outputs = exodus
+  # []
   [kumar_material]
-    type = NucleationMicroForce
+    type = LinearNucleationMicroForce2021
+    phase_field = d
+    if_stress_intact = false
+    stress_name = stress
     normalization_constant = c0
     tensile_strength = '${sigma_ts}'
     compressive_strength = '${sigma_cs}'
     delta = '${delta}'
     external_driving_force_name = ce
-    output_properties = 'ce'
-    #outputs = exodus
+    stress_balance_name = f_nu
+    # output_properties = 'ce f_nu'
+    # outputs = exodus
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -161,6 +191,10 @@
   # nl_abs_tol = 1e-10
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
+
+  # start_time = 0
+  # end_time = 5e-1 # for a = 5
+  # dt = 1e-3
 []
 
 [Outputs]
