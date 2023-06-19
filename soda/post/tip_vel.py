@@ -25,8 +25,8 @@ ax.fill_between(x1, y_min, y_max, facecolor='grey', alpha=0.8, label="exp")
 
 # simulation
 df = pd.read_csv("../gold/tip_full_tip_p22.5_gc8.89e-3_ts30_cs330_l0.25_delta0.csv")
-smooth_y = smooth(df["tip_velocity"], 20)
-ax.plot(df["time"]*1e6 - 15, smooth_y/3.2e6, label="sim", lw=0.8)
+smooth_y = smooth(df["tip_velocity"], 10)
+ax.plot(df["time"]*1e6 - 15, smooth_y/3.2e6, label="sim")
 
 ax.set_xlim([0, 50])
 ax.set_ylim([0, 0.7])
