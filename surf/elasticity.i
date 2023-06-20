@@ -84,7 +84,7 @@ Gc = 9e-3
 sigma_ts = 30
 sigma_cs = 330
 
-l = 0.25
+l = 0.2
 delta = 0
 
 # ---------------------------------
@@ -355,5 +355,6 @@ refine = 4 # fine mesh size: 0.015625
   print_linear_residuals = false
   [csv]
     type = CSV
+    file_base = './csv/soda_gc${Gc}_l${l}_delta${delta}/soda_gc${Gc}_l${l}_delta${delta}'
   []
 []
