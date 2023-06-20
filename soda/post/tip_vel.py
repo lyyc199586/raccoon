@@ -29,7 +29,7 @@ smooth_y = smooth(df["tip_velocity"], 10)
 ax.plot(df["time"]*1e6 - 15, smooth_y/3.2e6, label="sim")
 
 ax.set_xlim([0, 50])
-ax.set_ylim([0, 0.7])
+ax.set_ylim([0, 0.8])
 ax.set_xlabel("Time ($\mu$s)")
 ax.set_ylabel("Normalized crack velocity $v/c_R$")
 ax.legend()
