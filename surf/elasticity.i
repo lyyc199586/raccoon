@@ -355,6 +355,6 @@ refine = 4 # fine mesh size: 0.015625
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './csv/soda_gc${Gc}_l${l}_delta${delta}'
+    file_base = './gold/soda_gc${Gc}_l${l}_delta${delta}'
   []
 []
