@@ -9,8 +9,8 @@ def plot_df(df, window_size, cR, color, label=''):
     v = df["tip_velocity"]
     y = df["tip_y"]
     t0 = t.loc[df[v > 0].index[0]] # crack initiation time
-    t1 = t.loc[df[y > 0.25].index[0]] # branch start time
-    t2 = t.loc[df[y > 0.5].index[0]] # branch end time
+    t1 = t.loc[df[y > 0.5].index[0]] # branch start time
+    t2 = t.loc[df[y > 1].index[0]] # branch end time
     ax.plot(t - t0, uniform_filter1d(v, w)/cR, color=color, label=label)
     ax.axvspan(t1 - t0, t2 - t0, facecolor=color, alpha=0.1)
 
@@ -55,7 +55,7 @@ plot_df(dfs[3], w, cR, colors[3], label="$G_c=10$ N/m, $p=25$ MPa")
 
 ax.set_xlim([0, 50])
 ax.set_ylim([0, 0.8])
-ax.set_xlabel("Time ($\mu$s)")
+ax.set_xlabel("Time ($\\mu$s)")
 ax.set_ylabel("Normalized crack velocity $v/c_R$")
 ax.legend()
 # %%
