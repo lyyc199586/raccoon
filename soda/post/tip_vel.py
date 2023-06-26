@@ -55,7 +55,7 @@ plot_df(dfs[3], w, cR, colors[3], label="$G_c=10$ N/m, $p=25$ MPa")
 
 ax.set_xlim([0, 50])
 ax.set_ylim([0, 0.8])
-ax.set_xlabel("Time ($\mu$s)")
+ax.set_xlabel("Time ($\\mu$s)")
 ax.set_ylabel("Normalized crack velocity $v/c_R$")
 ax.legend()
 # %%
