@@ -5,7 +5,8 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
-Gc = 8.89e-3 # N/mm -> 3 J/m^2
+# Gc = 8.89e-3 # N/mm -> 3 J/m^2
+Gc = 9e-3
 # Gc = 9.5e-3
 # Gc = 8.7e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
@@ -18,7 +19,7 @@ p = 20
 refine = 6 # h=1, h_ref=0.015625=1/2^6
 
 l = 0.25
-delta = 0
+delta = -0.625
 
 # putty
 E_p = 1.7
@@ -157,35 +158,39 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [d_dist]
+  []
+  [tip_dist]
+  []
 []
 
 [Kernels]
-  # [solid_x]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_x
-  #   component = 0
-  #   save_in = fx
-  # []
-  # [solid_y]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_y
-  #   component = 1
-  #   save_in = fy
-  # []
   [solid_x]
-    type = ADDynamicStressDivergenceTensors
+    type = ADStressDivergenceTensors
     variable = disp_x
     component = 0
-    alpha = 0.11
     save_in = fx
   []
   [solid_y]
-    type = ADDynamicStressDivergenceTensors
+    type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
-    alpha = 0.11
     save_in = fy
   []
+  # [solid_x]
+  #   type = ADDynamicStressDivergenceTensors
+  #   variable = disp_x
+  #   component = 0
+  #   alpha = 0.11
+  #   save_in = fx
+  # []
+  # [solid_y]
+  #   type = ADDynamicStressDivergenceTensors
+  #   variable = disp_y
+  #   component = 1
+  #   alpha = 0.11
+  #   save_in = fy
+  # []
   [inertia_x]
     type = InertialForce
     variable = disp_x
@@ -251,6 +256,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     variable = vel_y
     acceleration = accel_y
     execute_on = timestep_end
+  []
+  [d_dist]
+    type = ParsedAux
+    variable = d_dist
+    coupled_variables = d
+    expression = 'if(d > d_cr & y > 0, sqrt((x - 27)^2 + y^2), -1)'
+    use_xyzt = true
+    constant_names = d_cr
+    constant_expressions = 0.95
   []
 []
 
