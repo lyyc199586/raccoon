@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage import uniform_filter1d
 
-def plot_df(df, window_size, cR, color, label=''):
+def plot_df(df, w, cR, color, label=''):
     t = df["time"]*1e6 # to us
     v = df["tip_velocity"]
     y = df["tip_y"]
     t0 = t.loc[df[v > 0].index[0]] # crack initiation time
-    t1 = t.loc[df[y > 0.25].index[0]] # branch start time
-    t2 = t.loc[df[y > 0.5].index[0]] # branch end time
+    t1 = t.loc[df[y > 0.5].index[0]] # branch start time
+    t2 = t.loc[df[y > 1].index[0]] # branch end time
     ax.plot(t - t0, uniform_filter1d(v, w)/cR, color=color, label=label)
     ax.axvspan(t1 - t0, t2 - t0, facecolor=color, alpha=0.1)
 
