@@ -6,18 +6,24 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 # Gc = 8.89e-3 # N/mm -> 3 J/m^2
-Gc = 9e-3
-# Gc = 10e-3
+Gc = 8.5e-3
+# Gc = 9e-3
+# Gc = 15e-3
+# Gc = 9.5e-3
+# Gc = 8.7e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 25
+p = 20
 
-refine = 6 # h=1, h_ref=0.015625
+# l = 0.075
+# delta = -0.2 # haven't tested
+refine = 6 # h=1, h_ref=0.015625=1/2^6
 
 l = 0.25
-delta = -0.625
-# delta = -0.55
+# delta = -0.625
+delta = -0.65
+# delta = 0
 
 # putty
 E_p = 1.7
@@ -58,36 +64,22 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     x = '0 15e-6 60e-6 75e-6 80e-6'
     y = '0 ${p} ${p} 0 0'
   []
-  # [n_factor]
-  #   type = ADParsedFunction
-  #   expression = 'cos(39.29/180*pi)'
-  # []
-  # [t_factor_x] # tangential force factor
-  #   type = ADParsedFunction
-  #   expression = 'sin(39.29/180*pi)*cos(20/180*pi)'
-  # []
-  # [t_factor_y]
-  #   type = ADParsedFunction
-  #   expression = 'sin(39.29/180*pi)*sin(20/180*pi)'
-  # []
-  # [t_func_x]
-  #   type = CompositeFunction
-  #   functions = 'p_func t_factor_x'
-  # []
-  # [t_func_y_top]
-  #   type = CompositeFunction
-  #   functions = 'p_func t_factor_y'
-  #   scale_factor = -1
-  # []
-  # [t_func_y_bottom]
-  #   type = CompositeFunction
-  #   functions = 'p_func t_factor_y'
-  #   scale_factor = 1
-  # []
-  # [n_func]
-  #   type = CompositeFunction
-  #   functions = 'p_func n_factor'
-  # []
+  [t_factor_x]
+    type = ADParsedFunction
+    expression = 'sin(20/180*pi) + 0.35*cos(20/180*pi)'
+  []
+  [t_factor_y]
+    type = ADParsedFunction
+    expression = 'cos(20/180/pi) - 0.35*sin(20/180*pi)'
+  []
+  [t_func_x]
+    type = CompositeFunction
+    functions = 'p_func t_factor_x'
+  []
+  [t_func_y]
+    type = CompositeFunction
+    functions = 'p_func t_factor_y'
+  []
 []
 
 [GlobalParams]
@@ -95,15 +87,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   use_displaced_mesh = false # small strain
   # beta = 0.25
   # gamma = 0.5
+  # eta = 19.63
   gamma = '${fparse 5/6}'
   beta = '${fparse 4/9}'
-  # eta = 19.63
 []
 
 [Mesh]
   [gen]
     type = FileMeshGenerator
-    file = '../mesh/full.msh'
+    file = '../mesh/half.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
@@ -112,25 +104,18 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     block_id = 1
     block_name = top_layer
   []
-  [bottomlayer]
-    type = ParsedSubdomainMeshGenerator
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
     input = toplayer
-    combinatorial_geometry = 'y < -74'
-    block_id = 2
-    block_name = bottom_layer
+    new_boundary = noncrack
+    bottom_left = '26.9 0 0'
+    top_right = '100.1 0 0'
   []
   [vpartialtop]
     type = ParsedGenerateSideset
-    input = bottomlayer
-    included_boundaries = 'v-entire-top'
-    new_sideset_name = 'v-load-top'
-    combinatorial_geometry = 'x < 13.6'
-  []
-  [vpartialbottom]
-    type = ParsedGenerateSideset
-    input = vpartialtop
-    included_boundaries = 'v-entire-bottom'
-    new_sideset_name = 'v-load-bottom'
+    input = noncrack
+    included_boundaries = 'v-partial'
+    new_sideset_name = 'v-load'
     combinatorial_geometry = 'x < 13.6'
   []
   construct_side_list_from_node_list = true
@@ -145,11 +130,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      refine = 0.0001
+      refine = 0.001
     []
     [initial_tip]
       type = BoxMarker
-      bottom_left = '26 -1 0'
+      bottom_left = '26 0 0'
       top_right = '28 1 0'
       outside = DO_NOTHING
       inside = REFINE
@@ -183,8 +168,6 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     #   function = 'if(y=0&x>=19&x<=27,1,0)'
     # []
   []
-  [d_dist]
-  []
   [accel_x]
   []
   [accel_y]
@@ -197,37 +180,39 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [d_dist]
+  []
+  # [tip_dist]
+  # []
 []
 
 [Kernels]
-  # [solid_x]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_x
-  #   component = 0
-  #   save_in = fx
-  # []
-  # [solid_y]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_y
-  #   component = 1
-  #   save_in = fy
-  # []
   [solid_x]
-    # type = ADDynamicStressDivergenceTensors
     type = ADStressDivergenceTensors
     variable = disp_x
     component = 0
-    # alpha = 0.11
     save_in = fx
   []
   [solid_y]
-    # type = ADDynamicStressDivergenceTensors
-    type =  ADStressDivergenceTensors
+    type = ADStressDivergenceTensors
     variable = disp_y
     component = 1
-    # alpha = 0.11
     save_in = fy
   []
+  # [solid_x]
+  #   type = ADDynamicStressDivergenceTensors
+  #   variable = disp_x
+  #   component = 0
+  #   alpha = 0.11
+  #   save_in = fx
+  # []
+  # [solid_y]
+  #   type = ADDynamicStressDivergenceTensors
+  #   variable = disp_y
+  #   component = 1
+  #   alpha = 0.11
+  #   save_in = fy
+  # []
   [inertia_x]
     type = InertialForce
     variable = disp_x
@@ -310,61 +295,51 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [fix_top_x]
     type = DirichletBC
     variable = disp_x
-    boundary = 'top bottom'
+    boundary = top
     value = 0
   []
   [fix_top_y]
     type = DirichletBC
     variable = disp_y
-    boundary = 'top bottom'
+    boundary = top
     value = 0
   []
-  # [fix_center_y]
-  #   type = DirichletBC
-  #   variable = disp_y
-  #   boundary = noncrack
-  #   value = 0
-  # []
-  [pressue_x]
-    type = ADPressure
-    # component = 0
-    variable = disp_x
-    displacements = 'disp_x disp_y'
-    # boundary = 'v-entire-top v-entire-bottom'
-    boundary = 'v-load-top v-load-bottom'
-    function = p_func
-    # function = n_func
-  []
-  [pressue_y]
-    type = ADPressure
-    # component = 1
+  [fix_center_y]
+    type = DirichletBC
     variable = disp_y
-    displacements = 'disp_x disp_y'
-    boundary = 'v-load-top v-load-bottom'
-    function = p_func
-    # function = n_func
+    boundary = noncrack
+    value = 0
   []
-  # [tangential_x]
-  #   type =  ADFunctionNeumannBC
+  # [pressue_x]
+  #   type = ADPressure
+  #   # component = 0
   #   variable = disp_x
   #   displacements = 'disp_x disp_y'
-  #   boundary = 'v-load-top v-load-bottom'
-  #   function = t_func_x
+  #   boundary = 'v-load'
+  #   function = p_func
   # []
-  # [tangential_y_top]
-  #   type =  ADFunctionNeumannBC
+  # [pressue_y]
+  #   type = ADPressure
+  #   # component = 1
   #   variable = disp_y
   #   displacements = 'disp_x disp_y'
-  #   boundary = 'v-load-top'
-  #   function = t_func_y_top
+  #   boundary = 'v-load'
+  #   function = p_func
   # []
-  # [tangential_y_bottom]
-  #   type =  ADFunctionNeumannBC
-  #   variable = disp_y
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'v-load-bottom'
-  #   function = t_func_y_bottom
-  # []
+  [mix_x]
+    type = ADFunctionNeumannBC
+    variable = disp_x
+    displacements = 'disp_x disp_y'
+    boundary = 'v-load'
+    function = t_func_x
+  []
+  [mix_y]
+    type = ADFunctionNeumannBC
+    variable = disp_y
+    displacements = 'disp_x disp_y'
+    boundary = 'v-load'
+    function = t_func_y
+  []
 []
 
 [Materials]
@@ -429,32 +404,49 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = ADComputeIsotropicElasticityTensor
     bulk_modulus = ${K_p}
     shear_modulus = ${G_p}
-    block = '1 2'
+    block = 1
   []
   [density_putty]
     type = GenericConstantMaterial
     prop_names = 'density_p'
     prop_values = '${rho_p}'
-    block = '1 2'
+    block = 1
   []
   [stress_putty]
     type = ADComputeLinearElasticStress
-    block = '1 2'
+    block = 1
   []
   [strain_putty]
+    # type = ADComputeSmallStrain
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
-    block = '1 2'
+    block = 1
   []
 []
 
 [Postprocessors]
-  [Fy_top]
+  [Fy]
     type = NodalSum
     variable = fy
-    boundary = v-load-top
+    boundary = v-load
     outputs = pp
   []
+  [Fx]
+    type = NodalSum
+    variable = fx
+    boundary = v-load
+    outputs = pp
+  []
+  # [disp_x]
+  #   type = PointValue
+  #   point = '0 8.493 0'
+  #   variable = disp_x
+  # []
+  # [open_disp_y]
+  #   type = PointValue
+  #   point = '0 8.493 0'
+  #   variable = disp_y
+  # []
   [max_d]
     type = NodalExtremeValue
     variable = d
@@ -467,7 +459,14 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     value_type = max
     outputs = pp
   []
-  # crack_tip tracking
+  # [Jint]
+  #   type = PhaseFieldJIntegral
+  #   J_direction = '1 0 0'
+  #   strain_energy_density = psie
+  #   displacements = 'disp_x disp_y'
+  #   boundary = 'left bottom right top' # ? need to define in mesh?
+  # []
+  # crack tip tracking
   [tip_x]
     type = PDCrackTipTracker
     variable = d_dist
@@ -527,8 +526,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
 
   dt = 5e-8 # 0.05 us
   dtmin = 5e-9
@@ -547,10 +546,10 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 
   [TimeIntegrator]
     type = NewmarkBeta
-    gamma = '${fparse 5/6}'
-    beta = '${fparse 4/9}'
-    # gamma = 0.5
-    # beta = 0.25
+    # gamma = '${fparse 5/6}'
+    # beta = '${fparse 4/9}'
+    gamma = 0.5
+    beta = 0.25
   []
 []
 
@@ -560,14 +559,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  file_base = '../out/plane_stress_full_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/plane_stress_full_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = '../out/half_tan_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = '../out/hht_half_test'
   interval = 1
   [pp]
     type = CSV
-    file_base = '../csv/pp_plane_stress_full_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    file_base = '../csv/pp_half_tan_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   []
   [tip]
     type = CSV
-    file_base = '../gold/plane_stress_full_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    file_base = '../gold/tip_half_tan_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   []
 []

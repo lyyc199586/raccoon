@@ -6,20 +6,22 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 # Gc = 8.89e-3 # N/mm -> 3 J/m^2
-Gc = 9e-3
+# Gc = 9e-3
+Gc = 15e-3
 # Gc = 9.5e-3
 # Gc = 8.7e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 20
+p = 30
 
 # l = 0.075
 # delta = -0.2 # haven't tested
 refine = 6 # h=1, h_ref=0.015625=1/2^6
 
 l = 0.25
-delta = -0.625
+# delta = -0.625
+delta = 0
 
 # putty
 E_p = 1.7
@@ -48,8 +50,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [to_psie_active]
     type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
+    variable = 'disp_x disp_y strain_zz psie_active'
+    source_variable = 'disp_x disp_y strain_zz psie_active'
     from_blocks = 0
   []
 []
@@ -65,9 +67,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 [GlobalParams]
   displacements = 'disp_x disp_y'
   use_displaced_mesh = false # small strain
-  beta = 0.25
-  gamma = 0.5
-  eta = 19.63
+  # beta = 0.25
+  # gamma = 0.5
+  # eta = 19.63
+  gamma = '${fparse 5/6}'
+  beta = '${fparse 4/9}'
 []
 
 [Mesh]
@@ -94,7 +98,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     input = noncrack
     included_boundaries = 'v-partial'
     new_sideset_name = 'v-load'
-    combinatorial_geometry = 'x < 13.5'
+    combinatorial_geometry = 'x < 13.6'
   []
   construct_side_list_from_node_list = true
 []
@@ -129,10 +133,10 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
   []
-  # [strain_zz]
-  #   initial_from_file_var = 'strain_zz' 
-  #   initial_from_file_timestep = LATEST
-  # []
+  [strain_zz]
+    # initial_from_file_var = 'strain_zz' 
+    # initial_from_file_timestep = LATEST
+  []
 []
 
 [AuxVariables]
@@ -160,8 +164,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   []
   [d_dist]
   []
-  [tip_dist]
-  []
+  # [tip_dist]
+  # []
 []
 
 [Kernels]
@@ -223,11 +227,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     velocity = vel_y
     acceleration = accel_y
   []
-  # [plane_stress]
-  #   type = ADWeakPlaneStress
-  #   variable = 'strain_zz'
-  #   displacements = 'disp_x disp_y'
-  # []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
 []
 
 [AuxKernels]
@@ -261,7 +265,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = ParsedAux
     variable = d_dist
     coupled_variables = d
-    expression = 'if(d > d_cr & y > 0, sqrt((x - 27)^2 + y^2), -1)'
+    # expression = 'if(d > d_cr & y > 0, sqrt((x - 27)^2 + y^2), -1)'
+    expression = 'if(d > d_cr & y > 0, x-27, -1)'
     use_xyzt = true
     constant_names = d_cr
     constant_expressions = 0.95
@@ -336,11 +341,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     block = 0
   []
   [strain]
-    # type = ADComputePlaneSmallStrain
-    type = ADComputeSmallStrain
-    # out_of_plane_strain = 'strain_zz'
+    type = ADComputePlaneSmallStrain
+    # type = ADComputeSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    output_properties = 'total_strain'
+    # output_properties = 'total_strain'
     block = 0
   []
   [elasticity]
@@ -380,7 +385,9 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     block = 1
   []
   [strain_putty]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
     block = 1
   []
 []
@@ -390,31 +397,35 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = NodalSum
     variable = fy
     boundary = v-partial
+    outputs = pp
   []
   [Fx]
     type = NodalSum
     variable = fx
     boundary = v-partial
+    outputs = pp
   []
   # [disp_x]
   #   type = PointValue
   #   point = '0 8.493 0'
   #   variable = disp_x
   # []
-  [open_disp_y]
-    type = PointValue
-    point = '0 8.493 0'
-    variable = disp_y
-  []
+  # [open_disp_y]
+  #   type = PointValue
+  #   point = '0 8.493 0'
+  #   variable = disp_y
+  # []
   [max_d]
     type = NodalExtremeValue
     variable = d
     value_type = max
+    outputs = pp
   []
   [max_f_nu]
     type = ElementExtremeValue
     variable = f_nu_var
     value_type = max
+    outputs = pp
   []
   # [Jint]
   #   type = PhaseFieldJIntegral
@@ -423,6 +434,56 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   #   displacements = 'disp_x disp_y'
   #   boundary = 'left bottom right top' # ? need to define in mesh?
   # []
+  # crack tip tracking
+  [tip_x]
+    type = PDCrackTipTracker
+    variable = d_dist
+    component = 0
+    initial_coord = 27
+    outputs = tip
+    execute_on = 'initial timestep_begin'
+  []
+  [tip_y]
+    type = PDCrackTipTracker
+    variable = d_dist
+    component = 1
+    initial_coord = 0
+    outputs = tip
+    execute_on = 'initial timestep_begin'
+  []
+  [tip_z]
+    type = PDCrackTipTracker
+    variable = d_dist
+    component = 2
+    initial_coord = 0
+    outputs = tip
+    execute_on = TIMESTEP_END
+  []
+  [dx]
+    type = ChangeOverTimePostprocessor
+    postprocessor = tip_x
+    outputs = none
+  []
+  [dy]
+    type = ChangeOverTimePostprocessor
+    postprocessor = tip_y
+    outputs = none
+  []
+  [dz]
+    type = ChangeOverTimePostprocessor
+    postprocessor = tip_z
+    outputs = none
+  []
+  [dt]
+    type = TimestepSize
+    outputs = none
+  []
+  [tip_velocity]
+    type = ParsedPostprocessor
+    pp_names = 'dx dy dz dt'
+    function = 'sqrt(dx^2 + dy^2 + dz^2)/dt'
+    outputs = tip
+  []
 []
 
 [Executioner]
@@ -437,6 +498,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   # nl_abs_tol = 1e-8
 
   dt = 5e-8 # 0.05 us
+  dtmin = 5e-9
   end_time = 80e-6
 
   # restart
@@ -450,13 +512,13 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
 
-  # [TimeIntegrator]
-  #   type = NewmarkBeta
-  #   # gamma = '${fparse 5/6}'
-  #   # beta = '${fparse 4/9}'
-  #   gamma = 0.5
-  #   beta = 0.25
-  # []
+  [TimeIntegrator]
+    type = NewmarkBeta
+    gamma = '${fparse 5/6}'
+    beta = '${fparse 4/9}'
+    # gamma = 0.5
+    # beta = 0.25
+  []
 []
 
 [Outputs]
@@ -465,10 +527,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  file_base = '../out/hht_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = '../out/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   # file_base = '../out/hht_half_test'
   interval = 1
-  [csv]
+  [pp]
     type = CSV
+    file_base = '../csv/pp_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  []
+  [tip]
+    type = CSV
+    file_base = '../gold/tip_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   []
 []
