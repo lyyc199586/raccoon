@@ -72,10 +72,11 @@
     # initial_from_file_timestep = LATEST
     block = 0
   []
-  # [strain_zz]
-  #   initial_from_file_var = 'strain_zz' 
-  #   initial_from_file_timestep = LATEST
-  # []
+  [strain_zz]
+    # initial_from_file_var = 'strain_zz' 
+    # initial_from_file_timestep = LATEST
+    block = 0
+  []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
     # initial_from_file_timestep = LATEST
@@ -204,9 +205,9 @@
     block = 0
   []
   [strain]
-    type = ADComputeSmallStrain
-    # type = ADComputePlaneSmallStrain
-    # out_of_plane_strain = 'strain_zz'
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     block = 0
   []
@@ -240,12 +241,12 @@
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
-  # line_search = bt
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
+  line_search = none
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
-  nl_abs_tol = 1e-6
+  # nl_abs_tol = 1e-6
 
   # restart
   # start_time = 80e-6
