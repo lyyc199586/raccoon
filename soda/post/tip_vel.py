@@ -59,24 +59,22 @@ plot_exp_vel(ax, facecolor='grey', alpha=0.6, label="Experiment")
 
 
 # simulation
-# df1 = pd.read_csv("../gold/pp_half_tan_p25_gc9e-3_ts30_cs330_l0.25_delta-0.625.csv")
 df1 = pd.read_csv("../gold/tip_half_tan_p25_gc9e-3_ts30_cs330_l0.25_delta-0.625.csv")
-# df2 = pd.read_csv("../gold/tip_full_p25_gc9e-3_ts30_cs330_l0.25_delta-0.625.csv")
-# df3 = pd.read_csv("../gold/tip_full_p20_gc10e-3_ts30_cs330_l0.25_delta-0.55.csv")
-# df4 = pd.read_csv("../gold/tip_full_p25_gc10e-3_ts30_cs330_l0.25_delta-0.55.csv")
+df2 = pd.read_csv("../gold/tip_half_tan_p25_gc10e-3_ts30_cs330_l0.25_delta-0.55.csv")
+df3 = pd.read_csv("../gold/tip_half_p25_gc9e-3_ts30_cs330_l0.25_delta-0.625.csv")
+df4 = pd.read_csv("../gold/tip_half_p25_gc10e-3_ts30_cs330_l0.25_delta-0.55.csv")
 
 w = 10
 gc = 9.5e-3
 cr = 3.2e6
-# ax.plot(df1["time"]*1e6 - 15.45, uniform_filter1d(df1["tip_velocity"], w)/3.2e6, label='$G_c=9$ N/m, $p=20$ MPa')
-# ax.plot(df2["time"]*1e6 - 14, uniform_filter1d(df2["tip_velocity"], w)/3.2e6, label='$G_c=9$ N/m, $p=25$ MPa')
-# ax.plot(df3["time"]*1e6 - 15.7, uniform_filter1d(df3["tip_velocity"], w)/3.2e6, label='$G_c=10$ N/m, $p=20$ MPa')
-# ax.plot(df4["time"]*1e6 - 14.15, uniform_filter1d(df4["tip_velocity"], w)/3.2e6, label='$G_c=10$ N/m, $p=25$ MPa')
 # colors = ax._get_lines.color_cycle
 colors = ['#c1272d', '#0000a7', '#eecc16', '#008176', "#b3b3b3"]
-# dfs = [df1, df2, df3, df4]
-dfs = [df1]
-plot_tip_vel(ax, dfs[0], w, cr, colors[0], label="$\mathcal{G}_c=9.5$ N/m, $p=25$ MPa")
+dfs = [df1, df2, df3, df4]
+# dfs = [df1]
+plot_tip_vel(ax, dfs[0], w, cr, colors[0], label="$\mathcal{G}_c=9$ N/m, with friction")
+plot_tip_vel(ax, dfs[1], w, cr, colors[1], label="$\mathcal{G}_c=10$ N/m, with friction")
+plot_tip_vel(ax, dfs[2], w, cr, colors[2], label="$\mathcal{G}_c=9$ N/m, w/o friction")
+plot_tip_vel(ax, dfs[3], w, cr, colors[3], label="$\mathcal{G}_c=10$ N/m, w/o friction")
 # plot_energy_vel(ax, dfs[0], gc, cr, label='Simulation')
 # plot_df(dfs[1], w, cR, colors[1], label="$G_c=9$ N/m, $p=25$ MPa")
 # plot_df(dfs[2], w, cR, colors[2], label="$G_c=10$ N/m, $p=20$ MPa")
@@ -84,11 +82,11 @@ plot_tip_vel(ax, dfs[0], w, cr, colors[0], label="$\mathcal{G}_c=9.5$ N/m, $p=25
 
 
 ax.set_xlim([0, 80])
-ax.set_ylim([0, 1.2])
+ax.set_ylim([0, 1])
 ax.set_xlabel("Time ($\\mu$s)")
 ax.set_ylabel("Normalized crack velocity $v/c_R$")
 ax.legend()
 # %%
 
-fig.savefig('tip_vel_w10.png')
+fig.savefig('./figures/tip_vel_w10.png')
 # %%
