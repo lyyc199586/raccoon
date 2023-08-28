@@ -1,19 +1,51 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/disc_r25_h1.msh'
+    file = '../mesh/disc_r25_h1.msh'
   []
-  [left_bnd]
+  [left_arc]
     type = ParsedGenerateSideset
     combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x < -${r}*cos(${a}/180*3.14)'
-    new_sideset_name = 'left_bnd'
+    new_sideset_name = 'left_arc'
     input = fmg
   []
-  [right_bnd]
+  [right_arc]
     type = ParsedGenerateSideset
     combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x > ${r}*cos(${a}/180*3.14)'
-    new_sideset_name = 'right_bnd'
-    input = left_bnd
+    new_sideset_name = 'right_arc'
+    input = left_arc
+  []
+[]
+
+[Adaptivity]
+  initial_marker = initial_marker
+  initial_steps = ${refine}
+  # marker = damage_marker
+  max_h_level = ${refine}
+  [Markers]
+    # [damage_marker]
+    #   type = ValueRangeMarker
+    #   variable = d
+    #   lower_bound = 0.0001
+    #   upper_bound = 1
+    # []
+    # [strength_marker]
+    #   type = ValueRangeMarker
+    #   variable = f_nu_var
+    #   lower_bound = -1e-2
+    #   upper_bound = 1e-2
+    # []
+    # [combo_marker]
+    #   type = ComboMarker
+    #   markers = 'damage_marker combo_marker'
+    # []
+    [initial_marker]
+      type = BoxMarker
+      bottom_left = '-${r} -8 0'
+      top_right = '${r} 8 0'
+      outside = DO_NOTHING
+      inside = REFINE
+    []
   []
 []
 
@@ -54,7 +86,8 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    bound_value = 1
+    # bound_value = 1
+    bound_value = 0 # no damage
   []
 []
 
@@ -98,13 +131,19 @@
     function = 'd'
     phase_field = d
   []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   f_name = g
+  #   function = (1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 1e-5'
+  # []
+  [nodegradation] # elastic test
+    type = NoDegradation
+    f_name = g 
+    function = 1
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -156,6 +195,8 @@
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
   line_search = none
@@ -163,7 +204,6 @@
   nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
-  # nl_abs_tol = 1e-6
 
   # restart
   # start_time = 80e-6

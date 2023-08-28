@@ -13,21 +13,24 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 # nucleation model
-l = 1
-delta = 0
+l = 2.5
+delta = 5
 
 # model parameter
 r = 25
 a = 10 # load arc angle (deg)
-p = 1000
-t0 = 50e-6 # ramp time
+p = 300
+t0 = 100e-6 # ramp time
 tf = 200e-6
+
+# adaptivity
+refine = 2 # h_fine = 1/2^3 = 0.125
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -73,10 +76,43 @@ tf = 200e-6
   []
 []
 
+[Adaptivity]
+  initial_marker = initial_marker
+  initial_steps = ${refine}
+  # marker = damage_marker
+  max_h_level = ${refine}
+  [Markers]
+    # [damage_marker]
+    #   type = ValueRangeMarker
+    #   variable = d
+    #   lower_bound = 0.0001
+    #   upper_bound = 1
+    # []
+    # [strength_marker]
+    #   type = ValueRangeMarker
+    #   variable = f_nu_var
+    #   lower_bound = -1e-2
+    #   upper_bound = 1e-2
+    # []
+    # [combo_marker]
+    #   type = ComboMarker
+    #   markers = 'damage_marker combo_marker'
+    # []
+    [initial_marker]
+      type = BoxMarker
+      bottom_left = '-${r} -8 0'
+      top_right = '${r} 8 0'
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
+
 [Functions]
   [load]
     type = ADParsedFunction
-    expression = 'if(t<t0, p*sin(pi*t/2/t0), p)'
+    # expression = 'if(t<t0, p*sin(pi*t/2/t0), p)'
+    expression = 'p*sin(pi*t/2/t0)'
     symbol_names = 'p t0'
     symbol_values = '${p} ${t0}'
   []
@@ -207,20 +243,20 @@ tf = 200e-6
     ad_props_in = 'density'
     reg_props_out = 'reg_density'
   []
-  [nodegradation] # elastic test
-    type = NoDegradation
-    f_name = g 
-    function = 1
-    phase_field = d
-  []
-  # [degradation]
-  #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
+  # [nodegradation] # elastic test
+  #   type = NoDegradation
+  #   f_name = g 
+  #   function = 1
   #   phase_field = d
-  #   parameter_names = 'p eta '
-  #   parameter_values = '2 1e-5'
   # []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
+  []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -264,43 +300,64 @@ tf = 200e-6
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
+  petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
   automatic_scaling = true
 
+  line_search = none
+
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
 
   # dt = 5e-8 # 0.05 us
-  dt = 1e-6
-  dtmin = 5e-9
+  # dt = 1e-6
+  # dtmin = 5e-9
   end_time = ${tf}
 
 
   fixed_point_max_its = 50
+  # fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = true
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
 
   [TimeIntegrator]
     type = NewmarkBeta
     gamma = 0.5
     beta = 0.25
   []
+
+  # [TimeStepper]
+  #   type = IterationAdaptiveDT
+  #   optimal_iterations = 10
+  #   dt = 1e-6
+  #   growth_factor = 2
+  # []
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<5.8e-5, 1e-6, 1e-7)'
+  []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 1
+    minimum_time_interval = 1e-6
   []
+  minimum_time_interval = 1e-6
   print_linear_residuals = false
-  file_base = './out/brz_elastic_p${p}_t0${t0}'
+  # file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}'
+  file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}_it50a/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}'
   interval = 1
+  checkpoint = true
   [pp]
     type = CSV
-    file_base = './csv/pp_brz_elastic_p${p}_t0${t0}'
+    file_base = './csv/pp_brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}'
   []
 []

@@ -45,13 +45,13 @@
 
 # E = 32e3 # 32 GPa
 # nu = 0.2
-# rho = 2.54e-9 # Mg/mm^3
+# # rho = 2.54e-9 # Mg/mm^3
 # Gc = 0.003
 # sigma_ts = 3.08 # MPa
-# sigma_cs = 30.8
+# sigma_cs = 9.24
 # # psic = '${fparse sigma_ts^2/2/E}'
-# l = 2 # L = 1.25mm, l_ch = 11 mm
-# delta = 4.75
+# l = 1.5 # L = 1.25mm, l_ch = 11 mm
+# delta = 3
 
 # quasi-static branching
 # E = 20e3
@@ -78,15 +78,25 @@
 # delta = 12
 
 # soda-lime glass
-E = 72e3
-nu = 0.25
-Gc = 9e-3
-sigma_ts = 30
-sigma_cs = 330
+# E = 72e3
+# nu = 0.25
+# Gc = 9e-3
+# sigma_ts = 30
+# sigma_cs = 330
 
-l = 0.25
-delta = 0
+# l = 0.25
+# delta = 0
 
+# basalt
+E = 20.11e3
+nu = 0.24
+Gc = 0.1
+sigma_ts = 11.31
+sigma_cs = 159.08
+
+# nucleation model
+l = 1
+delta = 30
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -96,22 +106,22 @@ c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
 # shape and scale
-# a = 10 # crack length
-a = 5
+a = 10 # crack length
+# a = 5
 h = 0.25 # coase mesh size
 length = '${fparse 6*a}'
 width = '${fparse 2*a}'
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
 # refine = 3 # fine mesh size: 0.025
-refine = 4 # fine mesh size: 0.015625
+refine = 1 # fine mesh size: 0.015625
 
 [Functions]
   [bc_func]
     type = ParsedFunction
-    value = c1*((x-20*t)^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-20*t))))*sin(0.5*atan2(y,(x-20*t)))
-    vars = 'c1 c2'
-    vals = '${c1} ${c2}'
+    expression = c1*((x-20*t)^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-20*t))))*sin(0.5*atan2(y,(x-20*t)))
+    symbol_names = 'c1 c2'
+    symbol_values = '${c1} ${c2}'
   []
 []
 
@@ -127,15 +137,13 @@ refine = 4 # fine mesh size: 0.015625
 [Transfers]
   [from_d]
     type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = from_multiapp
+    from_multi_app = fracture
     variable = 'd f_nu_var'
     source_variable = 'd f_nu_var'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
-    multi_app = fracture
-    direction = to_multiapp
+    to_multi_app = fracture
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
   []
@@ -327,10 +335,10 @@ refine = 4 # fine mesh size: 0.015625
   nl_abs_tol = 1e-10
 
   start_time = 0
-  end_time = 5e-1 # for a = 5
-  dt = 1e-3
-  # end_time = 1 # for a = 10
+  # end_time = 5e-1 # for a = 5
   # dt = 1e-3
+  end_time = 1 # for a = 10
+  dt = 1e-3
 
   # fast
   # fixed_point_max_its = 20
@@ -351,10 +359,10 @@ refine = 4 # fine mesh size: 0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/soda_gc${Gc}_l${l}_delta${delta}/soda_gc${Gc}_l${l}_delta${delta}'
+  file_base = './out/basalt_gc${Gc}_l${l}_delta${delta}/basalt_gc${Gc}_l${l}_delta${delta}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/soda_gc${Gc}_l${l}_delta${delta}'
+    file_base = './gold/basalt_gc${Gc}_l${l}_delta${delta}'
   []
 []

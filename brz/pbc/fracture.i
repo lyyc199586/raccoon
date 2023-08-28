@@ -1,30 +1,48 @@
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = ${nx}
-    ny = ${ny}
-    xmax = ${length}
-    ymin = ${fparse -1*a}
-    ymax = ${a}
+  [fmg]
+    type = FileMeshGenerator
+    file = './mesh/disc_r25_h1.msh'
+  []
+  [left_bnd]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x < -${r}*cos(${a}/180*3.14)'
+    new_sideset_name = 'left_bnd'
+    input = fmg
+  []
+  [right_bnd]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x > ${r}*cos(${a}/180*3.14)'
+    new_sideset_name = 'right_bnd'
+    input = left_bnd
   []
 []
 
 [Adaptivity]
-  initial_marker = initial_tip
+  initial_marker = initial_marker
   initial_steps = ${refine}
-  marker = damage_marker
+  # marker = damage_marker
   max_h_level = ${refine}
   [Markers]
-    [damage_marker]
-      type = ValueThresholdMarker
-      variable = d
-      refine = 0.0001
-    []
-    [initial_tip]
+    # [damage_marker]
+    #   type = ValueRangeMarker
+    #   variable = d
+    #   lower_bound = 0.0001
+    #   upper_bound = 1
+    # []
+    # [strength_marker]
+    #   type = ValueRangeMarker
+    #   variable = f_nu_var
+    #   lower_bound = -1e-2
+    #   upper_bound = 1e-2
+    # []
+    # [combo_marker]
+    #   type = ComboMarker
+    #   markers = 'damage_marker combo_marker'
+    # []
+    [initial_marker]
       type = BoxMarker
-      bottom_left = '0 -${fparse 2*l} 0'
-      top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
+      bottom_left = '-${r} -8 0'
+      top_right = '${r} 8 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -33,10 +51,6 @@
 
 [Variables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=0&x<=${a},1,0)'
-    []
   []
 []
 
@@ -62,8 +76,8 @@
 [Bounds]
   [conditional]
     type = ConditionalBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
+    variable = 'bounds_dummy'
+    bounded_variable = 'd'
     fixed_bound_value = 0
     threshold_value = 0.95
   []
@@ -107,16 +121,8 @@
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 0'
+    prop_names = 'E K G lambda Gc l sigma_ts sigma_cs delta'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_cs} ${delta}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -124,6 +130,20 @@
     function = 'd'
     phase_field = d
   []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
+  []
+  # [nodegradation] # elastic test
+  #   type = NoDegradation
+  #   f_name = g 
+  #   function = 1
+  #   phase_field = d
+  # []
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
@@ -132,25 +152,14 @@
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
-  # [kumar_material]
-  #   type = NucleationMicroForce
-  #   normalization_constant = c0
-  #   tensile_strength = '${sigma_ts}'
-  #   compressive_strength = '${sigma_cs}'
-  #   delta = '${delta}'
-  #   external_driving_force_name = ce
-  #   output_properties = 'ce'
-  #   #outputs = exodus
-  # []
   [kumar_material]
     type = KLRNucleationMicroForce
     phase_field = d
-    # if_stress_intact = false
     stress_name = stress
     normalization_constant = c0
-    tensile_strength = '${sigma_ts}'
-    compressive_strength = '${sigma_cs}'
-    delta = '${delta}'
+    tensile_strength = sigma_ts
+    compressive_strength = sigma_cs
+    delta = delta
     external_driving_force_name = ce
     stress_balance_name = f_nu
     # output_properties = 'ce f_nu'
@@ -168,6 +177,7 @@
     phase_field = d
     degradation_function = g
     decomposition = NONE
+    # decomposition = VOLDEV
     # output_properties = 'psie'
     # outputs = exodus
   []
@@ -175,7 +185,6 @@
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    # outputs = exodus
   []
 []
 
@@ -183,23 +192,19 @@
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
+  line_search = none
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
 
-  # start_time = 0
-  # end_time = 5e-1 # for a = 5
-  # dt = 1e-3
-[]
-
-[Outputs]
-  #[exodus]
-  #  type = Exodus
-  #[]
-  print_linear_residuals = false
+  # restart
+  # start_time = 80e-6
+  # end_time = 120e-6
 []
