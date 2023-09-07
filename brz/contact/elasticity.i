@@ -1,4 +1,4 @@
-# 2D plane stress, dynamic simualtions of brazilian tests using mortar contact
+# 2D plane stress, dynamic simualtions of brazilian tests using contact
 
 # basalt properties (MPa, N, mm, s)
 E = 20.11e3
@@ -6,6 +6,7 @@ nu = 0.24
 Gc = 0.1
 sigma_ts = 11.31
 sigma_cs = 159.08
+# sigma_cs = ${fparse sigma_ts*100}
 rho = 2.74e-9
 
 # steel for platens
@@ -26,14 +27,29 @@ delta = 5
 
 # model parameter
 r = 25
-a = 10 # load arc angle (deg)
+a = 20 # load arc angle (deg)
 # p = 100
 u = 1 # max load disp
 t0 = 100e-6 # ramp time
 tf = 200e-6
+# gap = -0.0145
 
 # adaptivity
-refine = 2 # h_fine ~ 0.2 (0.2-0.25)
+# refine = 2 # h_fine ~ 0.2 (0.2-0.25)
+refine = 3 # h_fine ~ 0.1 (0.1-0.125)
+
+# hht parameters
+# hht_alpha = -0.25
+# beta = '${fparse (1-hht_alpha)^2/4}'
+# gamma = '${fparse 1/2-hht_alpha}'
+
+# newmark beta
+beta = 0.25
+gamma = 0.5
+
+# central difference
+# beta = 0
+# gamma = 0.5
 
 [MultiApps]
   [fracture]
@@ -64,8 +80,9 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
 [GlobalParams]
   displacements = 'disp_x disp_y'
   use_displaced_mesh = true
-  gamma = 0.5
-  beta = 0.25
+  alpha = ${hht_alpha}
+  gamma = ${gamma}
+  beta = ${beta}
 []
 
 [Mesh]
@@ -113,24 +130,22 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
   [left_contact]
     primary = left_platen_right
     secondary = left_arc 
-    # primary = left_arc
-    # secondary = left_platen_right
     model = frictionless
     # formulation = mortar
     formulation = penalty
-    penalty = 1e+08
+    penalty = 1e+8
     normalize_penalty = true
+    # secondary_gap_offset = gap
   []
   [right_contact]
     primary = right_platen_left
     secondary = right_arc
-    # primary = right_arc
-    # secondary = right_platen_left
     model = frictionless
     # formulation = mortar
     formulation = penalty
-    penalty = 1e+08
+    penalty = 1e+8
     normalize_penalty = true
+    # secondary_gap_offset = gap
   []
 []
 
@@ -160,8 +175,10 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
       type = BoxMarker
       bottom_left = '-${r} -8 0'
       top_right = '${r} 8 0'
-      outside = DO_NOTHING
-      inside = REFINE
+      # outside = DO_NOTHING
+      # inside = REFINE
+      outside = COARSEN
+      inside = DO_NOTHING
     []
   []
 []
@@ -242,9 +259,25 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
     order = CONSTANT
     family = MONOMIAL
   []
+  # [gap]
+  # []
 []
 
 [Kernels]
+  [solid_x]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    # alpha = 0.1
+    save_in = fx
+  []
+  [solid_y]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    # alpha = 0.1
+    save_in = fy
+  []
   [solid_x]
     type = ADStressDivergenceTensors
     variable = disp_x
@@ -260,20 +293,20 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
     block = '1 2 3'
   []
   [inertia_x]
-    type = InertialForce
+    type = ADInertialForce
     variable = disp_x
-    density = reg_density
+    density = density
     velocity = vel_x
     acceleration = accel_x
-    block = '1 2 3'
+    block = '1'
   []
   [inertia_y]
-    type = InertialForce
+    type = ADInertialForce
     variable = disp_y
-    density = reg_density
+    density = density
     velocity = vel_y
     acceleration = accel_y
-    block = '1 2 3'
+    block = '1'
   []
   [plane_stress]
     type = ADWeakPlaneStress
@@ -373,6 +406,12 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
     coupled_variables = 's1 s3'
     expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
   []
+  # [gap]
+  #   type = ConstantAux
+  #   variable = gap
+  #   value = ${gap}
+  #   boundary = 'left_arc right_arc'
+  # []
 []
 
 [BCs]
@@ -415,28 +454,24 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
     prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
     block = 'disc'
   []
-  [reg_density]
-    type = MaterialADConverter
-    ad_props_in = 'density'
-    reg_props_out = 'reg_density'
-    block = 'disc'
-  []
-  [nodegradation] # elastic test
-    type = NoDegradation
-    f_name = g 
-    function = 1
-    phase_field = d
-    block = 'disc'
-  []
-  # [degradation]
-  #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
+  # [nodegradation] # elastic test
+  #   type = NoDegradation
+  #   f_name = g 
+  #   function = 1
   #   phase_field = d
-  #   parameter_names = 'p eta '
-  #   parameter_values = '2 1e-5'
   #   block = 'disc'
   # []
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    # function = (1-d)^p*(1-eta)+eta
+    function = (1-d)^p+eta
+    phase_field = d
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
+    # parameter_values = '2 0'
+    block = 'disc'
+  []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -500,10 +535,10 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
     boundary = left_platen_right
     outputs = 'pp exodus'
   []
-  [Fx_left_platen_left]
+  [Fx_left_arc]
     type = NodalSum
     variable = fx
-    boundary = left_platen_left
+    boundary = left_arc
     outputs = 'pp exodus'
   []
   [impactor_disp]
@@ -533,7 +568,7 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
 
   # dt = 5e-8 # 0.05 us
   dt = 1e-6
-  dtmin = 5e-9
+  dtmin = 5e-8
   end_time = ${tf}
 
 
@@ -545,21 +580,9 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
 
-  [TimeIntegrator]
-    type = NewmarkBeta
-    gamma = 0.5
-    beta = 0.25
-  []
-
-  # [TimeStepper]
-  #   type = IterationAdaptiveDT
-  #   optimal_iterations = 10
-  #   dt = 1e-6
-  #   growth_factor = 2
-  # []
-  # [TimeStepper]
-  #   type = FunctionDT
-  #   function = 'if(t<5.8e-5, 1e-6, 1e-7)'
+  # [TimeIntegrator]
+  #   type = CentralDifference
+  #   solve_type = consistent
   # []
 []
 
@@ -570,14 +593,14 @@ refine = 2 # h_fine ~ 0.2 (0.2-0.25)
     interval = 1
   []
   print_linear_residuals = false
-  # file_base = './out/penalty_nuc22_u${u}_a${a}_l${l}_d${delta}/penalty_nuc22_u${u}_a${a}_l${l}_d${delta}'
-  file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
+  file_base = './out/penalty_nuc22_u${u}_a${a}_l${l}_d${delta}/penalty_nuc22_nb_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it50'
+  # file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    # file_base = './csv/pp_penalty_nuc22_u${u}_a${a}_l${l}_d${delta}'
-    file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
+    file_base = './csv/pp_penalty_nuc22_nb_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it50'
+    # file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   []
 []
 

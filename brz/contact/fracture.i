@@ -86,8 +86,8 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    # bound_value = 1
-    bound_value = 0 # no damage
+    bound_value = 1
+    # bound_value = 0 # no damage
   []
 []
 
@@ -131,20 +131,22 @@
     function = 'd'
     phase_field = d
   []
-  # [degradation]
-  #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
-  #   phase_field = d
-  #   parameter_names = 'p eta '
-  #   parameter_values = '2 1e-5'
-  # []
-  [nodegradation] # elastic test
-    type = NoDegradation
-    f_name = g 
-    function = 1
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    # function = (1-d)^p*(1-eta)+eta
+    function = (1-d)^p+eta
     phase_field = d
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
+    # parameter_values = '2 0'
   []
+  # [nodegradation] # elastic test
+  #   type = NoDegradation
+  #   f_name = g 
+  #   function = 1
+  #   phase_field = d
+  # []
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
