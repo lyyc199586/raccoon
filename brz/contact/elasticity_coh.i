@@ -6,7 +6,7 @@ nu = 0.24
 Gc = 0.1
 sigma_ts = 11.31
 # sigma_cs = 159.08
-sigma_cs = ${fparse sigma_ts*30}
+# sigma_cs = ${fparse sigma_ts*30}
 rho = 2.74e-9
 
 # steel for platens
@@ -17,19 +17,13 @@ rho_s = 8e-9
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
+psic = '${fparse sigma_ts^2/2/E}'
 
 K_s = '${fparse E_s/3/(1-2*nu_s)}'
 G_s = '${fparse E_s/2/(1+nu_s)}'
 
-# nuc2022
-# l = 3
-# delta = 5
-
-# nuc2020
+# cohesive model
 l = 3
-delta = 15
-# l = 1
-# delta = 25
 
 # model parameter
 r = 25
@@ -61,8 +55,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r};refine=${refine}'
+    input_files = fracture_coh.i
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};a=${a};r=${r};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -71,8 +65,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [from_d]
     type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
-    variable = 'd f_nu_var'
-    source_variable = 'd f_nu_var'
+    variable = 'd'
+    source_variable = 'd'
     to_blocks = 'disc'
   []
   [to_psie_active]
@@ -228,10 +222,6 @@ gamma = '${fparse 1/2-hht_alpha}'
   [vel_x]
   []
   [vel_y]
-  []
-  [f_nu_var]
-    order = CONSTANT
-    family = MONOMIAL
   []
   [penetration]
   []
@@ -458,8 +448,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   # disc
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda l Gc density'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
+    prop_names = 'E K G lambda l Gc density psic'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho} ${psic}'
     block = 'disc'
   []
   # [nodegradation] # elastic test
@@ -469,15 +459,31 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   phase_field = d
   #   block = 'disc'
   # []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    # function = (1-d)^p*(1-eta)+eta
-    function = (1-d)^p+eta
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   f_name = g
+  #   # function = (1-d)^p*(1-eta)+eta
+  #   function = (1-d)^p+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 1e-5'
+  #   # parameter_values = '2 0'
+  #   block = 'disc'
+  # []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
-    # parameter_values = '2 0'
+    block = 'disc'
+  []
+  [degradation]
+    type = RationalDegradationFunction
+    f_name = g
+    phase_field = d 
+    material_property_names = 'Gc psic xi c0 l'
+    parameter_names = 'p a2 a3 eta '
+    parameter_values = '2 1.0 0.0 1e-3'
     block = 'disc'
   []
   [strain]
@@ -493,7 +499,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = NONE
+    decomposition = SPECTRAL
     output_properties = 'psie_active'
     outputs = exodus
     block = 'disc'
@@ -606,14 +612,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/penalty_nuc20_u${u}_a${a}_l${l}_d${delta}/penalty_nuc20_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it300'
-  # file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
+  file_base = './out/penalty_coh_u${u}_a${a}_l${l}/penalty_coh_u${u}_a${a}_l${l}'
   interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './csv/pp_penalty_nuc20_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it300'
-    # file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
+    file_base = './csv/pp_penalty_coh_u${u}_a${a}_l${l}'
   []
 []
 
