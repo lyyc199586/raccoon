@@ -5,7 +5,8 @@ E = 20.11e3
 nu = 0.24
 Gc = 0.1
 sigma_ts = 11.31
-sigma_cs = 159.08
+# sigma_cs = 159.08
+sigma_cs = ${fparse sigma_ts*30}
 rho = 2.74e-9
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -387,12 +388,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   # minimum_time_interval = 1e-6
   print_linear_residuals = false
-  # file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}'
-  file_base = './out/hert_nuc22_u${u}_a${a}_l${l}_d${delta}_iref${refine}/hert_newmark_nuc22_u${u}_a${a}_l${l}_d${delta}_iref${refine}'
+  file_base = './out/brz_nuc22_u${u}_a${a}_l${l}_d${delta}_ref${refine}/brz_nuc22_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it50'
+  # file_base = './out/hert_nuc22_u${u}_a${a}_l${l}_d${delta}/hert_newmark_nuc22_u${u}_a${a}_l${l}_d${delta}_iref${refine}'
   interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './csv/pp_hert_newmark_nuc22_u${u}_a${a}_l${l}_d${delta}_iref${refine}'
+    file_base = './csv/pp_hert_newmark_nuc22_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it50'
   []
 []

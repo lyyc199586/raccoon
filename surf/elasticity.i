@@ -92,11 +92,14 @@ E = 20.11e3
 nu = 0.24
 Gc = 0.1
 sigma_ts = 11.31
-sigma_cs = 159.08
+# sigma_cs = 159.08
+sigma_cs = ${fparse sigma_ts*30}
 
 # nucleation model
-l = 1
-delta = 30
+# l = 2.5
+# delta = 5
+l = 3
+delta = 15
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -136,13 +139,15 @@ refine = 1 # fine mesh size: 0.015625
 
 [Transfers]
   [from_d]
-    type = MultiAppCopyTransfer
+    # type = MultiAppCopyTransfer
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
     variable = 'd f_nu_var'
     source_variable = 'd f_nu_var'
   []
   [to_psie_active]
-    type = MultiAppCopyTransfer
+    # type = MultiAppCopyTransfer
+    type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
@@ -359,10 +364,10 @@ refine = 1 # fine mesh size: 0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/basalt_gc${Gc}_l${l}_delta${delta}/basalt_gc${Gc}_l${l}_delta${delta}'
+  file_base = './out/basalt_nuc20_sratio${fparse int(sigma_cs/sigma_ts)}_gc${Gc}_l${l}_delta${delta}_h${fparse h/(2^refine)}/basalt_sratio${fparse int(sigma_cs/sigma_ts)}_gc${Gc}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/basalt_gc${Gc}_l${l}_delta${delta}'
+    file_base = './gold/basalt_nuc20_ratio${fparse int(sigma_cs/sigma_ts)}_gc${Gc}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   []
 []
