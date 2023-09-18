@@ -43,15 +43,15 @@
 
 # dynamic branching
 
-# E = 32e3 # 32 GPa
-# nu = 0.2
-# # rho = 2.54e-9 # Mg/mm^3
-# Gc = 0.003
-# sigma_ts = 3.08 # MPa
-# sigma_cs = 9.24
-# # psic = '${fparse sigma_ts^2/2/E}'
-# l = 1.5 # L = 1.25mm, l_ch = 11 mm
-# delta = 3
+E = 32e3 # 32 GPa
+nu = 0.2
+# rho = 2.54e-9 # Mg/mm^3
+Gc = 0.003
+sigma_ts = 3.08 # MPa
+sigma_cs = 9.24
+# psic = '${fparse sigma_ts^2/2/E}'
+l = 1.5 # L = 1.25mm, l_ch = 11 mm
+delta = 5
 
 # quasi-static branching
 # E = 20e3
@@ -88,18 +88,18 @@
 # delta = 0
 
 # basalt
-E = 20.11e3
-nu = 0.24
-Gc = 0.1
-sigma_ts = 11.31
-# sigma_cs = 159.08
-sigma_cs = ${fparse sigma_ts*30}
+# E = 20.11e3
+# nu = 0.24
+# Gc = 0.1
+# sigma_ts = 11.31
+# # sigma_cs = 159.08
+# sigma_cs = ${fparse sigma_ts*30}
 
 # nucleation model
 # l = 2.5
 # delta = 5
-l = 3
-delta = 15
+# l = 3
+# delta = 15
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -364,10 +364,10 @@ refine = 1 # fine mesh size: 0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/basalt_nuc20_sratio${fparse int(sigma_cs/sigma_ts)}_gc${Gc}_l${l}_delta${delta}_h${fparse h/(2^refine)}/basalt_sratio${fparse int(sigma_cs/sigma_ts)}_gc${Gc}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+  file_base = './out/basalt_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}/basalt_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/basalt_nuc20_ratio${fparse int(sigma_cs/sigma_ts)}_gc${Gc}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+    file_base = './gold/pmma_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   []
 []
