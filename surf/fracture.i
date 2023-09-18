@@ -142,7 +142,7 @@
   #   output_properties = 'ce'
   #   #outputs = exodus
   # []
-  [kumar_material]
+  [kumar_material] 
     # type = KLRNucleationMicroForce
     type = KLBFNucleationMicroForce
     # phase_field = d
