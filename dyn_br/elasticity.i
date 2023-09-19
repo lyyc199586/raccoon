@@ -433,12 +433,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 5
   []
   print_linear_residuals = false
-  # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './out/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   interval = 1
   [csv]
-    # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-    file_base = './csv/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    # file_base = './csv/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
     type = CSV
   []
 []

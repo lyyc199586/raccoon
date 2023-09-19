@@ -177,20 +177,9 @@
     coupled_variables = 'd'
     material_property_names = 'alpha(d) Gc c0 l'
   []
-  [kumar_material] #2020
-    type = KLBFNucleationMicroForce
-    # phase_field = d
-    stress_name = stress
-    normalization_constant = c0
-    tensile_strength = sigma_ts
-    compressive_strength = sigma_cs
-    delta = delta
-    external_driving_force_name = ce
-    stress_balance_name = f_nu
-  []
-  # [kumar_material] #2022
-  #   type = KLRNucleationMicroForce
-  #   phase_field = d
+  # [kumar_material] #2020
+  #   type = KLBFNucleationMicroForce
+  #   # phase_field = d
   #   stress_name = stress
   #   normalization_constant = c0
   #   tensile_strength = sigma_ts
@@ -199,6 +188,17 @@
   #   external_driving_force_name = ce
   #   stress_balance_name = f_nu
   # []
+  [kumar_material] #2022
+    type = KLRNucleationMicroForce
+    phase_field = d
+    stress_name = stress
+    normalization_constant = c0
+    tensile_strength = sigma_ts
+    compressive_strength = sigma_cs
+    delta = delta
+    external_driving_force_name = ce
+    stress_balance_name = f_nu
+  []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
