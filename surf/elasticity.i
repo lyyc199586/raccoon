@@ -364,10 +364,10 @@ refine = 1 # fine mesh size: 0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/basalt_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}/basalt_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+  file_base = './out/basalt_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}/basalt_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/pmma_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+    file_base = './gold/pmma_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   []
 []

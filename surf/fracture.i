@@ -143,9 +143,9 @@
   #   #outputs = exodus
   # []
   [kumar_material] 
-    # type = KLRNucleationMicroForce
-    type = KLBFNucleationMicroForce
-    # phase_field = d
+    type = KLRNucleationMicroForce
+    # type = KLBFNucleationMicroForce
+    phase_field = d
     stress_name = stress
     normalization_constant = c0
     tensile_strength = '${sigma_ts}'
