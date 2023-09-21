@@ -10,7 +10,7 @@ sigma_ts = 1733 # MPa
 # sigma_cs = 5199
 psic = '${fparse sigma_ts^2/2/E}'
 
-l = 0.5
+l = 0.35
 # delta = 4
 
 refine = 3
@@ -62,7 +62,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Mesh]
-  # [fmg]
+  # [gen]
   #   type = FileMeshGenerator
   #   file = './mesh/kal.msh'
   # []
@@ -105,7 +105,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Adaptivity]
   marker = combo_marker
   max_h_level = ${refine}
-  cycles_per_step = 3
+  cycles_per_step = ${refine}
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -113,13 +113,14 @@ gamma = '${fparse 1/2-hht_alpha}'
       lower_bound = 0.0001
       upper_bound = 1
     []
-    [psic_marker]
+    [psie_marker]
       type = ValueThresholdMarker
       variable = psie_active
+      refine = 2.5
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'damage_marker psie_marker'
     []
   []
 []
@@ -332,7 +333,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 -0.5 0.0 1e-6'
+    parameter_values = '2 -0.5 0 1e-6'
   []
   # [degradation]
   #   type = PowerDegradationFunction
@@ -367,10 +368,10 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Postprocessors]
-  [dt]
-    type = TimestepSize
-    outputs = "csv"
-  []
+  # [ddt]
+  #   type = TimestepSize
+  #   outputs = "csv"
+  # []
   [Fx]
     type = NodalSum
     variable = fx
@@ -415,32 +416,53 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 200 0.7 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-3
-  nl_abs_tol = 1e-5
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
-  dt = 5e-7
   end_time = 90e-6
+  nl_max_its = 20
 
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
+  fixed_point_max_its = 50
+  accept_on_max_fixed_point_iteration = false
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
+  [TimeStepper]
+    type = ConstantDT
+    dt = 5e-7
+    cutback_factor_at_failure = 0.5
+  []
+  [TimeIntegrator]
+    type = NewmarkBeta
+    beta = ${beta}
+    gamma = ${gamma}
+  []
+  [Predictor]
+    type = SimplePredictor
+    scale = 1
+  []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 5
+    interval = 2
+    minimum_time_interval = 1e-6
   []
   print_linear_residuals = false
   file_base = './out/kal_coh_ts${sigma_ts}_l${l}/kal_coh_ts${sigma_ts}_l${l}'
   interval = 1
+  checkpoint = true
   [csv]
-    file_base = './csv/kal_coh_ts${sigma_ts}_l${l}'
+    file_base = './gold/kal_coh_ts${sigma_ts}_l${l}'
     type = CSV
   []
 []

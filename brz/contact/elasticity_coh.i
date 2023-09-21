@@ -23,7 +23,8 @@ K_s = '${fparse E_s/3/(1-2*nu_s)}'
 G_s = '${fparse E_s/2/(1+nu_s)}'
 
 # cohesive model
-l = 3
+# l = 3
+l = 1.25
 
 # model parameter
 r = 25
@@ -75,6 +76,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
     from_blocks = 'disc'
+  []
+  [pp_transfer]
+    type = MultiAppPostprocessorTransfer
+    from_multi_app = fracture
+    from_postprocessor = Psi_f
+    to_postprocessor = fracture_energy
+    reduction_type = average
   []
 []
 
@@ -483,7 +491,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d 
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1.0 0.0 1e-3'
+    parameter_values = '2 -0.5 0.0 1e-6'
     block = 'disc'
   []
   [strain]
@@ -566,6 +574,27 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = d
     outputs = 'pp exodus'
   []
+  [fracture_energy]
+    type = Receiver
+    outputs = 'pp'
+  []
+  [kinetic_energy]
+    type = KineticEnergy
+    outputs = 'pp'
+    block = 'disc'
+  []
+  [strain_energy]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie
+    outputs = 'pp'
+    block = 'disc'
+  []
+  [external_work]
+    type = ExternalWork
+    forces = 'fx fy'
+    outputs = 'pp'
+    block = 'disc'
+  []
 []
 
 [Executioner]
@@ -617,7 +646,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './csv/pp_penalty_coh_u${u}_a${a}_l${l}'
+    file_base = './gold/pp_penalty_coh_u${u}_a${a}_l${l}'
   []
 []
 

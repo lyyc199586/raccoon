@@ -146,7 +146,7 @@
     phase_field = d 
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1.0 0.0 1e-3'
+    parameter_values = '2 -0.5 0.0 1e-6'
   []
   # [nodegradation] # elastic test
   #   type = NoDegradation
@@ -161,6 +161,13 @@
     args = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
+  []
+  [psi_f]
+    type = ADParsedMaterial
+    property_name = psi_f
+    expression = '(Gc/c0/l)*alpha'
+    coupled_variables = 'd'
+    material_property_names = 'alpha(d) Gc c0 l'
   []
   # [kumar_material]
   #   type = KLRNucleationMicroForce
@@ -195,6 +202,13 @@
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
+  []
+[]
+
+[Postprocessors]
+  [Psi_f]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psi_f
   []
 []
 

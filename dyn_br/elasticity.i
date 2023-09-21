@@ -437,7 +437,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # file_base = './out/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   interval = 1
   [csv]
-    file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
     # file_base = './csv/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
     type = CSV
   []

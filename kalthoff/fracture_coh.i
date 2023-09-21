@@ -36,7 +36,7 @@
 [Adaptivity]
   marker = combo_marker
   max_h_level = ${refine}
-  cycles_per_step = 3
+  cycles_per_step = ${refine}
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -44,13 +44,14 @@
       lower_bound = 0.0001
       upper_bound = 1
     []
-    [psic_marker]
+    [psie_marker]
       type = ValueThresholdMarker
       variable = psie_active
+      refine = 2.5
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'damage_marker psie_marker'
     []
   []
 []
@@ -138,7 +139,7 @@
     phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 -0.5 0.0 1e-6'
+    parameter_values = '2 -0.5 0 1e-6'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -192,12 +193,14 @@
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type  -pc_hypre_type -snes_type'
+  petsc_options_value = 'hypre      boomeramg                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-3
-  nl_abs_tol = 1e-5
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 []
