@@ -180,9 +180,13 @@
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    expression = '(Gc/c0/l)*alpha'
+    expression = 'Gc*gamma'
     coupled_variables = 'd'
-    material_property_names = 'alpha(d) Gc c0 l'
+    material_property_names = 'gamma(d) Gc'
+  []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
+    phase_field = d
   []
   # [kumar_material] #2020
   #   type = KLBFNucleationMicroForce
@@ -230,6 +234,7 @@
   [Psi_f]
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
+    execute_on = 'initial timestep_end'
   []
 []
 

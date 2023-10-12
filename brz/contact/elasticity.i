@@ -6,7 +6,7 @@ nu = 0.24
 Gc = 0.1
 sigma_ts = 11.31
 # sigma_cs = 159.08
-sigma_cs = ${fparse sigma_ts*30}
+sigma_cs = 339.3
 rho = 2.74e-9
 
 # steel for platens
@@ -81,6 +81,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
     from_blocks = 'disc'
+  []
+  [pp_transfer]
+    type = MultiAppPostprocessorTransfer
+    from_multi_app = fracture
+    from_postprocessor = Psi_f
+    to_postprocessor = fracture_energy
+    reduction_type = average
   []
 []
 
@@ -560,6 +567,27 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = d
     outputs = 'pp exodus'
   []
+  [fracture_energy]
+    type = Receiver
+    outputs = 'pp'
+  []
+  [kinetic_energy]
+    type = KineticEnergy
+    outputs = 'pp'
+    block = 'disc'
+  []
+  [strain_energy]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie
+    outputs = 'pp'
+    block = 'disc'
+  []
+  [external_work]
+    type = ExternalWork
+    forces = 'fx fy'
+    outputs = 'pp'
+    block = 'disc'
+  []
 []
 
 [Executioner]
@@ -585,13 +613,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   end_time = ${tf}
 
 
-  fixed_point_max_its = 300
-  # fixed_point_max_its = 20
+  # fixed_point_max_its = 300
+  fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
 
   # [TimeIntegrator]
   #   type = CentralDifference
@@ -606,13 +634,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/penalty_nuc20_u${u}_a${a}_l${l}_d${delta}/penalty_nuc20_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it300'
+  file_base = './out/penalty_nuc20_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}/penalty_nuc20_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
   # file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './csv/pp_penalty_nuc20_u${u}_a${a}_l${l}_d${delta}_sratio${fparse int(sigma_cs/sigma_ts)}_it300'
+    file_base = './gold/pp_penalty_nuc20_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
     # file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   []
 []

@@ -10,10 +10,11 @@ sigma_ts = 1733 # MPa
 # sigma_cs = 5199
 psic = '${fparse sigma_ts^2/2/E}'
 
-l = 0.35
+# l = 0.35
+l = 0.75
 # delta = 4
 
-refine = 3
+refine = 4 #h_r = 0.3125
 
 # hht parameters
 hht_alpha = -0.25
@@ -26,20 +27,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     input_files = fracture_coh.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
     execute_on = 'TIMESTEP_END'
+    clone_parent_mesh = true
   []
 []
 
 [Transfers]
   [from_d]
-    # type = MultiAppCopyTransfer
-    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
   []
   [to_psie_active]
-    # type = MultiAppCopyTransfer
-    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
@@ -66,11 +68,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   type = FileMeshGenerator
   #   file = './mesh/kal.msh'
   # []
-  [gen] #h_c = 1, h_r = 0.25
+  [gen] #h_c = 5, h_r = 0.15625
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
-    ny = 100
+    nx = 20
+    ny = 20
     xmin = 0
     xmax = 100
     ymin = 0
@@ -103,10 +105,19 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Adaptivity]
+  # initial_marker = initial_marker
+  # initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = ${refine}
   [Markers]
+    [initial_box]
+      type = BoxMarker
+      bottom_left = '44 19 0'
+      top_right = '56 31 0'
+      inside = refine
+      outside = DO_NOTHING
+    []
     [damage_marker]
       type = ValueRangeMarker
       variable = d
@@ -116,11 +127,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     [psie_marker]
       type = ValueThresholdMarker
       variable = psie_active
-      refine = 2.5
+      refine = 3
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psie_marker'
+      markers = 'initial_box damage_marker'
     []
   []
 []
@@ -333,7 +344,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 -0.5 0 1e-6'
+    parameter_values = '2 1 0 1e-9'
   []
   # [degradation]
   #   type = PowerDegradationFunction
@@ -355,7 +366,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = SPECTRAL
+    # decomposition = SPECTRAL
+    decomposition = VOLDEV
     output_properties = 'psie_active'
     outputs = exodus
   []
@@ -416,28 +428,33 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 200 0.7 ext+i PMIS 4 2 0.4'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
-
+  start_time = 0
   end_time = 90e-6
   nl_max_its = 20
 
-  fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = false
+  fixed_point_max_its = 20
+  accept_on_max_fixed_point_iteration = true
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
+  # dt = 5e-7
   [TimeStepper]
-    type = ConstantDT
-    dt = 5e-7
+    type = FunctionDT
+    function = 'if(t <= 2.2e-5, 5e-7, 5e-8)'
+    # type = ConstantDT
+    # dt = 5e-7
     cutback_factor_at_failure = 0.5
   []
   [TimeIntegrator]
@@ -445,24 +462,24 @@ gamma = '${fparse 1/2-hht_alpha}'
     beta = ${beta}
     gamma = ${gamma}
   []
-  [Predictor]
-    type = SimplePredictor
-    scale = 1
-  []
+  # [Predictor]
+  #   type = SimplePredictor
+  #   scale = 1
+  # []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 2
-    minimum_time_interval = 1e-6
+    interval = 1
+    minimum_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/kal_coh_ts${sigma_ts}_l${l}/kal_coh_ts${sigma_ts}_l${l}'
+  file_base = './out/kal_coh_vd_ts${sigma_ts}_l${l}/kal_coh_ts${sigma_ts}_l${l}'
   interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/kal_coh_ts${sigma_ts}_l${l}'
+    file_base = './gold/kal_coh_vd_ts${sigma_ts}_l${l}'
     type = CSV
   []
 []

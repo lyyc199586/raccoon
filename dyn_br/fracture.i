@@ -1,36 +1,36 @@
 [Mesh]
-  [gen] #h_c = 1, h_r = 0.25
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 100
-    ny = 40
-    xmin = 0
-    xmax = 100
-    ymin = -20
-    ymax = 20
-  []
-  [sub_upper]
-    type = ParsedSubdomainMeshGenerator
-    input = gen
-    combinatorial_geometry = 'x < 50 & y > 0'
-    block_id = 1
-  []
-  [sub_lower]
-    type = ParsedSubdomainMeshGenerator
-    input = sub_upper
-    combinatorial_geometry = 'x < 50 & y < 0'
-    block_id = 2
-  []
-  [split]
-    input = sub_lower
-    type = BreakMeshByBlockGenerator
-    block_pairs = '1 2'
-    split_interface = true
-  []
+  # [gen] #h_c = 1, h_r = 0.25
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 100
+  #   ny = 40
+  #   xmin = 0
+  #   xmax = 100
+  #   ymin = -20
+  #   ymax = 20
+  # []
+  # [sub_upper]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = gen
+  #   combinatorial_geometry = 'x < 50 & y > 0'
+  #   block_id = 1
+  # []
+  # [sub_lower]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = sub_upper
+  #   combinatorial_geometry = 'x < 50 & y < 0'
+  #   block_id = 2
+  # []
+  # [split]
+  #   input = sub_lower
+  #   type = BreakMeshByBlockGenerator
+  #   block_pairs = '1 2'
+  #   split_interface = true
+  # []
 []
 
 [Adaptivity]
-  marker = damage_marker
+  marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = ${refine}
   [Markers]
@@ -43,8 +43,8 @@
     [strength_marker]
       type = ValueRangeMarker
       variable = f_nu_var
-      lower_bound = -1e-2
-      upper_bound = 1e-2
+      lower_bound = -1e-4
+      upper_bound = 1e-4
     []
     [combo_marker]
       type = ComboMarker
@@ -78,6 +78,10 @@
   [strain_zz]
     #   initial_from_file_var = 'strain_zz' 
     #   initial_from_file_timestep = LATEST
+  []
+  [ce_var]
+    order = CONSTANT
+    family = MONOMIAL
   []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
@@ -140,6 +144,11 @@
     property = f_nu
     variable = f_nu_var
   []
+  [get_ce]
+    type = ADMaterialRealAux
+    property = ce
+    variable = ce_var
+  []
 []
 
 [Materials]
@@ -160,7 +169,7 @@
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -173,9 +182,20 @@
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    expression = '(Gc/c0/l)*alpha'
+    expression = 'Gc*gamma'
     coupled_variables = 'd'
-    material_property_names = 'alpha(d) Gc c0 l'
+    material_property_names = 'gamma(d) Gc'
+  []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
+    phase_field = d
+  []
+  [psi_f_ce]
+    type = ADParsedMaterial
+    property_name = psi_f_ce
+    expression = 'ce*d'
+    coupled_variables = 'd'
+    material_property_names = 'ce'
   []
   # [kumar_material] #2020
   #   type = KLBFNucleationMicroForce
@@ -223,6 +243,10 @@
   [Psi_f]
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
+  []
+  [Psi_f_ce]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psi_f_ce
   []
 []
 

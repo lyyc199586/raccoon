@@ -6,22 +6,23 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 # Gc = 8.89e-3 # N/mm -> 3 J/m^2
-# Gc = 9e-3
-Gc = 15e-3
+Gc = 9e-3
+# Gc = 15e-3
 # Gc = 9.5e-3
 # Gc = 8.7e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 30
+p = 25
 
 # l = 0.075
 # delta = -0.2 # haven't tested
-refine = 6 # h=1, h_ref=0.015625=1/2^6
+# refine = 6 # h=1, h_ref=0.015625=1/2^6
+refine = 4
 
 l = 0.25
-# delta = -0.625
-delta = 0
+delta = -0.625
+# delta = 0
 
 # putty
 E_p = 1.7
@@ -490,8 +491,13 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
   # nl_rel_tol = 1e-6
@@ -499,7 +505,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 
   dt = 5e-8 # 0.05 us
   dtmin = 5e-9
-  end_time = 80e-6
+  end_time = 100e-6
 
   # restart
   # start_time = 80e-6
@@ -527,15 +533,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  file_base = '../out/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = '../out/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
   # file_base = '../out/hht_half_test'
   interval = 1
   [pp]
     type = CSV
-    file_base = '../csv/pp_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    file_base = '../gold/pp_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
   []
   [tip]
     type = CSV
-    file_base = '../gold/tip_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    file_base = '../gold/tip_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
   []
 []

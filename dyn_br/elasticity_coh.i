@@ -4,7 +4,7 @@ nu = 0.2
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-rho = 2.54e-9 # Mg/mm^3
+rho = 2.45e-9 # Mg/mm^3
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 # sigma_cs = 9.24
@@ -16,7 +16,8 @@ l = 0.625
 refine = 3
 
 # hht parameters
-hht_alpha = -0.25
+hht_alpha = -0.3
+# hht_alpha = 0
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
@@ -175,6 +176,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [kinetic_energy_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [p_ext]
+  []
 []
 
 [Kernels]
@@ -182,6 +189,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
+    save_in = fx
   []
   [solid_y]
     type = ADDynamicStressDivergenceTensors
@@ -286,6 +294,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     coupled_variables = 's1 s3'
     expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
   []
+  [kinetic_energy_aux]
+    type = ADKineticEnergyAux
+    variable = kinetic_energy_var
+    density = density
+    newmark_velocity_x = vel_x
+    newmark_velocity_y = vel_y
+    newmark_velocity_z = 0
+  []
+  [power]
+    type = ParsedAux
+    variable = p_ext
+    expression = 'fy*vel_y + fx*vel_x'
+    coupled_variables = 'fx fy vel_x vel_y'
+    # boundary = 'top bottom'
+  []
 []
 
 [BCs]
@@ -379,21 +402,46 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture_energy]
     type = Receiver
     outputs = "csv"
+    execute_on = 'initial timestep_end'
   []
   [kinetic_energy]
     type = KineticEnergy
     outputs = "csv"
+    execute_on = 'initial timestep_end'
+    implicit = false
   []
+  # [kinetic_moose]
+  #   type = ElementIntegralVariablePostprocessor
+  #   variable = kinetic_energy_var
+  #   outputs = "csv"
+  #   execute_on = 'initial timestep_end'
+  # []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
     outputs = "csv"
+    execute_on = 'initial timestep_end'
   []
   [external_work]
     type = ExternalWork
     boundary = 'top bottom'
     forces = 'fx fy'
     outputs = "csv"
+    execute_on = 'initial timestep_end'
+    unique_node_execute = true
+    force_postaux = true
+  []
+  [external_power]
+    type = SideIntegralVariablePostprocessor
+    variable = p_ext
+    boundary = "top bottom"
+    execute_on = 'initial timestep_end'
+    outputs = none
+  []
+  [external_moose]
+    type = TimeIntegratedPostprocessor
+    value = external_power
+    execute_on = 'initial timestep_end'
   []
 []
 
@@ -419,8 +467,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = true
+  fixed_point_max_its = 20
+  accept_on_max_fixed_point_iteration = false
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
@@ -428,15 +476,14 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # [TimeIntegrator]
   #   type = NewmarkBeta
-  #   gamma = '${fparse 5/6}'
-  #   beta = '${fparse 4/9}'
   # []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 5
+    # interval = 5
+    minimum_time_interval = 5e-7
   []
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
@@ -444,7 +491,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   interval = 1
   [csv]
     # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-    file_base = './csv/dyn_br_coh_ts${sigma_ts}_l${l}'
+    file_base = './gold/dyn_br_coh_ts${sigma_ts}_l${l}'
     type = CSV
   []
 []

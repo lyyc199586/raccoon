@@ -50,8 +50,10 @@ Gc = 0.003
 sigma_ts = 3.08 # MPa
 sigma_cs = 9.24
 # psic = '${fparse sigma_ts^2/2/E}'
-l = 1.5 # L = 1.25mm, l_ch = 11 mm
-delta = 5
+# l = 1.5 # L = 1.25mm, l_ch = 11 mm
+# delta = 5
+l = 0.625
+delta = 0
 
 # quasi-static branching
 # E = 20e3
@@ -100,6 +102,15 @@ delta = 5
 # delta = 5
 # l = 3
 # delta = 15
+
+# steel for kalthoff
+# Gc = 22.2
+# E = 1.9e5
+# nu = 0.3
+# sigma_ts = 1733
+# sigma_cs = 5199
+# l = 0.5
+# delta = 0.5
 # ---------------------------------
 
 K = '${fparse E/3/(1-2*nu)}'
@@ -111,13 +122,15 @@ c2 = '${fparse (3-nu)/(1+nu)}'
 # shape and scale
 a = 10 # crack length
 # a = 5
-h = 0.25 # coase mesh size
+# h = 0.25 # coase mesh size
+# h = 0.625
+h = 1
 length = '${fparse 6*a}'
 width = '${fparse 2*a}'
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
 # refine = 3 # fine mesh size: 0.025
-refine = 1 # fine mesh size: 0.015625
+refine = 3 # fine mesh size: 0.015625
 
 [Functions]
   [bc_func]
@@ -364,10 +377,10 @@ refine = 1 # fine mesh size: 0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/basalt_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}/basalt_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+  file_base = './out/pmma_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}/pmma_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/pmma_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+    file_base = './gold/pmma_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
   []
 []

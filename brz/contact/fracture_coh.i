@@ -140,20 +140,20 @@
   #   parameter_values = '2 1e-5'
   #   # parameter_values = '2 0'
   # []
-  [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    phase_field = d 
-    material_property_names = 'Gc psic xi c0 l'
-    parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 -0.5 0.0 1e-6'
-  []
-  # [nodegradation] # elastic test
-  #   type = NoDegradation
-  #   f_name = g 
-  #   function = 1
-  #   phase_field = d
+  # [degradation]
+  #   type = RationalDegradationFunction
+  #   f_name = g
+  #   phase_field = d 
+  #   material_property_names = 'Gc psic xi c0 l'
+  #   parameter_names = 'p a2 a3 eta '
+  #   parameter_values = '2 -0.5 0.0 1e-6'
   # []
+  [nodegradation] # elastic test
+    type = NoDegradation
+    f_name = g 
+    function = 1
+    phase_field = d
+  []
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
@@ -223,10 +223,10 @@
   automatic_scaling = true
 
   line_search = none
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
   # restart
   # start_time = 80e-6
