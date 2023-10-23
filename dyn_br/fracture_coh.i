@@ -1,36 +1,51 @@
 [Mesh]
-  [gen] #h_c = 1, h_r = 0.25
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = 100
-    ny = 40
-    xmin = 0
-    xmax = 100
-    ymin = -20
-    ymax = 20
-  []
-  [sub_upper]
-    type = ParsedSubdomainMeshGenerator
-    input = gen
-    combinatorial_geometry = 'x < 50 & y > 0'
-    block_id = 1
-  []
-  [sub_lower]
-    type = ParsedSubdomainMeshGenerator
-    input = sub_upper
-    combinatorial_geometry = 'x < 50 & y < 0'
-    block_id = 2
-  []
-  [split]
-    input = sub_lower
-    type = BreakMeshByBlockGenerator
-    block_pairs = '1 2'
-    split_interface = true
-  []
+  # [gen] #h_c = 1, h_r = 0.25
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = 100
+  #   ny = 40
+  #   xmin = 0
+  #   xmax = 100
+  #   ymin = -20
+  #   ymax = 20
+  # []
+  # [sub_upper]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = gen
+  #   combinatorial_geometry = 'x < 50 & y > 0'
+  #   block_id = 1
+  # []
+  # [sub_lower]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = sub_upper
+  #   combinatorial_geometry = 'x < 50 & y < 0'
+  #   block_id = 2
+  # []
+  # [split]
+  #   input = sub_lower
+  #   type = BreakMeshByBlockGenerator
+  #   block_pairs = '1 2'
+  #   split_interface = true
+  # []
+  # second_order = true
 []
 
+# [Adaptivity]
+#   initial_marker = initial
+#   initial_steps = ${refine}
+#   [Markers]
+#     [initial]
+#       type = BoxMarker
+#       bottom_left = '50 -20 0'
+#       top_right = '100 20 0'
+#       inside = REFINE
+#       outside = DO_NOTHING
+#     []
+#   []
+# []
+
 [Adaptivity]
-  marker = combo_marker
+  marker = damage_marker
   max_h_level = ${refine}
   cycles_per_step = 2
   [Markers]
@@ -69,15 +84,17 @@
   [disp_x]
     # initial_from_file_var = 'disp_x' 
     # initial_from_file_timestep = LATEST
+    # order = SECOND
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
+    # order = SECOND
   []
-  [strain_zz]
-    #   initial_from_file_var = 'strain_zz' 
-    #   initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   #   initial_from_file_var = 'strain_zz' 
+  #   #   initial_from_file_timestep = LATEST
+  # []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
     # initial_from_file_timestep = LATEST
@@ -88,6 +105,10 @@
   #   order = CONSTANT
   #   family = MONOMIAL
   # []
+  [psi_f_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Bounds]
@@ -133,13 +154,18 @@
   # []
 []
 
-# [AuxKernels]
-#   [get_f_nu]
-#     type = ADMaterialRealAux
-#     property = f_nu
-#     variable = f_nu_var
-#   []
-# []
+[AuxKernels]
+  # [get_f_nu]
+  #   type = ADMaterialRealAux
+  #   property = f_nu
+  #   variable = f_nu_var
+  # [
+  [get_psi_f_var]
+    type = ADMaterialRealAux
+    property = psi_f
+    variable = psi_f_var
+  []
+[]
 
 [Materials]
   [fracture_properties]
@@ -171,9 +197,9 @@
   # []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(Gc/c0/l)*alpha'
-    args = 'd psie_active'
+    property_name = psi
+    expression = 'g*psie_active+(Gc/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
@@ -210,10 +236,16 @@
   #   external_driving_force_name = ce
   #   stress_balance_name = f_nu
   # []
+  # [strain]
+  #   type = ADComputePlaneSmallStrain
+  #   # out_of_plane_strain = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  # []
   [strain]
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    type = ADComputeSmallStrain
     displacements = 'disp_x disp_y'
+    # output_properties = 'total_strain'
+    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity

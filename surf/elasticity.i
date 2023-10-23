@@ -52,7 +52,7 @@ sigma_cs = 9.24
 # psic = '${fparse sigma_ts^2/2/E}'
 # l = 1.5 # L = 1.25mm, l_ch = 11 mm
 # delta = 5
-l = 0.625
+l = 2
 delta = 0
 
 # quasi-static branching
