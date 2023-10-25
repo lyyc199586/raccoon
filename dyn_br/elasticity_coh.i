@@ -265,26 +265,26 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = accel_x
     displacement = disp_x
     velocity = vel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_x] 
     type = NewmarkVelAux
     variable = vel_x
     acceleration = accel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [accel_y]
     type = NewmarkAccelAux
     variable = accel_y
     displacement = disp_y
     velocity = vel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_y]
     type = NewmarkVelAux
     variable = vel_y
     acceleration = accel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [s11]
     type = ADRankTwoAux
