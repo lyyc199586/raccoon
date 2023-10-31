@@ -42,8 +42,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   [to_psie_active]
     type = MultiAppCopyTransfer
     to_multi_app = fracture
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
+    # variable = 'disp_x disp_y strain_zz psie_active'
+    # source_variable = 'disp_x disp_y strain_zz psie_active'
+    variable = 'disp_x disp_y psie_active'
+    source_variable = 'disp_x disp_y psie_active'
   []
   [pp_transfer_1]
     type = MultiAppPostprocessorTransfer
@@ -66,7 +68,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
-  use_displaced_mesh = false
+  use_displaced_mesh = true
 []
 
 [Mesh]
@@ -133,10 +135,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # initial_from_file_var = 'disp_y'
     # initial_from_file_timestep = LATEST
   []
-  [strain_zz]
-    # initial_from_file_var = 'strain_zz'
-    # initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   # initial_from_file_var = 'strain_zz'
+  #   # initial_from_file_timestep = LATEST
+  # []
 []
 
 [AuxVariables]
@@ -194,6 +196,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [w_ext]
+  []
 []
 
 
@@ -224,11 +228,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  [plane_stress]
-    type = ADWeakPlaneStress
-    variable = 'strain_zz'
-    displacements = 'disp_x disp_y'
-  []
+  # [plane_stress]
+  #   type = ADWeakPlaneStress
+  #   variable = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  # []
 []
 
 [AuxKernels]
@@ -307,6 +311,15 @@ gamma = '${fparse 1/2-hht_alpha}'
     coupled_variables = 's1 s3'
     expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
   []
+  [work]
+    type = ParsedAux
+    variable = w_ext
+    # expression = 'disp_y^2/sqrt(disp_x^2 + disp_y^2) + disp_x^2/sqrt(disp_x^2 + disp_y^2)'
+    expression = 'if(x > 0.5, if(x < 99.5, abs(disp_y), abs(disp_y)/2), abs(disp_y)/2)'
+    coupled_variables = 'disp_y'
+    boundary = 'top bottom'
+    use_xyzt = true
+  []
 []
 
 [BCs]
@@ -345,8 +358,9 @@ gamma = '${fparse 1/2-hht_alpha}'
     parameter_values = '2 1e-6'
   []
   [strain]
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    # type = ADComputePlaneSmallStrain
+    type = ADComputeSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
   []
@@ -373,12 +387,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalSum
     variable = fy
     boundary = top
-    outputs = "csv exodus"
+    # outputs = "csv exodus"
   []
   [max_disp_y]
     type = NodalExtremeValue
     variable = disp_y
-    outputs = "csv exodus"
+    # outputs = "csv exodus"
   []
   [Jint]
     type = PhaseFieldJIntegral
@@ -390,26 +404,32 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [fracture_energy]
     type = Receiver
-    outputs = "csv"
+    # outputs = "csv"
   []
   [ce_integral]
     type = Receiver
-    outputs = "csv"
+    # outputs = "csv"
   []
   [kinetic_energy]
     type = KineticEnergy
-    outputs = "csv"
+    # outputs = "csv"
   []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
-    outputs = "csv"
+    # outputs = "csv"
   []
   [external_work]
     type = ExternalWork
     boundary = 'top bottom'
     forces = 'fx fy'
-    outputs = "csv"
+    # outputs = "csv"
+  []
+  [preset_ext_work]
+    type = SideIntegralVariablePostprocessor
+    variable = w_ext
+    boundary = "top bottom"
+    # execute_on = 'initial timestep_end'
   []
 []
 
@@ -456,12 +476,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     minimum_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  # file_base = './out/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   interval = 1
   [csv]
-    file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-    # file_base = './csv/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
+    file_base = './gold/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
     type = CSV
   []
 []

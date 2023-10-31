@@ -11,7 +11,7 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 refine = 3 # h_r = 0.125
-v0 = -5e3 # mm/s -> 0.0005 mm/us
+v0 = -0.5e3 # mm/s -> 5 m/s -> h0 = 1.27 m
 
 # hht parameters
 hht_alpha = -0.3
