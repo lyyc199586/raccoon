@@ -20,12 +20,14 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Transfers]
   [from_d]
     type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y disp_z psie_active'
     source_variable = 'disp_x disp_y disp_z psie_active'
@@ -38,7 +40,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     input_files = fracture_coh.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
     execute_on = TIMESTEP_END
-    clone_parent_mesh = true
+    # clone_parent_mesh = true
   []
 []
 
@@ -56,16 +58,16 @@ gamma = '${fparse 1/2-hht_alpha}'
     file = './mesh/quarter_cylinder_r20_t30_h1.msh'
   []
   [initial_box]
-    type = ParsedSubdomainMeshGenerator
+    type = ParsedGenerateSideset
     input = fmg
-    combinatorial_geometry = 'x<5.1 & y< 5.1 & z>28.9'
-    block_id = 1
+    combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
+    new_sideset_name = initial_square
   []
   [initial_refine]
-    type = RefineBlockGenerator
+    type = RefineSidesetGenerator
     input = initial_box
     refinement = ${refine}
-    block = 1
+    boundaries = 'initial_square'
   []
   [load]
     type = ParsedGenerateSideset
@@ -94,14 +96,15 @@ gamma = '${fparse 1/2-hht_alpha}'
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = 3
+  # start_time = 2e-7
   [Markers]
-    # [initial]
-    #   type = BoxMarker
-    #   bottom_left = '-0.1 -0.1 28.9'
-    #   top_right = '6.1 6.1 30.1'
-    #   inside = REFINE
-    #   outside = DO_NOTHING
-    # []
+    [initial]
+      type = BoxMarker
+      bottom_left = '-0.1 -0.1 28.9'
+      top_right = '5.1 5.1 30.1'
+      inside = REFINE
+      outside = DO_NOTHING
+    []
     [damage_marker]
       type = ValueRangeMarker
       variable = d
@@ -115,7 +118,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'initial damage_marker psic_marker'
     []
   []
 []
@@ -355,7 +358,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
 
-  dt = 1e-7
+  dt = 2e-8
   start_time = 0
   end_time = 50e-6
 

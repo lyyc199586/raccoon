@@ -1,27 +1,39 @@
 [Mesh]
-  # [fmg]
-  #   type = FileMeshGenerator
-  #   file = './mesh/quarter_cylinder_r20_t30_h1.msh'
-  # []
-  # [load]
-  #   type = ParsedGenerateSideset
-  #   input = fmg
-  #   combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
-  #   new_sideset_name = load
-  # []
-  # [front]
-  #   type = ParsedGenerateSideset
-  #   input = load
-  #   combinatorial_geometry = 'y < 0.1'
-  #   new_sideset_name = front
-  # []
-  # [left]
-  #   type = ParsedGenerateSideset
-  #   input = front
-  #   combinatorial_geometry = 'x < 0.1'
-  #   new_sideset_name = left
-  # []
-  # coord_type = XYZ
+  [fmg]
+    type = FileMeshGenerator
+    file = './mesh/quarter_cylinder_r20_t30_h1.msh'
+  []
+  [initial_box]
+    type = ParsedGenerateSideset
+    input = fmg
+    combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
+    new_sideset_name = initial_square
+  []
+  [initial_refine]
+    type = RefineSidesetGenerator
+    input = initial_box
+    refinement = ${refine}
+    boundaries = 'initial_square'
+  []
+  [load]
+    type = ParsedGenerateSideset
+    input = initial_refine
+    combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
+    new_sideset_name = load
+  []
+  [front]
+    type = ParsedGenerateSideset
+    input = load
+    combinatorial_geometry = 'y < 0.1'
+    new_sideset_name = front
+  []
+  [left]
+    type = ParsedGenerateSideset
+    input = front
+    combinatorial_geometry = 'x < 0.1'
+    new_sideset_name = left
+  []
+  coord_type = XYZ
 []
 
 [Adaptivity]
@@ -30,14 +42,15 @@
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = 3
+  # start_time = 2e-7
   [Markers]
-    # [initial]
-    #   type = BoxMarker
-    #   bottom_left = '-0.1 -0.1 28.9'
-    #   top_right = '6.1 6.1 30.1'
-    #   inside = REFINE
-    #   outside = DO_NOTHING
-    # []
+    [initial]
+      type = BoxMarker
+      bottom_left = '-0.1 -0.1 28.9'
+      top_right = '5.1 5.1 30.1'
+      inside = REFINE
+      outside = DO_NOTHING
+    []
     [damage_marker]
       type = ValueRangeMarker
       variable = d
@@ -51,7 +64,7 @@
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'initial damage_marker psic_marker'
     []
   []
 []
