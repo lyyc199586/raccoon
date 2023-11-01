@@ -6,12 +6,12 @@
   initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
-  cycles_per_step = 2
+  cycles_per_step = 3
   [Markers]
     [initial]
       type = BoxMarker
-      bottom_left = '-5.1 -0.9 0'
-      top_right = '5.1 0.1 0'
+      bottom_left = '-0.1 -0.1 29.9'
+      top_right = '20.1 20.1 30.1'
       inside = REFINE
       outside = DO_NOTHING
     []
@@ -28,7 +28,7 @@
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'initial damage_marker psic_marker'
     []
   []
 []
