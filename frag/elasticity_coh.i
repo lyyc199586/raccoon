@@ -1,17 +1,19 @@
 # BegoStone's properties
-E = 2.735e4
+# E = 2.735e4
+E = 6.26e3
 nu = 0.2
-Gc = 2.188e-2
+# Gc = 2.188e-2
+Gc = 3.656e-2
 sigma_ts = 10
 rho = 1.995e-9
-l = 1
+l = 1 # l_ch = E*Gc/sigma_ts^2
 # delta = 0
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 refine = 3 # h_r = 0.125
-v0 = -0.5e3 # mm/s -> 5 m/s -> h0 = 1.27 m
+v0 = -0.1e3 # mm/s -> 5 m/s -> h0 = 1.27 m
 
 # hht parameters
 hht_alpha = -0.3
@@ -36,7 +38,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = fracture.i
+    input_files = fracture_coh.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
     execute_on = TIMESTEP_END
     clone_parent_mesh = true
