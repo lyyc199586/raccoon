@@ -1,20 +1,43 @@
 [Mesh]
+  # [fmg]
+  #   type = FileMeshGenerator
+  #   file = './mesh/quarter_cylinder_r20_t30_h1.msh'
+  # []
+  # [load]
+  #   type = ParsedGenerateSideset
+  #   input = fmg
+  #   combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
+  #   new_sideset_name = load
+  # []
+  # [front]
+  #   type = ParsedGenerateSideset
+  #   input = load
+  #   combinatorial_geometry = 'y < 0.1'
+  #   new_sideset_name = front
+  # []
+  # [left]
+  #   type = ParsedGenerateSideset
+  #   input = front
+  #   combinatorial_geometry = 'x < 0.1'
+  #   new_sideset_name = left
+  # []
+  # coord_type = XYZ
 []
 
 [Adaptivity]
-  initial_marker = initial
-  initial_steps = ${refine}
+  # initial_marker = initial
+  # initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = 3
   [Markers]
-    [initial]
-      type = BoxMarker
-      bottom_left = '-0.1 -0.1 29.9'
-      top_right = '20.1 20.1 30.1'
-      inside = REFINE
-      outside = DO_NOTHING
-    []
+    # [initial]
+    #   type = BoxMarker
+    #   bottom_left = '-0.1 -0.1 28.9'
+    #   top_right = '6.1 6.1 30.1'
+    #   inside = REFINE
+    #   outside = DO_NOTHING
+    # []
     [damage_marker]
       type = ValueRangeMarker
       variable = d
@@ -28,7 +51,7 @@
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'initial damage_marker psic_marker'
+      markers = 'damage_marker psic_marker'
     []
   []
 []

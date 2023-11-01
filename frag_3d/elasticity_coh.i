@@ -55,9 +55,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = FileMeshGenerator
     file = './mesh/quarter_cylinder_r20_t30_h1.msh'
   []
+  [initial_box]
+    type = ParsedSubdomainMeshGenerator
+    input = fmg
+    combinatorial_geometry = 'x<5.1 & y< 5.1 & z>28.9'
+    block_id = 1
+  []
+  [initial_refine]
+    type = RefineBlockGenerator
+    input = initial_box
+    refinement = ${refine}
+    block = 1
+  []
   [load]
     type = ParsedGenerateSideset
-    input = fmg
+    input = initial_refine
     combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
     new_sideset_name = load
   []
@@ -77,19 +89,19 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Adaptivity]
-  initial_marker = initial
-  initial_steps = ${refine}
+  # initial_marker = initial
+  # initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = 3
   [Markers]
-    [initial]
-      type = BoxMarker
-      bottom_left = '-0.1 -0.1 29.9'
-      top_right = '20.1 20.1 30.1'
-      inside = REFINE
-      outside = DO_NOTHING
-    []
+    # [initial]
+    #   type = BoxMarker
+    #   bottom_left = '-0.1 -0.1 28.9'
+    #   top_right = '6.1 6.1 30.1'
+    #   inside = REFINE
+    #   outside = DO_NOTHING
+    # []
     [damage_marker]
       type = ValueRangeMarker
       variable = d
@@ -103,7 +115,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'initial damage_marker psic_marker'
+      markers = 'damage_marker psic_marker'
     []
   []
 []
