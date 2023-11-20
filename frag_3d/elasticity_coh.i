@@ -10,6 +10,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 
 refine = 3 # h_r = 0.125
+# refine = 1
 v0 = -1e4 # mm/s -> 5 m/s -> h0 = 1.27 m
 
 # hht parameters
@@ -55,23 +56,24 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/quarter_cylinder_r20_t30_h1.msh'
+    # file = './mesh/quarter_cylinder_r20_t30_h1.msh'
+    file = './mesh/quarter_cylinder_r20_t30_h1_transfinite.msh'
   []
-  [initial_box]
-    type = ParsedGenerateSideset
-    input = fmg
-    combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
-    new_sideset_name = initial_square
-  []
-  [initial_refine]
-    type = RefineSidesetGenerator
-    input = initial_box
-    refinement = ${refine}
-    boundaries = 'initial_square'
-  []
+  # [initial_box]
+  #   type = ParsedGenerateSideset
+  #   input = fmg
+  #   combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
+  #   new_sideset_name = initial_square
+  # []
+  # [initial_refine]
+  #   type = RefineSidesetGenerator
+  #   input = initial_box
+  #   refinement = ${refine}
+  #   boundaries = 'initial_square'
+  # []
   [load]
     type = ParsedGenerateSideset
-    input = initial_refine
+    input = fmg
     combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
     new_sideset_name = load
   []
@@ -118,7 +120,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'initial damage_marker psic_marker'
+      markers = 'damage_marker'
     []
   []
 []
@@ -340,13 +342,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
   nl_rel_tol = 1e-6
@@ -358,9 +360,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
 
-  dt = 2e-8
+  dt = 1e-7
   start_time = 0
   end_time = 50e-6
+  num_steps = 50
 
   [TimeIntegrator]
     type = NewmarkBeta
@@ -373,7 +376,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     interval = 1
-    minimum_time_interval = 1e-7
+    # minimum_time_interval = 1e-7
   []
   print_linear_residuals = false
   file_base = './out/frag_3d_coh_l${l}_v0${v0}/frag_3d_coh_l${l}_v0${v0}'

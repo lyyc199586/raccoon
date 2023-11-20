@@ -6,14 +6,14 @@ nu = 0.2
 Gc = 3.656e-2
 sigma_ts = 10
 rho = 1.995e-9
-l = 1 # l_ch = E*Gc/sigma_ts^2
+l = 0.5 # l_ch = E*Gc/sigma_ts^2
 # delta = 0
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 refine = 3 # h_r = 0.125
-v0 = -0.1e3 # mm/s -> 5 m/s -> h0 = 1.27 m
+v0 = -1e4 # mm/s -> 5 m/s -> h0 = 1.27 m
 
 # hht parameters
 hht_alpha = -0.3
@@ -69,6 +69,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     input = gen
     combinatorial_geometry = 'abs(x) < 5.1 & y > -0.1'
     new_sideset_name = load
+  []
+  [bottom]
+    type = ParsedGenerateSideset
+    input = load
+    combinatorial_geometry = 'y < -29.9'
+    new_sideset_name = bottom
   []
   coord_type = XYZ
 []
@@ -203,6 +209,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = load
     function = load_func
   []
+  [fix_bottom]
+    type = ADDirichletBC
+    variable = disp_y
+    boundary = bottom
+    value = 0
+  []
 []
 
 [Materials]
@@ -307,11 +319,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     minimum_time_interval = 1e-7
   []
   print_linear_residuals = false
-  file_base = './out/frag_2d_y30_coh_l${l}_v0${v0}/frag_2d_coh_l${l}_v0${v0}'
+  file_base = './out/frag_2d_y30_coh_fix_bottom_l${l}_v0${v0}/frag'
   interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/frag_2d_y30_coh_l${l}_v0${v0}'
+    file_base = './gold/frag_2d_y30_coh_fix_bottom_l${l}_v0${v0}'
     type = CSV
   []
 []

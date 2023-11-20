@@ -1,23 +1,24 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/quarter_cylinder_r20_t30_h1.msh'
+    # file = './mesh/quarter_cylinder_r20_t30_h1.msh'
+    file = './mesh/quarter_cylinder_r20_t30_h1_transfinite.msh'
   []
-  [initial_box]
-    type = ParsedGenerateSideset
-    input = fmg
-    combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
-    new_sideset_name = initial_square
-  []
-  [initial_refine]
-    type = RefineSidesetGenerator
-    input = initial_box
-    refinement = ${refine}
-    boundaries = 'initial_square'
-  []
+  # [initial_box]
+  #   type = ParsedGenerateSideset
+  #   input = fmg
+  #   combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
+  #   new_sideset_name = initial_square
+  # []
+  # [initial_refine]
+  #   type = RefineSidesetGenerator
+  #   input = initial_box
+  #   refinement = ${refine}
+  #   boundaries = 'initial_square'
+  # []
   [load]
     type = ParsedGenerateSideset
-    input = initial_refine
+    input = fmg
     combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
     new_sideset_name = load
   []
@@ -64,7 +65,7 @@
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'initial damage_marker psic_marker'
+      markers = 'damage_marker'
     []
   []
 []
@@ -175,10 +176,10 @@
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
-  # petsc_options_iname = '-pc_type -snes_type'
-  # petsc_options_value = 'asm      vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type'
+  petsc_options_value = 'hypre    boomeramg      vinewtonrsls'
   automatic_scaling = true
 
   # nl_rel_tol = 1e-8
