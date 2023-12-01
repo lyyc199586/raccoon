@@ -19,6 +19,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 refine = 3 # h_r = 0.125
 # refine = 2
 v0 = -5e3 # mm/s -> 5 m/s -> h0 = 1.27 m
+Dt = 20e-6
 
 # hht parameters
 hht_alpha = -0.25
@@ -203,11 +204,17 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Functions]
+  # [load_func]
+  #   type = ADParsedFunction
+  #   expression = 'v0*t'
+  #   symbol_names = 'v0'
+  #   symbol_values = ${v0}
+  # []
   [load_func]
     type = ADParsedFunction
-    expression = 'v0*t'
-    symbol_names = 'v0'
-    symbol_values = ${v0}
+    expression = 'if(t < Dt, v0*t*(1-0.5*t/Dt), 0.5*v0*Dt)'
+    symbol_names = 'v0 Dt'
+    symbol_values = '${v0} ${Dt}'
   []
 []
 
@@ -343,12 +350,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/frag_2d_y30_nuc22_v0${v0}_scs${sigma_cs}_l${l}_d${delta}/frag'
-  file_base = './out/frag_2d_y30_nuc22_fix_bottom_v0${v0}_scs${sigma_cs}_l${l}_d${delta}/frag'
+  file_base = './out/frag_2d_nuc22_fix_bottom_v0${v0}_scs${sigma_cs}_l${l}_d${delta}/frag'
   interval = 1
   checkpoint = true
   [csv]
     # file_base = './gold/frag_2d_y30_nuc22_v0${v0}_scs${sigma_cs}_l${l}_d${delta}'
-    file_base = './gold/frag_2d_y30_nuc22_fix_bottom_v0${v0}_scs${sigma_cs}_l${l}_d${delta}'
+    file_base = './gold/frag_2d_nuc22_fix_bottom_v0${v0}_scs${sigma_cs}_l${l}_d${delta}'
     type = CSV
   []
 []
