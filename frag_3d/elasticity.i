@@ -2,18 +2,22 @@ E = 6.26e3
 nu = 0.2
 Gc = 3.656e-2
 sigma_ts = 10
+sigma_cs = 37.4
 rho = 1.995e-9
-l = 1
+# l = 1
+l = 0.5
+delta = 0
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-psic = ${fparse sigma_ts^2/2/E}
+# psic = ${fparse sigma_ts^2/2/E}
 
-refine = 2 # h_r = 0.125
+refine = 3 # h_r = 0.125
 v0 = -1e4 # mm/s -> 5 m/s -> h0 = 1.27 m
+Dt = 20e-6
 
 # hht parameters
-hht_alpha = -0.3
+hht_alpha = -0.25
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
@@ -22,8 +26,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppCopyTransfer
     # type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
+    variable = 'd f_nu_var'
+    source_variable = 'd f_nu_var'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
@@ -37,8 +41,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = fracture_coh.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
+    input_files = fracture.i
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};refine=${refine}'
     execute_on = TIMESTEP_END
     # clone_parent_mesh = true
   []
@@ -83,7 +87,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
-  cycles_per_step = 3
+  cycles_per_step = 2
   # start_time = 2e-7
   [Markers]
     [initial]
@@ -99,11 +103,11 @@ gamma = '${fparse 1/2-hht_alpha}'
       lower_bound = 0.0001
       upper_bound = 1
     []
-    [psic_marker]
-      type = ValueThresholdMarker
-      variable = psie_active
-      refine = ${fparse psic*0.75}
-    []
+    # [psic_marker]
+    #   type = ValueThresholdMarker
+    #   variable = psie_active
+    #   refine = ${fparse psic*0.75}
+    # []
     [combo_marker]
       type = ComboMarker
       markers = 'damage_marker'
@@ -163,6 +167,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     family = monomial
   []
   [s_min]
+    order = constant
+    family = monomial
+  []
+  [f_nu_var]
     order = constant
     family = monomial
   []
@@ -314,8 +322,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Materials]
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda l Gc density psic'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho} ${psic}'
+    prop_names = 'E K G lambda l Gc density'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -323,13 +331,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     function = 'd'
     phase_field = d
   []
+  # [degradation]
+  #   type = RationalDegradationFunction
+  #   f_name = g
+  #   phase_field = d
+  #   material_property_names = 'Gc psic xi c0 l'
+  #   parameter_names = 'p a2 a3 eta'
+  #   parameter_values = '2 1 0 1e-9'
+  # []
   [degradation]
-    type = RationalDegradationFunction
-    f_name = g
-    phase_field = d
-    material_property_names = 'Gc psic xi c0 l'
-    parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 1 0 1e-9'
+    type = PowerDegradationFunction
+    f_name = g 
+    function = (1-d)^p+eta
+    phase_field = d 
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
   []
   # [nodeg]
   #   type = NoDegradation
@@ -347,8 +363,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = SPECTRAL
-    # decomposition = NONE
+    # decomposition = SPECTRAL
+    decomposition = NONE
     output_properties = 'psie_active'
     outputs = exodus
   []
@@ -418,11 +434,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     minimum_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/frag_3d_coh_l${l}_v0${v0}/frag_3d_coh_l${l}_v0${v0}'
+  file_base = './out/frag_3d_nuc22_v0${v0}_l${l}_d${delta}/frag'
   interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/frag_3d_coh_l${l}_v0${v0}'
+    file_base = './gold/frag_3d_nuc22_v0${v0}_l${l}_d${delta}'
     type = CSV
   []
 []
