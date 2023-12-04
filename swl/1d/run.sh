@@ -4,6 +4,6 @@ echo "Start: $(date)"
 echo "cwd: $(pwd)"
 
 
-mpirun -n 16 ../../raccoon-opt -i solid.i
+nohup mpirun -n 14 ../../raccoon-opt -i solid.i > log.txt 2>&1 &
 
 echo "End: $(date)"

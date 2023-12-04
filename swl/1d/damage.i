@@ -2,10 +2,10 @@
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 200
+    # nx = 200
+    # ny = 50
+    nx = 400
     ny = 50
-    # nx = 40
-    # ny = 10
     xmin = 2
     xmax = 4
     ymin = 0
@@ -99,6 +99,7 @@
 
   end_time = 2.2
   dt = 0.5e-3
+  # dt = 0.25e-3
 []
 
 # [Outputs]

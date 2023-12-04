@@ -16,12 +16,14 @@ G = '${fparse E/2/(1+nu)}'
     execute_on = 'TIMESTEP_END'
     input_files = 'fluid.i'
     # cli_args = 'SD=${SD};p_max=${p_max}'
+    # clone_parent_mesh = true
   []
   [damage]
     type = TransientMultiApp
     execute_on = TIMESTEP_END
     input_files = damage.i
     cli_args = 'Gc=${Gc};l=${l};psic=${psic}'
+    # clone_parent_mesh = true
   []
 []
 
@@ -64,10 +66,10 @@ G = '${fparse E/2/(1+nu)}'
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 200
+    # nx = 200
+    # ny = 50
+    nx = 400
     ny = 50
-    # nx = 40
-    # ny = 10
     xmin = 2
     xmax = 4
     ymin = 0
@@ -261,27 +263,28 @@ G = '${fparse E/2/(1+nu)}'
   solve_type = LINEAR
   [TimeIntegrator]
     type = CentralDifference
-    # solve_type = lumped
-    solve_type = consistent
+    solve_type = lumped
+    # solve_type = consistent
   []
   end_time = 2.2
   dt = 0.5e-3
+  # dt = 0.25e-3
 []
 
 [Outputs]
   [exodus]
     type = Exodus
     interval = 50
-    file_base = './out/solid'
+    file_base = './out/solid_h0.005'
   []
   [vpp]
     type = CSV
-    interval = 5
-    file_base = './out/vpp/line'
+    interval = 10
+    file_base = './out/vpp/line_h0.005'
   []
   [pp]
     type = CSV
     interval = 10
-    file_base = './out/pp/max_value'
+    file_base = './out/pp/max_value_h0.005'
   []
 []

@@ -3,10 +3,10 @@
   [gmg]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 200
+    # nx = 200
+    # ny = 50
+    nx = 400
     ny = 50
-    # nx = 40
-    # ny = 10
     xmin = 0
     xmax = 2
     ymin = 0
@@ -84,17 +84,17 @@
   []
 []
 
-[VectorPostprocessors]
-  [f]
-    type = LineValueSampler
-    variable = 'p'
-    start_point = '0 0 0'
-    end_point = '2 0 0'
-    num_points = 200
-    sort_by = x
-    outputs = vpp
-  []
-[]
+# [VectorPostprocessors]
+#   [f]
+#     type = LineValueSampler
+#     variable = 'p'
+#     start_point = '0 0 0'
+#     end_point = '2 0 0'
+#     num_points = 200
+#     sort_by = x
+#     outputs = vpp
+#   []
+# []
 
 [Executioner]
   type = Transient
@@ -106,6 +106,7 @@
 
   end_time = 2.2
   dt = 0.5e-3
+  # dt = 0.25e-3
   [TimeIntegrator]
     type = NewmarkBeta
   []
@@ -115,11 +116,11 @@
   [exodus]
     type = Exodus
     interval = 50
-    file_base = './out/fluid'
+    file_base = './out/fluid_h0.005'
   []
-  [vpp]
-    type = CSV
-    interval = 50
-    file_base = './out/vpp/line'
-  []
+  # [vpp]
+  #   type = CSV
+  #   interval = 50
+  #   file_base = './out/vpp/line'
+  # []
 []
