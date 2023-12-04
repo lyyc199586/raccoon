@@ -6,14 +6,15 @@ nu = 0.2
 Gc = 3.656e-2
 sigma_ts = 10
 rho = 1.995e-9
-l = 1 # l_ch = E*Gc/sigma_ts^2
+l = 0.5 # l_ch = E*Gc/sigma_ts^2
 # delta = 0
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 refine = 3 # h_r = 0.125
-v0 = -0.1e3 # mm/s -> 5 m/s -> h0 = 1.27 m
+v0 = -5e3 # mm/s -> 5 m/s -> h0 = 1.27 m
+Dt = 20e-6
 
 # hht parameters
 hht_alpha = -0.3
@@ -69,6 +70,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     input = gen
     combinatorial_geometry = 'abs(x) < 5.1 & y > -0.1'
     new_sideset_name = load
+  []
+  [bottom]
+    type = ParsedGenerateSideset
+    input = load
+    combinatorial_geometry = 'y < -29.9'
+    new_sideset_name = bottom
   []
   coord_type = XYZ
 []
@@ -190,9 +197,9 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Functions]
   [load_func]
     type = ADParsedFunction
-    expression = 'v0*t'
-    symbol_names = 'v0'
-    symbol_values = ${v0}
+    expression = 'if(t < Dt, v0*t*(1-0.5*t/Dt), 0.5*v0*Dt)'
+    symbol_names = 'v0 Dt'
+    symbol_values = '${v0} ${Dt}'
   []
 []
 
@@ -202,6 +209,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = disp_y
     boundary = load
     function = load_func
+  []
+  [fix_bottom]
+    type = ADDirichletBC
+    variable = disp_y
+    boundary = bottom
+    value = 0
   []
 []
 
@@ -271,13 +284,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
   nl_rel_tol = 1e-6
@@ -293,11 +306,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   start_time = 0
   end_time = 50e-6
 
-  [TimeIntegrator]
-    type = NewmarkBeta
-    beta = ${beta}
-    gamma = ${gamma}
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   beta = ${beta}
+  #   gamma = ${gamma}
+  # []
 []
 
 [Outputs]
@@ -307,11 +320,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     minimum_time_interval = 1e-7
   []
   print_linear_residuals = false
-  file_base = './out/frag_2d_y30_coh_l${l}_v0${v0}/frag_2d_coh_l${l}_v0${v0}'
+  file_base = './out/frag_2d_coh_fix_bottom_l${l}_v0${v0}/frag'
   interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/frag_2d_y30_coh_l${l}_v0${v0}'
+    file_base = './gold/frag_2d_coh_fix_bottom_l${l}_v0${v0}'
     type = CSV
   []
 []

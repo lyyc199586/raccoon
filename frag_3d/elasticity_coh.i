@@ -9,7 +9,8 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 
-refine = 2 # h_r = 0.125
+refine = 3 # h_r = 0.125
+# refine = 1
 v0 = -1e4 # mm/s -> 5 m/s -> h0 = 1.27 m
 
 # hht parameters
@@ -403,6 +404,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   dt = 1e-7
   start_time = 0
   end_time = 50e-6
+  num_steps = 50
 
   [TimeIntegrator]
     type = NewmarkBeta
