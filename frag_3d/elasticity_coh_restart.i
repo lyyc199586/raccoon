@@ -10,7 +10,6 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = ${fparse sigma_ts^2/2/E}
 
 refine = 3 # h_r = 0.125
-# refine = 1
 v0 = -1e4 # mm/s -> 5 m/s -> h0 = 1.27 m
 
 # hht parameters
@@ -41,7 +40,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     input_files = fracture_coh.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
     execute_on = TIMESTEP_END
-    # clone_parent_mesh = true
+    clone_parent_mesh = true
   []
 []
 
@@ -53,29 +52,46 @@ gamma = '${fparse 1/2-hht_alpha}'
   use_displaced_mesh = true
 []
 
+[Problem]
+  restart_file_base = './out/frag_3d_coh_l1_v0-1e4/frag_3d_coh_l1_v0-1e4_cp/0174'
+[]
+
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/quarter_cylinder_r20_t30_h1_transfinite.msh'
+    # file = './mesh/quarter_cylinder_r20_t30_h1_transfinite.msh'
+    file = './out/frag_3d_coh_l1_v0-1e4/frag_3d_coh_l1_v0-1e4_cp/0174-mesh.cpr'
   []
-  [load]
-    type = ParsedGenerateSideset
-    input = fmg
-    combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
-    new_sideset_name = load
-  []
-  [front]
-    type = ParsedGenerateSideset
-    input = load
-    combinatorial_geometry = 'y < 0.1'
-    new_sideset_name = front
-  []
-  [left]
-    type = ParsedGenerateSideset
-    input = front
-    combinatorial_geometry = 'x < 0.1'
-    new_sideset_name = left
-  []
+  # [initial_box]
+  #   type = ParsedGenerateSideset
+  #   input = fmg
+  #   combinatorial_geometry = 'x<5.1 & y< 5.1 & z>29.9'
+  #   new_sideset_name = initial_square
+  # []
+  # [initial_refine]
+  #   type = RefineSidesetGenerator
+  #   input = initial_box
+  #   refinement = ${refine}
+  #   boundaries = 'initial_square'
+  # []
+  # [load]
+  #   type = ParsedGenerateSideset
+  #   input = fmg
+  #   combinatorial_geometry = 'abs(sqrt(x^2 + y^2)) < 5.1 & z > 29.9'
+  #   new_sideset_name = load
+  # []
+  # [front]
+  #   type = ParsedGenerateSideset
+  #   input = load
+  #   combinatorial_geometry = 'y < 0.1'
+  #   new_sideset_name = front
+  # []
+  # [left]
+  #   type = ParsedGenerateSideset
+  #   input = front
+  #   combinatorial_geometry = 'x < 0.1'
+  #   new_sideset_name = left
+  # []
   coord_type = XYZ
 []
 
@@ -402,9 +418,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   fixed_point_abs_tol = 1e-5
 
   dt = 1e-7
-  start_time = 0
+  # start_time = 0
+  start_time = 17.4e-6
   end_time = 50e-6
-  num_steps = 50
 
   [TimeIntegrator]
     type = NewmarkBeta
@@ -420,11 +436,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     minimum_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/frag_3d_coh_l${l}_v0${v0}/frag_3d_coh_l${l}_v0${v0}'
+  file_base = './out/frag_3d_coh_l${l}_v0${v0}_2/frag_3d_coh_l${l}_v0${v0}'
   interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/frag_3d_coh_l${l}_v0${v0}'
+    file_base = './gold/frag_3d_coh_l${l}_v0${v0}_2'
     type = CSV
   []
 []
