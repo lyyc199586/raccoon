@@ -16,9 +16,9 @@ K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 # psic = ${fparse sigma_ts^2/2/E}
-refine = 3 # h_r = 0.125
-# refine = 2
-v0 = -5e3 # mm/s -> 5 m/s -> h0 = 1.27 m
+# refine = 3 # h_r = 0.125
+refine = 2
+v0 = -2e4 # mm/s -> 5 m/s -> h0 = 1.27 m
 Dt = 20e-6
 
 # hht parameters
@@ -30,14 +30,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   [from_d]
     type = MultiAppCopyTransfer
     from_multi_app = fracture
-    variable = 'd f_nu_var'
-    source_variable = 'd f_nu_var'
+    variable = 'd f_nu_var sts_var'
+    source_variable = 'd f_nu_var sts_var'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
     to_multi_app = fracture
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
+    variable = 'disp_x disp_y psie_active rand_mat_factor'
+    source_variable = 'disp_x disp_y psie_active rand_mat_factor'
   []
 []
 
@@ -45,7 +45,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};refine=${refine};'
     execute_on = TIMESTEP_END
     clone_parent_mesh = true
   []
@@ -67,22 +67,23 @@ gamma = '${fparse 1/2-hht_alpha}'
     ny = 30
     xmin = -20
     xmax = 20
-    ymin = -30
-    ymax = 0
+    ymin = 0
+    ymax = 30
   []
   [load]
     type = ParsedGenerateSideset
     input = gen
-    combinatorial_geometry = 'abs(x) < 5.1 & y > -0.1'
+    combinatorial_geometry = 'abs(x) < 5.1 & y > 29.9'
     new_sideset_name = load
   []
   [bottom]
     type = ParsedGenerateSideset
     input = load
-    combinatorial_geometry = 'y < -29.9'
+    combinatorial_geometry = 'y < 0.1'
     new_sideset_name = bottom
   []
   coord_type = XYZ
+  # uniform_refine = 3
 []
 
 [Adaptivity]
@@ -140,6 +141,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   [d]
   []
   [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [rand_mat_factor]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [sts_var]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -210,11 +219,31 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   symbol_names = 'v0'
   #   symbol_values = ${v0}
   # []
-  [load_func]
+  [load_spatial]
+    type = PiecewiseLinear
+    axis = x
+    x = '-5.1 -4.5 4.5 5.1'
+    y = '0 1 1 0'
+  []
+  [load_temporal]
     type = ADParsedFunction
     expression = 'if(t < Dt, v0*t*(1-0.5*t/Dt), 0.5*v0*Dt)'
     symbol_names = 'v0 Dt'
     symbol_values = '${v0} ${Dt}'
+  []
+  [load_func]
+    type = CompositeFunction
+    functions = 'load_spatial load_temporal'
+  []
+[]
+
+[ICs]
+  [rand_mat_ic] # varying
+    type = RandomIC
+    variable = rand_mat_factor
+    min = 0.5
+    max = 1.5
+    seed = 1
   []
 []
 
@@ -239,6 +268,29 @@ gamma = '${fparse 1/2-hht_alpha}'
     prop_names = 'E K G lambda l Gc density'
     prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
   []
+  # [bulk_properties]
+  #   type = ADGenericConstantMaterial
+  #   prop_names = 'K G Gc lambda l density'
+  #   prop_values = '${K} ${G} ${Gc} ${l} ${Gc} ${rho}'
+  # []
+  # [rand_youngs_modulus]
+  #   type = ADParsedMaterial
+  #   property_name = E 
+  #   coupled_variables = 'rand_mat_factor'
+  #   expression = 'E_base*rand_mat_factor'
+  #   constant_names = 'E_base'
+  #   constant_expressions = '${E}'
+  #   outputs = exodus
+  # []
+  # [rand_frac_toughness]
+  #   type = ADParsedMaterial
+  #   property_name = Gc
+  #   coupled_variables = 'rand_mat_factor'
+  #   expression = 'Gc_base*rand_mat_factor'
+  #   constant_names = 'Gc_base'
+  #   constant_expressions = '${Gc}'
+  #   outputs = exodus
+  # []
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
@@ -334,6 +386,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   dt = 1e-7
   start_time = 0
   end_time = 50e-6
+  # num_steps = 10
 
   [TimeIntegrator]
     type = NewmarkBeta
@@ -347,15 +400,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = Exodus
     interval = 1
     minimum_time_interval = 1e-7
+    execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
   print_linear_residuals = false
   # file_base = './out/frag_2d_y30_nuc22_v0${v0}_scs${sigma_cs}_l${l}_d${delta}/frag'
-  file_base = './out/frag_2d_nuc22_fix_bottom_v0${v0}_scs${sigma_cs}_l${l}_d${delta}/frag'
+  # file_base = './out/frag_2d_nuc22_fix_bottom_v0${v0}_sts+-0.5_scs${sigma_cs}_l${l}_d${delta}/frag'
+  file_base = './out/frag_2d_nuc22_pwlinear_load_v0${v0}_scs${sigma_cs}_l${l}_d${delta}/frag'
   interval = 1
   checkpoint = true
   [csv]
     # file_base = './gold/frag_2d_y30_nuc22_v0${v0}_scs${sigma_cs}_l${l}_d${delta}'
-    file_base = './gold/frag_2d_nuc22_fix_bottom_v0${v0}_scs${sigma_cs}_l${l}_d${delta}'
+    # file_base = './gold/frag_2d_nuc22_fix_bottom_v0${v0}_sts+-0.5_scs${sigma_cs}_l${l}_d${delta}'
+    file_base = './gold/frag_2d_nuc22_pwlinear_load_v0${v0}_scs${sigma_cs}_l${l}_d${delta}'
     type = CSV
   []
 []

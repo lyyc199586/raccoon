@@ -53,6 +53,14 @@
     order = CONSTANT
     family = MONOMIAL
   []
+  [rand_mat_factor]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [sts_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Bounds]
@@ -104,6 +112,11 @@
     property = f_nu
     variable = f_nu_var
   []
+  [get_sts]
+    type = ADMaterialRealAux
+    property = sts
+    variable = sts_var
+  []
 []
 
 [Materials]
@@ -112,6 +125,15 @@
     prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
   []
+  [rand_sts]
+    type = ADParsedMaterial
+    property_name = sts
+    coupled_variables = 'rand_mat_factor'
+    expression = 'sts_base*rand_mat_factor'
+    constant_names = 'sts_base'
+    constant_expressions = '${sigma_ts}'
+    # outputs = exodus
+  []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
@@ -119,7 +141,7 @@
     function = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-4'
   []
   # [degradation]
   #   type = RationalDegradationFunction
@@ -143,13 +165,14 @@
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
-  [kumar_material] 
+  [kumar_material]
     type = KLRNucleationMicroForce
     # type = KLBFNucleationMicroForce
     phase_field = d
     stress_name = stress
     normalization_constant = c0
     tensile_strength = '${sigma_ts}'
+    # tensile_strength = sts
     compressive_strength = '${sigma_cs}'
     delta = '${delta}'
     external_driving_force_name = ce
@@ -189,7 +212,6 @@
   # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
   petsc_options_value = 'hypre boomeramg      vinewtonrsls '
-  
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true

@@ -22,12 +22,15 @@ K_s = '${fparse E_s/3/(1-2*nu_s)}'
 G_s = '${fparse E_s/2/(1+nu_s)}'
 
 # nuc2022
-# l = 3
+# l = 2.5
 # delta = 5
+delta = 10
+l = 2
+# delta = 10
 
 # nuc2020
-l = 3
-delta = 15
+# l = 3
+# delta = 15
 # l = 1
 # delta = 25
 
@@ -46,7 +49,8 @@ gap = -0.0145
 refine = 3 # h_fine ~ 0.1 (0.1-0.125)
 
 # hht parameters
-hht_alpha = -0.25
+# hht_alpha = -0.25
+hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
@@ -594,13 +598,26 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
+  # solve_type = 'PJFNK'
+  # petsc_options = '-snes_ksp_ew'
+  # petsc_options_iname = '-pc_type -snes_linesearch_type -pc_factor_shift_type -pc_factor_shift_amount'
+  # petsc_options_value = 'lu       basic                 NONZERO               1e-15'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
   # petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
   # petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
   automatic_scaling = true
 
-  line_search = l2
+  # line_search = l2
+  line_search = contact
+  contact_line_search_ltol = 1e-5
+  contact_line_search_allowed_lambda_cuts = 3 
+  l_tol = 1e-08
 
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
@@ -608,13 +625,17 @@ gamma = '${fparse 1/2-hht_alpha}'
   nl_abs_tol = 1e-8
 
   # dt = 5e-8 # 0.05 us
-  dt = 1e-6
-  dtmin = 5e-8
+  # dt = 5e-7
+  dtmin = 1e-8
   end_time = ${tf}
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<4.5e-5, 1e-6, 1e-7)'
+  []
 
 
   # fixed_point_max_its = 300
-  fixed_point_max_its = 20
+  fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-6
   # fixed_point_abs_tol = 1e-8
@@ -630,17 +651,17 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    minimum_time_interval = 1e-6
+    minimum_time_interval = 5e-7
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/penalty_nuc20_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}/penalty_nuc20_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
+  file_base = './out/penalty_nuc22_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}/brz'
   # file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './gold/pp_penalty_nuc20_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
+    file_base = './gold/pp_penalty_nuc22_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
     # file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   []
 []

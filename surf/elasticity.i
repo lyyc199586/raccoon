@@ -67,15 +67,15 @@
 # BegoStone
 # E = 2.735e4
 # E = 4.77e3
-E = 6.16e3
-nu = 0.2
-Gc = 3.656e-2
-sigma_ts = 10
-# sigma_cs = 22.27
-sigma_cs = 37.4
+# E = 6.16e3
+# nu = 0.2
+# Gc = 3.656e-2
+# sigma_ts = 10
+# # sigma_cs = 22.27
+# sigma_cs = 37.4
 
-l = 0.5
-delta = 0
+# l = 0.5
+# delta = 0
 
 # soda-lime glass
 # E = 72e3
@@ -88,12 +88,15 @@ delta = 0
 # delta = 0
 
 # basalt
-# E = 20.11e3
-# nu = 0.24
-# Gc = 0.1
-# sigma_ts = 11.31
-# # sigma_cs = 159.08
-# sigma_cs = ${fparse sigma_ts*30}
+material = basalt
+E = 20.11e3
+nu = 0.24
+Gc = 0.1
+sigma_ts = 11.31
+# sigma_cs = 159.08
+sigma_cs = ${fparse sigma_ts*30}
+l = 2
+delta = 10
 
 # nucleation model
 # l = 2.5
@@ -128,7 +131,7 @@ width = '${fparse 2*a}'
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
 # refine = 3 # fine mesh size: 0.025
-refine = 2 # fine mesh size: 0.015625
+refine = 3 # fine mesh size: 0.015625
 
 [Functions]
   [bc_func]
@@ -375,10 +378,10 @@ refine = 2 # fine mesh size: 0.015625
     type = Exodus
     interval = 10
   []
-  file_base = './out/bego_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}/bego_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+  file_base = './out/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}/${material}_surf'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/bego_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_h${fparse h/(2^refine)}'
+    file_base = './gold/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}'
   []
 []

@@ -138,7 +138,7 @@
     function = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 1e-5'
     # parameter_values = '2 0'
   []
   # [nodegradation] # elastic test
@@ -162,22 +162,9 @@
     coupled_variables = 'd'
     material_property_names = 'alpha(d) Gc c0 l'
   []
-  # [kumar_material] #2022
-  #   type = KLRNucleationMicroForce
-  #   phase_field = d
-  #   stress_name = stress
-  #   normalization_constant = c0
-  #   tensile_strength = sigma_ts
-  #   compressive_strength = sigma_cs
-  #   delta = delta
-  #   external_driving_force_name = ce
-  #   stress_balance_name = f_nu
-  #   # output_properties = 'ce f_nu'
-  #   # outputs = exodus
-  # []
-  [kumar_material] #2020
-    type = KLBFNucleationMicroForce
-    # phase_field = d
+  [kumar_material] #2022
+    type = KLRNucleationMicroForce
+    phase_field = d
     stress_name = stress
     normalization_constant = c0
     tensile_strength = sigma_ts
@@ -188,6 +175,19 @@
     # output_properties = 'ce f_nu'
     # outputs = exodus
   []
+  # [kumar_material] #2020
+  #   type = KLBFNucleationMicroForce
+  #   # phase_field = d
+  #   stress_name = stress
+  #   normalization_constant = c0
+  #   tensile_strength = sigma_ts
+  #   compressive_strength = sigma_cs
+  #   delta = delta
+  #   external_driving_force_name = ce
+  #   stress_balance_name = f_nu
+  #   # output_properties = 'ce f_nu'
+  #   # outputs = exodus
+  # []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -226,14 +226,18 @@
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
   # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
+  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
   line_search = none
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-
+  # line_search = bt
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
+  # fixed_point_max_its = 20
+  # accept_on_max_fixed_point_iteration = true
   # restart
   # start_time = 80e-6
   # end_time = 120e-6

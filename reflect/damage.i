@@ -14,7 +14,7 @@
   [add_crack]
     type = ParsedGenerateSideset
     input = gmg
-    combinatorial_geometry = 'abs(x-1)<0.021'
+    combinatorial_geometry = 'abs(x-1.01)<0.01'
     new_sideset_name = 'crack'
   []
 []
@@ -22,9 +22,19 @@
 [Variables]
   [d]
     [InitialCondition]
-      type = ConstantIC
-      boundary = crack
-      value = 1
+      # type = ConstantIC
+      # boundary = crack
+      # value = 1
+      type = BrittleDamageIC
+      d0 = 1
+      x1 = 1
+      x2 = 1
+      y1 = 0
+      y2 = 0.2
+      z1 = 0
+      z2 = 0
+      l = ${l}
+      # bandwidth_multiplier = 2
     []
   []
 []
@@ -43,12 +53,25 @@
 []
 
 [Bounds]
+  # [irr]
+  #   type = VariableOldValueBoundsAux
+  #   variable = 'bounds_dummy'
+  #   bounded_variable = 'd'
+  #   bound_type = lower
+  # []
+  # [irr2]
+  #   type = VariableOldValueBoundsAux
+  #   variable = 'bounds_dummy'
+  #   bounded_variable = 'd'
+  #   bound_type = upper
+  # []
   [conditional]
     type = ConditionalBoundsAux
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.95
+    # threshold_value = 0.95
+    threshold_value = 0.01
   []
   [upper]
     type = ConstantBoundsAux
@@ -76,6 +99,15 @@
     type = ADCoefMatSource
     variable = d
     prop_names = 'ce'
+  []
+[]
+
+[ICs]
+  [d_1]
+    type = ConstantIC
+    variable = d
+    value = 1
+    boundary = crack
   []
 []
 

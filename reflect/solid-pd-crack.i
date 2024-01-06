@@ -7,10 +7,10 @@ E = 0.02735
 nu = 0
 Gc = 21.88e-9
 l = 0.1 # h = 0.02
-delta = 0
+# delta = 0
 # psic = 7.0e-9
-sigma_ts = 20
-sigma_cs = 100
+# sigma_ts = 20
+# sigma_cs = 100
 
 rho = 1.995e-3
 
@@ -31,33 +31,33 @@ gamma = '${fparse 1/2-hht_alpha}'
   beta = ${beta}
 []
 
-[MultiApps]
-  [damage]
-    type = TransientMultiApp
-    execute_on = TIMESTEP_END
-    input_files = damage.i
-    # cli_args = 'Gc=${Gc};l=${l};psic=${psic}'
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};'
-    # clone_parent_mesh = true
-  []
-[]
+# [MultiApps]
+#   [damage]
+#     type = TransientMultiApp
+#     execute_on = TIMESTEP_END
+#     input_files = damage.i
+#     # cli_args = 'Gc=${Gc};l=${l};psic=${psic}'
+#     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};'
+#     # clone_parent_mesh = true
+#   []
+# []
 
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    from_multi_app = damage
-    source_variable = d
-    variable = d
-    execute_on = TIMESTEP_BEGIN
-  []
-  [to_d]
-    type = MultiAppCopyTransfer
-    to_multi_app = damage
-    source_variable = 'disp_x disp_y psie_active'
-    variable = 'disp_x disp_y psie_active'
-    execute_on = TIMESTEP_END
-  []
-[]
+# [Transfers]
+#   [from_d]
+#     type = MultiAppCopyTransfer
+#     from_multi_app = damage
+#     source_variable = d
+#     variable = d
+#     execute_on = TIMESTEP_BEGIN
+#   []
+#   [to_d]
+#     type = MultiAppCopyTransfer
+#     to_multi_app = damage
+#     source_variable = 'disp_x disp_y psie_active'
+#     variable = 'disp_x disp_y psie_active'
+#     execute_on = TIMESTEP_END
+#   []
+# []
 
 [Mesh]
   [gmg]
@@ -89,11 +89,6 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [AuxVariables]
   [d]
-    [InitialCondition]
-      type = ConstantIC
-      boundary = crack
-      value = 1
-    []
   []
   [bounds_dummy]
   []
@@ -188,7 +183,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = 'if(t < T, amp*sin(pi*t/(T)), 0)'
     symbol_names = 'amp T'
     # symbol_values = '1e-3 1'
-    symbol_values = '-10e-6 0.25'
+    symbol_values = '10e-6 0.25'
   []
 []
 
@@ -200,6 +195,28 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = left
     variable = disp_x
     function = f_load
+  []
+[]
+
+[ICs]
+  [d_0]
+    type = ConstantIC
+    variable = d
+    value = 1
+    boundary = crack
+  []
+  [d_1]
+    type = BrittleDamageIC
+    variable = d
+    d0 = 1
+    x1 = 1.01
+    x2 = 1.01
+    y1 = 0
+    y2 = 0.2
+    z1 = 0
+    z2 = 0
+    l = ${l}
+    # bandwidth_multiplier = 2
   []
 []
 
@@ -294,13 +311,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  # file_base = './out/reflect_pd_compression'
-  file_base = './out/reflect_pd_tension'
+  file_base = './out/reflect_pd_compression'
+  # file_base = './out/reflect_pd_tension'
   interval = 1
   [pp]
     type = CSV
-    # file_base = './gold/reflect_pd_compression'
-    file_base = './gold/reflect_pd_tension'
+    file_base = './gold/reflect_pd_compression'
+    # file_base = './gold/reflect_pd_tension'
     minimum_time_interval = 0.01
   []
 []
