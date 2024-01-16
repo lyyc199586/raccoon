@@ -15,6 +15,13 @@
     block_id = 1
     block_name = top_layer
   []
+  # [frontcrack]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = toplayer
+  #   combinatorial_geometry = 'x > 19 & y <=74'
+  #   block_id = 2
+  #   block_name = front_crack
+  # []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
     input = toplayer
@@ -34,7 +41,9 @@
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      refine = 0.001
+      # refine = 0.001
+      refine = 0.1
+      # block = front_crack
     []
     [initial_tip]
       type = BoxMarker
@@ -157,14 +166,14 @@
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    property_name = alpha
+    f_name = alpha
     function = 'd^2'
     phase_field = d
     block = 0
   []
   [degradation]
     type = PowerDegradationFunction
-    property_name = g
+    f_name = g
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
@@ -174,8 +183,8 @@
   [psi]
     type = ADDerivativeParsedMaterial
     property_name = psi
-    function = 'g*psie_active+(Gc/c0/l)*alpha'
-    args = 'd psie_active'
+    expression = 'g*psie_active+(Gc/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
     block = 0

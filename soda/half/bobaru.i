@@ -8,9 +8,10 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 
-Gc = 3.8e-3
+# Gc = 3.8e-3
+Gc = 9
 
-p = 25 # they used normal pressure = 25*cos(theta) 
+p = 19 # they used normal pressure = 25*cos(theta) 
 l = 0.6
 refine = 3 # h = 1/2^4 = 0.125
 
@@ -24,7 +25,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = bobaru.i
+    input_files = bobaru_frac.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
@@ -54,11 +55,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     y = '0 ${p} ${p} 0 0'
   []
   [t_factor_x]
-    type = MooseParsedFunction
+    type = ParsedFunction
     expression = 'sin(20/180*pi) + 0.35*cos(20/180*pi)'
   []
   [t_factor_y]
-    type = MooseParsedFunction
+    type = ParsedFunction
     expression = 'cos(20/180/pi) - 0.35*sin(20/180*pi)'
   []
   [t_func_x]
@@ -93,6 +94,13 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     block_id = 1
     block_name = top_layer
   []
+  # [frontcrack]
+  #   type = ParsedSubdomainMeshGenerator
+  #   input = toplayer
+  #   combinatorial_geometry = 'x > 19 & y <=74'
+  #   block_id = 2
+  #   block_name = front_crack
+  # []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
     input = toplayer
@@ -119,7 +127,9 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      refine = 0.001
+      # refine = 0.001
+      refine = 0.1
+      # block = front_crack
     []
     [initial_tip]
       type = BoxMarker
@@ -205,7 +215,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [inertia_x]
     type = ADInertialForce
     variable = disp_x
-    density = reg_density
+    density = density
     block = 0
     velocity = vel_x
     acceleration = accel_x
@@ -213,7 +223,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [inertia_y]
     type = ADInertialForce
     variable = disp_y
-    density = reg_density
+    density = density
     block = 0
     velocity = vel_y
     acceleration = accel_y
@@ -341,7 +351,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   []
   [degradation]
     type = PowerDegradationFunction
-    property_name = g
+    f_name = g
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
@@ -538,8 +548,10 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 10
+    interval = 1
+    minimum_time_interval = 0.5e-6
   []
+  checkpoint = true
   print_linear_residuals = false
   file_base = '../out/bobaru_gc${Gc}_l${l}_h${refine}/bobaru_gc${Gc}_l${l}_h${refine}'
   # file_base = '../out/hht_half_test'
