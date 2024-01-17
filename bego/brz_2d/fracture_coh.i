@@ -124,7 +124,7 @@
     phase_field = d 
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0.0 0'
+    parameter_values = '2 1 0.0 ${eta}'
     # parameter_values = '2 1 0.0 1e-3'
   []
   [crack_geometric]
@@ -204,12 +204,12 @@
   petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
-  line_search = bt
+  # line_search = none
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
 
   ### restart
   # start_time = 0.492
@@ -217,11 +217,11 @@
   # dt = 2e-3
 []
 
-[Outputs]
-  [exodus]
-    type = Exodus
-    interval = 1
-  []
-  file_base = './out/fracture_coh_eta0_R${R}_ts${sigma_ts}_l${l}'
-  print_linear_residuals = false
-[]
+# [Outputs]
+#   [exodus]
+#     type = Exodus
+#     interval = 1
+#   []
+#   file_base = './out/fracture_coh_eta{eta}_R${R}_ts${sigma_ts}_l${l}'
+#   print_linear_residuals = false
+# []

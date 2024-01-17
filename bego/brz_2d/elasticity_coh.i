@@ -8,6 +8,7 @@ l = 0.25
 # delta = 25
 ## effective radius R = R*r2/(r2 - R)=R*a/(a-1)
 R = 2.9 # a=infty
+eta = 1e-6
 # R = 31.9 # a=1.1
 # R = 14.5 # a=1.25
 
@@ -44,7 +45,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture_coh.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};psic=${psic};R=${R}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};eta=${eta};psic=${psic};'
+                # 'sigma_ts=${sigma_ts};R=${R}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -339,10 +341,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   [degradation]
     type = RationalDegradationFunction
     f_name = g
-    phase_field = d 
+    phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0.0 0'
+    parameter_values = '2 1 0.0 ${eta}'
     # parameter_values = '2 1 0.0 1e-3'
   []
   [strain]
@@ -435,9 +437,9 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
   #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
   # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
-  # line_search = bt
-  line_search = none
-
+  line_search = bt
+  # line_search = none
+  # auto_preconditioning = false
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
@@ -458,7 +460,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
   [TimeStepper]
     type = FunctionDT
-    function = 'if(t<0.5, 0.05, 2e-3)' # r2/R = infty
+    function = 'if(t<0.5, 0.05, 5e-3)' # r2/R = infty
     # function = 'if(t<0.35, 0.05, 2e-3)' # r2/R = 1.1
     # function = 'if(t<0.45, 0.05, 2e-3)' # r2/R = 1.25
   []
@@ -475,12 +477,12 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
   # fixed_point_abs_tol = 1e-10
 
   fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
 []
 
 [Outputs]
@@ -489,7 +491,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
     interval = 1
     minimum_time_interval = 0.01
   []
-  file_base = './out/solid_coh_eta0_R${R}_ts${sigma_ts}_l${l}'
+  file_base = './out/solid_coh_eta${eta}_R${R}_ts${sigma_ts}_l${l}'
   print_linear_residuals = false
   [csv]
     type = CSV
