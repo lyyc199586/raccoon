@@ -24,7 +24,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
 # nuc2022
 # l = 2.5
 # delta = 5
-delta = 10
+delta = 4
 l = 2
 # delta = 10
 
