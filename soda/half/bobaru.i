@@ -8,11 +8,12 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 
-# Gc = 3.8e-3
-Gc = 9
+Gc = 3.8e-3
+# Gc = 9
 
 p = 19 # they used normal pressure = 25*cos(theta) 
-l = 0.6
+# l = 0.6
+l = 1.2
 refine = 3 # h = 1/2^4 = 0.125
 
 # putty
@@ -128,7 +129,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
       type = ValueThresholdMarker
       variable = d
       # refine = 0.001
-      refine = 0.1
+      # refine = 0.1
+      refine = 0.5
       # block = front_crack
     []
     [initial_tip]
