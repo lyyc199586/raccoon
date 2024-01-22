@@ -143,6 +143,24 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
 []
 
+[BCs]
+  [left_arc_x]
+    type = ADFunctionContactBC
+    variable = disp_x
+    boundary = left_bnd
+    function = left_bc_func
+    penalty_function = p_func
+  []
+  [right_arc_x]
+    type = ADFunctionContactBC
+    variable = disp_x
+    boundary = right_bnd
+    function = right_bc_func
+    penalty_function = p_func
+  []
+[]
+
+
 [Variables]
   [disp_x]
   []
@@ -247,23 +265,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = vel_y
     acceleration = accel_y
     execute_on = timestep_end
-  []
-[]
-
-[BCs]
-  [left_arc_x]
-    type = ADFunctionContactBC
-    variable = disp_x
-    boundary = left_bnd
-    function = left_bc_func
-    penalty_function = p_func
-  []
-  [right_arc_x]
-    type = ADFunctionContactBC
-    variable = disp_x
-    boundary = right_bnd
-    function = right_bc_func
-    penalty_function = p_func
   []
 []
 

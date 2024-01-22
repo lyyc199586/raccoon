@@ -5,6 +5,7 @@ E = 20.11e3
 nu = 0.24
 Gc = 0.1
 sigma_ts = 11.31
+# sigma_ts = 43.34
 # sigma_cs = 159.08
 sigma_cs = 339.3
 rho = 2.74e-9
@@ -22,10 +23,10 @@ K_s = '${fparse E_s/3/(1-2*nu_s)}'
 G_s = '${fparse E_s/2/(1+nu_s)}'
 
 # nuc2022
-# l = 2.5
-# delta = 5
-delta = 4
-l = 2
+# l = 3
+delta = 5
+# delta = 4
+l = 3
 # delta = 10
 
 # nuc2020
@@ -142,6 +143,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     top_right = '31.01 15.1 0.01'
   []
   # construct_side_list_from_node_list=true
+  patch_update_strategy = auto
+  # patch_size = 5000
 []
 
 [Contact]

@@ -64,13 +64,15 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = GeneratedMeshGenerator
     dim = 2
     nx = 100
-    ny = 10
+    # ny = 10
+    ny = 1
     # nx = 400
     # ny = 25
     xmin = 0
     xmax = 2
     ymin = 0
-    ymax = 0.2
+    # ymax = 0.2
+    ymax = 0.02
   []
   [add_crack]
     type = ParsedGenerateSideset
@@ -246,6 +248,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADComputeSmallStrain
     # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
+    output_properties = total_strain
+    outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -253,8 +257,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    # decomposition = NONE
-    decomposition = VOLDEV
+    decomposition = SPECTRAL
+    # decomposition = VOLDEV
     # output_properties = 'psie_active'
     # outputs = exodus
   []
@@ -312,12 +316,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/reflect_pd_vd_comp'
+  file_base = './out/reflect_pd_sp_comp_1layer'
   # file_base = './out/reflect_pd_tension'
   interval = 1
   [pp]
     type = CSV
-    file_base = './gold/reflect_pd_vd_comp'
+    file_base = './gold/reflect_pd_sp_comp_1layer'
     # file_base = './gold/reflect_pd_tension'
     minimum_time_interval = 0.01
   []

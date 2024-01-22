@@ -1,7 +1,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/disc_r25_h1.msh'
+    file = '../mesh/disc_r25_h1.msh'
   []
   [left_bnd]
     type = ParsedGenerateSideset
@@ -192,17 +192,17 @@
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
-  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
-  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type -snes_linesearch_damping'
+  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls 0.5'
+  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type'
+  # petsc_options_value = 'hypre boomeramg      vinewtonrsls'
   automatic_scaling = true
 
-  line_search = none
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  line_search = basic
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
   # restart
   # start_time = 80e-6

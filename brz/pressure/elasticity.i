@@ -26,6 +26,11 @@ tf = 200e-6
 # adaptivity
 refine = 2 # h_fine = 1/2^3 = 0.125
 
+# hht_parameters
+hht_alpha = -0.3
+beta = '${fparse (1-hht_alpha)^2/4}'
+gamma = '${fparse 1/2-hht_alpha}'
+
 [MultiApps]
   [fracture]
     type = TransientMultiApp
@@ -52,15 +57,17 @@ refine = 2 # h_fine = 1/2^3 = 0.125
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
-  use_displaced_mesh = false
-  gamma = 0.5
-  beta = 0.25
+  # use_displaced_mesh = false
+  use_displaced_mesh = true
+  alpha = ${hht_alpha}
+  gamma = ${gamma}
+  beta = ${beta}
 []
 
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/disc_r25_h1.msh'
+    file = '../mesh/disc_r25_h1.msh'
   []
   [left_bnd]
     type = ParsedGenerateSideset
@@ -149,29 +156,41 @@ refine = 2 # h_fine = 1/2^3 = 0.125
 []
 
 [Kernels]
+  # [solid_x]
+  #   type = ADStressDivergenceTensors
+  #   variable = disp_x
+  #   component = 0
+  #   save_in = fx
+  # []
+  # [solid_y]
+  #   type = ADStressDivergenceTensors
+  #   variable = disp_y
+  #   component = 1
+  #   save_in = fy
+  # []
   [solid_x]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
     save_in = fx
   []
   [solid_y]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = fy
   []
   [inertia_x]
-    type = InertialForce
+    type = ADInertialForce
     variable = disp_x
-    density = reg_density
+    density = density
     velocity = vel_x
     acceleration = accel_x
   []
   [inertia_y]
-    type = InertialForce
+    type = ADInertialForce
     variable = disp_y
-    density = reg_density
+    density = density
     velocity = vel_y
     acceleration = accel_y
   []
@@ -238,11 +257,11 @@ refine = 2 # h_fine = 1/2^3 = 0.125
     prop_names = 'E K G lambda l Gc density'
     prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
   []
-  [reg_density]
-    type = MaterialADConverter
-    ad_props_in = 'density'
-    reg_props_out = 'reg_density'
-  []
+  # [reg_density]
+  #   type = MaterialADConverter
+  #   ad_props_in = 'density'
+  #   reg_props_out = 'reg_density'
+  # []
   # [nodegradation] # elastic test
   #   type = NoDegradation
   #   f_name = g 
@@ -299,39 +318,43 @@ refine = 2 # h_fine = 1/2^3 = 0.125
 [Executioner]
   type = Transient
 
-  solve_type = NEWTON
+  # solve_type = NEWTON
   # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   # petsc_options_value = 'lu       superlu_dist                 '
-  petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
-  petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
+  # petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
+  # petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
+  solve_type = 'PJFNK'
+  petsc_options = '-snes_ksp_ew'
+  petsc_options_iname = '-pc_type -snes_linesearch_type -pc_factor_shift_type -pc_factor_shift_amount -snes_linesearch_damping'
+  petsc_options_value = 'lu       basic                 NONZERO               1e-15 0.5'
   automatic_scaling = true
 
   line_search = none
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
   # dt = 5e-8 # 0.05 us
   # dt = 1e-6
-  # dtmin = 5e-9
+  dtmin = 1e-8
   end_time = ${tf}
 
 
   fixed_point_max_its = 50
   # fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
 
-  [TimeIntegrator]
-    type = NewmarkBeta
-    gamma = 0.5
-    beta = 0.25
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   gamma = 0.5
+  #   beta = 0.25
+  # []
 
   # [TimeStepper]
   #   type = IterationAdaptiveDT
@@ -348,16 +371,18 @@ refine = 2 # h_fine = 1/2^3 = 0.125
 [Outputs]
   [exodus]
     type = Exodus
-    minimum_time_interval = 1e-6
+    minimum_time_interval = 1e-7
+    execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
-  minimum_time_interval = 1e-6
+  # minimum_time_interval = 1e-6
   print_linear_residuals = false
+  
   # file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}'
-  file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}_it50a/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}'
-  interval = 1
+  file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}_it50a/brz'
+  # interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './csv/pp_brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}'
+    file_base = './gold/pp_brz_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}'
   []
 []
