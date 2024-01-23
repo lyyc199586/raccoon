@@ -206,10 +206,10 @@
 
   # line_search = none
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
   ### restart
   # start_time = 0.492
