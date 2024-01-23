@@ -25,7 +25,8 @@ beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
 [GlobalParams]
-  displacements = 'disp_x disp_y'
+  # displacements = 'disp_x disp_y'
+  displacements = 'disp_x'
   use_displaced_mesh = false
   alpha = ${hht_alpha}
   gamma = ${gamma}
@@ -63,17 +64,10 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [gmg]
     type = GeneratedMeshGenerator
-    dim = 2
+    dim = 1
     nx = 100
-    # ny = 10
-    ny = 1
-    # nx = 400
-    # ny = 25
     xmin = 0
     xmax = 2
-    ymin = 0
-    # ymax = 0.2
-    ymax = 0.02
   []
   [add_crack]
     type = ParsedGenerateSideset
@@ -86,8 +80,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Variables]
   [disp_x]
   []
-  [disp_y]
-  []
+  # [disp_y]
+  # []
 []
 
 [AuxVariables]
@@ -107,10 +101,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [vel_x]
   []
-  [accel_y]
-  []
-  [vel_y]
-  []
+  # [accel_y]
+  # []
+  # [vel_y]
+  # []
 []
 
 [Kernels]
@@ -119,23 +113,23 @@ gamma = '${fparse 1/2-hht_alpha}'
     component = 0
     variable = disp_x
   []
-  [solid_y]
-    type = ADDynamicStressDivergenceTensors
-    component = 1
-    variable = disp_y
-  []
+  # [solid_y]
+  #   type = ADDynamicStressDivergenceTensors
+  #   component = 1
+  #   variable = disp_y
+  # []
   [inertia_x]
     type = ADInertialForce
     variable = 'disp_x'
     velocity = vel_x
     acceleration = accel_x
   []
-  [inertia_y]
-    type = ADInertialForce
-    variable = 'disp_y'
-    velocity = vel_y
-    acceleration = accel_y
-  []
+  # [inertia_y]
+  #   type = ADInertialForce
+  #   variable = 'disp_y'
+  #   velocity = vel_y
+  #   acceleration = accel_y
+  # []
 []
 
 [AuxKernels]
@@ -152,19 +146,19 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_x
     execute_on = timestep_end
   []
-  [accel_y]
-    type = NewmarkAccelAux
-    variable = accel_y
-    displacement = disp_y
-    velocity = vel_y
-    execute_on = timestep_end
-  []
-  [vel_y]
-    type = NewmarkVelAux
-    variable = vel_y
-    acceleration = accel_y
-    execute_on = timestep_end
-  []
+  # [accel_y]
+  #   type = NewmarkAccelAux
+  #   variable = accel_y
+  #   displacement = disp_y
+  #   velocity = vel_y
+  #   execute_on = timestep_end
+  # []
+  # [vel_y]
+  #   type = NewmarkVelAux
+  #   variable = vel_y
+  #   acceleration = accel_y
+  #   execute_on = timestep_end
+  # []
   [stress_xx]
     type = ADRankTwoAux
     variable = 'stress_xx'
@@ -194,7 +188,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [left_in]
     # type = ADFunctionDirichletBC
     type = ADPressure
-    displacements = 'disp_x disp_y'
+    # displacements = 'disp_x disp_y'
     boundary = left
     variable = disp_x
     function = f_load
@@ -215,7 +209,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     x1 = 1.01
     x2 = 1.01
     y1 = 0
-    y2 = 0.2
+    y2 = 0
     z1 = 0
     z2 = 0
     l = ${l}
@@ -248,7 +242,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [strain]
     type = ADComputeSmallStrain
     # out_of_plane_strain = 'strain_zz'
-    displacements = 'disp_x disp_y'
+    # displacements = 'disp_x disp_y'
     output_properties = total_strain
     outputs = exodus
   []
@@ -317,12 +311,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/reflect_pd_vd_comp_1layer'
+  file_base = './out/reflect_pd_vd_comp_1d'
   # file_base = './out/reflect_pd_tension'
   interval = 1
   [pp]
     type = CSV
-    file_base = './gold/reflect_pd_vd_comp_1layer'
+    file_base = './gold/reflect_pd_vd_comp_1d'
     # file_base = './gold/reflect_pd_tension'
     minimum_time_interval = 0.01
   []
