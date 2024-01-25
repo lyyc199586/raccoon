@@ -248,6 +248,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     variable = vel_x
     acceleration = accel_x
     execute_on = timestep_end
+
   []
   [accel_y]
     type = NewmarkAccelAux

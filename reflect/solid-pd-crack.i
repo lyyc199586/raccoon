@@ -243,7 +243,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     function = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 1e-4'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -317,12 +317,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/reflect_pd_vd_comp_1layer'
+  file_base = './out/reflect_pd_vd_comp_1layer_2damaged_elem_eta1e-4'
   # file_base = './out/reflect_pd_tension'
   interval = 1
   [pp]
     type = CSV
-    file_base = './gold/reflect_pd_vd_comp_1layer'
+    file_base = './gold/reflect_pd_vd_comp_1layer_2damaged_elem_eta1e-4'
     # file_base = './gold/reflect_pd_tension'
     minimum_time_interval = 0.01
   []
