@@ -67,7 +67,7 @@ NodalPosition::execute()
 }
 
 Real
-NodalPosition::getValue()
+NodalPosition::getValue() const
 {
   return _position;
 }
