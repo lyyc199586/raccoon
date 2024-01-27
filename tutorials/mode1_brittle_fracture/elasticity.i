@@ -89,15 +89,23 @@ l = 0.02
 
 [Kernels]
   [solid_x]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
   []
   [solid_y]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = fy
+  []
+  [inertia_x]
+    type = ADInertialForce
+    variable = disp_x
+  []
+  [inertia_y]
+    type = ADInertialForce
+    variable = disp_y
   []
 []
 
@@ -137,8 +145,8 @@ l = 0.02
 [Materials]
   [bulk]
     type = ADGenericConstantMaterial
-    prop_names = 'K G'
-    prop_values = '${K} ${G}'
+    prop_names = 'K G density'
+    prop_values = '${K} ${G} 1e-9'
   []
   [degradation]
     type = PowerDegradationFunction
@@ -176,54 +184,72 @@ l = 0.02
     boundary = top
     outputs = pp
   []
-  [dist_max_value]
-    type = NodalExtremeValue
-    variable = d_dist
-    outputs = pp
-  []
-  [dist_max_id]
-    type = NodalMaxValueId
-    variable = d_dist
-    outputs = pp
-  []
-  [tip_x]
-    type = NodalMaxValuePosition
-    variable = d_dist
-    coord = x
-    outputs = tip
-  []
-  [tip_y]
-    type = NodalMaxValuePosition
-    variable = d_dist
-    coord = y
-    outputs = tip
-  []
-  [tip_z]
-    type = NodalMaxValuePosition
-    variable = d_dist
-    coord = z
-    outputs = tip
-  []
+  # [dist_max_value]
+  #   type = NodalExtremeValue
+  #   variable = d_dist
+  #   outputs = pp
+  # []
+  # [dist_max_id]
+  #   type = NodalMaxValueId
+  #   variable = d_dist
+  #   outputs = pp
+  # []
+  # [tip_x]
+  #   type = NodalMaxValuePosition
+  #   variable = d_dist
+  #   coord = x
+  #   outputs = tip
+  # []
+  # [tip_y]
+  #   type = NodalMaxValuePosition
+  #   variable = d_dist
+  #   coord = y
+  #   outputs = tip
+  # []
+  # [tip_z]
+  #   type = NodalMaxValuePosition
+  #   variable = d_dist
+  #   coord = z
+  #   outputs = tip
+  # []
 []
+
+# [Executioner]
+#   type = Transient
+
+#   solve_type = NEWTON
+#   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+#   petsc_options_value = 'lu       superlu_dist                 '
+#   automatic_scaling = true
+
+#   nl_rel_tol = 1e-8
+#   nl_abs_tol = 1e-10
+
+#   dt = 2e-5
+#   end_time = 3.5e-3
+
+#   fixed_point_max_its = 20
+#   accept_on_max_fixed_point_iteration = true
+#   fixed_point_rel_tol = 1e-8
+#   fixed_point_abs_tol = 1e-10
+# []
 
 [Executioner]
   type = Transient
-
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  dt = 2e-5
+  start_time = 0
   end_time = 3.5e-3
+  dt = 2e-5
 
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-8
-  fixed_point_abs_tol = 1e-10
+  # petsc_options_iname = '-pc_type'
+  # petsc_options_value = 'lu'
+  [TimeIntegrator]
+    type = CentralDifference
+  []
+
+  # [TimeStepper]
+  #   type = FunctionDT
+  #   function = 'if(t<5.8e-5, 1e-7, 0.5e-7)'
+  # []
 []
 
 [Outputs]

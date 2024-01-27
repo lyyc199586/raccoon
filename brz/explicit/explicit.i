@@ -24,15 +24,15 @@ t0 = 100e-6 # ramp time
 tf = 200e-6
 
 # adaptivity
-refine = 3 # h_fine = 1/2^3 = 0.125
+# refine = 2 # h_fine = 1/2^3 = 0.125
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r};'
-                'refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts}'
     execute_on = 'TIMESTEP_END'
+    clone_parent_mesh = true
   []
 []
 
@@ -54,59 +54,88 @@ refine = 3 # h_fine = 1/2^3 = 0.125
 [GlobalParams]
   displacements = 'disp_x disp_y'
   # use_displaced_mesh = false
-  use_displaced_mesh = true
+  # use_displaced_mesh = true
 []
 
 [Mesh]
   [fmg]
     type = FileMeshGenerator
     file = '../mesh/disc_r25_h1.msh'
+    # show_info = true
+  []
+  # [smooth]
+  #   type = SmoothMeshGenerator
+  #   input = fmg
+  #   iterations = 10
+  # []
+  # [box]
+  #   type = SubdomainBoundingBoxGenerator
+  #   input = smooth
+  #   bottom_left = '-${r} -8.0 0.0'
+  #   top_right = '${r} 8.0 0.0'
+  #   block_id = 2
+  #   block_name = center
+  #   # restricted_subdomains = 'disc'
+  # []
+  # [refine]
+  #   type = RefineBlockGenerator
+  #   input = box
+  #   refinement = 2
+  #   block = 'center'
+  # []
+  [circ]
+    type = ParsedGenerateSideset
+    combinatorial_geometry = 'abs(x*x+y*y-${r}^2) < 1'
+    new_sideset_name = 'circ'
+    input = fmg
   []
   [left_bnd]
     type = ParsedGenerateSideset
-    combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x < -${r}*cos(${a}/180*3.14)'
+    combinatorial_geometry = 'x < -${r}*cos(${a}/180*3.14)'
     new_sideset_name = 'left_bnd'
-    input = fmg
+    included_boundaries = 'circ'
+    input = circ
   []
   [right_bnd]
     type = ParsedGenerateSideset
-    combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x > ${r}*cos(${a}/180*3.14)'
+    combinatorial_geometry = 'x > ${r}*cos(${a}/180*3.14)'
     new_sideset_name = 'right_bnd'
+    included_boundaries = 'circ'
     input = left_bnd
   []
 []
 
-[Adaptivity]
-  initial_marker = initial_marker
-  initial_steps = ${refine}
-  # marker = damage_marker
-  max_h_level = ${refine}
-  [Markers]
-    # [damage_marker]
-    #   type = ValueRangeMarker
-    #   variable = d
-    #   lower_bound = 0.0001
-    #   upper_bound = 1
-    # []
-    # [strength_marker]
-    #   type = ValueRangeMarker
-    #   variable = f_nu_var
-    #   lower_bound = -1e-2
-    #   upper_bound = 1e-2
-    # []
-    # [combo_marker]
-    #   type = ComboMarker
-    #   markers = 'damage_marker combo_marker'
-    # []
-    [initial_marker]
-      type = BoxMarker
-      bottom_left = '-${r} -8 0'
-      top_right = '${r} 8 0'
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
+# [Adaptivity]
+#   initial_marker = initial_marker
+#   initial_steps = ${refine}
+#   # marker = damage_marker
+#   max_h_level = ${refine}
+#   [Markers]
+#     # [damage_marker]
+#     #   type = ValueRangeMarker
+#     #   variable = d
+#     #   lower_bound = 0.0001
+#     #   upper_bound = 1
+#     # []
+#     # [strength_marker]
+#     #   type = ValueRangeMarker
+#     #   variable = f_nu_var
+#     #   lower_bound = -1e-2
+#     #   upper_bound = 1e-2
+#     # []
+#     # [combo_marker]
+#     #   type = ComboMarker
+#     #   markers = 'damage_marker combo_marker'
+#     # []
+#     [initial_marker]
+#       type = BoxMarker
+#       bottom_left = '-${r} -8 0'
+#       top_right = '${r} 8 0'
+#       outside = DO_NOTHING
+#       inside = REFINE
+#     []
+#   []
+# []
 
 [Functions]
   [load]
@@ -150,39 +179,39 @@ refine = 3 # h_fine = 1/2^3 = 0.125
 []
 
 [Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-    save_in = fx
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    save_in = fy
-  []
   # [solid_x]
-  #   type = ADDynamicStressDivergenceTensors
+  #   type = ADStressDivergenceTensors
   #   variable = disp_x
   #   component = 0
   #   save_in = fx
   # []
   # [solid_y]
-  #   type = ADDynamicStressDivergenceTensors
+  #   type = ADStressDivergenceTensors
   #   variable = disp_y
   #   component = 1
   #   save_in = fy
   # []
+  [solid_x]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    save_in = fx
+  []
+  [solid_y]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    save_in = fy
+  []
   [inertia_x]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_x
     density = density
     # velocity = vel_x
     # acceleration = accel_x
   []
   [inertia_y]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_y
     density = density
     # velocity = vel_y
@@ -195,36 +224,30 @@ refine = 3 # h_fine = 1/2^3 = 0.125
   []
 []
 
-# [AuxKernels]
-#   [accel_x] # Calculates and stores acceleration at the end of time step
-#     type = NewmarkAccelAux
-#     variable = accel_x
-#     displacement = disp_x
-#     velocity = vel_x
-#     execute_on = timestep_end
-#     beta = 0
-#     gamma = 
-#   []
-#   [vel_x] # Calculates and stores velocity at the end of the time step
-#     type = NewmarkVelAux
-#     variable = vel_x
-#     acceleration = accel_x
-#     execute_on = timestep_end
-#   []
-#   [accel_y]
-#     type = NewmarkAccelAux
-#     variable = accel_y
-#     displacement = disp_y
-#     velocity = vel_y
-#     execute_on = timestep_end
-#   []
-#   [vel_y]
-#     type = NewmarkVelAux
-#     variable = vel_y
-#     acceleration = accel_y
-#     execute_on = timestep_end
-#   []
-# []
+[AuxKernels]
+  [accel_x]
+    type = TestNewmarkTI
+    variable = accel_x
+    displacement = disp_x
+    first = false
+  []
+  [vel_x]
+    type = TestNewmarkTI
+    variable = vel_x
+    displacement = disp_x
+  []
+  [accel_y]
+    type = TestNewmarkTI
+    variable = accel_y
+    displacement = disp_y
+    first = false
+  []
+  [vel_y]
+    type = TestNewmarkTI
+    variable = vel_y
+    displacement = disp_y
+  []
+[]
 
 
 [BCs]
@@ -251,14 +274,14 @@ refine = 3 # h_fine = 1/2^3 = 0.125
 [Materials]
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda l Gc density'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
+    prop_names = 'E K G lambda l Gc'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc}'
   []
-  # [reg_density]
-  #   type = MaterialADConverter
-  #   ad_props_in = 'density'
-  #   reg_props_out = 'reg_density'
-  # []
+  [density]
+    type = GenericConstantMaterial
+    prop_names = 'density'
+    prop_values = '${rho}'
+  []
   # [nodegradation] # elastic test
   #   type = NoDegradation
   #   f_name = g 
@@ -317,39 +340,29 @@ refine = 3 # h_fine = 1/2^3 = 0.125
   solve_type = LINEAR
   [TimeIntegrator]
     type = CentralDifference
-    solve_type = lumped
   []
-
+  dt = 1e-8
   dtmin = 1e-10
   start_time = 0
   end_time = ${tf}
-
-  [TimeStepper]
-    type = FunctionDT
-    function = 'if(t<5.8e-5, 1e-7, 0.5e-7)'
-  []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    minimum_time_interval = 1e-8
+    minimum_time_interval = 1e-7
     execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
   # minimum_time_interval = 1e-6
   print_linear_residuals = false
   
-  # file_base = './out/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}/brz_nuc22_p${p}_a${a}_l${l}_d${delta}_ref${refine}'
   file_base = './out/brz_explicit_nuc22_p${p}_a${a}_l${l}_d${delta}/brz'
   # interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './gold/pp_brz_explicit_nuc22_p${p}_a${a}_l${l}_d${delta}_iref${refine}'
+    file_base = './gold/pp_brz_explicit_nuc22_p${p}_a${a}_l${l}_d${delta}'
   []
 []
 
-[Debug]
-  show_functors = true
 
-[]

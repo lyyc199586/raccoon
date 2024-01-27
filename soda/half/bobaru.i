@@ -8,12 +8,12 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 
-Gc = 3.8e-3
-# Gc = 9
+# Gc = 3.8e-3
+Gc = 9
 
 p = 19 # they used normal pressure = 25*cos(theta) 
-# l = 0.6
-l = 1.2
+l = 0.6
+# l = 1.2
 refine = 3 # h = 1/2^4 = 0.125
 
 # putty
@@ -22,6 +22,12 @@ nu_p = 0.4
 rho_p = 1e-9
 K_p = '${fparse E_p/3/(1-2*nu_p)}'
 G_p = '${fparse E_p/2/(1+nu_p)}'
+
+# hht parameters
+# hht_alpha = -0.25
+hht_alpha = -0.3
+beta = '${fparse (1-hht_alpha)^2/4}'
+gamma = '${fparse 1/2-hht_alpha}'
 
 [MultiApps]
   [fracture]
@@ -75,12 +81,10 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
-  use_displaced_mesh = false # small strain
-  # beta = 0.25
-  # gamma = 0.5
-  # eta = 19.63
-  gamma = '${fparse 5/6}'
-  beta = '${fparse 4/9}'
+  use_displaced_mesh = true
+  alpha = ${hht_alpha}
+  gamma = ${gamma}
+  beta = ${beta}
 []
 
 [Mesh]
@@ -188,32 +192,32 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 []
 
 [Kernels]
-  [solid_x]
-    type = ADStressDivergenceTensors
-    variable = disp_x
-    component = 0
-    save_in = fx
-  []
-  [solid_y]
-    type = ADStressDivergenceTensors
-    variable = disp_y
-    component = 1
-    save_in = fy
-  []
   # [solid_x]
-  #   type = ADDynamicStressDivergenceTensors
+  #   type = ADStressDivergenceTensors
   #   variable = disp_x
   #   component = 0
-  #   alpha = 0.11
   #   save_in = fx
   # []
   # [solid_y]
-  #   type = ADDynamicStressDivergenceTensors
+  #   type = ADStressDivergenceTensors
   #   variable = disp_y
   #   component = 1
-  #   alpha = 0.11
   #   save_in = fy
   # []
+  [solid_x]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_x
+    component = 0
+    # alpha = 0.11
+    save_in = fx
+  []
+  [solid_y]
+    type = ADDynamicStressDivergenceTensors
+    variable = disp_y
+    component = 1
+    # alpha = 0.11
+    save_in = fy
+  []
   [inertia_x]
     type = ADInertialForce
     variable = disp_x
@@ -381,7 +385,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     phase_field = d
     degradation_function = g
     decomposition = SPECTRAL
-    output_properties = 'psie_active'
+    output_properties = 'psie psie_active'
     outputs = exodus
     block = 0
   []
@@ -531,20 +535,20 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = true
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  # fixed_point_max_its = 50
+  # accept_on_max_fixed_point_iteration = true
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
 
-  [TimeIntegrator]
-    type = NewmarkBeta
-    # gamma = '${fparse 5/6}'
-    # beta = '${fparse 4/9}'
-    gamma = 0.5
-    beta = 0.25
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   # gamma = '${fparse 5/6}'
+  #   # beta = '${fparse 4/9}'
+  #   gamma = 0.5
+  #   beta = 0.25
+  # []
 []
 
 [Outputs]
