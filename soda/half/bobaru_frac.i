@@ -41,8 +41,8 @@
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      # refine = 0.001
-      refine = 0.5
+      refine = 0.0001
+      # refine = 0.5
       # block = front_crack
     []
     [initial_tip]

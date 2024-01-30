@@ -135,7 +135,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     value = 0
   []
   [p_func] # penalty function for hertzian contact boundary
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = 'dist:=u*(-cos(pi*t/t0) + 1)/2;
                   if(abs(y) < sqrt(r*dist), p, 0)'
     symbol_names = 'u t0 r p'

@@ -1,36 +1,31 @@
-# explicit solve
-
-# basalt properties (MPa, N, mm, s)
+# basalt
 E = 20.11e3
 nu = 0.24
-Gc = 0.1
-sigma_ts = 11.31
-sigma_cs = 159.08
 rho = 2.74e-9
-
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-# nucleation model
+Gc = 0.1
+sigma_ts = 11.31
+sigma_cs = 159.08
 l = 3
 delta = 5
+refine = 3
 
 # model parameter
 r = 25
-a = 10 # load arc angle (deg)
+a = 10
 p = 300
 t0 = 100e-6 # ramp time
 tf = 200e-6
-
-# adaptivity
-# refine = 2 # h_fine = 1/2^3 = 0.125
+# nsegs = '${fparse ceil(2*pi*r/h)}'
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};r=${r};refine=${refine}'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
   []
@@ -54,40 +49,25 @@ tf = 200e-6
 [GlobalParams]
   displacements = 'disp_x disp_y'
   # use_displaced_mesh = false
-  # use_displaced_mesh = true
+  use_displaced_mesh = true
 []
 
 [Mesh]
   [fmg]
     type = FileMeshGenerator
     file = '../mesh/disc_r25_h1.msh'
-    # show_info = true
+    show_info = true
   []
-  # [smooth]
-  #   type = SmoothMeshGenerator
-  #   input = fmg
-  #   iterations = 10
-  # []
-  # [box]
-  #   type = SubdomainBoundingBoxGenerator
-  #   input = smooth
-  #   bottom_left = '-${r} -8.0 0.0'
-  #   top_right = '${r} 8.0 0.0'
-  #   block_id = 2
-  #   block_name = center
-  #   # restricted_subdomains = 'disc'
-  # []
-  # [refine]
-  #   type = RefineBlockGenerator
-  #   input = box
-  #   refinement = 2
-  #   block = 'center'
-  # []
+  [smooth]
+    type = SmoothMeshGenerator
+    input = fmg
+    iterations = 10
+  []
   [circ]
     type = ParsedGenerateSideset
     combinatorial_geometry = 'abs(x*x+y*y-${r}^2) < 1'
     new_sideset_name = 'circ'
-    input = fmg
+    input = smooth
   []
   [left_bnd]
     type = ParsedGenerateSideset
@@ -105,46 +85,18 @@ tf = 200e-6
   []
 []
 
-# [Adaptivity]
-#   initial_marker = initial_marker
-#   initial_steps = ${refine}
-#   # marker = damage_marker
-#   max_h_level = ${refine}
-#   [Markers]
-#     # [damage_marker]
-#     #   type = ValueRangeMarker
-#     #   variable = d
-#     #   lower_bound = 0.0001
-#     #   upper_bound = 1
-#     # []
-#     # [strength_marker]
-#     #   type = ValueRangeMarker
-#     #   variable = f_nu_var
-#     #   lower_bound = -1e-2
-#     #   upper_bound = 1e-2
-#     # []
-#     # [combo_marker]
-#     #   type = ComboMarker
-#     #   markers = 'damage_marker combo_marker'
-#     # []
-#     [initial_marker]
-#       type = BoxMarker
-#       bottom_left = '-${r} -8 0'
-#       top_right = '${r} 8 0'
-#       outside = DO_NOTHING
-#       inside = REFINE
-#     []
-#   []
-# []
-
-[Functions]
-  [load]
-    # type = ADParsedFunction
-    type = ParsedFunction
-    # expression = 'if(t<t0, p*sin(pi*t/2/t0), p)'
-    expression = 'p*sin(pi*t/2/t0)'
-    symbol_names = 'p t0'
-    symbol_values = '${p} ${t0}'
+[Adaptivity]
+  initial_marker = initial_marker
+  initial_steps = ${refine}
+  max_h_level = ${refine}
+  [Markers]
+    [initial_marker]
+      type = BoxMarker
+      bottom_left = '-${r} -8 0'
+      top_right = '${r} 8 0'
+      outside = DO_NOTHING
+      inside = REFINE
+    []
   []
 []
 
@@ -159,18 +111,19 @@ tf = 200e-6
 
 [AuxVariables]
   [d]
+    initial_condition = 0
+  []
+  [vel_x]
+  []
+  [accel_x]
+  []
+  [vel_y]
+  []
+  [accel_y]
   []
   [fx]
   []
   [fy]
-  []
-  [accel_x]
-  []
-  [accel_y]
-  []
-  [vel_x]
-  []
-  [vel_y]
   []
   [f_nu_var]
     order = CONSTANT
@@ -179,43 +132,27 @@ tf = 200e-6
 []
 
 [Kernels]
-  # [solid_x]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_x
-  #   component = 0
-  #   save_in = fx
-  # []
-  # [solid_y]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_y
-  #   component = 1
-  #   save_in = fy
-  # []
   [solid_x]
     type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
     save_in = fx
+    displacements = 'disp_x disp_y'
   []
   [solid_y]
     type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = fy
+    displacements = 'disp_x disp_y'
   []
   [inertia_x]
     type = InertialForce
     variable = disp_x
-    density = density
-    # velocity = vel_x
-    # acceleration = accel_x
   []
   [inertia_y]
     type = InertialForce
     variable = disp_y
-    density = density
-    # velocity = vel_y
-    # acceleration = accel_y
   []
   [plane_stress]
     type = ADWeakPlaneStress
@@ -249,25 +186,35 @@ tf = 200e-6
   []
 []
 
-
 [BCs]
   [fix_right_x]
-    type = DirichletBC
+    type = ADDirichletBC
     variable = disp_x
     boundary = right_bnd
-    value = 0
+    value = 0.0
   []
   [load_left_x]
-    type = Pressure
-    variable = disp_x
+    type = ADPressure
     boundary = left_bnd
+    variable = disp_x
     function = load
+    displacements = 'disp_x disp_y'
   []
   [load_left_y]
-    type = Pressure
-    variable = disp_y
+    type = ADPressure
     boundary = left_bnd
+    variable = disp_y
     function = load
+    displacements = 'disp_x disp_y'
+  []
+[]
+
+[Functions]
+  [load]
+    type = ParsedFunction
+    expression = 'p*sin(pi*t/2/t0)'
+    symbol_names = 'p t0'
+    symbol_values = '${p} ${t0}'
   []
 []
 
@@ -279,28 +226,20 @@ tf = 200e-6
   []
   [density]
     type = GenericConstantMaterial
-    prop_names = 'density'
+    prop_names = density
     prop_values = '${rho}'
-  []
-  # [nodegradation] # elastic test
-  #   type = NoDegradation
-  #   f_name = g 
-  #   function = 1
-  #   phase_field = d
-  # []
-  [degradation]
-    type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
   []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     # output_properties = 'total_strain'
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = 'stress'
+    outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -309,14 +248,16 @@ tf = 200e-6
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active'
+    # output_properties = 'psie_active'
     outputs = exodus
   []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = elasticity
-    output_properties = 'stress'
-    outputs = exodus
+  [degradation]
+    type = PowerDegradationFunction
+    f_name = g
+    function = (1-d)^p*(1-eta)+eta
+    phase_field = d
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
   []
 []
 
@@ -325,26 +266,26 @@ tf = 200e-6
     type = NodalSum
     variable = fy
     boundary = left_bnd
-    outputs = 'pp exodus'
+    # outputs = 'pp exodus'
   []
   [Fx]
     type = NodalSum
     variable = fx
     boundary = left_bnd
-    outputs = 'pp exodus'
+    # outputs = 'pp exodus'
   []
 []
 
 [Executioner]
   type = Transient
-  solve_type = LINEAR
-  [TimeIntegrator]
-    type = CentralDifference
-  []
-  dt = 1e-8
-  dtmin = 1e-10
   start_time = 0
   end_time = ${tf}
+  dt = 1e-8
+
+  [TimeIntegrator]
+    type = CentralDifference
+    solve_type = lumped
+  []
 []
 
 [Outputs]
@@ -353,16 +294,11 @@ tf = 200e-6
     minimum_time_interval = 1e-7
     execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
-  # minimum_time_interval = 1e-6
   print_linear_residuals = false
-  
   file_base = './out/brz_explicit_nuc22_p${p}_a${a}_l${l}_d${delta}/brz'
-  # interval = 1
   checkpoint = true
   [pp]
     type = CSV
     file_base = './gold/pp_brz_explicit_nuc22_p${p}_a${a}_l${l}_d${delta}'
   []
 []
-
-

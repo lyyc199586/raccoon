@@ -1,5 +1,6 @@
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  # implicit = false
 []
 
 [Mesh]
@@ -16,8 +17,8 @@
   []
   [disp_y]
   []
-  # [strain_zz]
-  # []
+  [strain_zz]
+  []
 []
 
 [Kernels]
@@ -32,17 +33,17 @@
     component = 1
   []
   [inertia_x]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_x
   []
   [inertia_y]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_y
   []
-  # [plane_stress]
-  #   type = ADWeakPlaneStress
-  #   variable = 'strain_zz'
-  # []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+  []
 []
 
 [BCs]
@@ -68,13 +69,17 @@
   []
   [stress_block]
     type = ADComputeLinearElasticStress
+    output_properties = 'stress'
+    outputs = exodus
   []
   [strain]
     type = ADComputePlaneSmallStrain
-    # out_of_plane_strain = 'strain_zz'
+    out_of_plane_strain = 'strain_zz'
+    output_properties = 'mechanical_strain'
+    outputs = exodus
   []
   [density]
-    type = ADGenericConstantMaterial
+    type = GenericConstantMaterial
     prop_names = density
     prop_values = 2.74e-9
   []
@@ -88,6 +93,7 @@
 
   [TimeIntegrator]
     type = CentralDifference
+    solve_type = lumped
   []
 []
 

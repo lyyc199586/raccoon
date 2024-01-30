@@ -1,92 +1,20 @@
-# [Mesh]
-#   [fmg]
-#     type = FileMeshGenerator
-#     file = '../mesh/disc_r25_h1.msh'
-#   []
-#   [left_bnd]
-#     type = ParsedGenerateSideset
-#     combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x < -${r}*cos(${a}/180*3.14)'
-#     new_sideset_name = 'left_bnd'
-#     input = fmg
-#   []
-#   [right_bnd]
-#     type = ParsedGenerateSideset
-#     combinatorial_geometry = 'abs(x*x+y*y-25^2) < 1 & x > ${r}*cos(${a}/180*3.14)'
-#     new_sideset_name = 'right_bnd'
-#     input = left_bnd
-#   []
-# []
 [Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = '../mesh/disc_r25_h1.msh'
-  []
-  # [box]
-  #   type = SubdomainBoundingBoxGenerator
-  #   input = fmg
-  #   bottom_left = '-${r} -8.0 0.0'
-  #   top_right = '${r} 8.0 0.0'
-  #   block_id = 2
-  #   block_name = center
-  #   restricted_subdomains = 'disc'
-  # []
-  # [refine]
-  #   type = RefineBlockGenerator
-  #   input = box
-  #   refinement = 2
-  #   block = 'center'
-  # []
-  # [circ]
-  #   type = ParsedGenerateSideset
-  #   combinatorial_geometry = 'abs(x*x+y*y-${r}^2) < 1'
-  #   new_sideset_name = 'circ'
-  #   input = refine
-  # []
-  # [left_bnd]
-  #   type = ParsedGenerateSideset
-  #   combinatorial_geometry = 'x < -${r}*cos(${a}/180*3.14)'
-  #   new_sideset_name = 'left_bnd'
-  #   input = circ
-  # []
-  # [right_bnd]
-  #   type = ParsedGenerateSideset
-  #   combinatorial_geometry = 'x > ${r}*cos(${a}/180*3.14)'
-  #   new_sideset_name = 'right_bnd'
-  #   input = left_bnd
-  # []
 []
 
-# [Adaptivity]
-#   initial_marker = initial_marker
-#   initial_steps = ${refine}
-#   # marker = damage_marker
-#   max_h_level = ${refine}
-#   [Markers]
-#     # [damage_marker]
-#     #   type = ValueRangeMarker
-#     #   variable = d
-#     #   lower_bound = 0.0001
-#     #   upper_bound = 1
-#     # []
-#     # [strength_marker]
-#     #   type = ValueRangeMarker
-#     #   variable = f_nu_var
-#     #   lower_bound = -1e-2
-#     #   upper_bound = 1e-2
-#     # []
-#     # [combo_marker]
-#     #   type = ComboMarker
-#     #   markers = 'damage_marker combo_marker'
-#     # []
-#     [initial_marker]
-#       type = BoxMarker
-#       bottom_left = '-${r} -8 0'
-#       top_right = '${r} 8 0'
-#       outside = DO_NOTHING
-#       inside = REFINE
-#     []
-#   []
-# []
+[Adaptivity]
+  initial_marker = initial_marker
+  initial_steps = ${refine}
+  max_h_level = ${refine}
+  [Markers]
+    [initial_marker]
+      type = BoxMarker
+      bottom_left = '-${r} -8 0'
+      top_right = '${r} 8 0'
+      outside = DO_NOTHING
+      inside = REFINE
+    []
+  []
+[]
 
 [Variables]
   [d]

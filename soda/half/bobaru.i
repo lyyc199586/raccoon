@@ -134,7 +134,7 @@ gamma = '${fparse 1/2-hht_alpha}'
       variable = d
       # refine = 0.001
       # refine = 0.1
-      refine = 0.5
+      refine = 0.0001
       # block = front_crack
     []
     [initial_tip]
@@ -427,13 +427,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalSum
     variable = fy
     boundary = v-load
-    outputs = pp
+    # outputs = pp
   []
   [Fx]
     type = NodalSum
     variable = fx
     boundary = v-load
-    outputs = pp
+    # outputs = pp
   []
   # [disp_x]
   #   type = PointValue
@@ -449,7 +449,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalExtremeValue
     variable = d
     value_type = max
-    outputs = pp
+    # outputs = pp
   []
   # [max_f_nu]
   #   type = ElementExtremeValue
