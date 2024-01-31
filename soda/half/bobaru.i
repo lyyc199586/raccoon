@@ -9,7 +9,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
 
 # Gc = 3.8e-3
-Gc = 9
+Gc = 9e-3
 
 p = 19 # they used normal pressure = 25*cos(theta) 
 l = 0.6
@@ -44,14 +44,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
-    to_blocks = 0
+    to_blocks = '0 2'
   []
   [to_psie_active]
     type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
-    from_blocks = 0
+    from_blocks = '0 2'
   []
 []
 
@@ -99,16 +99,17 @@ gamma = '${fparse 1/2-hht_alpha}'
     block_id = 1
     block_name = top_layer
   []
-  # [frontcrack]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = toplayer
-  #   combinatorial_geometry = 'x > 19 & y <=74'
-  #   block_id = 2
-  #   block_name = front_crack
-  # []
+  [frontcrack]
+    type = ParsedSubdomainMeshGenerator
+    input = toplayer
+    combinatorial_geometry = 'x > 19'
+    excluded_subdomains = 1
+    block_id = 2
+    block_name = crack_front
+  []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = toplayer
+    input = frontcrack
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -133,9 +134,9 @@ gamma = '${fparse 1/2-hht_alpha}'
       type = ValueThresholdMarker
       variable = d
       # refine = 0.001
-      # refine = 0.1
-      refine = 0.0001
-      # block = front_crack
+      refine = 0.1
+      # refine = 0.0001
+      block = crack_front
     []
     [initial_tip]
       type = BoxMarker
@@ -353,7 +354,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda l Gc density'
     prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
-    block = 0
+    block = '0 2'
   []
   [degradation]
     type = PowerDegradationFunction
@@ -362,7 +363,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
-    block = 0
+    block = '0 2'
   []
   # [reg_density]
   #   type = MaterialADConverter
@@ -376,7 +377,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     # output_properties = 'total_strain'
-    block = 0
+    block = '0 2'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -387,14 +388,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     decomposition = SPECTRAL
     output_properties = 'psie psie_active'
     outputs = exodus
-    block = 0
+    block = '0 2'
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
     outputs = exodus
-    block = 0
+    block = '0 2'
   []
 
   # putty

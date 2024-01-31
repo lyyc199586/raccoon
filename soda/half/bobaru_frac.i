@@ -15,16 +15,17 @@
     block_id = 1
     block_name = top_layer
   []
-  # [frontcrack]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = toplayer
-  #   combinatorial_geometry = 'x > 19 & y <=74'
-  #   block_id = 2
-  #   block_name = front_crack
-  # []
+  [frontcrack]
+    type = ParsedSubdomainMeshGenerator
+    input = toplayer
+    combinatorial_geometry = 'x > 19'
+    excluded_subdomains = 1
+    block_id = 2
+    block_name = crack_front
+  []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = toplayer
+    input = frontcrack
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -41,9 +42,9 @@
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      refine = 0.0001
-      # refine = 0.5
-      # block = front_crack
+      # refine = 0.0001
+      refine = 0.1
+      block = crack_front
     []
     [initial_tip]
       type = BoxMarker
@@ -61,7 +62,7 @@
     #   type = FunctionIC
     #   function = 'if(y=0&x>=19&x<=27,1,0)'
     # []
-    block = 0
+    block = '0 2'
   []
 []
 
@@ -69,29 +70,29 @@
   [bounds_dummy]
     # initial_from_file_var = 'bounds_dummy' 
     # initial_from_file_timestep = LATEST
-    block = 0
+    block = '0 2'
   []
   [disp_x]
     # initial_from_file_var = 'disp_x' 
     # initial_from_file_timestep = LATEST
-    block = 0
+    block = '0 2'
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
-    block = 0
+    block = '0 2'
   []
   [strain_zz]
     # initial_from_file_var = 'strain_zz' 
     # initial_from_file_timestep = LATEST
-    block = 0
+    block = '0 2'
   []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
     # initial_from_file_timestep = LATEST
     order = CONSTANT
     family = MONOMIAL
-    block = 0
+    block = '0 2'
   []
   # [f_nu_var]
   #   order = CONSTANT
@@ -106,6 +107,7 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = lower
+    block = '0 2'
   []
   # [conditional]
   #   type = ConditionalBoundsAux
@@ -130,7 +132,7 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
-    block = 0
+    block = '0 2'
   []
 []
 
@@ -141,13 +143,13 @@
     fracture_toughness = Gc
     regularization_length = l
     normalization_constant = c0
-    block = 0
+    block = '0 2'
   []
   [source]
     type = ADPFFSource
     variable = d
     free_energy = psi
-    block = 0
+    block = '0 2'
   []
   # [nuc_force]
   #   type = ADCoefMatSource
@@ -162,14 +164,14 @@
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda Gc l'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
-    block = 0
+    block = '0 2'
   []
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
     function = 'd^2'
     phase_field = d
-    block = 0
+    block = '0 2'
   []
   [degradation]
     type = PowerDegradationFunction
@@ -178,7 +180,7 @@
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
-    block = 0
+    block = '0 2'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -187,7 +189,7 @@
     coupled_variables = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
-    block = 0
+    block = '0 2'
   []
   # [kumar_material]
   #   type = LinearNucleationMicroForce2021
@@ -209,7 +211,7 @@
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    block = 0
+    block = '0 2'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -221,13 +223,13 @@
     # decomposition = VOLDEV
     # output_properties = 'psie'
     # outputs = exodus
-    block = 0
+    block = '0 2'
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    block = 0
+    block = '0 2'
   []
 []
 
@@ -242,10 +244,10 @@
   automatic_scaling = true
 
   line_search = none
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   # nl_abs_tol = 1e-6
 
   # restart
