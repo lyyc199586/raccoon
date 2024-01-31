@@ -397,6 +397,15 @@ gamma = '${fparse 1/2-hht_alpha}'
     outputs = exodus
     block = '0 2'
   []
+  [psie_intact]
+    type = ADParsedMaterial
+    property_name = psie_intact
+    expression = 'psie_active + (psie - g*psie_active)'
+    material_property_names = 'psie psie_active g(d)'
+    output_properties = 'psie_intact'
+    outputs = exodus
+    block = '0 2'
+  []
 
   # putty
   [elasticity_putty]
