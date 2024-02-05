@@ -9,7 +9,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 Gc = 0.1
 sigma_ts = 11.31
 sigma_cs = 159.08
-l = 3
+l = 2.5
 delta = 5
 refine = 3
 
@@ -18,7 +18,8 @@ r = 25
 a = 10
 p = 300
 t0 = 100e-6 # ramp time
-tf = 200e-6
+# tf = 200e-6
+tf = 75e-6
 # nsegs = '${fparse ceil(2*pi*r/h)}'
 
 [MultiApps]
@@ -257,7 +258,7 @@ tf = 200e-6
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 0'
   []
 []
 
@@ -291,7 +292,7 @@ tf = 200e-6
 [Outputs]
   [exodus]
     type = Exodus
-    minimum_time_interval = 1e-7
+    minimum_time_interval = 5e-7
     execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
   print_linear_residuals = false
