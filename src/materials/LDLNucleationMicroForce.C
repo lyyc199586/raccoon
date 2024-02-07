@@ -3,6 +3,7 @@
 //* http://dolbow.pratt.duke.edu
 
 #include "Function.h"
+#include "MooseMesh.h"
 #include "LDLNucleationMicroForce.h"
 
 registerADMooseObject("raccoonApp", LDLNucleationMicroForce);
@@ -35,7 +36,7 @@ LDLNucleationMicroForce::validParams()
       "The hydrostatic strength of the material beyond which the material fails.");
 
   params.addParam<MaterialPropertyName>("delta", "delta", "Name of the unitless coefficient delta");
-  params.addParam<Real>("h", 0.0, "mesh size");
+  params.addParam<bool>("h_correction", false, "Whether to use h correction formula for delta");
   params.addParam<MaterialPropertyName>(
       "external_driving_force_name",
       "ex_driving",
@@ -62,7 +63,7 @@ LDLNucleationMicroForce::LDLNucleationMicroForce(const InputParameters & paramet
     _sigma_ts(getADMaterialProperty<Real>(prependBaseName("tensile_strength", true))),
     _sigma_hs(getADMaterialProperty<Real>(prependBaseName("hydrostatic_strength", true))),
     _delta(declareADProperty<Real>(prependBaseName("delta", true))),
-    _h(getParam<Real>("h")),
+    _h_correction(getParam<bool>("h_correction")),
     _stress(getADMaterialProperty<RankTwoTensor>(prependBaseName("stress_name", true))),
     _stress_balance(declareADProperty<Real>(prependBaseName("stress_balance_name", true)))
 {
@@ -72,10 +73,10 @@ void
 LDLNucleationMicroForce::computeQpProperties()
 {
   // The bulk modulus
-  ADReal K = _lambda[_qp] + 2 * _mu[_qp] / 3;
+  ADReal K = _lambda[_qp] + 2.0 * _mu[_qp] / 3.0;
 
   // The Young's modulus
-  ADReal E = 9 * _mu[_qp] * K / (_mu[_qp] + 3 * K);
+  ADReal E = 9.0 * _mu[_qp] * K / (_mu[_qp] + 3.0 * K);
 
   // The mobility
   ADReal M = _Gc[_qp] / _L[_qp] / _c0[_qp];
@@ -94,33 +95,37 @@ LDLNucleationMicroForce::computeQpProperties()
     J2.value() = libMesh::TOLERANCE * libMesh::TOLERANCE;
 
   // Compute critical energy
-  //   ADReal sigma_hs = 2 / 3 * _sigma_ts[_qp] * _sigma_cs[_qp] / (_sigma_cs[_qp] -
-  //   _sigma_ts[_qp]); ADReal sigma_ts = _sigma_ts[_qp];
-  ADReal W_ts = _sigma_ts[_qp] * _sigma_ts[_qp] / 2 / E;
-  ADReal W_hs = _sigma_hs[_qp] * _sigma_hs[_qp] / 2 / K;
-  if (_h == 0.0)
+  ADReal W_ts = _sigma_ts[_qp] * _sigma_ts[_qp] / 2.0 / E;
+  ADReal W_hs = _sigma_hs[_qp] * _sigma_hs[_qp] / 2.0 / K;
+
+  // Compute delta
+  if (!_h_correction)
   {
-    // Compute delta (the function might change ...)
-    _delta[_qp] = (_sigma_ts[_qp] + 8.15 * _sigma_hs[_qp]) / 23.25 / _sigma_hs[_qp] * 3 / 16 *
+    // Use formula without h correction
+    _delta[_qp] = (_sigma_ts[_qp] + 8.15 * _sigma_hs[_qp]) / 23.25 / _sigma_hs[_qp] * 3.0 / 16.0 *
                       (_Gc[_qp] / W_ts / _L[_qp]) +
                   3.0 / 8.0;
   }
   else
   {
-    _delta[_qp] = std::pow(1 + 3.0 / 8.0 * _h / _L[_qp], -2) *
+    // Get mesh size of current element
+    ADReal h = _current_elem->hmin();
+
+    // Use formula with h correction
+    _delta[_qp] = std::pow(1 + 3.0 / 8.0 * h / _L[_qp], -2) *
                       (_sigma_ts[_qp] + 3 * (1 + std::sqrt(3.0)) * _sigma_hs[_qp]) /
                       (3 + 10 * std::sqrt(3.0)) / _sigma_hs[_qp] * 3 / 16 *
                       (_Gc[_qp] / W_ts / _L[_qp]) +
-                  std::pow(1 + 3.0 / 8.0 * _h / _L[_qp], -1) * 2 / 5;
+                  std::pow(1 + 3.0 / 8.0 * h / _L[_qp], -1) * 2 / 5;
   }
 
   // Parameters in the strength surface
   ADReal alpha_1 =
-      _delta[_qp] * _Gc[_qp] / 8 / _sigma_hs[_qp] / _L[_qp] - 2 / 3 * W_hs / _sigma_hs[_qp];
-  ADReal alpha_2 = std::sqrt(3) / 8 * _delta[_qp] * (3 * _sigma_hs[_qp] - _sigma_ts[_qp]) /
+      _delta[_qp] * _Gc[_qp] / 8.0 / _sigma_hs[_qp] / _L[_qp] - 2.0 / 3.0 * W_hs / _sigma_hs[_qp];
+  ADReal alpha_2 = std::sqrt(3.0) / 8.0 * _delta[_qp] * (3.0 * _sigma_hs[_qp] - _sigma_ts[_qp]) /
                        (_sigma_hs[_qp] * _sigma_ts[_qp]) * _Gc[_qp] / _L[_qp] +
-                   2 / std::sqrt(3) * W_hs / _sigma_hs[_qp] -
-                   2 * std::sqrt(3) * W_ts / _sigma_ts[_qp];
+                   2.0 / std::sqrt(3.0) * W_hs / _sigma_hs[_qp] -
+                   2.0 * std::sqrt(3.0) * W_ts / _sigma_ts[_qp];
 
   // Compute the external driving force required to recover the desired strength envelope.
   _ex_driving[_qp] = alpha_2 * std::sqrt(J2) + alpha_1 * I1;
