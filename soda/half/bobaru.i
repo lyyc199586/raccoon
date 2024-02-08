@@ -12,9 +12,10 @@ rho = 2.44e-9 # Mg/mm^3
 Gc = 9e-3
 
 p = 19 # they used normal pressure = 25*cos(theta) 
-l = 0.25
+l = 0.038
 # l = 1.2
-refine = 4 # h = 1/2^3 = 0.125
+# refine = 4 # h = 1/2^3 = 0.125
+refine = 7
 
 # putty
 E_p = 1.7
