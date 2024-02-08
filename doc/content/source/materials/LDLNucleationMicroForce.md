@@ -51,6 +51,14 @@ The material properties used are the bulk modulus $\kappa$ and Young's modulus $
 
 The strength surface is presented with uniaxial tensile $\sigma_{ts}$ and hydrostatic strength $\sigma_{hs}$, where $\sigma_{hs}=\dfrac{2}{3} \dfrac{\sigma_{ts}\sigma_{cs}}{\sigma_{cs} - \sigma_{ts}}$.
 
+### KLR (Kumar, Lopez, Ravi-Chandar) Model 2022
+
+Please see [KLRNucleationMicroForce](source/materials/KLRNucleationMicroForce.md)
+
+### KLBF (Kumar, Lopez, Bourdin, Francfort) Model 2020
+
+Please see [KLBFNucleationMicroForce](source/materials/KLBFNucleationMicroForce.md)
+
 ## Example Input File Syntax
 
 ```
