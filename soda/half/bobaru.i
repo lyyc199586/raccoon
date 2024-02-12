@@ -15,7 +15,8 @@ p = 19 # they used normal pressure = 25*cos(theta)
 l = 0.038
 # l = 1.2
 # refine = 4 # h = 1/2^3 = 0.125
-refine = 7
+# refine = 7
+refine = 6
 
 # putty
 E_p = 1.7
@@ -103,14 +104,20 @@ gamma = '${fparse 1/2-hht_alpha}'
   [frontcrack]
     type = ParsedSubdomainMeshGenerator
     input = toplayer
-    combinatorial_geometry = 'x > 19'
+    combinatorial_geometry = 'x > 26 & y < 1.1'
     excluded_subdomains = 1
     block_id = 2
     block_name = crack_front
   []
+  [uniform_refine]
+    input = frontcrack
+    type = RefineBlockGenerator
+    refinement = 1
+    block = 2
+  []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = frontcrack
+    input = uniform_refine
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -135,14 +142,16 @@ gamma = '${fparse 1/2-hht_alpha}'
       type = ValueThresholdMarker
       variable = d
       # refine = 0.001
-      refine = 0.1
+      refine = 0.2
       # refine = 0.0001
       block = crack_front
     []
     [initial_tip]
       type = BoxMarker
-      bottom_left = '26 0 0'
-      top_right = '28 1 0'
+      # bottom_left = '26 0 0'
+      # top_right = '28 1 0'
+      bottom_left = '26.5 0 0'
+      top_right = '27.5 1 0'
       outside = DO_NOTHING
       inside = REFINE
     []
