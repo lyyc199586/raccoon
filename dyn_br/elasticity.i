@@ -9,8 +9,9 @@ Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 sigma_cs = 9.24
 
-l = 1.5
-delta = 5 # haven't tested
+# l = 1.5
+l = 0.625
+# delta = 5 # haven't tested
 refine = 3
 
 # hht parameters
@@ -26,7 +27,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
   []
@@ -36,8 +37,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [from_d]
     type = MultiAppCopyTransfer
     from_multi_app = fracture
-    variable = 'd f_nu_var ce_var'
-    source_variable = 'd f_nu_var ce_var'
+    variable = 'd f_nu_var ce_var delta_var'
+    source_variable = 'd f_nu_var ce_var delta_var'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
@@ -51,14 +52,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
     from_postprocessor = 'Psi_f'
-    to_postprocessor = 'fracture_energy'
+    to_postprocessor = 'fracture_gamma'
     reduction_type = average
   []
   [pp_transfer_2]
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
     from_postprocessor = Psi_f_ce
-    to_postprocessor = ce_integral
+    to_postprocessor = fracture_ce
     reduction_type = average
   []
 []
@@ -135,10 +136,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # initial_from_file_var = 'disp_y'
     # initial_from_file_timestep = LATEST
   []
-  # [strain_zz]
-  #   # initial_from_file_var = 'strain_zz'
-  #   # initial_from_file_timestep = LATEST
-  # []
+  [strain_zz]
+    # initial_from_file_var = 'strain_zz'
+    # initial_from_file_timestep = LATEST
+  []
 []
 
 [AuxVariables]
@@ -161,6 +162,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # []
   []
   [ce_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [delta_var]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -228,11 +233,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  # [plane_stress]
-  #   type = ADWeakPlaneStress
-  #   variable = 'strain_zz'
-  #   displacements = 'disp_x disp_y'
-  # []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
 []
 
 [AuxKernels]
@@ -358,9 +363,9 @@ gamma = '${fparse 1/2-hht_alpha}'
     parameter_values = '2 1e-6'
   []
   [strain]
-    # type = ADComputePlaneSmallStrain
-    type = ADComputeSmallStrain
-    # out_of_plane_strain = 'strain_zz'
+    type = ADComputePlaneSmallStrain
+    # type = ADComputeSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
   []
@@ -402,13 +407,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     outputs = "csv exodus"
   []
-  [fracture_energy]
+  [fracture_gamma]
     type = Receiver
     # outputs = "csv"
   []
-  [ce_integral]
+  [fracture_ce]
     type = Receiver
     # outputs = "csv"
+  []
+  [fracture_energy]
+    type = ParsedPostprocessor
+    pp_names = 'fracture_gamma fracture_ce'
+    function = 'fracture_gamma - fracture_ce'
   []
   [kinetic_energy]
     type = KineticEnergy
@@ -437,8 +447,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
@@ -477,11 +492,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  file_base = './out/dyn_br_nuc24_hc_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_hc_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/dyn_br_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
+    file_base = './gold/dyn_br_nuc24_hc_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     type = CSV
   []
 []
