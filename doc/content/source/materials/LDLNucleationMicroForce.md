@@ -25,7 +25,7 @@ Note that the following derivation follows settings of `AT-1`, i.e., $\alpha(d)=
 
 The "undamaged" nucleation driving force is defined as
 \begin{equation}
-\widehat{c_e}(\boldsymbol{\varepsilon}(\boldsymbol{u}))= \alpha_1 \sqrt{J_2} +  \alpha_1 I_1.
+\widehat{c_e}(\boldsymbol{\varepsilon}(\boldsymbol{u}))= \alpha_2 \sqrt{J_2} +  \alpha_1 I_1 - (1-d)\left(1 - \dfrac{\sqrt{I_1^2}}{I_1}\right)\psi_e.
 \end{equation}
 
 In this recast, $\delta^l$ is evaluated explicitly as

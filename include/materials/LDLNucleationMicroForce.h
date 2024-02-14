@@ -35,12 +35,16 @@ protected:
   ///@{ Phase field properties
   /// The fracture toughness
   const ADMaterialProperty<Real> & _Gc;
+  /// phase field variable
+  const VariableValue & _d;
   /// The normalization constant
   const ADMaterialProperty<Real> & _c0;
   /// phase field regularization length
   const ADMaterialProperty<Real> & _L;
   ///@}
 
+  /// strain energy density active
+  const ADMaterialProperty<Real> & _psie_active;
   /// Lame's first parameter
   const ADMaterialProperty<Real> & _lambda;
   /// The shear modulus
