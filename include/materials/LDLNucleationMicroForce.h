@@ -44,7 +44,7 @@ protected:
   ///@}
 
   /// strain energy density active
-  const ADMaterialProperty<Real> & _psie_active;
+  const VariableValue & _psie_active;
   /// Lame's first parameter
   const ADMaterialProperty<Real> & _lambda;
   /// The shear modulus

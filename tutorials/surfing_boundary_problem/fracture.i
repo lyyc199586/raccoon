@@ -118,6 +118,8 @@
   []
   [nucleation_micro_force]
     type = LDLNucleationMicroForce
+    phase_field = d
+    strain_energy_density_active = psie_active
     regularization_length = l
     normalization_constant = c0
     fracture_toughness = Gc

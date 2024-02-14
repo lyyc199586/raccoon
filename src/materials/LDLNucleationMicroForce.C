@@ -23,10 +23,9 @@ LDLNucleationMicroForce::validParams()
   params.addParam<MaterialPropertyName>(
       "normalization_constant", "c0", "The normalization constant $c_0$");
   params.addRequiredCoupledVar("phase_field", "Name of the phase-field (damage) variable");
-  params.addParam<MaterialPropertyName>(
+  params.addRequiredCoupledVar(
       "strain_energy_density_active",
-      "psie_active",
-      "Name of the strain energy density computed by this material model");
+      "Name of the active strain energy density varible computed in the main app");
   params.addParam<MaterialPropertyName>(
       "regularization_length", "l", "the phase field regularization length");
 
@@ -64,7 +63,7 @@ LDLNucleationMicroForce::LDLNucleationMicroForce(const InputParameters & paramet
     _d(coupledValue("phase_field")),
     _c0(getADMaterialProperty<Real>(prependBaseName("normalization_constant", true))),
     _L(getADMaterialProperty<Real>(prependBaseName("regularization_length", true))),
-    _psie_active(getADMaterialProperty<Real>(prependBaseName("strain_energy_density_active", true))),
+    _psie_active(coupledValue("strain_energy_density_active")),
     _lambda(getADMaterialProperty<Real>(prependBaseName("lambda", true))),
     _mu(getADMaterialProperty<Real>(prependBaseName("shear_modulus", true))),
     _sigma_ts(getADMaterialProperty<Real>(prependBaseName("tensile_strength", true))),
