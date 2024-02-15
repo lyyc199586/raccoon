@@ -11,13 +11,13 @@ rho = 2.44e-9 # Mg/mm^3
 # Gc = 3.8e-3
 Gc = 9e-3
 
-p = 19 # they used normal pressure = 25*cos(theta) 
-l = 0.1
+p = 25 # they used normal pressure = 25*cos(theta) 
+l = 0.72
 # l = 1.2
 # refine = 4 # h = 1/2^3 = 0.125
 # refine = 7
 # refine = 6
-refine = 5
+refine = 3
 
 # putty
 E_p = 1.7
@@ -35,7 +35,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = bobaru_frac.i
+    input_files = at1_frac.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
@@ -105,20 +105,20 @@ gamma = '${fparse 1/2-hht_alpha}'
   [frontcrack]
     type = ParsedSubdomainMeshGenerator
     input = toplayer
-    combinatorial_geometry = 'x > 26 & y < 1.1'
+    combinatorial_geometry = 'x > 26'
     excluded_subdomains = 1
     block_id = 2
     block_name = crack_front
   []
-  [uniform_refine]
-    input = frontcrack
-    type = RefineBlockGenerator
-    refinement = 1
-    block = 2
-  []
+  # [uniform_refine]
+  #   input = frontcrack
+  #   type = RefineBlockGenerator
+  #   refinement = 1
+  #   block = 2
+  # []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = uniform_refine
+    input = frontcrack
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -143,16 +143,16 @@ gamma = '${fparse 1/2-hht_alpha}'
       type = ValueThresholdMarker
       variable = d
       # refine = 0.001
-      refine = 0.2
+      refine = 0.01
       # refine = 0.0001
       block = crack_front
     []
     [initial_tip]
       type = BoxMarker
-      # bottom_left = '26 0 0'
-      # top_right = '28 1 0'
-      bottom_left = '26.5 0 0'
-      top_right = '27.5 0.5 0'
+      bottom_left = '26 0 0'
+      top_right = '28 1 0'
+      # bottom_left = '26.5 0 0'
+      # top_right = '27.5 0.5 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -589,12 +589,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   checkpoint = true
   print_linear_residuals = false
-  file_base = '../out/bobaru_gc${Gc}_l${l}_h${refine}/bobaru_gc${Gc}_l${l}_h${refine}'
+  file_base = '../out/at1_gc${Gc}_l${l}_h${refine}/at1_gc${Gc}_l${l}_h${refine}'
   # file_base = '../out/hht_half_test'
   interval = 1
   [pp]
     type = CSV
-    file_base = '../gold/pp_bobaru_gc${Gc}_l${l}_h${refine}'
+    file_base = '../gold/pp_at1_gc${Gc}_l${l}_h${refine}'
   []
   # [tip]
   #   type = CSV

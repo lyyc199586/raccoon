@@ -18,7 +18,7 @@
   [frontcrack]
     type = ParsedSubdomainMeshGenerator
     input = toplayer
-    combinatorial_geometry = 'x > 26 & y < 1.1'
+    combinatorial_geometry = 'x > 26'
     excluded_subdomains = 1
     block_id = 2
     block_name = crack_front
@@ -48,16 +48,16 @@
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      # refine = 0.0001
-      refine = 0.2
+      refine = 0.01
+      # refine = 0.2
       block = crack_front
     []
     [initial_tip]
       type = BoxMarker
-      # bottom_left = '26 0 0'
-      # top_right = '28 1 0'
-      bottom_left = '26.5 0 0'
-      top_right = '27.5 0.5 0'
+      bottom_left = '26 0 0'
+      top_right = '28 1 0'
+      # bottom_left = '26.5 0 0'
+      # top_right = '27.5 0.5 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -177,7 +177,7 @@
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
-    function = 'd^2'
+    function = 'd'
     phase_field = d
     block = '0 2'
   []

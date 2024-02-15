@@ -1,23 +1,37 @@
 # soda-lime glass
-# Bobaru used AT-2 and Spectral decomp
 E = 72e3 # 32 GPa
-# nu = 0.25
-nu = 0.23
+nu = 0.25
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 rho = 2.44e-9 # Mg/mm^3
-
-# Gc = 3.8e-3
+# Gc = 8.89e-3 # N/mm -> 3 J/m^2
+# Gc = 8.5e-3
 Gc = 9e-3
+# Gc = 15e-3
+# Gc = 9.5e-3
+# Gc = 8.7e-3
+# sigma_ts = 41 # MPa, sts and scs from guessing
+sigma_ts = 30
+psic = ${fparse sigma_ts^2/2/E}
+# sigma_cs = 330
+p = 25
 
-p = 19 # they used normal pressure = 25*cos(theta) 
-l = 0.1
-# l = 1.2
-# refine = 4 # h = 1/2^3 = 0.125
-# refine = 7
-# refine = 6
-refine = 5
+# l = 0.075
+# delta = -0.2 # haven't tested
+# refine = 6 # h=1, h_ref=0.015625=1/2^6
+refine = 4
+
+l = 0.25
+# delta = -0.625
+# delta = -0.65
+# delta = 0
+
+# hht parameters
+hht_alpha = -0.3
+# hht_alpha = 0
+beta = '${fparse (1-hht_alpha)^2/4}'
+gamma = '${fparse 1/2-hht_alpha}'
 
 # putty
 E_p = 1.7
@@ -26,17 +40,19 @@ rho_p = 1e-9
 K_p = '${fparse E_p/3/(1-2*nu_p)}'
 G_p = '${fparse E_p/2/(1+nu_p)}'
 
-# hht parameters
-# hht_alpha = -0.25
-hht_alpha = -0.3
-beta = '${fparse (1-hht_alpha)^2/4}'
-gamma = '${fparse 1/2-hht_alpha}'
+[GlobalParams]
+  displacements = 'disp_x disp_y'
+  alpha = ${hht_alpha}
+  gamma = ${gamma}
+  beta = ${beta}
+  use_displaced_mesh = true
+[]
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = bobaru_frac.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};refine=${refine}'
+    input_files = fracture-coh.i
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -47,14 +63,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
-    to_blocks = '0 2'
+    to_blocks = 0
   []
   [to_psie_active]
     type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
-    from_blocks = '0 2'
+    from_blocks = 0
   []
 []
 
@@ -65,11 +81,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     y = '0 ${p} ${p} 0 0'
   []
   [t_factor_x]
-    type = ParsedFunction
+    type = ADParsedFunction
     expression = 'sin(20/180*pi) + 0.35*cos(20/180*pi)'
   []
   [t_factor_y]
-    type = ParsedFunction
+    type = ADParsedFunction
     expression = 'cos(20/180/pi) - 0.35*sin(20/180*pi)'
   []
   [t_func_x]
@@ -80,14 +96,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = CompositeFunction
     functions = 'p_func t_factor_y'
   []
-[]
-
-[GlobalParams]
-  displacements = 'disp_x disp_y'
-  use_displaced_mesh = true
-  alpha = ${hht_alpha}
-  gamma = ${gamma}
-  beta = ${beta}
 []
 
 [Mesh]
@@ -102,23 +110,9 @@ gamma = '${fparse 1/2-hht_alpha}'
     block_id = 1
     block_name = top_layer
   []
-  [frontcrack]
-    type = ParsedSubdomainMeshGenerator
-    input = toplayer
-    combinatorial_geometry = 'x > 26 & y < 1.1'
-    excluded_subdomains = 1
-    block_id = 2
-    block_name = crack_front
-  []
-  [uniform_refine]
-    input = frontcrack
-    type = RefineBlockGenerator
-    refinement = 1
-    block = 2
-  []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
-    input = uniform_refine
+    input = toplayer
     new_boundary = noncrack
     bottom_left = '26.9 0 0'
     top_right = '100.1 0 0'
@@ -142,17 +136,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     [damage_marker]
       type = ValueThresholdMarker
       variable = d
-      # refine = 0.001
-      refine = 0.2
-      # refine = 0.0001
-      block = crack_front
+      refine = 0.001
     []
     [initial_tip]
       type = BoxMarker
-      # bottom_left = '26 0 0'
-      # top_right = '28 1 0'
-      bottom_left = '26.5 0 0'
-      top_right = '27.5 0.5 0'
+      bottom_left = '26 0 0'
+      top_right = '28 1 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -193,61 +182,61 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [vel_y]
   []
-  # [f_nu_var]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [d_dist]
-  # []
+  [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [d_dist]
+  []
   # [tip_dist]
   # []
 []
 
 [Kernels]
-  # [solid_x]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_x
-  #   component = 0
-  #   save_in = fx
-  # []
-  # [solid_y]
-  #   type = ADStressDivergenceTensors
-  #   variable = disp_y
-  #   component = 1
-  #   save_in = fy
-  # []
   [solid_x]
     type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
-    # alpha = 0.11
     save_in = fx
   []
   [solid_y]
     type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
-    # alpha = 0.11
     save_in = fy
   []
+  # [solid_x]
+  #   type = ADDynamicStressDivergenceTensors
+  #   variable = disp_x
+  #   component = 0
+  #   alpha = 0.11
+  #   save_in = fx
+  # []
+  # [solid_y]
+  #   type = ADDynamicStressDivergenceTensors
+  #   variable = disp_y
+  #   component = 1
+  #   alpha = 0.11
+  #   save_in = fy
+  # []
   [inertia_x]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_x
-    density = density
+    density = reg_density
     block = 0
     velocity = vel_x
     acceleration = accel_x
   []
   [inertia_y]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_y
-    density = density
+    density = reg_density
     block = 0
     velocity = vel_y
     acceleration = accel_y
   []
   [inertia_x_putty]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_x
     density = density_p
     block = 1
@@ -255,7 +244,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_x
   []
   [inertia_y_putty]
-    type = ADInertialForce
+    type = InertialForce
     variable = disp_y
     density = density_p
     block = 1
@@ -363,32 +352,46 @@ gamma = '${fparse 1/2-hht_alpha}'
   # bego
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda l Gc density'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
-    block = '0 2'
+    prop_names = 'E K G lambda l Gc density psic'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho} ${psic}'
+    block = 0
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
+    block = 0
   []
   [degradation]
-    type = PowerDegradationFunction
+    type = RationalDegradationFunction
     f_name = g
-    function = (1-d)^p*(1-eta)+eta
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
-    block = '0 2'
+    material_property_names = 'Gc psic xi c0 l'
+    parameter_names = 'p a2 a3 eta'
+    parameter_values = '2 -0.5 0.0 1e-6'
+    block = 0
   []
-  # [reg_density]
-  #   type = MaterialADConverter
-  #   ad_props_in = 'density'
-  #   reg_props_out = 'reg_density'
+  # [nodegradation] # test without d
+  #   type = NoDegradation
+  #   f_name = g 
+  #   function = 1
+  #   phase_field = d
   #   block = 0
   # []
+  [reg_density]
+    type = MaterialADConverter
+    ad_props_in = 'density'
+    reg_props_out = 'reg_density'
+    block = 0
+  []
   [strain]
     type = ADComputePlaneSmallStrain
     # type = ADComputeSmallStrain
     out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     # output_properties = 'total_strain'
-    block = '0 2'
+    block = 0
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -396,26 +399,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
+    # decomposition = NONE
     decomposition = SPECTRAL
-    output_properties = 'psie psie_active'
+    output_properties = 'psie_active'
     outputs = exodus
-    block = '0 2'
+    block = 0
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
     outputs = exodus
-    block = '0 2'
-  []
-  [psie_intact]
-    type = ADParsedMaterial
-    property_name = psie_intact
-    expression = 'psie_active + (psie - g*psie_active)'
-    material_property_names = 'psie psie_active g(d)'
-    output_properties = 'psie_intact'
-    outputs = exodus
-    block = '0 2'
+    block = 0
   []
 
   # putty
@@ -426,7 +421,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     block = 1
   []
   [density_putty]
-    type = ADGenericConstantMaterial
+    type = GenericConstantMaterial
     prop_names = 'density_p'
     prop_values = '${rho_p}'
     block = 1
@@ -448,13 +443,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalSum
     variable = fy
     boundary = v-load
-    # outputs = pp
+    outputs = pp
   []
   [Fx]
     type = NodalSum
     variable = fx
     boundary = v-load
-    # outputs = pp
+    outputs = pp
   []
   # [disp_x]
   #   type = PointValue
@@ -470,14 +465,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalExtremeValue
     variable = d
     value_type = max
-    # outputs = pp
+    outputs = pp
   []
-  # [max_f_nu]
-  #   type = ElementExtremeValue
-  #   variable = f_nu_var
-  #   value_type = max
-  #   outputs = pp
-  # []
+  [max_f_nu]
+    type = ElementExtremeValue
+    variable = f_nu_var
+    value_type = max
+    outputs = pp
+  []
   # [Jint]
   #   type = PhaseFieldJIntegral
   #   J_direction = '1 0 0'
@@ -540,64 +535,55 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Executioner]
   type = Transient
 
-  # solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
-
-  solve_type = PJFNK
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
 
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
 
   dt = 5e-8 # 0.05 us
-  dtmin = 5e-9
+  # dtmin = 5e-9
   end_time = 100e-6
 
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 
-  # fixed_point_max_its = 50
-  # accept_on_max_fixed_point_iteration = true
+  fixed_point_max_its = 500
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-6
   # fixed_point_abs_tol = 1e-8
   fixed_point_rel_tol = 1e-3
   fixed_point_abs_tol = 1e-5
-  nl_abs_tol = 1e-8
-  nl_rel_tol = 1e-6
 
-  # [TimeIntegrator]
-  #   type = NewmarkBeta
-  #   # gamma = '${fparse 5/6}'
-  #   # beta = '${fparse 4/9}'
-  #   gamma = 0.5
-  #   beta = 0.25
-  # []
+  [TimeIntegrator]
+    type = NewmarkBeta
+    # gamma = '${fparse 5/6}'
+    # beta = '${fparse 4/9}'
+    # gamma = 0.5
+    # beta = 0.25
+  []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 1
-    minimum_time_interval = 0.5e-6
+    minimum_time_interval = 5e-7
   []
-  checkpoint = true
   print_linear_residuals = false
-  file_base = '../out/bobaru_gc${Gc}_l${l}_h${refine}/bobaru_gc${Gc}_l${l}_h${refine}'
+  file_base = '../out/half_coh_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}/half_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}'
   # file_base = '../out/hht_half_test'
   interval = 1
   [pp]
     type = CSV
-    file_base = '../gold/pp_bobaru_gc${Gc}_l${l}_h${refine}'
+    file_base = '../gold/pp_half_coh_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}'
   []
   # [tip]
   #   type = CSV
-  #   file_base = '../gold/tip_half_tan_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
+  #   file_base = '../gold/tip_half_coh_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
   # []
 []
