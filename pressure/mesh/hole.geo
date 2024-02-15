@@ -1,7 +1,7 @@
 // settings
 a = 40;
 r = 5;
-h_r = 0.25;
+h_r = 0.125;
 h_c = 1;
 
 // center
@@ -48,4 +48,12 @@ Plane Surface(2) = {2};
 Plane Surface(3) = {3};
 Plane Surface(4) = {4};
 
+Physical Line("circle") = {1, 2, 3, 4};
+Physical Line("top") = {5};
+Physical Line("left") = {6};
+Physical Line("bottom") = {7};
+Physical Line("right") = {8};
+
 Recombine Surface{1, 2, 3, 4};
+
+Physical Surface(1) = {1, 2, 3, 4};
