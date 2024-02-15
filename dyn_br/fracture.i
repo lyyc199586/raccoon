@@ -74,12 +74,12 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 []
 
 [Bounds]
-  [irreversibility]
-    type = VariableOldValueBoundsAux
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-  []
+  # [irreversibility]
+  #   type = VariableOldValueBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   bound_type = lower
+  # []
   [conditional]
     type = ConditionalBoundsAux
     variable = 'bounds_dummy'
@@ -87,13 +87,13 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     fixed_bound_value = 0
     threshold_value = 0.95
   []
-  # [upper]
-  #   type = ConstantBounds
-  #   variable = bounds_dummy
-  #   bounded_variable = d
-  #   bound_type = upper
-  #   bound_value = 1
-  # []
+  [upper]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1
+  []
 []
 
 [Kernels]
@@ -174,15 +174,17 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = CrackSurfaceDensity
     phase_field = d
   []
-  [psi_f_ce]
+  [ce_integral]
     type = ADParsedMaterial
-    property_name = psi_f_ce
-    expression = 'ce*(1-d)/3'
+    property_name = ce_integral
+    expression = '-ce*(1-d)/3'
     coupled_variables = 'd'
     material_property_names = 'ce'
   []
   [nucforce]
     type = LDLNucleationMicroForce
+    phase_field = d
+    strain_energy_density_active = psie_active
     regularization_length = l
     normalization_constant = c0
     tensile_strength = sigma_ts
@@ -241,9 +243,9 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
   []
-  [Psi_f_ce]
+  [ce_integral]
     type = ADElementIntegralMaterialProperty
-    mat_prop = psi_f_ce
+    mat_prop = ce_integral
   []
 []
 

@@ -52,14 +52,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
     from_postprocessor = 'Psi_f'
-    to_postprocessor = 'fracture_gamma'
+    to_postprocessor = 'fracture_energy'
     reduction_type = average
   []
   [pp_transfer_2]
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
-    from_postprocessor = Psi_f_ce
-    to_postprocessor = fracture_ce
+    from_postprocessor = ce_integral
+    to_postprocessor = nucleation_energy
     reduction_type = average
   []
 []
@@ -382,8 +382,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
-    # output_properties = 'stress'
-    # outputs = exodus
+    output_properties = 'stress'
+    outputs = exodus
   []
 []
 
@@ -407,18 +407,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     outputs = "csv exodus"
   []
-  [fracture_gamma]
-    type = Receiver
-    # outputs = "csv"
-  []
-  [fracture_ce]
-    type = Receiver
-    # outputs = "csv"
-  []
   [fracture_energy]
-    type = ParsedPostprocessor
-    pp_names = 'fracture_gamma fracture_ce'
-    function = 'fracture_gamma - fracture_ce'
+    type = Receiver
+    # outputs = "csv"
+  []
+  [nucleation_energy]
+    type = Receiver
+    # outputs = "csv"
   []
   [kinetic_energy]
     type = KineticEnergy
