@@ -178,9 +178,10 @@
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    expression = '(delta*Gc/c0/l)*alpha'
+    # expression = '(delta*Gc/c0/l)*alpha'
+    expression = ='delta*Gc*gamma'
     coupled_variables = 'd'
-    material_property_names = 'delta alpha(d) Gc c0 l'
+    material_property_names = 'delta gamma(d) Gc'
   []
   [ce_integral]
     type = ADParsedMaterial
