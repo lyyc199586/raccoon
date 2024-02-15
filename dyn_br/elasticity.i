@@ -442,13 +442,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
@@ -457,6 +457,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # nl_abs_tol = 1e-10
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
+  nl_max_its = 200
 
   dt = 5e-7
   end_time = 100e-6
@@ -465,7 +466,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 50
+  fixed_point_max_its = 200
   accept_on_max_fixed_point_iteration = false
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
