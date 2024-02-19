@@ -193,7 +193,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     delta = delta
     external_driving_force_name = ce
     stress_balance_name = f_nu
-    h_correction = true
+    # h_correction = true
   []
   # [kumar_material] #2020
   #   type = KLBFNucleationMicroForce
@@ -253,12 +253,12 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
-  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
-  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
   # nl_rel_tol = 1e-8

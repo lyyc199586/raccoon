@@ -442,13 +442,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
@@ -488,11 +488,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc24_hc_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_hc_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/dyn_br_nuc24_hc_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+    file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     type = CSV
   []
 []
