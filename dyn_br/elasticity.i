@@ -9,10 +9,11 @@ Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 sigma_cs = 9.24
 
+## l = 3/8*E*Gc/sigma_ts^2 = 3.79
 # l = 1.5
-l = 0.625
+l = 0.5
 # delta = 5 # haven't tested
-refine = 3
+refine = 3 # 0.125
 
 # hht parameters
 # hht_alpha = -0.25
@@ -360,7 +361,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 1e-5'
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -453,31 +454,32 @@ gamma = '${fparse 1/2-hht_alpha}'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
   nl_max_its = 200
 
   dt = 5e-7
+  dtmin = 1e-8
   end_time = 100e-6
 
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 200
-  accept_on_max_fixed_point_iteration = false
+  fixed_point_max_its = 50
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
   fixed_point_abs_tol = 1e-8
 
-  # [TimeIntegrator]
-  #   type = NewmarkBeta
-  #   gamma = '${fparse 5/6}'
-  #   beta = '${fparse 4/9}'
-  # []
+  [TimeIntegrator]
+    type = NewmarkBeta
+    # gamma = '${fparse 5/6}'
+    # beta = '${fparse 4/9}'
+  []
 []
 
 [Outputs]
@@ -486,6 +488,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
     minimum_time_interval = 5e-7
   []
+  checkpoint = true
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'

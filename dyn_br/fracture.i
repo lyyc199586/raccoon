@@ -153,7 +153,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 1e-5'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -261,11 +261,11 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-  nl_max_its = 200
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
+  # nl_max_its = 500
 
   # restart
   # start_time = 80e-6
