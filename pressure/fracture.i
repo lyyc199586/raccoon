@@ -80,7 +80,7 @@
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 -0.5 0 1e-6'
+    parameter_values = '2 1 0 1e-6'
   []
   [psi]
     type = ADDerivativeParsedMaterial

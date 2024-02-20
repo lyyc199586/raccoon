@@ -211,7 +211,7 @@ seed = 3
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 -0.5 0 1e-6'
+    parameter_values = '2 1 0 1e-6'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -270,13 +270,18 @@ seed = 3
   line_search = none
   fixed_point_max_its = 300
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
 
-  dt = 0.005
-  dtmin = 0.0001
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<0.1, 0.005, 0.0005)'
+    growth_factor = 5
+    cutback_factor_at_failure = 0.2
+  []
+  # dtmin = 0.0001
   start_time = 0
-  end_time = 1
+  end_time = 0.2
   # num_steps = 1
 []
 
@@ -284,7 +289,7 @@ seed = 3
   [exodus]
     type = Exodus
     interval = 1
-    minimum_time_interval = 0.005
+    minimum_time_interval = 0.001
   []
   print_linear_residuals = false
   file_base = './out/hole_coh_p${p0}_r${r}_l${l}'
