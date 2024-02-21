@@ -80,7 +80,7 @@
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0 1e-6'
+    parameter_values = '2 1 0 1e-5'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -115,8 +115,8 @@
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
 []
 
 [Outputs]

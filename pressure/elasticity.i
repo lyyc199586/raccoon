@@ -1,11 +1,21 @@
 # crack from pressurized hole
 
-# BegoStone mat prop (MPa, N, mm)
-E = 6.26e3
-nu = 0.2
-Gc = 3.656e-2
-sigma_ts = 10
-# sigma_cs = 37.4
+# # BegoStone mat prop (MPa, N, mm)
+# E = 6.26e3
+# nu = 0.2
+# Gc = 3.656e-2
+# sigma_ts = 10
+# # sigma_cs = 37.4
+# l = 0.5
+# r = 10
+# rho = 1.995e-9
+
+## Rudy's paper Section 5.7
+E = 210e3
+rho = 7.85e-9
+nu = 0.3
+sigma_ts = 1e3
+Gc = 20
 l = 0.5
 r = 10
 
@@ -14,11 +24,21 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = '${fparse sigma_ts^2/2/E}'
 
-p0 = 100
+T0 = 100e-6
+p0 = 400
 seed = 3
+
+## hht parameters
+hht_alpha = -0.3
+beta = '${fparse (1-hht_alpha)^2/4}'
+gamma = '${fparse 1/2-hht_alpha}'
+
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  alpha = ${hht_alpha}
+  gamma = ${gamma}
+  beta = ${beta}
 []
 
 [Transfers]
@@ -82,6 +102,14 @@ seed = 3
 [AuxVariables]
   [d]
   []
+  [accel_x]
+  []
+  [accel_y]
+  []
+  [vel_x]
+  []
+  [vel_y]
+  []
   [fx]
   []
   [fy]
@@ -110,16 +138,30 @@ seed = 3
 
 [Kernels]
   [solid_x]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
     save_in = fx
   []
   [solid_y]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
     save_in = fy
+  []
+  [inertia_x]
+    type = ADInertialForce
+    variable = disp_x
+    density = density
+    velocity = vel_x
+    acceleration = accel_x
+  []
+  [inertia_y]
+    type = ADInertialForce
+    variable = disp_y
+    density = density
+    velocity = vel_y
+    acceleration = accel_y
   []
 []
 
@@ -134,7 +176,7 @@ seed = 3
     type = ADRankTwoScalarAux
     rank_two_tensor = stress
     variable = radial
-    scalar_type = AxialStress
+    scalar_type = RadialStress
   []
   [pressure]
     type = ADRankTwoScalarAux
@@ -142,14 +184,38 @@ seed = 3
     variable = pressure 
     scalar_type = Hydrostatic
   []
+  [accel_x]
+    type = NewmarkAccelAux
+    variable = accel_x
+    displacement = disp_x
+    velocity = vel_x
+  []
+  [vel_x] 
+    type = NewmarkVelAux
+    variable = vel_x
+    acceleration = accel_x
+  []
+  [accel_y]
+    type = NewmarkAccelAux
+    variable = accel_y
+    displacement = disp_y
+    velocity = vel_y
+  []
+  [vel_y]
+    type = NewmarkVelAux
+    variable = vel_y
+    acceleration = accel_y
+  []
 []
 
 [Functions]
   [p_func]
     type = ADParsedFunction
-    expression = 'p0*t'
-    symbol_names = 'p0'
-    symbol_values = '${p0}'
+    # expression = 'p0*t'
+    expression = 'p0*exp(t/T0)'
+    # expression = 'if(t<T0, p0*sin(pi*t/2/T0), p0)'
+    symbol_names = 'p0 T0'
+    symbol_values = '${p0} ${T0}'
   []
 []
 
@@ -166,25 +232,25 @@ seed = 3
     variable = 'disp_y'
     function = p_func
   []
-  [fix_x]
-    type = ADDirichletBC
-    boundary = fix_point
-    variable = disp_x
-    value = 0
-  []
-  [fix_y]
-    type = ADDirichletBC
-    boundary = fix_point
-    variable = disp_y
-    value = 0
-  []
+  # [fix_x]
+  #   type = ADDirichletBC
+  #   boundary = fix_point
+  #   variable = disp_x
+  #   value = 0
+  # []
+  # [fix_y]
+  #   type = ADDirichletBC
+  #   boundary = fix_point
+  #   variable = disp_y
+  #   value = 0
+  # []
 []
 
 [Materials]
   [bulk_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda l Gc'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc}'
+    prop_names = 'E K G lambda l Gc density'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
   []
   [psic]
     type = ADParsedMaterial
@@ -211,7 +277,7 @@ seed = 3
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0 1e-6'
+    parameter_values = '2 1 0 1e-5'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -247,49 +313,67 @@ seed = 3
   []
 []
 
+# [Preconditioning]
+#   [smp]
+#     type = SMP
+#     full = true
+#     petsc_options_iname = '-pc_type -pc_factor_shift_type '
+#     petsc_options_value = '  lu NONZERO'
+#   []
+# []
+
 [Executioner]
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
   # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
   #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
   #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
   #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
   # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
-  # petsc_options_iname = '-pc_type -pc_hypre_type'
-  # petsc_options_value = 'hypre boomeramg'
+  petsc_options_iname = '-pc_type -pc_hypre_type'
+  petsc_options_value = 'hypre boomeramg'
   automatic_scaling = true
   scaling_group_variables = 'disp_x disp_y'
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-  nl_max_its = 200
+  # l_abs_tol = 1e-8
+  # l_max_its = 200
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_max_its = 200
 
   line_search = none
-  fixed_point_max_its = 300
+  fixed_point_max_its = 20
+  # disable_fixed_point_residual_norm_check = true
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-4
-  fixed_point_abs_tol = 1e-6
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 
-  [TimeStepper]
-    type = FunctionDT
-    function = 'if(t<0.1, 0.005, 0.0005)'
-    growth_factor = 5
-    cutback_factor_at_failure = 0.2
-  []
+  # [TimeStepper]
+  #   type = FunctionDT
+  #   function = 'if(t<0.1, 0.005, 0.0005)'
+  #   growth_factor = 5
+  #   cutback_factor_at_failure = 0.2
+  # []
+  # dt = 0.05
+  dt = 1e-6
   # dtmin = 0.0001
   start_time = 0
-  end_time = 0.2
+  end_time = 120e-6
   # num_steps = 1
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  # []
+  # relaxation_factor = 0.1
 []
 
 [Outputs]
   [exodus]
     type = Exodus
     interval = 1
-    minimum_time_interval = 0.001
+    minimum_time_interval = 1e-6
   []
   print_linear_residuals = false
   file_base = './out/hole_coh_p${p0}_r${r}_l${l}'
