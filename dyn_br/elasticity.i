@@ -8,10 +8,12 @@ rho = 2.45e-9 # Mg/mm^3
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 sigma_cs = 9.24
+# sigma_cs = 15
 
 ## l = 3/8*E*Gc/sigma_ts^2 = 3.79
 # l = 1.5
-l = 0.5
+# l = 0.5
+l = 0.625
 # delta = 5 # haven't tested
 refine = 3 # 0.125
 
@@ -123,7 +125,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker strength_marker'
+      # markers = 'damage_marker strength_marker'
+      markers = 'damage_marker'
     []
   []
 []
@@ -355,6 +358,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     function = 'd'
     phase_field = d
   []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
+    phase_field = d
+  []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
@@ -443,43 +450,43 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
   nl_max_its = 200
 
   dt = 5e-7
-  dtmin = 1e-8
+  # dtmin = 1e-8
   end_time = 100e-6
 
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 50
+  fixed_point_max_its = 20
   accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
   fixed_point_abs_tol = 1e-8
 
-  [TimeIntegrator]
-    type = NewmarkBeta
-    # gamma = '${fparse 5/6}'
-    # beta = '${fparse 4/9}'
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   # gamma = '${fparse 5/6}'
+  #   # beta = '${fparse 4/9}'
+  # []
 []
 
 [Outputs]
