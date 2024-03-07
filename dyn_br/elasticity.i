@@ -10,12 +10,12 @@ sigma_ts = 3.08 # MPa, sts and scs from guessing
 sigma_cs = 9.24
 # sigma_cs = 15
 
-## l = 3/8*E*Gc/sigma_ts^2 = 3.79
-# l = 1.5
+## lch = 3/8*E*Gc/sigma_ts^2 = 3.79
+l = 0.25
 # l = 0.5
-l = 0.625
+# l = 0.625
 # delta = 5 # haven't tested
-refine = 3 # 0.125
+refine = 4 # 0.125
 
 # hht parameters
 # hht_alpha = -0.25
@@ -498,11 +498,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   checkpoint = true
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/dyn_br_nuc24_woh_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_woh_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+    file_base = './gold/dyn_br_nuc24_woh_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     type = CSV
   []
 []

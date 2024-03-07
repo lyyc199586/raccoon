@@ -154,7 +154,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -178,14 +178,15 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   [ce_integral]
     type = ADParsedMaterial
     property_name = ce_integral
-    expression = '-ce*(1-d)/3'
+    expression = 'ce'
     coupled_variables = 'd'
     material_property_names = 'ce'
   []
   [nucforce]
     type = LDLNucleationMicroForce
     phase_field = d
-    strain_energy_density_active = psie_active
+    degradation_function = g
+    # strain_energy_density_active = psie_active
     regularization_length = l
     normalization_constant = c0
     tensile_strength = sigma_ts
