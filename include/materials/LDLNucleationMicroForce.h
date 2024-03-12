@@ -37,14 +37,16 @@ protected:
   const ADMaterialProperty<Real> & _Gc;
   /// phase field variable
   const VariableValue & _d;
+  /// degradation function name
+  const MaterialPropertyName _g_name;
+  /// degradation function
+  const ADMaterialProperty<Real> & _g;
   /// The normalization constant
   const ADMaterialProperty<Real> & _c0;
   /// phase field regularization length
   const ADMaterialProperty<Real> & _L;
   ///@}
 
-  /// strain energy density active
-  const VariableValue & _psie_active;
   /// Lame's first parameter
   const ADMaterialProperty<Real> & _lambda;
   /// The shear modulus

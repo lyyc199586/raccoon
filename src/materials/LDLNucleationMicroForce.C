@@ -23,9 +23,7 @@ LDLNucleationMicroForce::validParams()
   params.addParam<MaterialPropertyName>(
       "normalization_constant", "c0", "The normalization constant $c_0$");
   params.addRequiredCoupledVar("phase_field", "Name of the phase-field (damage) variable");
-  params.addRequiredCoupledVar(
-      "strain_energy_density_active",
-      "Name of the active strain energy density varible computed in the main app");
+  params.addParam<MaterialPropertyName>("degradation_function", "g", "The degradation function");
   params.addParam<MaterialPropertyName>(
       "regularization_length", "l", "the phase field regularization length");
 
@@ -61,9 +59,10 @@ LDLNucleationMicroForce::LDLNucleationMicroForce(const InputParameters & paramet
     _ex_driving(declareADProperty<Real>(prependBaseName("external_driving_force_name", true))),
     _Gc(getADMaterialProperty<Real>(prependBaseName("fracture_toughness", true))),
     _d(coupledValue("phase_field")),
+    _g_name(prependBaseName("degradation_function", true)),
+    _g(getADMaterialProperty<Real>(_g_name)),
     _c0(getADMaterialProperty<Real>(prependBaseName("normalization_constant", true))),
     _L(getADMaterialProperty<Real>(prependBaseName("regularization_length", true))),
-    _psie_active(coupledValue("strain_energy_density_active")),
     _lambda(getADMaterialProperty<Real>(prependBaseName("lambda", true))),
     _mu(getADMaterialProperty<Real>(prependBaseName("shear_modulus", true))),
     _sigma_ts(getADMaterialProperty<Real>(prependBaseName("tensile_strength", true))),
@@ -108,7 +107,8 @@ LDLNucleationMicroForce::computeQpProperties()
   if (!_h_correction)
   {
     // Use formula without h correction
-    _delta[_qp] = (_sigma_ts[_qp] + 8.15 * _sigma_hs[_qp]) / 23.25 / _sigma_hs[_qp] * 3.0 / 16.0 *
+    _delta[_qp] = (_sigma_ts[_qp] + (1 + 2 * std::sqrt(3)) * _sigma_hs[_qp]) /
+                      (8 + 3 * std::sqrt(3)) / _sigma_hs[_qp] * 3.0 / 16.0 *
                       (_Gc[_qp] / W_ts / _L[_qp]) +
                   3.0 / 8.0;
   }
@@ -119,23 +119,26 @@ LDLNucleationMicroForce::computeQpProperties()
 
     // Use formula with h correction
     _delta[_qp] = std::pow(1 + 3.0 / 8.0 * h / _L[_qp], -2) *
-                      (_sigma_ts[_qp] + 3 * (1 + std::sqrt(3.0)) * _sigma_hs[_qp]) /
-                      (3 + 10 * std::sqrt(3.0)) / _sigma_hs[_qp] * 3 / 16 *
+                      (_sigma_ts[_qp] + (1 + 2 * std::sqrt(3.0)) * _sigma_hs[_qp]) /
+                      (8 + 3 * std::sqrt(3.0)) / _sigma_hs[_qp] * 3 / 16 *
                       (_Gc[_qp] / W_ts / _L[_qp]) +
                   std::pow(1 + 3.0 / 8.0 * h / _L[_qp], -1) * 2 / 5;
   }
 
   // Parameters in the strength surface
   ADReal alpha_1 =
-      _delta[_qp] * _Gc[_qp] / 8.0 / _sigma_hs[_qp] / _L[_qp] - 2.0 / 3.0 * W_hs / _sigma_hs[_qp];
-  ADReal alpha_2 = std::sqrt(3.0) / 8.0 * _delta[_qp] * (3.0 * _sigma_hs[_qp] - _sigma_ts[_qp]) /
-                       (_sigma_hs[_qp] * _sigma_ts[_qp]) * _Gc[_qp] / _L[_qp] +
-                   2.0 / std::sqrt(3.0) * W_hs / _sigma_hs[_qp] -
-                   2.0 * std::sqrt(3.0) * W_ts / _sigma_ts[_qp];
+      -_delta[_qp] * _Gc[_qp] / 8.0 / _sigma_hs[_qp] / _L[_qp] + 2.0 / 3.0 * W_hs / _sigma_hs[_qp];
+  ADReal alpha_2 = -(std::sqrt(3.0) / 8.0 * _delta[_qp] * (3.0 * _sigma_hs[_qp] - _sigma_ts[_qp]) /
+                         (_sigma_hs[_qp] * _sigma_ts[_qp]) * _Gc[_qp] / _L[_qp] +
+                     2.0 / std::sqrt(3.0) * W_hs / _sigma_hs[_qp] -
+                     2.0 * std::sqrt(3.0) * W_ts / _sigma_ts[_qp]);
 
   // Compute the external driving force required to recover the desired strength envelope.
-  _ex_driving[_qp] = alpha_2 * std::sqrt(J2) + alpha_1 * I1 -
-                     (1.0 - _d[_qp]) * (1.0 - std::sqrt(I1 * I1) / I1) * _psie_active[_qp];
+  _ex_driving[_qp] =
+      alpha_2 * std::sqrt(J2) + alpha_1 * I1 +
+      (1.0 - std::sqrt(I1 * I1) / I1) / std::pow(_g[_qp], 1.5) *
+          (J2 / 2.0 / _mu[_qp] + I1 * I1 / 6.0 / (3.0 * _lambda[_qp] + 2.0 * _mu[_qp]));
 
-  _stress_balance[_qp] = J2 / _mu[_qp] + std::pow(I1, 2) / 9.0 / K - _ex_driving[_qp] - M;
+  _stress_balance[_qp] =
+      J2 / _mu[_qp] + std::pow(I1, 2) / 9.0 / K - _ex_driving[_qp] - M * _delta[_qp];
 }

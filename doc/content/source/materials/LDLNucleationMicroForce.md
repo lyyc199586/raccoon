@@ -25,21 +25,21 @@ Note that the following derivation follows settings of `AT-1`, i.e., $\alpha(d)=
 
 The "undamaged" nucleation driving force is defined as
 \begin{equation}
-\widehat{c_e}(\boldsymbol{\varepsilon}(\boldsymbol{u}))= \alpha_2 \sqrt{J_2} +  \alpha_1 I_1 - (1-d)\left(1 - \dfrac{\sqrt{I_1^2}}{I_1}\right)\psi_e.
+\widehat{c_e}(\boldsymbol{\varepsilon}(\boldsymbol{u}))= \alpha_2 \sqrt{J_2} +  \alpha_1 I_1 + (1-d)\left(1 - \dfrac{\sqrt{I_1^2}}{I_1}\right)\psi_e.
 \end{equation}
 
 In this recast, $\delta^l$ is evaluated explicitly as
 \begin{equation}
-\text{without h correction:}\quad\delta^l=\left(\frac{\sigma_{ts}+8.15\sigma_{hs}}{23.25\sigma_{hs}}\right)\frac{3G_c}{16 \psi_{ts} l} + \frac{3}{8},
+\text{without h correction:}\quad\delta^l=\left(\frac{\sigma_{ts}+ (1+2\sqrt{3})\sigma_{hs}}{(8+3\sqrt{3})\sigma_{hs}}\right)\frac{3G_c}{16 \psi_{ts} l} + \frac{3}{8},
 \end{equation}
 
 \begin{equation}
-\text{with h correction:}\quad\delta^l=\left(1+\frac{3 h}{8 l}\right)^{-2}\left(\frac{\sigma_{ts}+3(1+\sqrt{3})\sigma_{hs}}{(3+10\sqrt{3})\sigma_{hs}}\right)\frac{3G_c}{16 \psi_{ts} l} + \left(1 + \frac{3h}{8l}\right)^{-1}\frac{2}{5},
+\text{with h correction:}\quad\delta^l=\left(1+\frac{3 h}{8 l}\right)^{-2}\left(\frac{\sigma_{ts}+(1+2\sqrt{3})\sigma_{hs}}{(8+3\sqrt{3})\sigma_{hs}}\right)\frac{3G_c}{16 \psi_{ts} l} + \left(1 + \frac{3h}{8l}\right)^{-1}\frac{2}{5},
 \end{equation}
 
 where
 \begin{equation}
-\alpha_1 = \frac{1}{\sigma_{hs}}\delta^l \frac{G_c}{8l} - \frac{2\psi_{hs}}{3\sigma_{hs}}, \qquad \alpha_2=\frac{\sqrt{3}(3\sigma_{hs} - \sigma_{ts})}{\sigma_{hs}\sigma_{ts}}\delta^l \frac{G_c}{8l} + \frac{2\psi_{hs}}{\sqrt{3}\sigma_{hs}} - \frac{2\sqrt{3}\psi_{ts}}{\sigma_{ts}},
+\alpha_1 = - \frac{1}{\sigma_{hs}}\delta^l \frac{G_c}{8l} + \frac{2\psi_{hs}}{3\sigma_{hs}}, \qquad \alpha_2= - \frac{\sqrt{3}(3\sigma_{hs} - \sigma_{ts})}{\sigma_{hs}\sigma_{ts}}\delta^l \frac{G_c}{8l} - \frac{2\psi_{hs}}{\sqrt{3}\sigma_{hs}} + \frac{2\sqrt{3}\psi_{ts}}{\sigma_{ts}},
 \end{equation}
 
 with

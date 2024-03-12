@@ -84,7 +84,7 @@
     type = ADCoefMatSource
     variable = d
     prop_names = 'ce'
-    coefficient = -1.0
+    coefficient = 1.0
   []
 []
 
@@ -119,7 +119,7 @@
   [nucleation_micro_force]
     type = LDLNucleationMicroForce
     phase_field = d
-    strain_energy_density_active = psie_active
+    degradation_function = g
     regularization_length = l
     normalization_constant = c0
     fracture_toughness = Gc
