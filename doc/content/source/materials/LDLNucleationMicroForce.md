@@ -13,7 +13,7 @@ This is a variational recast of the phase-field fracture formulation put forth b
 The fracture functional reads
 
 \begin{equation}
-\mathcal{E}_f^l(\boldsymbol{u}, d):= \int_\Omega g(d) \psi_e(\boldsymbol{\varepsilon}(\boldsymbol{u})) \;\mathrm{dV} + \frac{\delta^l G_c}{c_0}\int_\Omega\left(\frac{\alpha(d)}{l} + l\nabla d\cdot \nabla d\right) \;\mathrm{dV} - \int_\Omega\left(\int_0^1 g(d) \;\mathrm{dd}\right)\widehat{c_e}(\boldsymbol{\varepsilon}(\boldsymbol{u})) \;\mathrm{dV}.
+\mathcal{E}_f^l(\boldsymbol{u}, d):= \int_\Omega g(d) \psi_e(\boldsymbol{\varepsilon}(\boldsymbol{u})) \;\mathrm{dV} + \frac{\delta^l G_c}{c_0}\int_\Omega\left(\frac{\alpha(d)}{l} + l\nabla d\cdot \nabla d\right) \;\mathrm{dV} + \int_\Omega\left(\int_0^1 g(d) \;\mathrm{dd}\right)\widehat{c_e}(\boldsymbol{\varepsilon}(\boldsymbol{u})) \;\mathrm{dV}.
 \end{equation}
 
 The governing equation for fracture is
