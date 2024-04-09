@@ -114,7 +114,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = ADCoefMatSource
     variable = d
     prop_names = 'ce'
-    coefficient = -1
+    coefficient = 1
   []
 []
 

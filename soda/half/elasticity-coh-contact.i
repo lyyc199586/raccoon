@@ -15,8 +15,9 @@ Gc = 9e-3
 sigma_ts = 30
 psic = ${fparse sigma_ts^2/2/E}
 # sigma_cs = 330
-p = 22.576
+# p = 25
 # p = 60
+p = 106
 
 # l = 0.075
 # delta = -0.2 # haven't tested
@@ -29,7 +30,8 @@ l = 0.25
 # delta = 0
 
 # hht parameters
-hht_alpha = -0.3
+# hht_alpha = -0.3
+hht_alpha = -0.25
 # hht_alpha = 0
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
@@ -40,6 +42,13 @@ nu_p = 0.4
 rho_p = 1e-9
 K_p = '${fparse E_p/3/(1-2*nu_p)}'
 G_p = '${fparse E_p/2/(1+nu_p)}'
+
+# steel
+E_s = 200e3
+nu_s = 0.3
+rho_s = 8e-9
+K_s = '${fparse E_s/3/(1-2*nu_s)}'
+G_s = '${fparse E_s/2/(1+nu_s)}'
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -76,63 +85,78 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 []
 
 [Functions]
+#   # [p_func] # trapezoidal loading pulse
+#   #   type = PiecewiseLinear
+#   #   x = '0 15e-6 60e-6 75e-6 80e-6'
+#   #   y = '0 ${p} ${p} 0 0'
+#   # []
   [p_func] # trapezoidal loading pulse
     type = PiecewiseLinear
-    x = '0 17.5e-6 57.5e-6 75e-6'
-    y = '0 ${p}   ${p}   0'
+    x = '0 15e-6 115e-6 130e-6'
+    y = '0 ${p} ${p} 0'
   []
-  # [p_func] # trapezoidal loading pulse
-  #   type = PiecewiseLinear
-  #   x = '0 60e-6 200e-6'
-  #   y = '0 ${p} 0'
-  # []
-  [t_factor_x]
-    type = ADParsedFunction
-    expression = 'sin(20/180*pi) + 0.35*cos(20/180*pi)'
-  []
-  [t_factor_y]
-    type = ADParsedFunction
-    expression = 'cos(20/180/pi) - 0.35*sin(20/180*pi)'
-  []
-  [t_func_x]
-    type = CompositeFunction
-    functions = 'p_func t_factor_x'
-  []
-  [t_func_y]
-    type = CompositeFunction
-    functions = 'p_func t_factor_y'
-  []
+#   # [t_factor_x]
+#   #   type = ADParsedFunction
+#   #   expression = 'sin(20/180*pi) + 0.35*cos(20/180*pi)'
+#   # []
+#   # [t_factor_y]
+#   #   type = ADParsedFunction
+#   #   expression = 'cos(20/180/pi) - 0.35*sin(20/180*pi)'
+#   # []
+#   # [t_func_x]
+#   #   type = CompositeFunction
+#   #   functions = 'p_func t_factor_x'
+#   # []
+#   # [t_func_y]
+#   #   type = CompositeFunction
+#   #   functions = 'p_func t_factor_y'
+#   # []
 []
 
 [Mesh]
   [gen]
     type = FileMeshGenerator
     # file = '../mesh/half.msh'
-    file = '../mesh/half_new.msh'
+    file = '../mesh/half_contact_part.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
     input = gen
     combinatorial_geometry = 'y > 74'
-    block_id = 1
+    block_id = 2
     block_name = top_layer
   []
+  # [noncrack]
+  #   type = BoundingBoxNodeSetGenerator
+  #   input = toplayer
+  #   new_boundary = noncrack
+  #   bottom_left = '26.9 0 0'
+  #   top_right = '100.1 0 0'
+  # []
   [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = toplayer
-    new_boundary = noncrack
-    bottom_left = '26.9 0 0'
-    top_right = '100.1 0 0'
-  []
-  [vpartialtop]
     type = ParsedGenerateSideset
-    input = noncrack
-    # included_boundaries = 'v-partial'
-    included_boundaries = 'v-entire'
-    new_sideset_name = 'v-load'
-    combinatorial_geometry = 'x < 13.6'
+    input = toplayer
+    new_sideset_name = noncrack
+    combinatorial_geometry = 'x > 26.9 & y < 0.1'
   []
-  construct_side_list_from_node_list = true
+  # [vpartialtop]
+  #   type = ParsedGenerateSideset
+  #   input = noncrack
+  #   # included_boundaries = 'v-partial'
+  #   included_boundaries = 'v-entire'
+  #   new_sideset_name = 'v-load'
+  #   combinatorial_geometry = 'x < 13.6'
+  # []
+  # [striker_bnd]
+  #   type = BoundingBoxNodeSetGenerator
+  #   input = noncrack
+  #   new_boundary = striker_bnd
+  #   bottom_left = '-2123 0 0'
+  #   top_right = '-1817.09 12.66 0'
+  # []
+  # construct_side_list_from_node_list = true
+  coord_type = XYZ
+  patch_update_strategy = always
 []
 
 [Adaptivity]
@@ -155,6 +179,29 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     []
   []
 []
+
+[Contact]
+  [v_notch]
+    primary = bar_v
+    secondary = v-entire
+    model = coulomb
+    formulation = penalty
+    normalize_penalty = true
+    friction_coefficient = 0.35
+    penalty = 1e3
+    tangential_tolerance = 0.005
+    newmark_beta = ${beta}
+    newmark_gamma = ${gamma}
+  []
+[]
+
+# [Dampers]
+#   [slip]
+#     type = ContactSlipDamper
+#     secondary = v-entire
+#     primary = bar-v
+#   []
+# []
 
 [Variables]
   [disp_x]
@@ -187,6 +234,11 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [accel_y]
   []
   [vel_x]
+    # [InitialCondition]
+    #   type = ConstantIC
+    #   value = 15e3
+    #   block = 2
+    # []
   []
   [vel_y]
   []
@@ -247,7 +299,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = InertialForce
     variable = disp_x
     density = density_p
-    block = 1
+    block = 2
     velocity = vel_x
     acceleration = accel_x
   []
@@ -255,7 +307,23 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = InertialForce
     variable = disp_y
     density = density_p
-    block = 1
+    block = 2
+    velocity = vel_y
+    acceleration = accel_y
+  []
+  [inertia_x_steel]
+    type = InertialForce
+    variable = disp_x
+    density = density_s
+    block = '1'
+    velocity = vel_x
+    acceleration = accel_x
+  []
+  [inertia_y_steel]
+    type = InertialForce
+    variable = disp_y
+    density = density_s
+    block = '1'
     velocity = vel_y
     acceleration = accel_y
   []
@@ -269,6 +337,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 [AuxKernels]
   [accel_x] # Calculates and stores acceleration at the end of time step
     type = NewmarkAccelAux
+    # type = TestNewmarkTI
+    # first = false
     variable = accel_x
     displacement = disp_x
     velocity = vel_x
@@ -276,12 +346,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   []
   [vel_x] # Calculates and stores velocity at the end of the time step
     type = NewmarkVelAux
+    # type = TestNewmarkTI
     variable = vel_x
     acceleration = accel_x
     execute_on = timestep_end
   []
   [accel_y]
     type = NewmarkAccelAux
+    # type = TestNewmarkTI
+    # first = false
     variable = accel_y
     displacement = disp_y
     velocity = vel_y
@@ -289,6 +362,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   []
   [vel_y]
     type = NewmarkVelAux
+    # type = TestNewmarkTI
     variable = vel_y
     acceleration = accel_y
     execute_on = timestep_end
@@ -321,40 +395,57 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [fix_center_y]
     type = DirichletBC
     variable = disp_y
-    boundary = noncrack
+    boundary = 'noncrack bar_center'
     value = 0
   []
-  # [pressue_x]
-  #   type = ADPressure
-  #   # component = 0
+  # [initial_vel]
+  #   type = PresetVelocity
+  #   variable = disp_x
+  #   boundary = striker_bnd
+  #   function = '15e3' #mm/s
+  # []
+  [pressue_x]
+    type = ADPressure
+    # component = 0
+    variable = disp_x
+    displacements = 'disp_x disp_y'
+    # boundary = 'v-load'
+    boundary = 'bar_left'
+    function = p_func
+  []
+  [pressue_y]
+    type = ADPressure
+    # component = 1
+    variable = disp_y
+    displacements = 'disp_x disp_y'
+    # boundary = 'v-load'
+    boundary = 'bar_left'
+    function = p_func
+  []
+  # [mix_x]
+  #   type = ADFunctionNeumannBC
   #   variable = disp_x
   #   displacements = 'disp_x disp_y'
   #   boundary = 'v-load'
-  #   function = p_func
+  #   function = t_func_x
   # []
-  # [pressue_y]
-  #   type = ADPressure
-  #   # component = 1
+  # [mix_y]
+  #   type = ADFunctionNeumannBC
   #   variable = disp_y
   #   displacements = 'disp_x disp_y'
   #   boundary = 'v-load'
-  #   function = p_func
+  #   function = t_func_y
   # []
-  [mix_x]
-    type = ADFunctionNeumannBC
-    variable = disp_x
-    displacements = 'disp_x disp_y'
-    boundary = 'v-load'
-    function = t_func_x
-  []
-  [mix_y]
-    type = ADFunctionNeumannBC
-    variable = disp_y
-    displacements = 'disp_x disp_y'
-    boundary = 'v-load'
-    function = t_func_y
-  []
 []
+
+# [Controls]
+#   [impact]
+#     type = TimePeriod
+#     enable_objects = 'BCs::initial_vel'
+#     start_time = '0'
+#     end_time = '5e-8'
+#   []
+# []
 
 [Materials]
   # bego
@@ -426,23 +517,49 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = ADComputeIsotropicElasticityTensor
     bulk_modulus = ${K_p}
     shear_modulus = ${G_p}
-    block = 1
+    block = 2
   []
   [density_putty]
     type = GenericConstantMaterial
     prop_names = 'density_p'
     prop_values = '${rho_p}'
-    block = 1
+    block = 2
   []
   [stress_putty]
     type = ADComputeLinearElasticStress
-    block = 1
+    block = 2
   []
   [strain_putty]
     # type = ADComputeSmallStrain
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
-    block = 1
+    block = 2
+  []
+
+  # steel for bar and striker
+  [elasticity_steel]
+    type = ADComputeIsotropicElasticityTensor
+    bulk_modulus = ${K_s}
+    shear_modulus = ${G_s}
+    block = '1'
+  []
+  [density_steel]
+    type = GenericConstantMaterial
+    prop_names = 'density_s'
+    prop_values = '${rho_s}'
+    block = '1'
+  []
+  [stress_steel]
+    type = ADComputeLinearElasticStress
+    block = '1'
+    output_properties = 'stress'
+    outputs = exodus
+  []
+  [strain_steel]
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
+    block = '1'
   []
 []
 
@@ -450,14 +567,14 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [Fy]
     type = NodalSum
     variable = fy
-    boundary = v-load
-    outputs = pp
+    boundary = v-entire
+    outputs = 'pp exodus'
   []
   [Fx]
     type = NodalSum
     variable = fx
-    boundary = v-load
-    outputs = pp
+    boundary = v-entire
+    outputs = 'pp exodus'
   []
   # [disp_x]
   #   type = PointValue
@@ -546,34 +663,47 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # solve_type = PJFNK
+  # petsc_options = '-snes_converged_reason -ksp_converged_reason -pc_svd_monitor '
+  #                 '-snes_linesearch_monitor'
+  # petsc_options_iname = '-pc_type -pc_factor_shift_type -pc_factor_shift_amount -mat_mffd_err'
+  # petsc_options_value = 'lu       NONZERO               1e-15                   1e-5'
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
-
-  dt = 5e-8 # 0.05 us
-  # dtmin = 5e-9
-  end_time = 100e-6
+  # dt = 5e-8 # 0.05 us
+  dtmin = 5e-9
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<8.5e-6, 5e-7, 5e-8)'
+  []
+  end_time = 300e-6
+  line_search = 'basic'
 
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-4
+  # nl_abs_tol = 1e-6
+  # nl_max_its = 20
 
-  fixed_point_max_its = 500
+  fixed_point_max_its = 50
+  # accept_on_max_fixed_point_iteration = false
   accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-6
   # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
 
   [TimeIntegrator]
     type = NewmarkBeta
-    # gamma = '${fparse 5/6}'
-    # beta = '${fparse 4/9}'
-    # gamma = 0.5
-    # beta = 0.25
+    # type = CentralDifference
   []
 []
 
@@ -582,19 +712,23 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     type = Exodus
     minimum_time_interval = 5e-7
   []
-  checkpoint = true
-  print_linear_residuals = false
-  file_base = '../out/half_coh_tan_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}/half_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}'
-  # file_base = '../out/half_coh_load_test_p${p}/half_coh_load_test_p${p}'
+  print_linear_residuals = true
+  # file_base = '../out/half_coh_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}/half_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}'
+  file_base = '../out/half_coh_contact_part/half_coh_contact_part'
   # file_base = '../out/hht_half_test'
   interval = 1
+  checkpoint = true
   [pp]
     type = CSV
-    file_base = '../gold/pp_half_coh_tan_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}'
-    # file_base = '../out/half_coh_load_test_p${p}/half_coh_load_test_p${p}'
+    # file_base = '../gold/pp_half_coh_p${p}_gc${Gc}_sigma_ts${sigma_ts}_l${l}_h${refine}'
+    file_base = '../out/half_coh_contact_part/half_coh_load_contact_part'
   []
   # [tip]
   #   type = CSV
   #   file_base = '../gold/tip_half_coh_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
   # []
 []
+
+# [Debug]
+#   show_var_residual_norms = true
+# []

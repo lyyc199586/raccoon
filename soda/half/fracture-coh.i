@@ -6,23 +6,25 @@
 [Mesh]
   [gen]
     type = FileMeshGenerator
-    file = '../mesh/half.msh'
+    # file = '../mesh/half.msh'
+    # file = '../mesh/half_contact_part.msh'
+    file = '../mesh/half_new.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
     input = gen
     combinatorial_geometry = 'y > 74'
-    block_id = 1
+    block_id = 2
     block_name = top_layer
   []
-  [noncrack]
-    type = BoundingBoxNodeSetGenerator
-    input = toplayer
-    new_boundary = noncrack
-    bottom_left = '26.9 0 0'
-    top_right = '100.1 0 0'
-  []
-  construct_side_list_from_node_list = true
+  # [noncrack]
+  #   type = BoundingBoxNodeSetGenerator
+  #   input = toplayer
+  #   new_boundary = noncrack
+  #   bottom_left = '26.9 0 0'
+  #   top_right = '100.1 0 0'
+  # []
+  # construct_side_list_from_node_list = true
 []
 
 [Adaptivity]
@@ -93,7 +95,7 @@
 
 [Bounds]
   [irreversibility]
-    type = VariableOldValueBoundsAux
+    type = VariableOldValueBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = lower
@@ -116,7 +118,7 @@
   #   threshold_ratio = 0.95
   # []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
