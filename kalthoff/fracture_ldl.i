@@ -1,3 +1,5 @@
+sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
+
 # [Mesh]
 #   # [fmg]
 #   #   type = FileMeshGenerator
@@ -33,7 +35,11 @@
 #   []
 # []
 
-[Mesh] # cloned from the parent app
+[Mesh]
+  [gen]
+    type = FileMeshGenerator
+    file = './mesh/kal.msh'
+  []
 []
 
 # [Adaptivity]
@@ -107,8 +113,7 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    # bound_value = 1
-    bound_value = 0
+    bound_value = 1
   []
 []
 
@@ -129,7 +134,7 @@
     type = ADCoefMatSource
     variable = d
     prop_names = 'ce'
-    coefficient = -1
+    coefficient = 1
   []
 []
 
@@ -139,32 +144,22 @@
     prop_names = 'E K G lambda Gc l sigma_ts sigma_hs'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_hs}'
   []
-  # [degradation]
-  #   type = RationalDegradationFunction
-  #   f_name = g
-  #   phase_field = d
-  #   material_property_names = 'Gc psic xi c0 l'
-  #   parameter_names = 'p a2 a3 eta'
-  #   parameter_values = '2 1 0 1e-9'
-  # []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
   []
-  # [degradation]
-  #   type = NoDegradation
-  #   f_name = g
-  #   phase_field = d
-  #   function = 1
-  # []
   [crack_geometric]
     type = CrackGeometricFunction
     f_name = alpha
     function = 'd'
+    phase_field = d
+  []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
     phase_field = d
   []
   [psi]
@@ -178,15 +173,14 @@
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    # expression = '(delta*Gc/c0/l)*alpha'
-    expression = ='delta*Gc*gamma'
+    expression = 'delta*Gc*gamma'
     coupled_variables = 'd'
     material_property_names = 'delta gamma(d) Gc'
   []
   [ce_integral]
     type = ADParsedMaterial
     property_name = ce_integral
-    expression = '- 1/3*(1-d)*ce'
+    expression = '1/3*(1-d)*ce'
     coupled_variables = 'd'
     material_property_names = 'ce'
   []
@@ -207,7 +201,10 @@
   [ldl]
     type = LDLNucleationMicroForce
     phase_field = d
-    strain_energy_density_active = psie_active
+    degradation_function = g
+    # strain_energy_density_active = psie_active
+    regularization_length = l
+    normalization_constant = c0
     tensile_strength = sigma_ts
     hydrostatic_strength = sigma_hs
     h_correction = true
@@ -281,5 +278,5 @@
     interval = 1
     minimum_time_interval = 5e-7
   []
-  file_base = './out/kal_nuc24_fracture_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/fracture'
 []

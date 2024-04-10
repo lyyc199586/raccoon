@@ -8,11 +8,10 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 sigma_ts = 1733 # MPa
 sigma_cs = 5199
-sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 # psic = '${fparse sigma_ts^2/2/E}'
 
 # l = 0.35
-l = 0.5
+l = 0.75
 # delta = 0.5
 
 # refine = 6 #h_r = 0.3125
@@ -26,10 +25,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture_ldl.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};sigma_hs=${sigma_hs};'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};'
               #  'refine=${refine}'
     execute_on = 'TIMESTEP_END'
-    clone_parent_mesh = true
+    # clone_parent_mesh = true
   []
 []
 
@@ -361,7 +360,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     function = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
   []
   # [degradation]
   #   type = NoDegradation
@@ -453,13 +452,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
   nl_rel_tol = 1e-6
@@ -468,12 +467,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   end_time = 90e-6
   nl_max_its = 20
 
-  fixed_point_max_its = 500
-  accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
+  fixed_point_max_its = 20
+  accept_on_max_fixed_point_iteration = true
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-3
+  fixed_point_abs_tol = 1e-5
   # dt = 5e-7
   [TimeStepper]
     # type = FunctionDT
@@ -501,12 +500,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/na_kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}/kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
-  file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/elasticity'
   interval = 1
   checkpoint = true
   [csv]
     # file_base = './gold/na_kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
-    file_base = './gold/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+    file_base = './gold/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/elasticity'
     type = CSV
   []
 []
