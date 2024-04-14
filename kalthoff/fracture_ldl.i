@@ -36,43 +36,43 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 # []
 
 [Mesh]
-  [gen]
-    type = FileMeshGenerator
-    file = './mesh/kal.msh'
-  []
+  # [gen]
+  #   type = FileMeshGenerator
+  #   file = './mesh/kal.msh'
+  # []
 []
 
-# [Adaptivity]
-#   # initial_marker = initial_marker
-#   # initial_steps = ${refine}
-#   marker = combo_marker
-#   max_h_level = ${refine}
-#   cycles_per_step = ${refine}
-#   [Markers]
-#     [initial_box]
-#       type = BoxMarker
-#       bottom_left = '44 19 0'
-#       top_right = '56 31 0'
-#       inside = refine
-#       outside = DO_NOTHING
-#     []
-#     [damage_marker]
-#       type = ValueRangeMarker
-#       variable = d
-#       lower_bound = 0.0001
-#       upper_bound = 1
-#     []
-#     [psie_marker]
-#       type = ValueThresholdMarker
-#       variable = psie_active
-#       refine = 3
-#     []
-#     [combo_marker]
-#       type = ComboMarker
-#       markers = 'initial_box damage_marker'
-#     []
-#   []
-# []
+[Adaptivity]
+  # initial_marker = initial_marker
+  # initial_steps = ${refine}
+  marker = combo_marker
+  max_h_level = ${refine}
+  cycles_per_step = ${refine}
+  [Markers]
+    [initial_box]
+      type = BoxMarker
+      bottom_left = '44 19 0'
+      top_right = '56 31 0'
+      inside = refine
+      outside = DO_NOTHING
+    []
+    [damage_marker]
+      type = ValueRangeMarker
+      variable = d
+      lower_bound = 0.0001
+      upper_bound = 1
+    []
+    [psie_marker]
+      type = ValueThresholdMarker
+      variable = psie_active
+      refine = 3
+    []
+    [combo_marker]
+      type = ComboMarker
+      markers = 'initial_box damage_marker'
+    []
+  []
+[]
 
 [Variables]
   [d]
@@ -109,7 +109,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     threshold_value = 0.95
   []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
@@ -144,6 +144,12 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     prop_names = 'E K G lambda Gc l sigma_ts sigma_hs'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_hs}'
   []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    f_name = alpha
+    function = 'd'
+    phase_field = d
+  []
   [degradation]
     type = PowerDegradationFunction
     f_name = g
@@ -152,16 +158,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
   []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
-    phase_field = d
-  []
-  [crack_surface_density]
-    type = CrackSurfaceDensity
-    phase_field = d
-  []
+  
   [psi]
     type = ADDerivativeParsedMaterial
     f_name = psi
@@ -177,41 +174,32 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     coupled_variables = 'd'
     material_property_names = 'delta gamma(d) Gc'
   []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
+    phase_field = d
+  []
   [ce_integral]
     type = ADParsedMaterial
     property_name = ce_integral
-    expression = '1/3*(1-d)*ce'
+    expression = 'ce'
     coupled_variables = 'd'
     material_property_names = 'ce'
   []
-  # [kumar_material] 
-  #   # type = KLRNucleationMicroForce
-  #   type = KLBFNucleationMicroForce
-  #   # phase_field = d
-  #   stress_name = stress
-  #   normalization_constant = c0
-  #   tensile_strength = '${sigma_ts}'
-  #   compressive_strength = '${sigma_cs}'
-  #   delta = '${delta}'
-  #   external_driving_force_name = ce
-  #   stress_balance_name = f_nu
-  #   # output_properties = 'ce f_nu'
-  #   # outputs = exodus
-  # []
   [ldl]
     type = LDLNucleationMicroForce
     phase_field = d
     degradation_function = g
-    # strain_energy_density_active = psie_active
     regularization_length = l
     normalization_constant = c0
     tensile_strength = sigma_ts
     hydrostatic_strength = sigma_hs
+    fracture_toughness = Gc
+    delta = delta
     h_correction = true
     external_driving_force_name = ce
     stress_balance_name = f_nu
     output_properties = 'ce f_nu delta'
-    outputs = exodus
+    # outputs = exodus
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -224,8 +212,6 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    # decomposition = SPECTRAL
-    # decomposition = VOLDEV
     decomposition = NONE
   []
   [stress]
@@ -253,16 +239,19 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type  -pc_hypre_type -snes_type'
-  # petsc_options_value = 'hypre      boomeramg                  vinewtonrsls'
-  # petsc_options_iname = '-pc_type -snes_type'
+  # petsc_options_iname = '-pc_type --pc_hypre_type -snes_type'
+  # petsc_options_value = 'hypre      boomeramg  vinewtonrsls'
+ 
   # petsc_options_value = 'asm      vinewtonrsls'
   # petsc_options_iname = '-pc_type -sub_pc_type -ksp_max_it -ksp_gmres_restart -sub_pc_factor_levels -snes_type'
   # petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
   automatic_scaling = true
+  # line_search = basic
 
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
-  nl_max_its = 500
+  
+  # nl_max_its = 500
   # [TimeStepper]
   #   type = FunctionDT
   #   function = 'if(t <= 3.1e-5, 5e-7, 5e-8)'
@@ -272,11 +261,11 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   # []
 []
 
-[Outputs]
-  [exodus]
-    type = Exodus
-    interval = 1
-    minimum_time_interval = 5e-7
-  []
-  file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/fracture'
-[]
+# [Outputs]
+#   [exodus]
+#     type = Exodus
+#     interval = 1
+#     minimum_time_interval = 5e-7
+#   []
+#   file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/fracture'
+# []
