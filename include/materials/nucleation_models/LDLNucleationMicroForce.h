@@ -9,7 +9,6 @@
 /**
  * The class implements the external driving force to recover a Drucker-Prager
  * strength envelope. See Larsen et. al. https://doi.org/10.48550/arXiv.2401.13938 for model 2024.
- * all parameters are required to be Material type, not double type
  */
 
 class LDLNucleationMicroForce : public NucleationMicroForceBase
