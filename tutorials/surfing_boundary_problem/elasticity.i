@@ -202,7 +202,7 @@ refine = 3
   [Jint_over_Gc]
     type = ParsedPostprocessor
     pp_names = 'Jint'
-    function = 'Jint/${Gc}'
+    expression = 'Jint/${Gc}'
   []
 []
 

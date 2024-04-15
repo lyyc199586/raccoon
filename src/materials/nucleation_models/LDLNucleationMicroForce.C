@@ -11,66 +11,27 @@ registerADMooseObject("raccoonApp", LDLNucleationMicroForce);
 InputParameters
 LDLNucleationMicroForce::validParams()
 {
-  InputParameters params = Material::validParams();
-  params += BaseNameInterface::validParams();
+  InputParameters params = NucleationMicroForceBase::validParams();
 
   params.addClassDescription(
       "This class computes the external driving force for nucleation given "
       "a Drucker-Prager strength envelope developed by Larsen et al. (2024)");
-
-  params.addParam<MaterialPropertyName>(
-      "fracture_toughness", "Gc", "energy release rate or fracture toughness");
-  params.addParam<MaterialPropertyName>(
-      "normalization_constant", "c0", "The normalization constant $c_0$");
-  params.addRequiredCoupledVar("phase_field", "Name of the phase-field (damage) variable");
-  params.addParam<MaterialPropertyName>("degradation_function", "g", "The degradation function");
-  params.addParam<MaterialPropertyName>(
-      "regularization_length", "l", "the phase field regularization length");
-
-  params.addParam<MaterialPropertyName>("lambda", "lambda", "Lame's first parameter lambda");
-  params.addParam<MaterialPropertyName>("shear_modulus", "G", "shear modulus mu or G");
-
   params.addRequiredParam<MaterialPropertyName>(
       "tensile_strength", "The tensile strength of the material beyond which the material fails.");
-
   params.addRequiredParam<MaterialPropertyName>(
       "hydrostatic_strength",
       "The hydrostatic strength of the material beyond which the material fails.");
-
   params.addParam<MaterialPropertyName>("delta", "delta", "Name of the unitless coefficient delta");
   params.addParam<bool>("h_correction", false, "Whether to use h correction formula for delta");
-  params.addParam<MaterialPropertyName>(
-      "external_driving_force_name",
-      "ex_driving",
-      "Name of the material that holds the external_driving_force");
-  params.addParam<MaterialPropertyName>(
-      "stress_balance_name",
-      "stress_balance",
-      "Name of the stress balance function $F= \\dfrac{J_2}{\\mu} + \\dfrac{I_1^2}{9\\kappa} - c_e "
-      "-\\dfrac{3\\Gc}{8\\delta}=0 $. This value tells how close the material is to strength "
-      "envelope.");
-  params.addParam<MaterialPropertyName>("stress_name", "stress", "Name of the stress tensor");
   return params;
 }
 
 LDLNucleationMicroForce::LDLNucleationMicroForce(const InputParameters & parameters)
-  : Material(parameters),
-    BaseNameInterface(parameters),
-    _ex_driving(declareADProperty<Real>(prependBaseName("external_driving_force_name", true))),
-    _Gc(getADMaterialProperty<Real>(prependBaseName("fracture_toughness", true))),
-    _d(coupledValue("phase_field")),
-    _g_name(prependBaseName("degradation_function", true)),
-    _g(getADMaterialProperty<Real>(_g_name)),
-    _c0(getADMaterialProperty<Real>(prependBaseName("normalization_constant", true))),
-    _L(getADMaterialProperty<Real>(prependBaseName("regularization_length", true))),
-    _lambda(getADMaterialProperty<Real>(prependBaseName("lambda", true))),
-    _mu(getADMaterialProperty<Real>(prependBaseName("shear_modulus", true))),
+  : NucleationMicroForceBase(parameters),
     _sigma_ts(getADMaterialProperty<Real>(prependBaseName("tensile_strength", true))),
     _sigma_hs(getADMaterialProperty<Real>(prependBaseName("hydrostatic_strength", true))),
     _delta(declareADProperty<Real>(prependBaseName("delta", true))),
-    _h_correction(getParam<bool>("h_correction")),
-    _stress(getADMaterialProperty<RankTwoTensor>(prependBaseName("stress_name", true))),
-    _stress_balance(declareADProperty<Real>(prependBaseName("stress_balance_name", true)))
+    _h_correction(getParam<bool>("h_correction"))
 {
 }
 
