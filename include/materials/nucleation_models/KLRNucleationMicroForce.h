@@ -11,8 +11,7 @@
  * strength envelope developed by Kumar et al. in 2022. See Kumar, A., Ravi-Chandar, K. &
  * Lopez-Pamies, O. The revisited phase-field approach to brittle fracture: application to
  * indentation and notch problems. Int J Fract 237, 83–100 (2022).
- * https://doi.org/10.1007/s10704-022-00653-z. all parameters are required to be Material type, not
- * double type
+ * https://doi.org/10.1007/s10704-022-00653-z. 
  */
 class KLRNucleationMicroForce : public NucleationMicroForceBase
 {
