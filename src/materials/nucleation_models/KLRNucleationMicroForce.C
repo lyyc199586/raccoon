@@ -4,7 +4,7 @@
 
 #include "KLRNucleationMicroForce.h"
 
-registerADMooseObject("raccoonApp", KLRNucleationMicroForce);
+registerMooseObjectReplaced("raccoonApp", KLRNucleationMicroForce, "12/31/2024 23:59", LDLNucleationMicroForce);
 
 InputParameters
 KLRNucleationMicroForce::validParams()

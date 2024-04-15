@@ -76,7 +76,7 @@ could deviate from $\ell$. The mesh should be able to resolve $l_e$ as well.
 
 ### KLBF (Kumar, Lopez, Bourdin, Francfort) Model 2020
 
-See [KLBFNucleationMicroForce](source/materials/KLBFNucleationMicroForce.md)
+See [KLBFNucleationMicroForce](nucleation_models/KLBFNucleationMicroForce.md)
 
 ## Example Input File Syntax
 

@@ -53,11 +53,11 @@ The strength surface is presented with uniaxial tensile $\sigma_{ts}$ and hydros
 
 ### KLR (Kumar, Lopez, Ravi-Chandar) Model 2022
 
-Please see [KLRNucleationMicroForce](source/materials/KLRNucleationMicroForce.md)
+Please see [KLRNucleationMicroForce](nucleation_models/KLRNucleationMicroForce.md)
 
 ### KLBF (Kumar, Lopez, Bourdin, Francfort) Model 2020
 
-Please see [KLBFNucleationMicroForce](source/materials/KLBFNucleationMicroForce.md)
+Please see [KLBFNucleationMicroForce](nucleation_models/KLBFNucleationMicroForce.md)
 
 ## Example Input File Syntax
 
