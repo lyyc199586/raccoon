@@ -52,7 +52,7 @@ LDLNucleationMicroForce::computeQpProperties()
   ADRankTwoTensor stress_dev = _stress[_qp].deviatoric();
   ADReal J2 = 0.5 * stress_dev.doubleContraction(stress_dev);
 
-  // Just to be extra careful... J2 is for sure non-negative but descritization and interpolation
+  // Just to be extra careful... J2 is for sure non-negative but discretization and interpolation
   // might bring surprise
   if (J2 < 0)
     mooseException("Negative J2");
