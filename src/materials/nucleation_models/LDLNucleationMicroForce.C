@@ -54,7 +54,8 @@ LDLNucleationMicroForce::computeQpProperties()
 
   // Just to be extra careful... J2 is for sure non-negative but descritization and interpolation
   // might bring surprise
-  mooseAssert(J2 >= 0, "Negative J2");
+  if (J2 < 0)
+    mooseException("Negative J2");
 
   // define zero J2's derivative
   if (MooseUtils::absoluteFuzzyEqual(J2, 0))
