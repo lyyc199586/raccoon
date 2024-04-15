@@ -2,7 +2,6 @@
 //* being developed at Dolbow lab at Duke University
 //* http://dolbow.pratt.duke.edu
 
-#include "Function.h"
 #include "KLRNucleationMicroForce.h"
 
 registerADMooseObject("raccoonApp", KLRNucleationMicroForce);
@@ -14,7 +13,6 @@ KLRNucleationMicroForce::validParams()
 
   params.addClassDescription("This class computes the external driving force for nucleation given "
                              "a Drucker-Prager strength envelope developed by Kumar et al. (2022)");
-
 
   params.addRequiredParam<MaterialPropertyName>(
       "tensile_strength", "The tensile strength of the material beyond which the material fails.");

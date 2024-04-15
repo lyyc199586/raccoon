@@ -30,7 +30,7 @@ protected:
   const ADMaterialProperty<Real> & _lambda;
   /// The shear modulus
   const ADMaterialProperty<Real> & _mu;
-  
+
   /// The stress tensor
   const ADMaterialProperty<RankTwoTensor> & _stress;
   /// Name of the stress space balance
