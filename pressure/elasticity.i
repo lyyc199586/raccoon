@@ -7,7 +7,7 @@ nu = 0.3
 sigma_ts = 1e3
 Gc = 20
 l = 1
-refine = 2
+refine = 3
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -16,7 +16,7 @@ psic = '${fparse sigma_ts^2/2/E}'
 
 T0 = 100e-6
 p0 = 400
-seed = 1
+seed = 8
 
 ## hht parameters
 hht_alpha = -0.25
@@ -73,18 +73,24 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = FileMeshGenerator
     file = './mesh/annulus_h1.msh'
   []
-  [fix_point]
-    type = ExtraNodesetGenerator
-    coord = '150 0 0'
+  # [fix_point]
+  #   type = ExtraNodesetGenerator
+  #   coord = '150 0 0'
+  #   input = fmg 
+  #   new_boundary = fix_point
+  # []
+  [initial_ref]
+    type = RefineSidesetGenerator
+    boundaries = inner
     input = fmg 
-    new_boundary = fix_point
+    refinement = ${refine}
   []
 []
 
 [Adaptivity]
   marker = damage_marker
   max_h_level = ${refine}
-  cycles_per_step = ${refine}
+  cycles_per_step = 3
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -284,7 +290,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0 1e-5'
+    parameter_values = '2 1 0 0'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -303,8 +309,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
-    output_properties = 'stress'
-    outputs = exodus
+    # output_properties = 'stress'
+    # outputs = exodus
   []
 []
 
@@ -324,13 +330,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_hypre_type'
+  # petsc_options_value = 'hypre boomeramg'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
   scaling_group_variables = 'disp_x disp_y'
 
@@ -340,7 +346,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   nl_abs_tol = 1e-8
   # nl_max_its = 200
 
-  line_search = bt
+  line_search = none
   fixed_point_algorithm = picard
   fixed_point_max_its = 20
   # disable_fixed_point_residual_norm_check = true
@@ -350,7 +356,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   [TimeStepper]
     type = FunctionDT
-    function = 'if(t < 49e-5, 1e-6, 1e-7)'
+    function = 'if(t < 48e-5, 1e-6, 1e-7)'
     growth_factor = 2
     cutback_factor_at_failure = 0.5
   []
@@ -359,9 +365,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   dt = 1e-6
   #   optimal_iterations = 5
   # []
-  # dt = 0.05
-  # dt = 1e-6
-  # dtmin = 0.0001
+  dtmin = 1e-8
   start_time = 0
   end_time = 100e-6
   # num_steps = 1
@@ -373,13 +377,11 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [Outputs]
   [exodus]
-    type = Exodus
-    time_step_interval = 1
+    type = Exodus 
     min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
   file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
-  time_step_interval = 1
   checkpoint = true
   [csv]
     file_base = './gold/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'

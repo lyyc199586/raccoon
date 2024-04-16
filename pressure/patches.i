@@ -5,7 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h4.msh'
+    file = './mesh/annulus_h1.msh'
   []
 []
 

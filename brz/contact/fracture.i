@@ -1,3 +1,5 @@
+sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
+
 [Mesh]
   [fmg]
     type = FileMeshGenerator
@@ -122,8 +124,8 @@
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l sigma_ts sigma_cs delta'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_cs} ${delta}'
+    prop_names = 'E K G lambda Gc l sigma_ts sigma_hs'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_hs}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -149,35 +151,29 @@
   # []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(Gc/c0/l)*alpha'
-    args = 'd psie_active'
-    material_property_names = 'alpha(d) g(d) Gc c0 l'
+    property_name = psi
+    expression = 'g*psie_active+(Gc*delta/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
+    material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
+  # [psi_f]
+  #   type = ADParsedMaterial
+  #   property_name = psi_f
+  #   expression = '(Gc/c0/l)*alpha'
+  #   coupled_variables = 'd'
+  #   material_property_names = 'alpha(d) Gc c0 l'
+  # []
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    expression = '(Gc/c0/l)*alpha'
+    expression = 'delta*Gc*gamma'
     coupled_variables = 'd'
-    material_property_names = 'alpha(d) Gc c0 l'
+    material_property_names = 'delta gamma(d) Gc'
   []
-  [kumar_material] #2022
-    type = KLRNucleationMicroForce
-    phase_field = d
-    stress_name = stress
-    normalization_constant = c0
-    tensile_strength = sigma_ts
-    compressive_strength = sigma_cs
-    delta = delta
-    external_driving_force_name = ce
-    stress_balance_name = f_nu
-    # output_properties = 'ce f_nu'
-    # outputs = exodus
-  []
-  # [kumar_material] #2020
-  #   type = KLBFNucleationMicroForce
-  #   # phase_field = d
+  # [kumar_material] #2022
+  #   type = KLRNucleationMicroForce
+  #   phase_field = d
   #   stress_name = stress
   #   normalization_constant = c0
   #   tensile_strength = sigma_ts
@@ -188,6 +184,20 @@
   #   # output_properties = 'ce f_nu'
   #   # outputs = exodus
   # []
+  [nucforce]
+    type = LDLNucleationMicroForce
+    phase_field = d
+    degradation_function = g
+    regularization_length = l
+    normalization_constant = c0
+    tensile_strength = sigma_ts
+    hydrostatic_strength = sigma_hs
+    fracture_toughness = Gc
+    delta = delta
+    external_driving_force_name = ce
+    stress_balance_name = f_nu
+    h_correction = true
+  []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'

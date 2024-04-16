@@ -7,12 +7,18 @@
     type = FileMeshGenerator
     file = './mesh/annulus_h1.msh'
   []
+  [initial_ref]
+    type = RefineSidesetGenerator
+    boundaries = inner
+    input = fmg 
+    refinement = ${refine}
+  []
 []
 
 [Adaptivity]
   marker = damage_marker
   max_h_level = ${refine}
-  cycles_per_step = ${refine}
+  cycles_per_step = 3
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -123,7 +129,7 @@
 
 [Executioner]
   type = Transient
-
+  line_search = none
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'

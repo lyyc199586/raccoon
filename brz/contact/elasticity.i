@@ -24,9 +24,9 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
 
 # nuc2022
 # l = 3
-delta = 5
-# delta = 4
-l = 3
+# delta = 5
+# # delta = 4
+# l = 3
 # delta = 10
 
 # nuc2020
@@ -34,6 +34,9 @@ l = 3
 # delta = 15
 # l = 1
 # delta = 25
+
+# nuc2024
+l = 1.2
 
 # model parameter
 r = 25
@@ -67,7 +70,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -485,9 +488,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   # []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
+    property_name = g
     # function = (1-d)^p*(1-eta)+eta
-    function = (1-d)^p+eta
+    expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
@@ -658,13 +661,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/penalty_nuc22_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}/brz'
+  file_base = './out/penalty_nuc24_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}/brz'
   # file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './gold/pp_penalty_nuc22_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
+    file_base = './gold/pp_penalty_nuc24_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     # file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   []
 []
