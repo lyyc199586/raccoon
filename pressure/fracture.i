@@ -5,23 +5,23 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h0.5.msh'
+    file = './mesh/annulus_h1.msh'
   []
 []
 
-# [Adaptivity]
-#   marker = damage_marker
-#   max_h_level = ${refine}
-#   cycles_per_step = ${refine}
-#   [Markers]
-#     [damage_marker]
-#       type = ValueRangeMarker
-#       variable = d
-#       lower_bound = 0.0001
-#       upper_bound = 1
-#     []
-#   []
-# []
+[Adaptivity]
+  marker = damage_marker
+  max_h_level = ${refine}
+  cycles_per_step = ${refine}
+  [Markers]
+    [damage_marker]
+      type = ValueRangeMarker
+      variable = d
+      lower_bound = 0.0001
+      upper_bound = 1
+    []
+  []
+[]
 
 [Variables]
   [d]

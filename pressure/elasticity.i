@@ -7,7 +7,7 @@ nu = 0.3
 sigma_ts = 1e3
 Gc = 20
 l = 1
-# refine = 3
+refine = 2
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -16,10 +16,10 @@ psic = '${fparse sigma_ts^2/2/E}'
 
 T0 = 100e-6
 p0 = 400
-seed = 3
+seed = 1
 
 ## hht parameters
-hht_alpha = -0.3
+hht_alpha = -0.25
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
@@ -57,7 +57,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};refine=${refine}'
     execute_on = TIMESTEP_END
   []
   [patches]
@@ -71,7 +71,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h0.5.msh'
+    file = './mesh/annulus_h1.msh'
   []
   [fix_point]
     type = ExtraNodesetGenerator
@@ -81,19 +81,19 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
 []
 
-# [Adaptivity]
-#   marker = damage_marker
-#   max_h_level = ${refine}
-#   cycles_per_step = ${refine}
-#   [Markers]
-#     [damage_marker]
-#       type = ValueRangeMarker
-#       variable = d
-#       lower_bound = 0.0001
-#       upper_bound = 1
-#     []
-#   []
-# []
+[Adaptivity]
+  marker = damage_marker
+  max_h_level = ${refine}
+  cycles_per_step = ${refine}
+  [Markers]
+    [damage_marker]
+      type = ValueRangeMarker
+      variable = d
+      lower_bound = 0.0001
+      upper_bound = 1
+    []
+  []
+[]
 
 [Variables]
   [disp_x]
@@ -340,20 +340,25 @@ gamma = '${fparse 1/2-hht_alpha}'
   nl_abs_tol = 1e-8
   # nl_max_its = 200
 
-  line_search = none
+  line_search = bt
   fixed_point_algorithm = picard
-  fixed_point_max_its = 10
+  fixed_point_max_its = 20
   # disable_fixed_point_residual_norm_check = true
-  accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
 
   [TimeStepper]
     type = FunctionDT
-    function = 'if(t < 50e-5, 1e-6, 1e-7)'
-    growth_factor = 5
-    cutback_factor_at_failure = 0.2
+    function = 'if(t < 49e-5, 1e-6, 1e-7)'
+    growth_factor = 2
+    cutback_factor_at_failure = 0.5
   []
+  # [TimeStepper]
+  #   type = IterationAdaptiveDT
+  #   dt = 1e-6
+  #   optimal_iterations = 5
+  # []
   # dt = 0.05
   # dt = 1e-6
   # dtmin = 0.0001
@@ -373,11 +378,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h0.5/pr_coh_p${p0}_t${T0}_l${l}_h0.5'
+  file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
   time_step_interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/pr_coh_p${p0}_t${T0}_l${l}_h0.5'
+    file_base = './gold/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
     type = CSV
   []
 []
