@@ -84,7 +84,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     threshold_value = 0.95
   []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
@@ -129,15 +129,15 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    # function = (1-d)^p*(1-eta)+eta
-    function = (1-d)^p+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
+    # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
@@ -145,7 +145,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   []
   # [nodegradation] # elastic test
   #   type = NoDegradation
-  #   f_name = g 
+  #   property_name = g 
   #   function = 1
   #   phase_field = d
   # []

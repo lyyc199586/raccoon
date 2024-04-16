@@ -146,7 +146,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     top_right = '31.01 15.1 0.01'
   []
   # construct_side_list_from_node_list=true
-  patch_update_strategy = auto
+  patch_update_strategy = always
   # patch_size = 5000
 []
 
@@ -443,8 +443,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fix_right_x]
     type = DirichletBC
     variable = disp_x
-    boundary = 'right_platen_left'
-    # boundary = right_platen_set
+    # boundary = 'right_platen_left'
+    boundary = right_platen_set
     preset = true
     value = 0
   []
@@ -452,6 +452,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADFunctionDirichletBC
     variable = disp_x
     boundary = 'left_platen_set'
+    # boundary = 'left_platen_left'
     preset = true
     function = load
   []
@@ -489,8 +490,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [degradation]
     type = PowerDegradationFunction
     property_name = g
-    # function = (1-d)^p*(1-eta)+eta
-    expression = (1-d)^p+eta
+    expression = (1-d)^p*(1-eta)+eta
+    # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
@@ -642,11 +643,11 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # fixed_point_max_its = 300
   fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = true
+  accept_on_max_fixed_point_iteration = false
   # fixed_point_rel_tol = 1e-6
   # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
 
   # [TimeIntegrator]
   #   type = CentralDifference
