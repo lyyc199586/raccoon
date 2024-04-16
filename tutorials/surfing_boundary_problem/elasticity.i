@@ -163,8 +163,8 @@ refine = 3
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 0'
@@ -202,7 +202,7 @@ refine = 3
   [Jint_over_Gc]
     type = ParsedPostprocessor
     pp_names = 'Jint'
-    function = 'Jint/${Gc}'
+    expression = 'Jint/${Gc}'
   []
 []
 
