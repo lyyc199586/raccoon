@@ -81,7 +81,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.95
+    threshold_value = 0.97
   []
   [upper]
     type = ConstantBounds

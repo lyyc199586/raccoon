@@ -11,7 +11,7 @@ sigma_ts = 3.08 # MPa, sts and scs from guessing
 psic = ${fparse sigma_ts^2/2/E}
 
 # l = 1.25
-l = 0.625
+l = 1
 # delta = 4 # haven't tested
 refine = 3
 
@@ -44,10 +44,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppCopyTransfer
     # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
-    # variable = 'disp_x disp_y strain_zz psie_active'
-    # source_variable = 'disp_x disp_y strain_zz psie_active'
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
+    variable = 'disp_x disp_y strain_zz psie_active'
+    source_variable = 'disp_x disp_y strain_zz psie_active'
+    # variable = 'disp_x disp_y psie_active'
+    # source_variable = 'disp_x disp_y psie_active'
   []
   [pp_transfer]
     type = MultiAppPostprocessorTransfer
@@ -150,10 +150,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # initial_from_file_timestep = LATEST
     # order = SECOND
   []
-  # [strain_zz]
-  #   # initial_from_file_var = 'strain_zz'
-  #   # initial_from_file_timestep = LATEST
-  # []
+  [strain_zz]
+    # initial_from_file_var = 'strain_zz'
+    # initial_from_file_timestep = LATEST
+  []
 []
 
 [AuxVariables]
@@ -252,11 +252,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  # [plane_stress]
-  #   type = ADWeakPlaneStress
-  #   variable = 'strain_zz'
-  #   displacements = 'disp_x disp_y'
-  # []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
 []
 
 [AuxKernels]
@@ -384,17 +384,17 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [degradation]
     type = RationalDegradationFunction
-    f_name = g
+    property_name = g
     phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 -0.5 0.0 1e-6'
+    parameter_values = '2 1 0.0 1e-6'
   []
   # [degradation]
   #   type = PowerDegradationFunction
@@ -412,7 +412,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   outputs = exodus
   # []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
     outputs = exodus

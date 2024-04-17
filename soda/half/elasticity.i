@@ -13,15 +13,17 @@ Gc = 9e-3
 # sigma_ts = 41 # MPa, sts and scs from guessing
 sigma_ts = 30
 sigma_cs = 330
-p = 25
+# p = 25
+p = 22.576
 
 # l = 0.075
 # delta = -0.2 # haven't tested
 # refine = 6 # h=1, h_ref=0.015625=1/2^6
+h = 1
 refine = 4
 
 l = 0.25
-delta = -0.625
+# delta = -0.625
 # delta = 0
 
 # putty
@@ -35,7 +37,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};delta=${delta};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -60,14 +62,14 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 [Functions]
   [p_func] # trapezoidal loading pulse
     type = PiecewiseLinear
-    x = '0 15e-6 60e-6 75e-6 80e-6'
-    y = '0 ${p} ${p} 0 0'
+    x = '0 17.5e-6 57.5e-6 75e-6'
+    y = '0 ${p}   ${p}   0'
   []
 []
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
-  use_displaced_mesh = false # small strain
+  use_displaced_mesh = true # small strain
   # beta = 0.25
   # gamma = 0.5
   # eta = 19.63
@@ -78,7 +80,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
 [Mesh]
   [gen]
     type = FileMeshGenerator
-    file = '../mesh/half.msh'
+    file = '../mesh/half_new.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
@@ -97,7 +99,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [vpartialtop]
     type = ParsedGenerateSideset
     input = noncrack
-    included_boundaries = 'v-partial'
+    # included_boundaries = 'v-partial'
+    included_boundaries = 'v-entire'
     new_sideset_name = 'v-load'
     combinatorial_geometry = 'x < 13.6'
   []
@@ -263,16 +266,16 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     acceleration = accel_y
     execute_on = timestep_end
   []
-  [d_dist]
-    type = ParsedAux
-    variable = d_dist
-    coupled_variables = d
-    # expression = 'if(d > d_cr & y > 0, sqrt((x - 27)^2 + y^2), -1)'
-    expression = 'if(d > d_cr & y > 0, x-27, -1)'
-    use_xyzt = true
-    constant_names = d_cr
-    constant_expressions = 0.95
-  []
+  # [d_dist]
+  #   type = ParsedAux
+  #   variable = d_dist
+  #   coupled_variables = d
+  #   # expression = 'if(d > d_cr & y > 0, sqrt((x - 27)^2 + y^2), -1)'
+  #   expression = 'if(d > d_cr & y > 0, x-27, -1)'
+  #   use_xyzt = true
+  #   constant_names = d_cr
+  #   constant_expressions = 0.95
+  # []
 []
 
 [BCs]
@@ -322,8 +325,8 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
@@ -331,7 +334,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   []
   # [nodegradation] # test without d
   #   type = NoDegradation
-  #   f_name = g 
+  #   property_name = g 
   #   function = 1
   #   phase_field = d
   #   block = 0
@@ -398,13 +401,13 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   [Fy]
     type = NodalSum
     variable = fy
-    boundary = v-partial
+    boundary = v-load
     outputs = pp
   []
   [Fx]
     type = NodalSum
     variable = fx
-    boundary = v-partial
+    boundary = v-load
     outputs = pp
   []
   # [disp_x]
@@ -437,55 +440,55 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   #   boundary = 'left bottom right top' # ? need to define in mesh?
   # []
   # crack tip tracking
-  [tip_x]
-    type = PDCrackTipTracker
-    variable = d_dist
-    component = 0
-    initial_coord = 27
-    outputs = tip
-    execute_on = 'initial timestep_begin'
-  []
-  [tip_y]
-    type = PDCrackTipTracker
-    variable = d_dist
-    component = 1
-    initial_coord = 0
-    outputs = tip
-    execute_on = 'initial timestep_begin'
-  []
-  [tip_z]
-    type = PDCrackTipTracker
-    variable = d_dist
-    component = 2
-    initial_coord = 0
-    outputs = tip
-    execute_on = TIMESTEP_END
-  []
-  [dx]
-    type = ChangeOverTimePostprocessor
-    postprocessor = tip_x
-    outputs = none
-  []
-  [dy]
-    type = ChangeOverTimePostprocessor
-    postprocessor = tip_y
-    outputs = none
-  []
-  [dz]
-    type = ChangeOverTimePostprocessor
-    postprocessor = tip_z
-    outputs = none
-  []
-  [dt]
-    type = TimestepSize
-    outputs = none
-  []
-  [tip_velocity]
-    type = ParsedPostprocessor
-    pp_names = 'dx dy dz dt'
-    function = 'sqrt(dx^2 + dy^2 + dz^2)/dt'
-    outputs = tip
-  []
+  # [tip_x]
+  #   type = PDCrackTipTracker
+  #   variable = d_dist
+  #   component = 0
+  #   initial_coord = 27
+  #   outputs = tip
+  #   execute_on = 'initial timestep_begin'
+  # []
+  # [tip_y]
+  #   type = PDCrackTipTracker
+  #   variable = d_dist
+  #   component = 1
+  #   initial_coord = 0
+  #   outputs = tip
+  #   execute_on = 'initial timestep_begin'
+  # []
+  # [tip_z]
+  #   type = PDCrackTipTracker
+  #   variable = d_dist
+  #   component = 2
+  #   initial_coord = 0
+  #   outputs = tip
+  #   execute_on = TIMESTEP_END
+  # []
+  # [dx]
+  #   type = ChangeOverTimePostprocessor
+  #   postprocessor = tip_x
+  #   outputs = none
+  # []
+  # [dy]
+  #   type = ChangeOverTimePostprocessor
+  #   postprocessor = tip_y
+  #   outputs = none
+  # []
+  # [dz]
+  #   type = ChangeOverTimePostprocessor
+  #   postprocessor = tip_z
+  #   outputs = none
+  # []
+  # [dt]
+  #   type = TimestepSize
+  #   outputs = none
+  # []
+  # [tip_velocity]
+  #   type = ParsedPostprocessor
+  #   pp_names = 'dx dy dz dt'
+  #   function = 'sqrt(dx^2 + dy^2 + dz^2)/dt'
+  #   outputs = tip
+  # []
 []
 
 [Executioner]
@@ -534,15 +537,15 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
     interval = 10
   []
   print_linear_residuals = false
-  file_base = '../out/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}/half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
+  file_base = '../out/soda_nuc24_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h${h}_rf${refine}/soda'
   # file_base = '../out/hht_half_test'
   interval = 1
   [pp]
     type = CSV
-    file_base = '../gold/pp_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
+    file_base = '../gold/soda_nuc24_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h${h}_rf${refine}'
   []
-  [tip]
-    type = CSV
-    file_base = '../gold/tip_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
-  []
+  # [tip]
+  #   type = CSV
+  #   file_base = '../gold/tip_half_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_h${refine}'
+  # []
 []

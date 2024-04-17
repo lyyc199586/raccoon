@@ -1,3 +1,5 @@
+sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
+
 [Problem]
   kernel_coverage_check = false
   material_coverage_check = false
@@ -6,7 +8,7 @@
 [Mesh]
   [gen]
     type = FileMeshGenerator
-    file = '../mesh/half.msh'
+    file = '../mesh/half_new.msh'
   []
   [toplayer]
     type = ParsedSubdomainMeshGenerator
@@ -116,7 +118,7 @@
   #   threshold_ratio = 0.95
   # []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
@@ -160,21 +162,21 @@
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    prop_names = 'E K G lambda Gc l sigma_ts sigma_hs'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_hs}'
     block = 0
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
     block = 0
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
@@ -182,26 +184,41 @@
   []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(Gc/c0/l)*alpha'
-    args = 'd psie_active'
-    material_property_names = 'alpha(d) g(d) Gc c0 l'
+    property_name = psi
+    expression = 'g*psie_active+(delta*Gc/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
+    material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
     block = 0
   []
-  [kumar_material]
-    type = LinearNucleationMicroForce2021
+  # [kumar_material]
+  #   type = LinearNucleationMicroForce2021
+  #   phase_field = d
+  #   if_stress_intact = false
+  #   stress_name = stress
+  #   normalization_constant = c0
+  #   tensile_strength = '${sigma_ts}'
+  #   compressive_strength = '${sigma_cs}'
+  #   delta = '${delta}'
+  #   external_driving_force_name = ce
+  #   stress_balance_name = f_nu
+  #   output_properties = 'ce f_nu'
+  #   # outputs = exodus
+  #   block = 0
+  # []
+  [nucforce]
+    type = LDLNucleationMicroForce
     phase_field = d
-    if_stress_intact = false
-    stress_name = stress
+    degradation_function = g
+    regularization_length = l
     normalization_constant = c0
-    tensile_strength = '${sigma_ts}'
-    compressive_strength = '${sigma_cs}'
-    delta = '${delta}'
+    tensile_strength = sigma_ts
+    hydrostatic_strength = sigma_hs
+    fracture_toughness = Gc
+    delta = delta
     external_driving_force_name = ce
     stress_balance_name = f_nu
-    output_properties = 'ce f_nu'
-    # outputs = exodus
+    h_correction = true
     block = 0
   []
   [strain]

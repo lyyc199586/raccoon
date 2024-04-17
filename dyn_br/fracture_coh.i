@@ -91,10 +91,10 @@
     # initial_from_file_timestep = LATEST
     # order = SECOND
   []
-  # [strain_zz]
-  #   #   initial_from_file_var = 'strain_zz' 
-  #   #   initial_from_file_timestep = LATEST
-  # []
+  [strain_zz]
+    #   initial_from_file_var = 'strain_zz' 
+    #   initial_from_file_timestep = LATEST
+  []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
     # initial_from_file_timestep = LATEST
@@ -113,7 +113,7 @@
 
 [Bounds]
   [irreversibility]
-    type = VariableOldValueBoundsAux
+    type = VariableOldValueBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = lower
@@ -126,7 +126,7 @@
   #   threshold_value = 0.95
   # []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
@@ -175,16 +175,16 @@
   []
   [degradation]
     type = RationalDegradationFunction
-    f_name = g
+    property_name = g
     phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 -0.5 0.0 1e-6'
+    parameter_values = '2 1 0.0 1e-6'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   # [degradation]
@@ -242,7 +242,9 @@
   #   displacements = 'disp_x disp_y'
   # []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     # output_properties = 'total_strain'
     # outputs = exodus

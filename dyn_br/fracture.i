@@ -50,10 +50,10 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
   []
-  [strain_zz]
-    #   initial_from_file_var = 'strain_zz' 
-    #   initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   #   initial_from_file_var = 'strain_zz' 
+  #   #   initial_from_file_timestep = LATEST
+  # []
   [ce_var]
     order = CONSTANT
     family = MONOMIAL
@@ -86,7 +86,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.95
+    threshold_value = 0.9
   []
   [upper]
     type = ConstantBounds
@@ -144,23 +144,23 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 1e-5'
   []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(Gc*delta/c0/l)*alpha'
-    args = 'd psie_active'
+    property_name = psi
+    expression = 'g*psie_active+(Gc*delta/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
     material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
@@ -177,8 +177,15 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   []
   [ce_integral]
     type = ADParsedMaterial
-    property_name = ce_integral
+    property_name = ce_int
     expression = 'ce'
+    coupled_variables = 'd'
+    material_property_names = 'ce'
+  []
+  [psi_nuc]
+    type = ADParsedMaterial
+    property_name = psi_nuc
+    expression = '-1/3*(1-d)*ce'
     coupled_variables = 'd'
     material_property_names = 'ce'
   []
@@ -186,7 +193,6 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = LDLNucleationMicroForce
     phase_field = d
     degradation_function = g
-    # strain_energy_density_active = psie_active
     regularization_length = l
     normalization_constant = c0
     tensile_strength = sigma_ts
@@ -220,9 +226,9 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   #   stress_balance_name = f_nu
   # []
   [strain]
-    type = ADComputePlaneSmallStrain
-    # type = ADComputeSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    # type = ADComputePlaneSmallStrain
+    type = ADComputeSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
   []
   [elasticity]
@@ -245,9 +251,13 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
   []
-  [ce_integral]
+  [ce_int]
     type = ADElementIntegralMaterialProperty
-    mat_prop = ce_integral
+    mat_prop = ce_int
+  []
+  [Psi_nuc]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psi_nuc
   []
 []
 

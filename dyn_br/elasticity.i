@@ -13,7 +13,7 @@ sigma_cs = 9.24
 ## lch = 3/8*E*Gc/sigma_ts^2 = 3.79
 # l = 0.25
 # l = 0.5
-l = 0.625
+l = 0.7
 # delta = 5 # haven't tested
 refine = 3 # 0.125
 
@@ -61,7 +61,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   [pp_transfer_2]
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
-    from_postprocessor = ce_integral
+    from_postprocessor = ce_int
+    to_postprocessor = ce_int
+    reduction_type = average
+  []
+  [pp_transfer_3]
+    type = MultiAppPostprocessorTransfer
+    from_multi_app = fracture
+    from_postprocessor = Psi_nuc
     to_postprocessor = nucleation_energy
     reduction_type = average
   []
@@ -140,10 +147,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # initial_from_file_var = 'disp_y'
     # initial_from_file_timestep = LATEST
   []
-  [strain_zz]
-    # initial_from_file_var = 'strain_zz'
-    # initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   # initial_from_file_var = 'strain_zz'
+  #   # initial_from_file_timestep = LATEST
+  # []
 []
 
 [AuxVariables]
@@ -237,11 +244,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  [plane_stress]
-    type = ADWeakPlaneStress
-    variable = 'strain_zz'
-    displacements = 'disp_x disp_y'
-  []
+  # [plane_stress]
+  #   type = ADWeakPlaneStress
+  #   variable = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  # []
 []
 
 [AuxKernels]
@@ -354,8 +361,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [crack_surface_density]
@@ -364,16 +371,16 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
   []
   [strain]
-    type = ADComputePlaneSmallStrain
-    # type = ADComputeSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    # type = ADComputePlaneSmallStrain
+    type = ADComputeSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
   []
@@ -416,6 +423,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     outputs = "csv exodus"
   []
   [fracture_energy]
+    type = Receiver
+    # outputs = "csv"
+  []
+  [ce_int]
     type = Receiver
     # outputs = "csv"
   []
@@ -498,11 +509,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   checkpoint = true
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/dyn_br_nuc24_plain_strain_ts${sigma_ts}_cs${sigma_cs}_l${l}/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+    file_base = './gold/dyn_br_nuc24_plain_strain_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     type = CSV
   []
 []
