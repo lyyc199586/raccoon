@@ -4,6 +4,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   [fmg]
     type = FileMeshGenerator
     file = '../mesh/disc_r25_h1.msh'
+    # file = 'disk.e'
   []
   [left_arc]
     type = ParsedGenerateSideset
@@ -43,8 +44,8 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     # []
     [initial_marker]
       type = BoxMarker
-      bottom_left = '-${r} -8 0'
-      top_right = '${r} 8 0'
+      bottom_left = '-${r} -10 0'
+      top_right = '${r} 10 0'
       outside = DO_NOTHING
       inside = REFINE
     []
@@ -81,7 +82,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.97
+    threshold_value = 0.95
   []
   [upper]
     type = ConstantBounds
@@ -131,6 +132,10 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = CrackGeometricFunction
     property_name = alpha
     expression = 'd'
+    phase_field = d
+  []
+  [crack_surface_density]
+    type = CrackSurfaceDensity
     phase_field = d
   []
   [degradation]
@@ -197,6 +202,8 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     external_driving_force_name = ce
     stress_balance_name = f_nu
     h_correction = true
+    output_properties = 'ce f_nu delta'
+    outputs = exodus
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -231,6 +238,11 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 [Executioner]
   type = Transient
 
+  [TimeStepper]
+    type = FunctionDT
+    function = 'if(t<4.5e-5, 1e-6, 1e-7)'
+  []
+
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
@@ -251,4 +263,14 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
+[]
+
+[Outputs]
+  [exodus]
+    type = Exodus
+    # minimum_time_interval = 5e-7
+    min_simulation_time_interval = 5e-7
+    # interval = 1
+  []
+  file_base = './out/penalty_nuc24_u${u}_rho${rho}_ts${sigma_ts}_cs${sigma_cs}_l${l}/brz_frac'
 []

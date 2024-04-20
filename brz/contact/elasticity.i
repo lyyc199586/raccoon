@@ -8,7 +8,9 @@ sigma_ts = 11.31
 # sigma_ts = 43.34
 # sigma_cs = 159.08
 sigma_cs = 339.3
+# sigma_cs = 500
 rho = 2.74e-9
+# rho = 0.75e-9
 
 # steel for platens
 E_s = 1e7
@@ -36,7 +38,7 @@ G_s = '${fparse E_s/2/(1+nu_s)}'
 # delta = 25
 
 # nuc2024
-l = 1.2
+l = 1.25
 
 # model parameter
 r = 25
@@ -70,7 +72,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};a=${a};r=${r};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};u=${u};a=${a};r=${r};rho=${rho};refine=${refine}'
     execute_on = 'TIMESTEP_END'
   []
 []
@@ -105,12 +107,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
+  # eta = ${eta}
 []
 
 [Mesh]
   [fmg]
     type = FileMeshGenerator
     file = '../mesh/disc_contact_r25_h1.msh'
+    # file = 'elastic.e'
   []
   [left_arc]
     type = ParsedGenerateSideset
@@ -197,8 +201,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     # []
     [initial_marker]
       type = BoxMarker
-      bottom_left = '-${r} -8 0'
-      top_right = '${r} 8 0'
+      bottom_left = '-${r} -10 0'
+      top_right = '${r} 10 0'
       outside = DO_NOTHING
       inside = REFINE
       # outside = COARSEN
@@ -643,7 +647,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # fixed_point_max_its = 300
   fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = false
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-6
   # fixed_point_abs_tol = 1e-8
   fixed_point_rel_tol = 1e-4
@@ -658,17 +662,19 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    minimum_time_interval = 5e-7
-    interval = 1
+    # minimum_time_interval = 5e-7
+    min_simulation_time_interval = 5e-7
+    # interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/penalty_nuc24_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}/brz'
+  file_base = './out/penalty_nuc24_u${u}_rho${rho}_ts${sigma_ts}_cs${sigma_cs}_l${l}/brz'
+  # file_base = 'elastic'
   # file_base = './out/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
-  interval = 1
+  # interval = 1
   checkpoint = true
   [pp]
     type = CSV
-    file_base = './gold/pp_penalty_nuc24_u${u}_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+    file_base = './gold/pp_penalty_nuc24_u${u}_rho${rho}_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     # file_base = './csv/penalty_elastic_u${u}_sratio${fparse int(sigma_cs/sigma_ts)}'
   []
 []

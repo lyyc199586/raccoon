@@ -540,6 +540,7 @@ G_p = '${fparse E_p/2/(1+nu_p)}'
   file_base = '../out/soda_nuc24_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h${h}_rf${refine}/soda'
   # file_base = '../out/hht_half_test'
   interval = 1
+  checkpoint = true
   [pp]
     type = CSV
     file_base = '../gold/soda_nuc24_p${p}_gc${Gc}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h${h}_rf${refine}'
