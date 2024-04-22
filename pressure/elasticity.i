@@ -5,6 +5,9 @@ E = 210e3
 rho = 7.85e-9
 nu = 0.3
 sigma_ts = 1e3
+sigma_cs = 5e3
+sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
+
 Gc = 20
 l = 1
 refine = 3
@@ -12,14 +15,15 @@ refine = 3
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-psic = '${fparse sigma_ts^2/2/E}'
+# psic = '${fparse sigma_ts^2/2/E}' # 2.38
 
 T0 = 100e-6
-p0 = 400
+p0 = 800
+# p0 = 600
 seed = 8
 
 ## hht parameters
-hht_alpha = -0.25
+hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
@@ -35,21 +39,25 @@ gamma = '${fparse 1/2-hht_alpha}'
   [from_patches]
     type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = patches
-    variable = 'psic'
-    source_variable = 'psic'
+    # variable = 'psic'
+    # source_variable = 'psic'
+    variable = 'sigma_ts sigma_hs'
+    source_variable = 'sigma_ts sigma_hs'
     execute_on = 'INITIAL'
   []
   [from_d]
     type = MultiAppCopyTransfer
     from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
+    variable = 'd ce f_nu'
+    source_variable = 'd ce f_nu'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
     to_multi_app = fracture
-    variable = 'psie_active disp_x disp_y psic'
-    source_variable = 'psie_active disp_x disp_y psic'
+    # variable = 'psie_active disp_x disp_y psic'
+    # source_variable = 'psie_active disp_x disp_y psic'
+    variable = 'psie_active disp_x disp_y sigma_ts sigma_hs'
+    source_variable = 'psie_active disp_x disp_y sigma_ts sigma_hs'
   []
 []
 
@@ -63,7 +71,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [patches]
     type = FullSolveMultiApp
     input_files = patches.i
-    cli_args = 'seed=${seed};psic=${psic}'
+    # cli_args = 'seed=${seed};psic=${psic}'
+    cli_args = 'seed=${seed};sigma_ts=${sigma_ts};sigma_hs=${sigma_hs}'
     execute_on = 'INITIAL'
   []
 []
@@ -79,16 +88,18 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   input = fmg 
   #   new_boundary = fix_point
   # []
-  [initial_ref]
-    type = RefineSidesetGenerator
-    boundaries = inner
-    input = fmg 
-    refinement = ${refine}
-  []
+  # [initial_ref]
+  #   type = RefineSidesetGenerator
+  #   boundaries = inner
+  #   input = fmg 
+  #   refinement = ${refine}
+  # []
 []
 
 [Adaptivity]
-  marker = damage_marker
+  marker = combo
+  initial_marker = inner_bnd
+  initial_steps = ${refine}
   max_h_level = ${refine}
   cycles_per_step = 3
   [Markers]
@@ -97,6 +108,15 @@ gamma = '${fparse 1/2-hht_alpha}'
       variable = d
       lower_bound = 0.0001
       upper_bound = 1
+    []
+    [inner_bnd]
+      type = BoundaryMarker
+      mark = REFINE
+      next_to = inner
+    []
+    [combo]
+      type = ComboMarker
+      markers = 'damage_marker inner_bnd'
     []
   []
 []
@@ -135,13 +155,49 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [psic]
+  [s1]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [s2]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  # [psic]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  #   [InitialCondition]
+  #     type = ConstantIC
+  #     value = ${psic}
+  #   []
+  # []
+  [sigma_ts]
     order = CONSTANT
     family = MONOMIAL
     [InitialCondition]
       type = ConstantIC
-      value = ${psic}
+      value = ${sigma_ts}
     []
+  []
+  [sigma_hs]
+    order = CONSTANT
+    family = MONOMIAL
+    [InitialCondition]
+      type = ConstantIC
+      value = ${sigma_hs}
+    []
+  []
+  [ce]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [delta]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [f_nu]
+    order = CONSTANT
+    family = MONOMIAL
   []
 []
 
@@ -192,6 +248,20 @@ gamma = '${fparse 1/2-hht_alpha}'
     rank_two_tensor = stress
     variable = pressure 
     scalar_type = Hydrostatic
+  []
+  [s1]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = s1
+    scalar_type = MaxPrincipal
+    execute_on = 'TIMESTEP_END'
+  []
+  [s2]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = s2
+    scalar_type = MidPrincipal
+    execute_on = 'TIMESTEP_END'
   []
   [accel_x]
     type = NewmarkAccelAux
@@ -271,11 +341,25 @@ gamma = '${fparse 1/2-hht_alpha}'
     prop_names = 'E K G lambda l Gc density'
     prop_values = '${E} ${K} ${G} ${Lambda} ${l} ${Gc} ${rho}'
   []
-  [psic]
+  # [psic]
+  #   type = ADParsedMaterial
+  #   property_name = psic 
+  #   coupled_variables = 'psic'
+  #   expression = 'psic'
+  #   # outputs = exodus
+  # []
+  [sigma_ts]
     type = ADParsedMaterial
-    property_name = psic 
-    coupled_variables = 'psic'
-    expression = 'psic'
+    property_name = sigma_ts 
+    coupled_variables = 'sigma_ts'
+    expression = 'sigma_ts'
+    # outputs = exodus
+  []
+  [sigma_hs]
+    type = ADParsedMaterial
+    property_name = sigma_hs 
+    coupled_variables = 'sigma_hs'
+    expression = 'sigma_hs'
     # outputs = exodus
   []
   [crack_geometric]
@@ -284,13 +368,23 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = 'd'
     phase_field = d
   []
+  # [degradation]
+  #   type = RationalDegradationFunction
+  #   property_name = g
+  #   phase_field = d
+  #   material_property_names = 'Gc psic xi c0 l '
+  #   parameter_names = 'p a2 a3 eta '
+  #   parameter_values = '2 1 0 0'
+  # []
   [degradation]
-    type = RationalDegradationFunction
+    type = PowerDegradationFunction
     property_name = g
+    expression = (1-d)^p*(1-eta)+eta
+    # expression = (1-d)^p+eta
     phase_field = d
-    material_property_names = 'Gc psic xi c0 l '
-    parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0 0'
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-5'
+    # parameter_values = '2 0'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -301,8 +395,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = SPECTRAL
-    # decomposition = NONE
+    # decomposition = SPECTRAL
+    decomposition = NONE
     output_properties = 'psie_active'
     outputs = exodus
   []
@@ -381,10 +475,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
+  # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
+  file_base = './out/pr_nuc24_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h1_rf${refine}/pr_nuc24_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h1_rf${refine}'
   checkpoint = true
   [csv]
-    file_base = './gold/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
+    file_base = './gold/pr_nuc24_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_l${l}_h1_rf${refine}'
     type = CSV
   []
 []

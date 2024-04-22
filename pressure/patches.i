@@ -5,7 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h1.msh'
+    file = './mesh/annulus_h20_tri.msh'
   []
 []
 
@@ -27,14 +27,34 @@
 []
 
 [Materials]
-  [psic]
+  # [psic]
+  #   type = ADParsedMaterial
+  #   property_name = 'psic'
+  #   constant_names = 'psic0'
+  #   constant_expressions = '${psic}'
+  #   coupled_variables = scale
+  #   expression = 'psic0*(10 + ceil(scale))/10'
+  #   output_properties = 'psic'
+  #   outputs = exodus
+  # []
+  [sigma_ts]
     type = ADParsedMaterial
-    property_name = 'psic'
-    constant_names = 'psic0'
-    constant_expressions = '${psic}'
+    property_name = 'sigma_ts'
+    constant_names = 'sigma_ts0'
+    constant_expressions = '${sigma_ts}'
     coupled_variables = scale
-    expression = 'psic0*(10 + ceil(scale))/10'
-    output_properties = 'psic'
+    expression = 'sigma_ts0*(10 + ceil(scale))/10'
+    output_properties = 'sigma_ts'
+    outputs = exodus
+  []
+  [sigma_hs]
+    type = ADParsedMaterial
+    property_name = 'sigma_hs'
+    constant_names = 'sigma_hs0'
+    constant_expressions = '${sigma_hs}'
+    coupled_variables = scale
+    expression = 'sigma_hs0*(10 + ceil(scale))/10'
+    output_properties = 'sigma_hs'
     outputs = exodus
   []
 []
