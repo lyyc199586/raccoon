@@ -23,13 +23,13 @@ Curve Loop(1) = {1, 4, -2, -3};
 Plane Surface(1) = {1};
 
 // Transfinite meshing
-// h = 15;
-// nx = Floor((r2-r1)/h) + 1;
-// ny = Floor(0.5*3.1415*(r1+r2)/2/h) + 1;
-// Transfinite Line{1, 2} = ny Using Progression 1;
-// Transfinite Line{3, 4} = nx Using Progression 1;
-// Transfinite Surface{1};
-// Recombine Surface{1};
+h = 0.25;
+nx = Floor((r2-r1)/h) + 1;
+ny = Floor(0.5*3.1415*(r1+r2)/2/h) + 1;
+Transfinite Line{1, 2} = ny Using Progression 1;
+Transfinite Line{3, 4} = nx Using Progression 1;
+Transfinite Surface{1};
+Recombine Surface{1};
 
 // mark boundary
 Physical Line("bottom") = {3};

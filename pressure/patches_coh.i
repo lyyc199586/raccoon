@@ -5,7 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h4.msh'
+    file = './mesh/annulus_h15.msh'
   []
 []
 
@@ -16,56 +16,25 @@
   []
 []
 
-[Distributions]
-  [normal]
-    type = Normal 
-    mean = 1
-    standard_deviation = 0.05
-  []
-[]
-
 [ICs]
   [random]
     type = RandomIC
     variable = scale
     max = 2
     min = -1
-    # distribution = normal
     seed = ${seed}
   []
 []
 
 [Materials]
-  # [E]
-  #   type = ADParsedMaterial
-  #   property_name = 'E'
-  #   constant_names = 'E0'
-  #   constant_expressions = '${E}'
-  #   coupled_variables = scale
-  #   expression = 'E0*(10 + ceil(scale))/10'
-  #   output_properties = 'E'
-  #   outputs = exodus
-  # []
-  [sigma_ts]
+  [psic]
     type = ADParsedMaterial
-    property_name = 'sigma_ts'
-    constant_names = 'sigma_ts0'
-    constant_expressions = '${sigma_ts}'
+    property_name = 'psic'
+    constant_names = 'psic0'
+    constant_expressions = '${psic}'
     coupled_variables = scale
-    expression = 'sigma_ts0*(20 + ceil(scale))/20'
-    # expression = 'scale*sigma_ts0'
-    output_properties = 'sigma_ts'
-    outputs = exodus
-  []
-  [sigma_hs]
-    type = ADParsedMaterial
-    property_name = 'sigma_hs'
-    constant_names = 'sigma_hs0'
-    constant_expressions = '${sigma_hs}'
-    coupled_variables = scale
-    expression = 'sigma_hs0*(20 + ceil(scale))/20'
-    # expression = 'scale*sigma_hs0'
-    output_properties = 'sigma_hs'
+    expression = 'psic0*(10 + ceil(scale))/10'
+    output_properties = 'psic'
     outputs = exodus
   []
 []

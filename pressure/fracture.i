@@ -20,7 +20,7 @@
   initial_marker = inner_bnd
   initial_steps = ${refine}
   max_h_level = ${refine}
-  cycles_per_step = 3
+  cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -52,7 +52,7 @@
     order = CONSTANT
     family = MONOMIAL
   []
-  # [psic]
+  # [E]
   #   order = CONSTANT
   #   family = MONOMIAL
   # []
@@ -94,7 +94,7 @@
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.95
+    threshold_value = 0.9
   []
   [upper]
     type = ConstantBounds
@@ -166,8 +166,8 @@
   [degradation]
     type = PowerDegradationFunction
     property_name = g
-    expression = (1-d)^p*(1-eta)+eta
-    # expression = (1-d)^p+eta
+    # expression = (1-d)^p*(1-eta)+eta
+    expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
@@ -233,6 +233,7 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     h_correction = true
+    # h_correction = false
     output_properties = 'ce f_nu delta'
     # outputs = exodus
   []
@@ -242,10 +243,14 @@
   type = Transient
   line_search = none
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
 []
