@@ -37,6 +37,7 @@ private:
   // @{ Strain energy density and its derivative w/r/t damage
   const MaterialPropertyName _psie_name;
   ADMaterialProperty<Real> & _psie;
+  ADMaterialProperty<Real> & _psie_intact;
   ADMaterialProperty<Real> & _psie_active;
   ADMaterialProperty<Real> & _dpsie_dd;
   // @}
