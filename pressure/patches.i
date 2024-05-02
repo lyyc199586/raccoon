@@ -52,7 +52,7 @@
     constant_names = 'sigma_ts0'
     constant_expressions = '${sigma_ts}'
     coupled_variables = scale
-    expression = 'sigma_ts0*(20 + ceil(scale))/20'
+    expression = 'sigma_ts0*(19 + ceil(scale))/20'
     # expression = 'scale*sigma_ts0'
     output_properties = 'sigma_ts'
     outputs = exodus
@@ -63,7 +63,7 @@
     constant_names = 'sigma_hs0'
     constant_expressions = '${sigma_hs}'
     coupled_variables = scale
-    expression = 'sigma_hs0*(20 + ceil(scale))/20'
+    expression = 'sigma_hs0*(19 + ceil(scale))/20'
     # expression = 'scale*sigma_hs0'
     output_properties = 'sigma_hs'
     outputs = exodus

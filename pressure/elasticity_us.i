@@ -318,14 +318,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = inner
     variable = 'disp_x'
     function = p_func
-    factor = -1
+    factor = 1
   []
   [pressure_y]
     type = ADPressure
     boundary = inner
     variable = 'disp_y'
     function = p_func
-    factor = -1
+    factor = 1
   []
   [left_x]
     type = ADDirichletBC
@@ -489,16 +489,16 @@ gamma = '${fparse 1/2-hht_alpha}'
   fixed_point_abs_tol = 1e-8
   # fixed_point_rel_tol = 1e-4
   # fixed_point_abs_tol = 1e-6
-  [TimeStepper]
-    type = FunctionDT
-    function = 'if(t<50,1,0.05)'
-    min_dt = 1e-2
-  []
+  # [TimeStepper]
+  #   type = FunctionDT
+  #   function = 'if(t<50,1,0.05)'
+  #   min_dt = 1e-2
+  # []
   dt = 1
   dtmin = 1e-2
   start_time = 0
   end_time = 80
-  num_steps = 1
+  # num_steps = 1
   [TimeIntegrator]
     type = NewmarkBeta
   []
