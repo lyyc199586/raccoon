@@ -366,13 +366,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADPressure
     variable = disp_y
     boundary = top
-    factor = -1
+    factor = -0.3
   []
   [ybottom]
     type = ADPressure
     variable = disp_y
     boundary = bottom
-    factor = -1
+    factor = -0.3
   []
 []
 
@@ -427,7 +427,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     degradation_function = g
     # decomposition = NONE
     decomposition = SPECTRAL
-    output_properties = 'psie_active psie'
+    output_properties = 'psie_active psie psie_intact'
     outputs = exodus
   []
   [stress]
@@ -555,11 +555,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_coh_ts${sigma_ts}_l${l}_small_strain/dyn_br_coh_ts${sigma_ts}_l${l}'
+  file_base = './out/dyn_br_coh_p0.3_ts${sigma_ts}_l${l}_small_strain/dyn_br_coh_ts${sigma_ts}_l${l}'
   interval = 1
   [csv]
     # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-    file_base = './gold/dyn_br_coh_ts${sigma_ts}_l${l}_small_strain'
+    file_base = './gold/dyn_br_coh_p0.3_ts${sigma_ts}_l${l}_small_strain'
     type = CSV
   []
 []

@@ -94,7 +94,7 @@
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.9
+    threshold_value = 0.95
   []
   [upper]
     type = ConstantBounds
@@ -170,8 +170,8 @@
     expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
-    # parameter_values = '2 0'
+    # parameter_values = '2 1e-5'
+    parameter_values = '2 0'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -232,8 +232,8 @@
     delta = delta
     external_driving_force_name = ce
     stress_balance_name = f_nu
-    h_correction = true
-    # h_correction = false
+    # h_correction = true
+    h_correction = false
     output_properties = 'ce f_nu delta'
     # outputs = exodus
   []
@@ -249,10 +249,15 @@
   petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  # dt = 1
+  # dtmin = 1e-2
+  # start_time = 0
+  # end_time = 80
+  
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
 []
 
 [Outputs]
