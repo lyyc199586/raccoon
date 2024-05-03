@@ -1,18 +1,12 @@
 [GlobalParams]
-  displacements = 'disp_X disp_Y'
+  displacements = 'disp_X disp_Y disp_Z'
 []
 
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h1.msh'
+    file = './mesh/ball_h1.msh'
   []
-  # [initial_ref]
-  #   type = RefineSidesetGenerator
-  #   boundaries = inner
-  #   input = fmg 
-  #   refinement = ${refine}
-  # []
 []
 
 [Adaptivity]
@@ -52,10 +46,6 @@
     order = CONSTANT
     family = MONOMIAL
   []
-  # [E]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
   [sigma_ts]
     order = CONSTANT
     family = MONOMIAL
@@ -67,6 +57,8 @@
   [disp_X]
   []
   [disp_Y]
+  []
+  [disp_Z]
   []
   [ce]
     order = CONSTANT
@@ -83,12 +75,6 @@
 []
 
 [Bounds]
-  # [irreversibility]
-  #   type = VariableOldValueBounds
-  #   variable = bounds_dummy
-  #   bounded_variable = d
-  #   bound_type = lower
-  # []
   [conditional]
     type = ConditionalBoundsAux
     variable = 'bounds_dummy'
@@ -155,14 +141,6 @@
     expression = 'd'
     phase_field = d
   []
-  # [degradation]
-  #   type = RationalDegradationFunction
-  #   property_name = g
-  #   phase_field = d
-  #   material_property_names = 'Gc psic xi c0 l '
-  #   parameter_names = 'p a2 a3 eta '
-  #   parameter_values = '2 1 0 1e-5'
-  # []
   [degradation]
     type = PowerDegradationFunction
     property_name = g
@@ -171,7 +149,6 @@
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-5'
-    # parameter_values = '2 0'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -181,26 +158,17 @@
     material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
-  # [psic]
-  #   type = ADParsedMaterial
-  #   property_name = psic 
-  #   coupled_variables = 'psic'
-  #   expression = 'psic'
-  #   # outputs = exodus
-  # []
   [sigma_ts]
     type = ADParsedMaterial
     property_name = sigma_ts 
     coupled_variables = 'sigma_ts'
     expression = 'sigma_ts'
-    # outputs = exodus
   []
   [sigma_hs]
     type = ADParsedMaterial
     property_name = sigma_hs 
     coupled_variables = 'sigma_hs'
     expression = 'sigma_hs'
-    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -208,7 +176,6 @@
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    # decomposition = SPECTRAL
     decomposition = NONE
   []
   [stress]
@@ -233,31 +200,21 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     h_correction = true
-    # h_correction = false
     output_properties = 'ce f_nu delta'
-    # outputs = exodus
   []
 []
 
 [Executioner]
   type = Transient
-  # line_search = none
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
   # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   # automatic_scaling = true
-
-  # dt = 1
-  # dtmin = 1e-2
-  # start_time = 0
-  # end_time = 80
   
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
 []
 
 [Outputs]
