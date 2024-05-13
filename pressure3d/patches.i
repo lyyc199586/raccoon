@@ -5,7 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h4.msh'
+    file = './mesh/ball_h4.msh'
   []
 []
 
@@ -16,13 +16,13 @@
   []
 []
 
-[Distributions]
-  [normal]
-    type = Normal 
-    mean = 1
-    standard_deviation = 0.05
-  []
-[]
+# [Distributions]
+#   [normal]
+#     type = Normal 
+#     mean = 1
+#     standard_deviation = 0.05
+#   []
+# []
 
 [ICs]
   [random]
@@ -36,16 +36,6 @@
 []
 
 [Materials]
-  # [E]
-  #   type = ADParsedMaterial
-  #   property_name = 'E'
-  #   constant_names = 'E0'
-  #   constant_expressions = '${E}'
-  #   coupled_variables = scale
-  #   expression = 'E0*(10 + ceil(scale))/10'
-  #   output_properties = 'E'
-  #   outputs = exodus
-  # []
   [sigma_ts]
     type = ADParsedMaterial
     property_name = 'sigma_ts'

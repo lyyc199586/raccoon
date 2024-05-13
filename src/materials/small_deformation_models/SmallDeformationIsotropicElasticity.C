@@ -41,6 +41,7 @@ SmallDeformationIsotropicElasticity::SmallDeformationIsotropicElasticity(
     _psie_name(prependBaseName("strain_energy_density", true)),
     _psie(declareADProperty<Real>(_psie_name)),
     _psie_active(declareADProperty<Real>(_psie_name + "_active")),
+    _psie_intact(declareADProperty<Real>(_psie_name + "_intact")),
     _dpsie_dd(declareADProperty<Real>(derivativePropertyName(_psie_name, {_d_name}))),
 
     // The degradation function and its derivatives
@@ -77,6 +78,7 @@ SmallDeformationIsotropicElasticity::computeStressNoDecomposition(const ADRankTw
   ADRankTwoTensor stress = _g[_qp] * stress_intact;
 
   _psie_active[_qp] = 0.5 * stress_intact.doubleContraction(strain);
+  _psie_intact[_qp] = 0.5 * stress_intact.doubleContraction(strain);
   _psie[_qp] = _g[_qp] * _psie_active[_qp];
   _dpsie_dd[_qp] = _dg_dd[_qp] * _psie_active[_qp];
 
@@ -103,6 +105,8 @@ SmallDeformationIsotropicElasticity::computeStressSpectralDecomposition(
 
   // Strain energy density
   ADReal psie_intact =
+      0.5 * lambda * strain_tr * strain_tr + _G[_qp] * strain.doubleContraction(strain);
+  _psie_intact[_qp] =
       0.5 * lambda * strain_tr * strain_tr + _G[_qp] * strain.doubleContraction(strain);
   _psie_active[_qp] = 0.5 * lambda * strain_tr_pos * strain_tr_pos +
                       _G[_qp] * strain_pos.doubleContraction(strain_pos);
@@ -133,6 +137,8 @@ SmallDeformationIsotropicElasticity::computeStressVolDevDecomposition(
 
   // Strain energy density
   ADReal psie_intact =
+      0.5 * _K[_qp] * strain_tr * strain_tr + _G[_qp] * strain_dev.doubleContraction(strain_dev);
+  _psie_intact[_qp] =
       0.5 * _K[_qp] * strain_tr * strain_tr + _G[_qp] * strain_dev.doubleContraction(strain_dev);
   ADReal psie_inactive = 0.5 * _K[_qp] * strain_tr_neg * strain_tr_neg;
   _psie_active[_qp] = psie_intact - psie_inactive;

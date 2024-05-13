@@ -13,7 +13,7 @@ sigma_cs = 9.24
 ## lch = 3/8*E*Gc/sigma_ts^2 = 3.79
 # l = 0.25
 # l = 0.5
-l = 1
+l = 0.625
 # delta = 5 # haven't tested
 refine = 3 # 0.125
 
@@ -461,13 +461,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
@@ -486,8 +486,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = false
+  fixed_point_max_its = 10
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
@@ -509,11 +509,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   checkpoint = true
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plain_strain/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
   interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plain_strain'
+    file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain'
     type = CSV
   []
 []

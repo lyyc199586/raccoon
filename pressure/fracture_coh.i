@@ -7,12 +7,11 @@
     type = FileMeshGenerator
     file = './mesh/annulus_h1.msh'
   []
-  # [initial_ref]
-  #   type = RefineSidesetGenerator
-  #   boundaries = inner
-  #   input = fmg 
-  #   refinement = ${refine}
-  # []
+  parallel_type = DISTRIBUTED
+  [Partitioner]
+    type = LibmeshPartitioner
+    partitioner = parmetis
+  []
 []
 
 [Adaptivity]

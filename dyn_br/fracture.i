@@ -86,7 +86,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     fixed_bound_value = 0
-    threshold_value = 0.9
+    threshold_value = 0.95
   []
   [upper]
     type = ConstantBounds
@@ -203,28 +203,6 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     stress_balance_name = f_nu
     h_correction = true
   []
-  # [kumar_material] #2020
-  #   type = KLBFNucleationMicroForce
-  #   # phase_field = d
-  #   stress_name = stress
-  #   normalization_constant = c0
-  #   tensile_strength = sigma_ts
-  #   compressive_strength = sigma_cs
-  #   delta = delta
-  #   external_driving_force_name = ce
-  #   stress_balance_name = f_nu
-  # []
-  # [kumar_material] #2022
-  #   type = KLRNucleationMicroForce
-  #   phase_field = d
-  #   stress_name = stress
-  #   normalization_constant = c0
-  #   tensile_strength = sigma_ts
-  #   compressive_strength = sigma_cs
-  #   delta = delta
-  #   external_driving_force_name = ce
-  #   stress_balance_name = f_nu
-  # []
   [strain]
     # type = ADComputePlaneSmallStrain
     type = ADComputeSmallStrain
@@ -265,12 +243,12 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
-  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
-  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
   # nl_rel_tol = 1e-8

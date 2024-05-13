@@ -45,9 +45,11 @@
 # []
 
 [Adaptivity]
-  marker = damage_marker
+  marker = combo_marker
   max_h_level = ${refine}
-  cycles_per_step = 2
+  initial_marker = initial
+  initial_steps = ${refine}
+  cycles_per_step = ${refine}
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -60,19 +62,26 @@
       variable = psie_active
       refine = 0.00075
     []
+    [initial]
+      type = BoxMarker
+      bottom_left = '47.9 -2.1 0'
+      top_right = '52.1 2.1 0'
+      inside = REFINE
+      outside = DONT_MARK
+    []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'damage_marker initial'
     []
   []
 []
 
 [Variables]
   [d]
-    # [InitialCondition]
-    #   type = FunctionIC
-    #   function = 'if(y=0&x>=0&x<=50,1,0)'
-    # []
+    [InitialCondition]
+      type = FunctionIC
+      function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
+    []
   []
 []
 

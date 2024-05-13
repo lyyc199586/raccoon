@@ -1,45 +1,47 @@
 [GlobalParams]
-  displacements = 'disp_X disp_Y'
+  displacements = 'disp_X disp_Y disp_Z'
 []
 
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h4.msh'
+    file = './mesh/ball_h4.msh'
   []
-  # [Partitioner]
-  #   type = LibmeshPartitioner
-  #   partitioner = parmetis
-  # []
+  # parallel_type = DISTRIBUTED
+  [Partitioner]
+    type = LibmeshPartitioner
+    partitioner = parmetis
+  []
 []
 
 [Adaptivity]
-  marker = damage_marker
-  # initial_marker = initial
-  # initial_steps = 2
+  marker = combo
+  initial_marker = initial
+  initial_steps = 2
   max_h_level = ${refine}
   cycles_per_step = 5
+  steps = ${refine}
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
       variable = d
-      lower_bound = 0.01
+      lower_bound = 0.0001
       upper_bound = 1
     []
-    # [initial]
-    #   type = BoundaryMarker
-    #   mark = REFINE
-    #   next_to = inner
-    # []
-    # [inner_bnd]
-    #   type = BoundaryMarker
-    #   mark = DO_NOTHING
-    #   next_to = inner
-    # []
-    # [combo]
-    #   type = ComboMarker
-    #   markers = 'damage_marker inner_bnd'
-    # []
+    [initial]
+      type = BoundaryMarker
+      mark = REFINE
+      next_to = inner
+    []
+    [inner_bnd]
+      type = BoundaryMarker
+      mark = DO_NOTHING
+      next_to = inner
+    []
+    [combo]
+      type = ComboMarker
+      markers = 'damage_marker inner_bnd'
+    []
   []
 []
 
@@ -55,10 +57,6 @@
     order = CONSTANT
     family = MONOMIAL
   []
-  # [E]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
   [sigma_ts]
     order = CONSTANT
     family = MONOMIAL
@@ -70,6 +68,8 @@
   [disp_X]
   []
   [disp_Y]
+  []
+  [disp_Z]
   []
   [ce]
     order = CONSTANT
@@ -86,12 +86,6 @@
 []
 
 [Bounds]
-  # [irreversibility]
-  #   type = VariableOldValueBounds
-  #   variable = bounds_dummy
-  #   bounded_variable = d
-  #   bound_type = lower
-  # []
   [conditional]
     type = ConditionalBoundsAux
     variable = 'bounds_dummy'
@@ -159,22 +153,19 @@
     phase_field = d
   []
   # [degradation]
-  #   type = RationalDegradationFunction
+  #   type = PowerDegradationFunction
   #   property_name = g
+  #   # expression = (1-d)^p*(1-eta)+eta
+  #   expression = (1-d)^p+eta
   #   phase_field = d
-  #   material_property_names = 'Gc psic xi c0 l '
-  #   parameter_names = 'p a2 a3 eta '
-  #   parameter_values = '2 1 0 1e-5'
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 1e-5'
   # []
-  [degradation]
-    type = PowerDegradationFunction
+  [nodeg]
+    type = NoDegradation
     property_name = g
-    # expression = (1-d)^p*(1-eta)+eta
-    expression = (1-d)^p+eta
+    expression = 1
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
-    # parameter_values = '2 0'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -184,26 +175,17 @@
     material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
-  # [psic]
-  #   type = ADParsedMaterial
-  #   property_name = psic 
-  #   coupled_variables = 'psic'
-  #   expression = 'psic'
-  #   # outputs = exodus
-  # []
   [sigma_ts]
     type = ADParsedMaterial
     property_name = sigma_ts 
     coupled_variables = 'sigma_ts'
     expression = 'sigma_ts'
-    # outputs = exodus
   []
   [sigma_hs]
     type = ADParsedMaterial
     property_name = sigma_hs 
     coupled_variables = 'sigma_hs'
     expression = 'sigma_hs'
-    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -211,7 +193,6 @@
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    # decomposition = SPECTRAL
     decomposition = NONE
   []
   [stress]
@@ -221,7 +202,7 @@
   []
   [strain]
     type = ADComputeSmallStrain
-    displacements = 'disp_X disp_Y'
+    # displacements = 'disp_X disp_Y'
   []
   [nucforce]
     type = LDLNucleationMicroForce
@@ -236,31 +217,21 @@
     external_driving_force_name = ce
     stress_balance_name = f_nu
     h_correction = true
-    # h_correction = false
     output_properties = 'ce f_nu delta'
-    # outputs = exodus
   []
 []
 
 [Executioner]
   type = Transient
-  # line_search = none
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
   # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   # automatic_scaling = true
-
-  # dt = 1
-  # dtmin = 1e-2
-  # start_time = 0
-  # end_time = 80
   
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
 []
 
 [Outputs]

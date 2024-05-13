@@ -14,6 +14,7 @@ psic = ${fparse sigma_ts^2/2/E}
 l = 1
 # delta = 4 # haven't tested
 refine = 3
+p = 1.2
 
 # hht parameters
 hht_alpha = -0.3
@@ -117,9 +118,11 @@ gamma = '${fparse 1/2-hht_alpha}'
 # []
 
 [Adaptivity]
-  marker = damage_marker
+  marker = combo_marker
   max_h_level = ${refine}
-  cycles_per_step = 2
+  initial_marker = initial
+  initial_steps = ${refine}
+  cycles_per_step = ${refine}
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -132,9 +135,16 @@ gamma = '${fparse 1/2-hht_alpha}'
       variable = psie_active
       refine = 0.00075
     []
+    [initial]
+      type = BoxMarker
+      bottom_left = '47.9 -2.1 0'
+      top_right = '52.1 2.1 0'
+      inside = REFINE
+      outside = DONT_MARK
+    []
     [combo_marker]
       type = ComboMarker
-      markers = 'damage_marker psic_marker'
+      markers = 'damage_marker initial'
     []
   []
 []
@@ -178,10 +188,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # family = HIERARCHIC 
   []
   [d]
-    # [InitialCondition]
-    #   type = FunctionIC
-    #   function = 'if(y=0&x>=0&x<=50,1,0)'
-    # []
+    [InitialCondition]
+      type = FunctionIC
+      function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
+    []
   []
   [s1]
     order = CONSTANT
@@ -366,13 +376,15 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADPressure
     variable = disp_y
     boundary = top
-    factor = -0.3
+    function = '${p}'
+    factor = -1
   []
   [ybottom]
     type = ADPressure
     variable = disp_y
     boundary = bottom
-    factor = -0.3
+    function = '${p}'
+    factor = -1
   []
 []
 
@@ -555,11 +567,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_coh_p0.3_ts${sigma_ts}_l${l}_small_strain/dyn_br_coh_ts${sigma_ts}_l${l}'
-  interval = 1
+  file_base = './out/dyn_br_coh_p${p}_ts${sigma_ts}_l${l}_small_strain/dyn_br'
+  # interval = 1
+  time_step_interval = 1
   [csv]
     # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-    file_base = './gold/dyn_br_coh_p0.3_ts${sigma_ts}_l${l}_small_strain'
+    file_base = './gold/dyn_br_coh_p${p}_ts${sigma_ts}_l${l}_small_strain'
     type = CSV
   []
 []

@@ -20,10 +20,10 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 # psic = '${fparse sigma_ts^2/2/E}' # 2.38
 
-T0 = 80
+T0 = 100
 p0 = 400
-# seed = 2
-seed = 8
+seed = 2
+# seed = 8
 
 ## hht parameters
 hht_alpha = -0.3
@@ -32,7 +32,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 
 [GlobalParams]
-  displacements = 'disp_x disp_y'
+  displacements = 'disp_X disp_Y'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
@@ -60,10 +60,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppCopyTransfer
     # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
-    # variable = 'psie_active disp_x disp_y E'
-    # source_variable = 'psie_active disp_x disp_y E'
-    variable = 'psie_active disp_x disp_y sigma_ts sigma_hs'
-    source_variable = 'psie_active disp_x disp_y sigma_ts sigma_hs'
+    # variable = 'psie_active disp_X disp_Y E'
+    # source_variable = 'psie_active disp_X disp_Y E'
+    variable = 'psie_active disp_X disp_Y sigma_ts sigma_hs'
+    source_variable = 'psie_active disp_X disp_Y sigma_ts sigma_hs'
   []
 []
 
@@ -86,7 +86,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h1.msh'
+    file = './mesh/annulus_h4.msh'
   []
   # [fix_point]
   #   type = ExtraNodesetGenerator
@@ -103,34 +103,39 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Adaptivity]
-  marker = combo
-  initial_marker = inner_bnd
-  initial_steps = ${refine}
+  marker = damage_marker
+  # initial_marker = initial
+  # initial_steps = 2
   max_h_level = ${refine}
   cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
       variable = d
-      lower_bound = 0.0001
+      lower_bound = 0.01
       upper_bound = 1
     []
-    [inner_bnd]
-      type = BoundaryMarker
-      mark = REFINE
-      next_to = inner
-    []
-    [combo]
-      type = ComboMarker
-      markers = 'damage_marker inner_bnd'
-    []
+    # [initial]
+    #   type = BoundaryMarker
+    #   mark = REFINE
+    #   next_to = inner
+    # []
+    # [inner_bnd]
+    #   type = BoundaryMarker
+    #   mark = DO_NOTHING
+    #   next_to = inner
+    # []
+    # [combo]
+    #   type = ComboMarker
+    #   markers = 'damage_marker inner_bnd'
+    # []
   []
 []
 
 [Variables]
-  [disp_x]
+  [disp_X]
   []
-  [disp_y]
+  [disp_Y]
   []
 []
 
@@ -205,31 +210,35 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [p_bc_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Kernels]
   [solid_x]
     type = ADDynamicStressDivergenceTensors
-    variable = disp_x
+    variable = disp_X
     component = 0
     save_in = fx
   []
   [solid_y]
     type = ADDynamicStressDivergenceTensors
-    variable = disp_y
+    variable = disp_Y
     component = 1
     save_in = fy
   []
   [inertia_x]
     type = ADInertialForce
-    variable = disp_x
+    variable = disp_X
     density = density
     velocity = vel_x
     acceleration = accel_x
   []
   [inertia_y]
     type = ADInertialForce
-    variable = disp_y
+    variable = disp_Y
     density = density
     velocity = vel_y
     acceleration = accel_y
@@ -272,7 +281,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [accel_x]
     type = NewmarkAccelAux
     variable = accel_x
-    displacement = disp_x
+    displacement = disp_X
     velocity = vel_x
   []
   [vel_x] 
@@ -283,13 +292,19 @@ gamma = '${fparse 1/2-hht_alpha}'
   [accel_y]
     type = NewmarkAccelAux
     variable = accel_y
-    displacement = disp_y
+    displacement = disp_Y
     velocity = vel_y
   []
   [vel_y]
     type = NewmarkVelAux
     variable = vel_y
     acceleration = accel_y
+  []
+  [get_p_mat]
+    type = ADMaterialRealAux
+    property = p_mat
+    variable = p_bc_var
+    boundary = inner
   []
 []
 
@@ -313,47 +328,71 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [BCs]
+  # [pressure_x]
+  #   type = ADPressure
+  #   boundary = inner
+  #   variable = 'disp_X'
+  #   function = p_func
+  #   factor = 1
+  # []
+  # [pressure_y]
+  #   type = ADPressure
+  #   boundary = inner
+  #   variable = 'disp_Y'
+  #   function = p_func
+  #   factor = 1
+  # []
   [pressure_x]
-    type = ADPressure
+    type = CoupledPressureBC
     boundary = inner
-    variable = 'disp_x'
-    function = p_func
-    factor = 1
+    variable = 'disp_X'
+    pressure = p_bc_var
+    component = 0
   []
   [pressure_y]
-    type = ADPressure
+    type = CoupledPressureBC
     boundary = inner
-    variable = 'disp_y'
-    function = p_func
-    factor = 1
+    variable = 'disp_Y'
+    pressure = p_bc_var
+    component = 1
   []
   [left_x]
     type = ADDirichletBC
     boundary = left
-    variable = disp_x
+    variable = disp_X
     value = 0
   []
   [bottom_y]
     type = ADDirichletBC
     boundary = bottom 
-    variable = disp_y
+    variable = disp_Y
     value = 0
   []
   # [fix_x]
   #   type = ADDirichletBC
   #   boundary = fix_point
-  #   variable = disp_x
+  #   variable = disp_X
   #   value = 0
   # []
   # [fix_y]
   #   type = ADDirichletBC
   #   boundary = fix_point
-  #   variable = disp_y
+  #   variable = disp_Y
   #   value = 0
   # []
 []
 
 [Materials]
+  [p_mat]
+    type = ADParsedMaterial
+    property_name = p_mat
+    expression = 'g*p0*exp(-t/T0)'
+    # coupled_variables = 'd'
+    material_property_names = 'g'
+    constant_names = 'p0 T0'
+    constant_expressions = '${p0} ${T0}'
+    extra_symbols = 't'
+  []
   [bulk_properties]
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda l Gc density'
@@ -408,8 +447,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    # parameter_values = '2 1e-5'
-    parameter_values = '2 0'
+    parameter_values = '2 1e-5'
+    # parameter_values = '2 0'
   []
   [strain]
     type = ADComputeSmallStrain
@@ -491,32 +530,33 @@ gamma = '${fparse 1/2-hht_alpha}'
   # fixed_point_abs_tol = 1e-6
   # [TimeStepper]
   #   type = FunctionDT
-  #   function = 'if(t<50,1,0.05)'
-  #   min_dt = 1e-2
+  #   function = 'if(t<50,2,0.05)'
+  #   min_dt = 5e-3
   # []
   dt = 1
-  dtmin = 1e-2
+  # dtmin = 1e-2
   start_time = 0
   end_time = 80
   # num_steps = 1
-  [TimeIntegrator]
-    type = NewmarkBeta
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  # []
   # relaxation_factor = 0.1
 []
 
 [Outputs]
   [exodus]
     type = Exodus 
-    min_simulation_time_interval = 0.5
+    # min_simulation_time_interval = 0.5
+    execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
   print_linear_residuals = true
   # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
-  file_base = './out/pr_us_seed${seed}_patch15_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h1_rf${refine}/pr'
+  file_base = './out/pr_us_seed${seed}_patch4_l${l}_h4_rf${refine}/pr'
   # file_base = './out/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5/pr_nuc24'
   checkpoint = true
   [csv]
-    file_base = './gold/pr_us_seed${seed}_patch15_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h1_rf${refine}'
+    file_base = './gold/pr_us_seed${seed}_patch4_l${l}_h4_rf${refine}'
     # file_base = './gold/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5'
     type = CSV
   []

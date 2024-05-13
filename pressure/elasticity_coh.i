@@ -16,7 +16,6 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = '${fparse sigma_ts^2/2/E}' # 2.38
 
 T0 = 100e-6
-# p0 = 800
 p0 = 400
 seed = 8
 
@@ -66,7 +65,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = FullSolveMultiApp
     input_files = patches_coh.i
     cli_args = 'seed=${seed};psic=${psic}'
-    # cli_args = 'seed=${seed};sigma_ts=${sigma_ts};sigma_hs=${sigma_hs}'
     execute_on = 'INITIAL'
   []
 []
@@ -76,12 +74,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = FileMeshGenerator
     file = './mesh/annulus_h1.msh'
   []
-  # [fix_point]
-  #   type = ExtraNodesetGenerator
-  #   coord = '150 0 0'
-  #   input = fmg 
-  #   new_boundary = fix_point
-  # []
+  parallel_type = DISTRIBUTED
+  [Partitioner]
+    type = LibmeshPartitioner
+    partitioner = parmetis
+  []
 []
 
 [Adaptivity]
@@ -283,18 +280,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = disp_y
     value = 0
   []
-  # [fix_x]
-  #   type = ADDirichletBC
-  #   boundary = fix_point
-  #   variable = disp_x
-  #   value = 0
-  # []
-  # [fix_y]
-  #   type = ADDirichletBC
-  #   boundary = fix_point
-  #   variable = disp_y
-  #   value = 0
-  # []
 []
 
 [Materials]
@@ -414,15 +399,17 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [Outputs]
   [exodus]
-    type = Exodus 
+    # type = Exodus 
+    type = Nemesis
     min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
   # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
-  file_base = './out/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}'
+  # file_base = './out/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}'
+  file_base = './out/pr_coh_distri_mesh/pr_coh'
   checkpoint = true
   [csv]
-    file_base = './gold/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}'
+    file_base = './gold/pr_coh_distri_mesh'
     type = CSV
   []
 []
