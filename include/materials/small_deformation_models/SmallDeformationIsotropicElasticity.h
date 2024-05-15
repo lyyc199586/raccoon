@@ -38,6 +38,7 @@ private:
   const MaterialPropertyName _psie_name;
   ADMaterialProperty<Real> & _psie;
   ADMaterialProperty<Real> & _psie_active;
+  ADMaterialProperty<Real> & _psie_intact;
   ADMaterialProperty<Real> & _dpsie_dd;
   // @}
 
