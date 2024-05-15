@@ -1,4 +1,5 @@
-# energy based tip traking: track maximum psie
+# Dynamic discrete crack by releasing node
+# Dynamic J int: J(t) = 
 
 # PMMA (see Michael Borden's PhD thesis, p132)
 E = 32e3 # 32 GPa
@@ -11,44 +12,13 @@ Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 psic = ${fparse sigma_ts^2/2/E}
 # sigma_cs = 9.24
+l = 0.65
 p = 1
 
-## lch = 3/8*E*Gc/sigma_ts^2 = 3.79
-l = 0.75
-refine = 3 # 0.125
-
 # hht parameters
-# hht_alpha = -0.25
 hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};refine=${refine}'
-    execute_on = 'TIMESTEP_END'
-    clone_parent_mesh = true
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    to_multi_app = fracture
-    # variable = 'disp_x disp_y strain_zz psie_active'
-    # source_variable = 'disp_x disp_y strain_zz psie_active'
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
-  []
-[]
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -69,66 +39,31 @@ gamma = '${fparse 1/2-hht_alpha}'
     ymin = -20
     ymax = 20
   []
-  [sub_upper]
+  [upper]
     type = ParsedSubdomainMeshGenerator
     input = gen
     combinatorial_geometry = 'x < 50 & y > 0'
     block_id = 1
   []
-  [sub_lower]
+  [lower]
     type = ParsedSubdomainMeshGenerator
-    input = sub_upper
+    input = upper
     combinatorial_geometry = 'x < 50 & y < 0'
     block_id = 2
   []
   [split]
-    input = sub_lower
+    input = lower
     type = BreakMeshByBlockGenerator
     block_pairs = '1 2'
     split_interface = true
   []
 []
 
-[Adaptivity]
-  marker = combo_marker
-  max_h_level = ${refine}
-  initial_marker = initial
-  initial_steps = ${refine}
-  cycles_per_step = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueRangeMarker
-      variable = d
-      lower_bound = 0.0001
-      upper_bound = 1
-    []
-    [psic_marker]
-      type = ValueThresholdMarker
-      variable = psie_active
-      refine = 0.00075
-    []
-    [initial]
-      type = BoxMarker
-      bottom_left = '47.9 -2.1 0'
-      top_right = '52.1 2.1 0'
-      inside = REFINE
-      outside = DONT_MARK
-    []
-    [combo_marker]
-      type = ComboMarker
-      markers = 'damage_marker initial'
-    []
-  []
-[]
-
-
 [Variables]
   [disp_x]
   []
   [disp_y]
   []
-  # [strain_zz]
-  # []
 []
 
 [AuxVariables]
@@ -145,35 +80,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fy]
   []
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
-    []
   []
-  [s1]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s3]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [f_quadrant_1]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [f_quadrant_2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  # [psie_ratio] # psie/psie_max
-  # []
 []
-
 
 [Kernels]
   [solid_x]
@@ -202,11 +110,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  # [plane_stress]
-  #   type = ADWeakPlaneStress
-  #   variable = 'strain_zz'
-  #   displacements = 'disp_x disp_y'
-  # []
 []
 
 [AuxKernels]
@@ -236,39 +139,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = timestep_end
   []
-  [s1]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = stress
-    variable = s1
-    scalar_type = MaxPrincipal
-    execute_on = 'TIMESTEP_END'
-  []
-  [s2]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = stress
-    variable = s2
-    scalar_type = MidPrincipal
-    execute_on = 'TIMESTEP_END'
-  []
-  [s3]
-    type = ADRankTwoScalarAux
-    rank_two_tensor = stress
-    variable = s3
-    scalar_type = MinPrincipal
-    execute_on = 'TIMESTEP_END'
-  []
-  # [quadrant]
-  #   type = ParsedAux
-  #   variable = f_quadrant_1
-  #   coupled_variables = 's11 s22'
-  #   expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
-  # []
-  # [quadrant2]
-  #   type = ParsedAux
-  #   variable = f_quadrant_2
-  #   coupled_variables = 's1 s3'
-  #   expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
-  # []
 []
 
 [BCs]
@@ -304,18 +174,22 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = CrackSurfaceDensity
     phase_field = d
   []
-  [degradation]
-    type = RationalDegradationFunction
-    property_name = g
+  # [degradation]
+  #   type = RationalDegradationFunction
+  #   property_name = g
+  #   phase_field = d
+  #   material_property_names = 'Gc psic xi c0 l'
+  #   parameter_names = 'p a2 a3 eta'
+  #   parameter_values = '2 1 0.0 1e-6'
+  # []
+  [nodeg]
+    type = NoDegradation
+    property_name = g 
     phase_field = d
-    material_property_names = 'Gc psic xi c0 l'
-    parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 1 0.0 1e-6'
+    expression = 1
   []
   [strain]
-    # type = ADComputePlaneSmallStrain
     type = ADComputeSmallStrain
-    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
   []
@@ -335,28 +209,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     output_properties = 'stress'
     outputs = exodus
   []
-  [s1_mat]
-    type = ADParsedMaterial
-    property_name = s1_mat 
-    coupled_variables = s1
-    expression = 's1'
-  []
-  [psie_ratio_mat]
-    type = ADParsedMaterial
-    property_name = psie_ratio_mat
-    material_property_names = 'psie'
-    postprocessor_names = 'max_psie'
-    expression = 'if(psie/max_psie>0.9,1,0)'
-    outputs = exodus
-  []
-  [s1_ratio_mat]
-    type = ADParsedMaterial
-    property_name = s1_ratio_mat
-    material_property_names = 's1_mat'
-    postprocessor_names = 'max_s1'
-    expression = 'if(s1_mat/max_s1>0.9,1,0)'
-    outputs = exodus
-  []
 []
 
 [Postprocessors]
@@ -364,22 +216,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalSum
     variable = fy
     boundary = top
-    # outputs = "csv exodus"
   []
   [max_disp_y]
     type = NodalExtremeValue
     variable = disp_y
-    # outputs = "csv exodus"
-  []
-  [max_psie]
-    type = ADElementExtremeMaterialProperty
-    mat_prop = psie
-    value_type = max
-  []
-  [max_s1]
-    type = ADElementExtremeMaterialProperty
-    mat_prop = s1_mat
-    value_type = max 
   []
   [Jint]
     type = PhaseFieldJIntegral
@@ -387,7 +227,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
     boundary = 'left bottom right top'
-    outputs = "csv exodus"
+  []
+  [Jint_over_Gc]
+    type = ParsedPostprocessor
+    expression = 'Jint/Gc'
+    pp_names = 'Jint'
+    constant_names = 'Gc'
+    constant_expressions = '${Gc}'
   []
 []
 
@@ -431,6 +277,3 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = CSV
   []
 []
-
-
-
