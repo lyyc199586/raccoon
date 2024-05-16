@@ -169,11 +169,11 @@
   [degradation]
     type = PowerDegradationFunction
     property_name = g
-    # expression = (1-d)^p*(1-eta)+eta
-    expression = (1-d)^p+eta
+    expression = (1-d)^p*(1-eta)+eta
+    # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
     # parameter_values = '2 0'
   []
   [psi]
@@ -244,7 +244,7 @@
 
 [Executioner]
   type = Transient
-  # line_search = none
+  line_search = none
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'

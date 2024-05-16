@@ -11,9 +11,9 @@ sigma_cs = 8e3
 sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 
 Gc = 20
-l = 1 # lch = 3/8*Gc*E/sts/sts = 1.575
+l = 2 # lch = 3/8*Gc*E/sts/sts = 1.575
 # l = 0.5
-refine = 3
+refine = 2
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -383,11 +383,15 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Materials]
+  # [deg_p]
+  #   type =  ADParsedMaterial
+  # []
   [p_mat]
     type = ADParsedMaterial
     property_name = p_mat
     expression = 'g*p0*exp(-t/T0)'
-    # coupled_variables = 'd'
+    # expression = 'p0*exp(-t/T0)'
+    coupled_variables = 'd'
     material_property_names = 'g'
     constant_names = 'p0 T0'
     constant_expressions = '${p0} ${T0}'
@@ -443,11 +447,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   [degradation]
     type = PowerDegradationFunction
     property_name = g
-    # expression = (1-d)^p*(1-eta)+eta
-    expression = (1-d)^p+eta
+    expression = (1-d)^p*(1-eta)+eta
+    # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
     # parameter_values = '2 0'
   []
   [strain]
@@ -478,10 +482,27 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = inner
     variable = pressure
   []
-  [avg_p]
-    type = SideAverageValue
+  [int_p]
+    type = ADSideIntegralMaterialProperty
     boundary = inner
-    variable = pressure
+    property = p_mat
+  []
+  [avg_p]
+    type = ParsedPostprocessor
+    pp_names = 'int_p'
+    expression = 'int_p/(3.1415926*80/2)'
+  []
+  [p_base]
+    type = ParsedPostprocessor
+    expression = 'p0*exp(-t/T0)'
+    constant_names = 'p0 T0'
+    constant_expressions = '${p0} ${T0}'
+    use_t = true
+  []
+  [avg_p_over_p0]
+    type = ParsedPostprocessor
+    pp_names = 'avg_p p_base'
+    expression = 'avg_p/p_base'
   []
   [avg_s1]
     type = SideAverageValue
@@ -524,10 +545,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   fixed_point_max_its = 10
   # disable_fixed_point_residual_norm_check = true
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
-  # fixed_point_rel_tol = 1e-4
-  # fixed_point_abs_tol = 1e-6
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
   # [TimeStepper]
   #   type = FunctionDT
   #   function = 'if(t<50,2,0.05)'
@@ -536,7 +557,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   dt = 1
   # dtmin = 1e-2
   start_time = 0
-  end_time = 80
+  end_time = 50
   # num_steps = 1
   # [TimeIntegrator]
   #   type = NewmarkBeta
@@ -552,11 +573,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = true
   # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
-  file_base = './out/pr_us_seed${seed}_patch4_l${l}_h4_rf${refine}/pr'
+  file_base = './out/pr_seed${seed}_patch4_l${l}_h4_rf${refine}/pr'
   # file_base = './out/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5/pr_nuc24'
   checkpoint = true
   [csv]
-    file_base = './gold/pr_us_seed${seed}_patch4_l${l}_h4_rf${refine}'
+    file_base = './gold/pr_seed${seed}_patch4_l${l}_h4_rf${refine}'
     # file_base = './gold/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5'
     type = CSV
   []
