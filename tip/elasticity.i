@@ -7,7 +7,8 @@ nu = 0.2
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-rho = 2.45e-9 # Mg/mm^3
+# rho = 2.45e-9 # Mg/mm^3
+rho = 2.45e3
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 psic = ${fparse sigma_ts^2/2/E}
@@ -33,29 +34,33 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = GeneratedMeshGenerator
     dim = 2
     nx = 100
-    ny = 40
+    ny = 20
     xmin = 0
     xmax = 100
-    ymin = -20
+    ymin = 0
     ymax = 20
   []
-  [upper]
+  [right_sub]
     type = ParsedSubdomainMeshGenerator
     input = gen
-    combinatorial_geometry = 'x < 50 & y > 0'
+    combinatorial_geometry = 'x > 50'
     block_id = 1
+    block_name = 'right'
   []
-  [lower]
-    type = ParsedSubdomainMeshGenerator
-    input = upper
-    combinatorial_geometry = 'x < 50 & y < 0'
-    block_id = 2
-  []
-  [split]
-    input = lower
-    type = BreakMeshByBlockGenerator
-    block_pairs = '1 2'
-    split_interface = true
+  construct_side_list_from_node_list=true
+[]
+
+[UserObjects]
+  [moving_circle]
+    type = CoupledVarThresholdElementSubdomainModifier
+    coupled_var = 'phi'
+    block = 1
+    criterion_type = ABOVE
+    threshold = 0
+    subdomain_id = 1
+    moving_boundary_name = moving_boundary
+    complement_moving_boundary_name = cmp_moving_boundary
+    execute_on = 'TIMESTEP_BEGIN'
   []
 []
 
@@ -80,6 +85,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fy]
   []
   [d]
+  []
+  [phi]
   []
 []
 
@@ -139,6 +146,19 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = timestep_end
   []
+  [phi]
+    type = FunctionAux
+    variable = phi
+    function = moving_circle
+    execute_on = 'INITIAL TIMESTEP_BEGIN'
+  []
+[]
+
+[Functions]
+  [moving_circle]
+    type = ParsedFunction
+    expression = 'x-(50+t)'
+  []
 []
 
 [BCs]
@@ -149,12 +169,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     function = '${p}'
     factor = -1
   []
-  [ybottom]
-    type = ADPressure
+  # [ybottom]
+  #   type = ADPressure
+  #   variable = disp_y
+  #   boundary = bottom
+  #   function = '${p}'
+  #   factor = -1
+  # []
+  [noncrack]
+    type = ADDirichletBC
     variable = disp_y
-    boundary = bottom
-    function = '${p}'
-    factor = -1
+    value = 0
+    boundary = 'bottom'
   []
 []
 
@@ -221,20 +247,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = NodalExtremeValue
     variable = disp_y
   []
-  [Jint]
-    type = PhaseFieldJIntegral
-    J_direction = '1 0 0'
-    strain_energy_density = psie
-    displacements = 'disp_x disp_y'
-    boundary = 'left bottom right top'
-  []
-  [Jint_over_Gc]
-    type = ParsedPostprocessor
-    expression = 'Jint/Gc'
-    pp_names = 'Jint'
-    constant_names = 'Gc'
-    constant_expressions = '${Gc}'
-  []
+  # [Jint]
+  #   type = DynamicPhaseFieldJIntegral
+  #   J_direction = '1 0 0'
+  #   strain_energy_density = psie
+  #   displacements = 'disp_x disp_y'
+  #   boundary = 'left bottom right top'
+  #   density = density
+  # []
+  # [Jint_over_Gc]
+  #   type = ParsedPostprocessor
+  #   expression = 'Jint/Gc'
+  #   pp_names = 'Jint'
+  #   constant_names = 'Gc'
+  #   constant_expressions = '${Gc}' 
+  # []
 []
 
 [Executioner]
@@ -252,9 +279,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   nl_abs_tol = 1e-8
   nl_max_its = 200
 
-  dt = 5e-7
+  # dt = 5e-7
+  dt = 0.5
   # dtmin = 1e-8
-  end_time = 100e-6
+  # end_time = 50e-6
+  end_time = 50
 
   fixed_point_max_its = 10
   accept_on_max_fixed_point_iteration = true
@@ -266,7 +295,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     time_step_interval = 1
-    min_simulation_time_interval = 5e-7
+    min_simulation_time_interval = 0.5
   []
   checkpoint = true
   print_linear_residuals = false
