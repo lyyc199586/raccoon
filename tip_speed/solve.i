@@ -1,20 +1,17 @@
-# Dynamic discrete crack by releasing node
-# Dynamic J int: J(t) = 
 
-# PMMA (see Michael Borden's PhD thesis, p132)
+# PMMA
 E = 32e3 # 32 GPa
 nu = 0.2
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-# rho = 2.45e-9 # Mg/mm^3
 rho = 2.45e3
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 psic = ${fparse sigma_ts^2/2/E}
-# sigma_cs = 9.24
-l = 0.65
 p = 1
+l = 1
+r = 5
 
 # hht parameters
 hht_alpha = -0.3
@@ -26,11 +23,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
-  use_displaced_mesh = true
+  # use_displaced_mesh = true
 []
 
 [Mesh]
-  [gen] #h_c = 1, h_r = 0.25
+  [gen]
     type = GeneratedMeshGenerator
     dim = 2
     nx = 100
@@ -40,27 +37,55 @@ gamma = '${fparse 1/2-hht_alpha}'
     ymin = 0
     ymax = 20
   []
-  [right_sub]
-    type = ParsedSubdomainMeshGenerator
-    input = gen
-    combinatorial_geometry = 'x > 50'
-    block_id = 1
-    block_name = 'right'
+  [noncrack]
+    type = BoundingBoxNodeSetGenerator
+    input = gen 
+    bottom_left = '49.5 -0.1 0'
+    top_right = '100.1 0.1 0'
+    new_boundary = noncrack
   []
-  construct_side_list_from_node_list=true
+  [initial_tip_circ]
+    type = ParsedSubdomainMeshGenerator
+    input = noncrack
+    block_id = 1
+    block_name = tip_circ 
+    combinatorial_geometry = '(x-50)^2 + y^2 < ${r}^2'
+  []
 []
 
 [UserObjects]
-  [moving_circle]
-    type = CoupledVarThresholdElementSubdomainModifier
-    coupled_var = 'phi'
-    block = 1
+  [moving_bnd]
+    type = MovingNodeSetUserObject
+    indicator = 'phi'
     criterion_type = ABOVE
     threshold = 0
-    subdomain_id = 1
-    moving_boundary_name = moving_boundary
-    complement_moving_boundary_name = cmp_moving_boundary
+    moving_boundary_name = noncrack
     execute_on = 'TIMESTEP_BEGIN'
+    boundary = 'bottom'
+  []
+  [moving_circ]
+    type = CoupledVarThresholdElementSubdomainModifier
+    coupled_var = 'tip_var'
+    criterion_type = BELOW
+    threshold = 0
+    subdomain_id = 1
+    complement_subdomain_id = 0
+    execute_on = 'TIMESTEP_BEGIN'
+  []
+[]
+
+[Functions]
+  [moving]
+    type = ParsedFunction
+    expression = 'x-tip'
+    symbol_names = 'tip'
+    symbol_values = 'tip'
+  []
+  [tip_circ]
+    type = ParsedFunction
+    expression = '(x-tip)^2 + y^2 - r^2'
+    symbol_names = 'tip r'
+    symbol_values = 'tip ${r}'
   []
 []
 
@@ -72,6 +97,12 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [AuxVariables]
+  [phi]
+  []
+  [tip_var]
+  []
+  [psie_var]
+  []
   [accel_x]
   []
   [accel_y]
@@ -86,7 +117,21 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [d]
   []
-  [phi]
+[]
+
+[BCs]
+  [ytop]
+    type = ADPressure
+    variable = disp_y
+    boundary = top
+    function = '${p}'
+    factor = -1
+  []
+  [noncrack]
+    type = ADDirichletBC
+    variable = disp_y
+    value = 0
+    boundary = 'noncrack'
   []
 []
 
@@ -120,6 +165,18 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [AuxKernels]
+  [phi]
+    type = FunctionAux
+    variable = phi
+    function = moving
+    execute_on = 'TIMESTEP_BEGIN'
+  []
+  [tip_var]
+    type = FunctionAux
+    variable = tip_var
+    function = tip_circ
+    execute_on = 'TIMESTEP_BEGIN'
+  []
   [accel_x]
     type = NewmarkAccelAux
     variable = accel_x
@@ -146,41 +203,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = timestep_end
   []
-  [phi]
-    type = FunctionAux
-    variable = phi
-    function = moving_circle
-    execute_on = 'INITIAL TIMESTEP_BEGIN'
-  []
-[]
-
-[Functions]
-  [moving_circle]
-    type = ParsedFunction
-    expression = 'x-(50+t)'
-  []
-[]
-
-[BCs]
-  [ytop]
-    type = ADPressure
-    variable = disp_y
-    boundary = top
-    function = '${p}'
-    factor = -1
-  []
-  # [ybottom]
-  #   type = ADPressure
-  #   variable = disp_y
-  #   boundary = bottom
-  #   function = '${p}'
-  #   factor = -1
-  # []
-  [noncrack]
-    type = ADDirichletBC
-    variable = disp_y
-    value = 0
-    boundary = 'bottom'
+  [get_psie]
+    type = ProjectionAux
+    variable = psie_var
+    v = psie
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
 []
 
@@ -200,14 +227,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = CrackSurfaceDensity
     phase_field = d
   []
-  # [degradation]
-  #   type = RationalDegradationFunction
-  #   property_name = g
-  #   phase_field = d
-  #   material_property_names = 'Gc psic xi c0 l'
-  #   parameter_names = 'p a2 a3 eta'
-  #   parameter_values = '2 1 0.0 1e-6'
-  # []
   [nodeg]
     type = NoDegradation
     property_name = g 
@@ -238,71 +257,72 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Postprocessors]
-  [Fy]
-    type = NodalSum
-    variable = fy
-    boundary = top
+  [Jint]
+    type = PhaseFieldJIntegral
+    J_direction = '1 0 0'
+    strain_energy_density = psie
+    displacements = 'disp_x disp_y'
+    boundary = 'left top right bottom'
+    # density = density
   []
-  [max_disp_y]
-    type = NodalExtremeValue
-    variable = disp_y
+  # [max_psie]
+  #   type = ADElementExtremeMaterialProperty
+  #   mat_prop = psie
+  #   value_type = max
+  # []
+  # [max_psie_var]
+  #   type = NodalExtremeValue
+  #   variable = psie_var
+  # []
+  # [max_psie_var_id]
+  #   type = NodalMaxValueId
+  #   variable = psie_var
+  # []
+  # [tip_x]
+  #   type = NodalMaxValuePosition
+  #   variable = psie_var
+  #   component = 0
+  #   boundary = noncrack
+  # []
+  [tip_adv]
+    type = ParsedPostprocessor
+    expression = 'if(Jint>Gc, 1, 0)'
+    pp_names = 'Jint'
+    constant_names = 'Gc'
+    constant_expressions = '${Gc}'
   []
-  # [Jint]
-  #   type = DynamicPhaseFieldJIntegral
-  #   J_direction = '1 0 0'
-  #   strain_energy_density = psie
-  #   displacements = 'disp_x disp_y'
-  #   boundary = 'left bottom right top'
-  #   density = density
-  # []
-  # [Jint_over_Gc]
-  #   type = ParsedPostprocessor
-  #   expression = 'Jint/Gc'
-  #   pp_names = 'Jint'
-  #   constant_names = 'Gc'
-  #   constant_expressions = '${Gc}' 
-  # []
+  [tip_cum]
+    type = CumulativeValuePostprocessor
+    postprocessor = tip_adv
+  []
+  [tip]
+    type = ParsedPostprocessor
+    expression = '50 + tip_cum'
+    pp_names = 'tip_cum'
+    execute_on = 'INITIAL TIMESTEP_BEGIN'
+    # constant_names = 'Gc'
+    # constant_expressions = '${Gc}'
+  []
 []
 
 [Executioner]
   type = Transient
-
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  petsc_options_iname = '-pc_type -pc_hypre_type'
+  petsc_options_value = 'hypre boomeramg'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-  nl_max_its = 200
-
-  # dt = 5e-7
-  dt = 0.5
-  # dtmin = 1e-8
-  # end_time = 50e-6
-  end_time = 50
-
-  fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  dt = 1
+  # num_steps = 2
+  start_time = 0
+  end_time = 100
 []
 
 [Outputs]
-  [exodus]
-    type = Exodus
-    time_step_interval = 1
-    min_simulation_time_interval = 0.5
-  []
-  checkpoint = true
-  print_linear_residuals = false
-  file_base = './out/dyn_br_p${p}_l${l}/dyn_br_p${p}_l${l}'
-  time_step_interval = 1
+  exodus = true
+  file_base = './out/moving'
   [csv]
-    file_base = './gold/dyn_br_p${p}_l${l}'
     type = CSV
+    file_base = './gold/moving'
   []
 []
