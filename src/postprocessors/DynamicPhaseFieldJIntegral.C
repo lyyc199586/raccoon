@@ -36,21 +36,26 @@ DynamicPhaseFieldJIntegral::DynamicPhaseFieldJIntegral(const InputParameters & p
     _u_dots(coupledDots("displacements"))
 {
   // set unused dimensions to zero
-  for (unsigned i = _ndisp; i < 3; ++i)
+  for (unsigned i = _ndisp; i < 3; ++i) {
     _grad_disp.push_back(&_grad_zero);
-
-  for (unsigned int i = _ndisp; i < 3; ++i)
     _u_dots.push_back(&_zero);
+  }
 }
 
 Real
 DynamicPhaseFieldJIntegral::computeQpIntegral()
 {
+  // grad(u) and dot(u)
   auto H = RankTwoTensor::initializeFromRows(
       (*_grad_disp[0])[_qp], (*_grad_disp[1])[_qp], (*_grad_disp[2])[_qp]);
-  RankTwoTensor I2(RankTwoTensor::initIdentity);
-  ADRankTwoTensor Sigma = _psie[_qp] * I2 - H.transpose() * _stress[_qp];
-  RealVectorValue n = _normals[_qp];
   RealVectorValue u_dot((*_u_dots[0])[_qp], (*_u_dots[1])[_qp], (*_u_dots[2])[_qp]);
-  return raw_value(_t * Sigma * n) + 0.5 * raw_value(_rho[_qp]) * u_dot * u_dot;;
+
+  // kinetic energy
+  ADReal psik = 0.5 * raw_value(_rho[_qp]) * u_dot * u_dot;
+
+  RankTwoTensor I2(RankTwoTensor::initIdentity);
+  ADRankTwoTensor Sigma = (_psie[_qp] + psik) * I2 - H.transpose() * _stress[_qp];
+  RealVectorValue n = _normals[_qp];
+  
+  return raw_value(_t * Sigma * n);
 }

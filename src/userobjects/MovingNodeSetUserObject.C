@@ -35,6 +35,7 @@ MovingNodeSetUserObject::MovingNodeSetUserObject(const InputParameters & paramet
     _indicator(coupledValue("indicator")),
     _threshold(getParam<Real>("threshold")),
     _moving_boundary_specified(isParamValid("moving_boundary_name")),
+    _moving_boundary_id(-1),
     _criterion_type(getParam<MooseEnum>("criterion_type").getEnum<CriterionType>())
 {
 }
@@ -56,6 +57,7 @@ MovingNodeSetUserObject::setMovingBoundaryName(MooseMesh & mesh)
   mooseAssert(boundary_ids.size() == 1, "Expect exactly one boundary ID.");
   _moving_boundary_id = boundary_ids[0];
   mesh.setBoundaryName(_moving_boundary_id, _moving_boundary_name);
+  mesh.getMesh().get_boundary_info().sideset_name(_moving_boundary_id) = _moving_boundary_name;
   mesh.getMesh().get_boundary_info().nodeset_name(_moving_boundary_id) = _moving_boundary_name;
 }
 
