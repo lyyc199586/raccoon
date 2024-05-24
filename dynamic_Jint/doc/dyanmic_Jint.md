@@ -25,11 +25,73 @@ G = \varepsilon_0^2 h E \frac{1-(1-\nu^2)V^2/C_o^2}{1- V^2/C_o^2},
 $$
 where $\varepsilon_0 = u_0/h, C_o=\sqrt{E/\rho}$, $V$ is less than $C_R$.
 
+## J integral
+
+Energy release rate: loss of total potential energy per unit crack growth area (length) $s$
+
+$$
+G=-\frac{\partial\Pi}{\partial s},
+$$
+
+where the total potential energy is
+
+$$
+\Pi = W - \int_{\partial\Omega} t\cdot u \;dS - \int_{\Omega} b\cdot u \;dV,
+$$
+
+$W$ is total strain energy.
+
+### Quasi-static
+
+J integral is defined on any path $\Gamma$ starting and ending on the crack faces as
+
+$$
+J = \int_{\Gamma} \left(\psi_e n_1 - t \cdot \frac{\partial u}{\partial x_1}\right) \; d\Gamma,
+$$
+
+or
+
+$$
+J = \int_{\Gamma} \left( \frac{1}{2} \sigma_{ij} u_{i,j} n_1 - \sigma_{ij}n_j u_{i,1}\right) \; d\Gamma
+$$
+
+where $n_1$ is the $x_1$ component of unit vector normal to $\Gamma$.
+
+In RACCOON, J is computed through given boundaries (should be around the crack tip), crack direction (tangential vector), and displacements
+
+```cpp
+// _t = {n1, n2, n3}
+// _grad_disp = {grad_u1, grad_u2, grad_u3}
+// _stress
+// _psie
+
+// assign grad u to RankTwoTensor
+auto H = RankTwoTensor::initializeFromRows(
+      (*_grad_disp[0])[_qp], (*_grad_disp[1])[_qp], (*_grad_disp[2])[_qp]);
+RankTwoTensor I2(RankTwoTensor::initIdentity);
+
+// calculate J
+ADRankTwoTensor Sigma = _psie[_qp] * I2 - H.transpose() * _stress[_qp];
+RealVectorValue n = _normals[_qp]; // normals of current boundary
+return raw_value(_t * Sigma * n);
+```
+
+### Dynamic
+
+$$
+J = \int_{\Gamma} \left( (\psi_e + \frac{1}{2} \rho \dot{u}^2) n_1 - t \cdot \frac{\partial u}{\partial x_1}\right) \; d\Gamma,
+$$
+
+or
+
+$$
+J = \int_{\Gamma} \left( \frac{1}{2} (\sigma_{ij} u_{i,j} + \rho V^2 u_{i,1}^2) n_1 - \sigma_{ij}n_j u_{i,1}\right) \; d\Gamma,
+$$
+
 ## Discrete crack
 
-Use dynamic J integral on the discrete crack, using material properties and geometry from the dynamic branching problem, let $V=0.25$ (mm/$\mu$s), $u_0=0.05$ mm
+Use dynamic J integral on the discrete crack, using material properties and geometry from the dynamic branching problem,
+compare to analytical G:
 
-$h = 20$ mm
-
-![](../post/DJint_u0.1_V0.25_Tc60_Tf160.png)
+![](../post/DJint_compare.png)
 

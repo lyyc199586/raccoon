@@ -1,74 +1,5 @@
 # Dynamic energy release rate and crack tip speed
 
-## Static 
-
-### G
-
-Energy release rate: loss of total potential energy per unit crack growth area (length) $s$
-
-$$
-G=-\frac{\partial\Pi}{\partial s},
-$$
-
-where the total potential energy is
-
-$$
-\Pi = W - \int_{\partial\Omega} t\cdot u \;dS - \int_{\Omega} b\cdot u \;dV,
-$$
-
-$W$ is total strain energy.
-
-### J integral
-
-J integral is defined on any path $\Gamma$ starting and ending on the crack faces as
-
-$$
-J = \int_{\Gamma} \left(\psi_e n_1 - t \cdot \frac{\partial u}{\partial x_1}\right) \; d\Gamma,
-$$
-
-or
-
-$$
-J = \int_{\Gamma} \left( \frac{1}{2} \sigma_{ij} u_{i,j} n_1 - \sigma_{ij}n_j u_{i,1}\right) \; d\Gamma
-$$
-
-where $n_1$ is the $x_1$ component of unit vector normal to $\Gamma$.
-
-In RACCOON, J is computed through given boundaries (should be around the crack tip), crack direction (tangential vector), and displacements
-
-```cpp
-// _t = {n1, n2, n3}
-// _grad_disp = {grad_u1, grad_u2, grad_u3}
-// _stress
-// _psie
-
-// assign grad u to RankTwoTensor
-auto H = RankTwoTensor::initializeFromRows(
-      (*_grad_disp[0])[_qp], (*_grad_disp[1])[_qp], (*_grad_disp[2])[_qp]);
-RankTwoTensor I2(RankTwoTensor::initIdentity);
-
-// calculate J
-ADRankTwoTensor Sigma = _psie[_qp] * I2 - H.transpose() * _stress[_qp];
-RealVectorValue n = _normals[_qp]; // normals of current boundary
-return raw_value(_t * Sigma * n);
-```
-
-## Dynamic
-
-### J integral
-
-$$
-J = \int_{\Gamma} \left( (\psi_e + \frac{1}{2} \rho \dot{u}^2) n_1 - t \cdot \frac{\partial u}{\partial x_1}\right) \; d\Gamma,
-$$
-
-or
-
-$$
-J = \int_{\Gamma} \left( \frac{1}{2} (\sigma_{ij} u_{i,j} + \rho V^2 u_{i,1}^2) n_1 - \sigma_{ij}n_j u_{i,1}\right) \; d\Gamma,
-$$
-
-where $\dot{u}_i=-V u_{i, 1}$
-
 ## Crack tip velocity?
 
 Consider (5.9)
@@ -86,7 +17,7 @@ $\alpha_d$: $\alpha_d=\sqrt{1-\dfrac{V^2}{C_d^2}}$
 $\alpha_s$: $\alpha_s=\sqrt{1-\dfrac{V^2}{C_s^2}}$ 
 $R(V)$: Rayleigh function $R(V)=4\alpha_d\alpha_s-(1+\alpha_s^2)^2$
 $k(V)$: the universal function $k(V)\approx \dfrac{1-V/C_R}{\sqrt{1-V/C_d}}$
-$K_I^0(t, l(t), 0)$: the dynamic stress intensity factor?
+$K_I^0(t, l(t), 0)$: the static stress intensity factor
 
 It has the form:
 
@@ -119,20 +50,32 @@ $$
 
 where $E'=E$ for plane stress, $E'=E/(1-\nu^2)$ for plane strain.
 
-If we have $K_I=K_{Ic}$
-
-### Derive $V$
-
-Assume $G=G_c$ for the right hand side of (5.9):
+If we have $K_I^0=K_{Ic}$, then $G = G_c^0$
+<!-- we can eliminate $G$ and $K_I^0$ in (5.9) (use plane stress for example):
 
 $$
-\frac{1+\nu}{E} \frac{V^2 \alpha_d}{C_s^2R(V)} \left[k(V)K_I^0(t, l(t),0)\right]^2 = G_c
+(1+\nu) \frac{V^2 \alpha_d}{C_s^2R(V)} k(V)^2 = 1
 $$
 
-$K_I$ is computed from static $J$-integral
+In this case, $V$ is  -->
 
-For convenience, define $A=\dfrac{1+\nu}{E C_s^2} (K_I^0)^2$.
+
+
+### Verify Dynamic $G$ from (5.9)
+
+(5.9)
 
 $$
-G_c \left[4(1 - V^2/C_d^2)(1 - V^2/C_s^2) - (2 - V^2/C_s^2)^2\right] = A V^2 (1 - V/C_R)^2
+\frac{1+\nu}{E} \frac{V^2 \alpha_d}{C_s^2R(V)} \left[k(V)K_I^0(t, l(t),0)\right]^2 = G
 $$
+
+We can use quasistatic $G^0$ as input (from static $J$ integral)
+
+so that $(K_I^0)^2 = G^0 E/(1-\nu^2)$, (5.9) can be simplified to 
+
+$$
+\frac{V^2 \alpha_d}{C_s^2R(V)} \frac{k^2(V)}{1-\nu} G_0 = G
+$$
+
+We can set a constant $V$, and use static J integral to compute $G_0$ and so the LHS, and the dynamic J integral which gives the RHS.
+

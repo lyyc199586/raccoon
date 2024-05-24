@@ -18,7 +18,7 @@ u0 = 0.1 # top disp
 T0 = 50 # ramp up time
 Tc = 60 # crack start time
 Tf = 160 # final time
-V = 0.25 # mannuly controled velocity
+V = 0.75 # mannuly controled velocity
 
 # hht parameters
 hht_alpha = -0.3
@@ -336,7 +336,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [Outputs]
   exodus = true
-  file_base = './out/steady_u${u0}_V${V}_Tc${Tc}_Tf${Tf}'
+  file_base = './out/steady_u${u0}_V${V}_Tc${Tc}_Tf${Tf}/steady'
   [csv]
     type = CSV
     file_base = './gold/steady_u${u0}_V${V}_Tc${Tc}_Tf${Tf}'
