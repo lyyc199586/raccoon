@@ -50,7 +50,7 @@ DynamicPhaseFieldJIntegral::computeQpIntegral()
       (*_grad_disp[0])[_qp], (*_grad_disp[1])[_qp], (*_grad_disp[2])[_qp]);
   RealVectorValue u_dot((*_u_dots[0])[_qp], (*_u_dots[1])[_qp], (*_u_dots[2])[_qp]);
 
-  // kinetic energy
+  // kinetic energy density
   ADReal psik = 0.5 * raw_value(_rho[_qp]) * u_dot * u_dot;
 
   RankTwoTensor I2(RankTwoTensor::initIdentity);

@@ -315,7 +315,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [tip]
     type = ParsedPostprocessor
-    expression = '0 + tip_cum'
+    expression = '0 + tip_cum' # initial_tip + tip_cmp
     pp_names = 'tip_cum'
     execute_on = 'INITIAL TIMESTEP_BEGIN'
   []

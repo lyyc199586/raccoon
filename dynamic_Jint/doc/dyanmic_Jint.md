@@ -1,30 +1,5 @@
 # Verify dynamic J integral
 
-## Analytical solution: Steady moving crack
-
-p244 Fig 5.5
-
-![setup](setup.png)
-
-Steady crack growth at speed $V$ in a strip of width $2h$, uniform normal displacement $u_0$ on top and bottom:
-$$
-u_2 (x_1, \pm h, t) = \pm u_0
-$$
-
-The stress intensity factor is
-$$
-K(t) = \frac{u_0 E}{\sqrt{h(1-\nu^2)}A_I(V)},
-$$
-
-where $A_I = \dfrac{V^2\alpha_d}{(1-\nu)C_s^2 D}$, $D =4\alpha_d\alpha_s-(1+\alpha_s^2)^2$
-
-The energy release rate is
-
-$$
-G = \varepsilon_0^2 h E \frac{1-(1-\nu^2)V^2/C_o^2}{1- V^2/C_o^2},
-$$
-where $\varepsilon_0 = u_0/h, C_o=\sqrt{E/\rho}$, $V$ is less than $C_R$.
-
 ## J integral
 
 Energy release rate: loss of total potential energy per unit crack growth area (length) $s$
@@ -78,17 +53,50 @@ return raw_value(_t * Sigma * n);
 
 ### Dynamic
 
+L.B. Freund (5.4.6)
+$$
+G(\Gamma_\infty) = \int_{\Gamma_\infty} \left( (T + U) n_1 - t \cdot \frac{\partial u}{\partial x_1}\right) \; d\Gamma,
+$$
+
+That should be
 $$
 J = \int_{\Gamma} \left( (\psi_e + \frac{1}{2} \rho \dot{u}^2) n_1 - t \cdot \frac{\partial u}{\partial x_1}\right) \; d\Gamma,
 $$
 
-or
+if steady growth with $V$
 
 $$
 J = \int_{\Gamma} \left( \frac{1}{2} (\sigma_{ij} u_{i,j} + \rho V^2 u_{i,1}^2) n_1 - \sigma_{ij}n_j u_{i,1}\right) \; d\Gamma,
 $$
 
-## Discrete crack
+## Analytical solution: Steady moving crack
+
+p244 Fig 5.5 Plane stress condition
+
+![setup](setup.png)
+
+Steady crack growth at speed $V$ in a strip of width $2h$, uniform normal displacement $u_0$ on top and bottom:
+$$
+u_2 (x_1, \pm h, t) = \pm u_0
+$$
+
+The stress intensity factor is
+$$
+K(t) = \frac{u_0 E}{\sqrt{h(1-\nu^2)}A_I(V)},
+$$
+
+where $A_I = \dfrac{V^2\alpha_d}{(1-\nu)C_s^2 D}$, $D =4\alpha_d\alpha_s-(1+\alpha_s^2)^2$
+
+The energy release rate is
+
+$$
+G = \varepsilon_0^2 h E \frac{1-(1-\nu^2)V^2/C_o^2}{1- V^2/C_o^2},
+$$
+where $\varepsilon_0 = u_0/h, C_o=\sqrt{E/\rho}$, $V$ is less than $C_R$.
+
+Relation between $G$ and $V/C_o$ (let other parameter to be 1):
+
+## FEM: sharp crack model
 
 Use dynamic J integral on the discrete crack, using material properties and geometry from the dynamic branching problem,
 compare to analytical G:
