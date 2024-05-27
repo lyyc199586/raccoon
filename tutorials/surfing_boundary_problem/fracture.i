@@ -13,7 +13,7 @@
 [Adaptivity]
   marker = marker
   initial_marker = marker
-  initial_steps = 3
+  initial_steps = ${refine}
   stop_time = 0
   max_h_level = ${refine}
   [Markers]
@@ -39,11 +39,13 @@
 [AuxVariables]
   [bounds_dummy]
   []
-  [psie_active]
-    order = CONSTANT
-    family = MONOMIAL
+  [disp_x]
   []
-  [ce]
+  [disp_y]
+  []
+  [strain_zz]
+  []
+  [psie_active]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -51,14 +53,13 @@
 
 [Bounds]
   [conditional]
-    type = ConditionalBoundsAux
+    type = VariableOldValueBounds
     variable = bounds_dummy
     bounded_variable = d
-    fixed_bound_value = 0
-    threshold_value = 0.95
+    bound_type = lower
   []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
@@ -79,35 +80,72 @@
     variable = d
     free_energy = psi
   []
+  [nuc_force]
+    type = ADCoefMatSource
+    variable = d
+    prop_names = 'ce'
+    coefficient = 1.0
+  []
 []
 
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    prop_names = 'E K G lambda Gc l sigma_ts sigma_hs'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_hs}'
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 0'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(ce+Gc/c0/l)*alpha'
-    args = 'd psie_active ce'
-    material_property_names = 'alpha(d) g(d) Gc c0 l'
+    property_name = psi
+    expression = 'g*psie_active+(Gc*delta/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
+    material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
+  []
+  [nucleation_micro_force]
+    type = LDLNucleationMicroForce
+    phase_field = d
+    degradation_function = g
+    regularization_length = l
+    normalization_constant = c0
+    fracture_toughness = Gc
+    tensile_strength = sigma_ts
+    hydrostatic_strength = sigma_hs
+    delta = delta
+    h_correction = true
+    external_driving_force_name = ce
+  []
+  [strain]
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
+  [elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+  []
+  [stress]
+    type = ComputeSmallDeformationStress
+    elasticity_model = elasticity
+    output_properties = 'stress'
   []
 []
 
