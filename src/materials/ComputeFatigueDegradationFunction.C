@@ -27,15 +27,20 @@ ComputeFatigueDegradationFunction::validParams()
       "f_alpha_type",
       "type of the fatigue degradation function (logarithmic or asymptotic");
   params.addParam<Real>("kappa", 0, "parameter in logaritmic fatigue degaradtion function");
+  params.addParam<Real>("k", 0, "residual in asmpytotic fatigue degaradtion function");
+  params.addParam<Real>(
+      "p", 1, "constribution parameter in asmpytotic fatigue degaradtion function");
   params.addRequiredParam<Real>("alpha_T", "fatigue threshold");
   params.addCoupledVar("initial_alpha_bar", "initial value for alpha_bar");
-  params.addParam<MaterialPropertyName>(
-      "degradation_mat", "g", "name of the material that holds the degradation");
+  // params.addParam<MaterialPropertyName>(
+  //     "degradation_mat", "g", "name of the material that holds the degradation");
+  params.addParam<MaterialPropertyName>("energy_threshold", "psic", "name of the energy threhold");
 
   return params;
 }
 
-ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(const InputParameters & parameters)
+ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(
+    const InputParameters & parameters)
   : ADMaterial(parameters),
     _E_el_name(isParamValid("elastic_energy_mat")
                    ? getParam<MaterialPropertyName>("elastic_energy_mat")
@@ -55,11 +60,14 @@ ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(const Input
     _f_alpha(declareADProperty<Real>(getParam<MaterialPropertyName>("f_alpha_name"))),
     _f_alpha_type(getParam<MaterialPropertyName>("f_alpha_type")),
     _kappa(getParam<Real>("kappa")),
+    _k(getParam<Real>("k")),
+    _p(getParam<Real>("p")),
     _alpha_T(getParam<Real>("alpha_T")),
     _alpha_bar_init(isParamValid("initial_alpha_bar") ? &coupledValue("initial_alpha_bar")
                                                       : nullptr),
-    _g(getADMaterialProperty<Real>("degradation_mat")),
-    _g_old(getMaterialPropertyOld<Real>("degradation_mat")),
+    // _g(getADMaterialProperty<Real>("degradation_mat")),
+    // _g_old(getMaterialPropertyOld<Real>("degradation_mat")),
+    _psic(getADMaterialProperty<Real>("energy_threshold")),
     _fatigue_flag(declareProperty<bool>("fatigue_flag"))
 {
 }
@@ -79,21 +87,15 @@ ComputeFatigueDegradationFunction::computeQpProperties()
       _E_el_active_old ? (*_E_el_active_old)[_qp] : (*_E_el_active_var_old)[_qp];
 
   // calculate degraded active elastic energy
-  ADReal alpha = _g[_qp] * E_el_active;
-  ADReal alpha_old = _g_old[_qp] * E_el_active_old;
+  ADReal alpha = (E_el_active - _psic[_qp] > 0) ? ((E_el_active - _psic[_qp]) / _psic[_qp]) : 0;
+  ADReal alpha_old =
+      (E_el_active_old - _psic[_qp] > 0) ? ((E_el_active_old - _psic[_qp]) / _psic[_qp]) : 0;
 
   // update alpha_bar
-  if (_fatigue_flag[_qp] == false)
-  {
-    _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old);
-  }
-  else
-  {
-    if (alpha > alpha_old)
-      _alpha_bar[_qp] = _alpha_bar_old[_qp] + (alpha - alpha_old);
-    else
-      _alpha_bar[_qp] = _alpha_bar_old[_qp];
-  }
+  if (alpha > alpha_old)
+    _alpha_bar[_qp] = _alpha_bar_old[_qp] + alpha * _dt;
+  ;
+  else _alpha_bar[_qp] = _alpha_bar_old[_qp];
 
   if (_alpha_bar[_qp] > _alpha_T)
     _fatigue_flag[_qp] = true;
@@ -106,9 +108,11 @@ ComputeFatigueDegradationFunction::computeQpProperties()
     if (_alpha_bar[_qp] < _alpha_T)
       _f_alpha[_qp] = 1.0;
     else
-      _f_alpha[_qp] = std::pow(2 * _alpha_T / (_alpha_T + _alpha_bar[_qp]), 2.0);
+      _f_alpha[_qp] =
+          (1 - _k) * std::pow(2 * _alpha_T / ((2 - _p) * _alpha_T + _p * _alpha_bar[_qp]), 2.0) +
+          _k;
 
-  // logarithmic
+    // logarithmic
   }
   else if (_f_alpha_type == "logarithmic")
   {

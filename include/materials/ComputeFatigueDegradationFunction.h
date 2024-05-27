@@ -42,6 +42,8 @@ protected:
 
   /// parameter in logaritmic fatigue degradation function
   const Real & _kappa;
+  const Real & _k;
+  const Real & _p;
 
   /// fatigue threshold
   const Real & _alpha_T;
@@ -50,8 +52,10 @@ protected:
   const VariableValue * _alpha_bar_init;
 
   /// degradation function and its old value
-  const ADMaterialProperty<Real> & _g;
-  const MaterialProperty<Real> & _g_old;
+  // const ADMaterialProperty<Real> & _g;
+  // const MaterialProperty<Real> & _g_old;
+
+  const ADMaterialProperty<Real> & _psic;
 
   /// Fatigue flag to check if fatigue has occured
   MaterialProperty<bool> & _fatigue_flag;
