@@ -504,7 +504,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     interval = 1
-    minimum_time_interval = 5e-7
+    minimum_time_interval = 1e-7
   []
   checkpoint = true
   print_linear_residuals = false
