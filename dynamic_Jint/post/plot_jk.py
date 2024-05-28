@@ -22,7 +22,7 @@ print(f"Cr={Cr}")
 #%% plot
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
 
-u_list = glob.glob('../gold/*V0.25*')
+u_list = glob.glob('../gold/*V0.75*')
 v_list = glob.glob('../gold/*u0.1*')
 
 def line_plot(data_path, ax):

@@ -77,7 +77,8 @@ p244 Fig 5.5 Plane stress condition
 
 Steady crack growth at speed $V$ in a strip of width $2h$, uniform normal displacement $u_0$ on top and bottom:
 $$
-u_2 (x_1, \pm h, t) = \pm u_0
+u_2 (x_1, \pm h, t) = \pm u_0,\\
+u_1 (x_1, \pm h, t) = 0.
 $$
 
 The stress intensity factor is
@@ -94,7 +95,8 @@ G = \varepsilon_0^2 h E \frac{1-(1-\nu^2)V^2/C_o^2}{1- V^2/C_o^2},
 $$
 where $\varepsilon_0 = u_0/h, C_o=\sqrt{E/\rho}$, $V$ is less than $C_R$.
 
-Relation between $G$ and $V/C_o$ (let other parameter to be 1):
+Relation between $G$ and $V/C_o$ ($\nu=0.2$ let other parameter to be 1):
+![](../post/g_to_v.png)
 
 ## FEM: sharp crack model
 

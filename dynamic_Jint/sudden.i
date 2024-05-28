@@ -11,14 +11,14 @@ rho = 2.45e3
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 psic = ${fparse sigma_ts^2/2/E}
-# p = 1
+
 l = 1
 r = 5
-u0 = 0.01 # top disp
-T0 = 50 # ramp up time
-Tc = 60 # crack start time
+# u0 = 0.01 # top disp
+p = 1 # top taction
+Tc = 50 # crack start time
 Tf = 160 # final time
-V = 1 # mannuly controlled velocity
+V = 0.25 # mannuly controlled velocity
 
 # hht parameters
 hht_alpha = -0.3
@@ -48,7 +48,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = RefineSidesetGenerator
     input = gen
     boundaries = bottom
-    refinement = 2
+    refinement = 3
   []
   [noncrack]
     type = BoundingBoxNodeSetGenerator
@@ -141,14 +141,20 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = top
     value = 0
   []
+  # [ytop]
+  #   # type = ADDirichletBC
+  #   type = SinDirichletBC
+  #   variable = disp_y
+  #   initial = 0
+  #   final = ${u0}
+  #   duration = ${T0}
+  #   boundary = top
+  # []
   [ytop]
-    # type = ADDirichletBC
-    type = SinDirichletBC
+    type = ADPressure
     variable = disp_y
-    initial = 0
-    final = ${u0}
-    duration = ${T0}
-    boundary = top
+    boundary = top 
+    factor = -1
   []
   [noncrack]
     type = ADDirichletBC
@@ -303,6 +309,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left top right'
     density = density
   []
+  [DJint_over_Jint]
+    type = ParsedPostprocessor
+    pp_names = 'Jint DJint'
+    expression = 'DJint/Jint'
+  []
   [tip_adv]
     type = ParsedPostprocessor
     expression = 'if(t>Tc, V, 0)'
@@ -336,7 +347,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   petsc_options_value = 'hypre boomeramg'
   automatic_scaling = true
 
-  dt = 1
+  dt = 0.5
   # num_steps = 30
   start_time = 0
   end_time = ${Tf}
@@ -344,9 +355,9 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [Outputs]
   exodus = true
-  file_base = './out/steady_u${u0}_V${V}_Tc${Tc}_Tf${Tf}/steady'
+  file_base = './out/sudden_p${p}_V${V}_Tc${Tc}_Tf${Tf}/sudden'
   [csv]
     type = CSV
-    file_base = './gold/steady_u${u0}_V${V}_Tc${Tc}_Tf${Tf}'
+    file_base = './gold/sudden_p${p}_V${V}_Tc${Tc}_Tf${Tf}'
   []
 []
