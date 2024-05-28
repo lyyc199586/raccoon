@@ -1,12 +1,8 @@
 [Mesh]
-   [./fmg]
-     type = FileMeshGenerator
-     file = '../mesh/2d/outer_vol_src.msh'
-   [../]
-[]
-
-
-[Problem]
+  [fmg]
+    type = FileMeshGenerator
+    file = '../mesh/2d/outer_vol_src.msh'
+  []
   coord_type = RZ
 []
 
@@ -28,26 +24,26 @@
   []
   [accel_z]
   []
-  [I_r]
-  []
-  [I_z]
-  []
-  [acoustic_energy]
-    # order = CONSTANT
-    # family = MONOMIAL
-  []
+  # [I_r]
+  # []
+  # [I_z]
+  # []
+  # [acoustic_energy]
+  #   # order = CONSTANT
+  #   # family = MONOMIAL
+  # []
 []
 
 [Kernels]
   [inertia_p]
     type = InertialForce
     variable = p
-  [../]
+  []
   [diff_p]
     type = ADCoefMatDiffusion
     variable = 'p'
     prop_names = 'Diff'
-  [../]
+  []
   [source_p]
     type = ADCoefMatSource
     variable = p
@@ -60,8 +56,8 @@
     velocity = vel_r
     acceleration = accel_r
     density = water_density
-    beta = 0.25 
-    gamma = 0.5 
+    beta = 0.25
+    gamma = 0.5
     eta = 0.0
   []
   [inertia_z] # M*accel + eta*M*vel
@@ -70,26 +66,25 @@
     velocity = vel_z
     acceleration = accel_z
     density = water_density
-    beta = 0.25 
-    gamma = 0.5 
+    beta = 0.25
+    gamma = 0.5
     eta = 0.0
   []
-  [grad_p_r]
-    type = PressureGradient
-    variable = disp_r
-    # displacements = 'disp_r disp_z'
-    pressure = p
-    component = 0
-  []
-  [grad_p_z]
-    type = PressureGradient
-    variable = disp_z
-    # displacements = 'disp_r disp_z'
-    pressure = p
-    component = 1
-  []
+  # [grad_p_r]
+  #   type = PressureGradient
+  #   variable = disp_r
+  #   # displacements = 'disp_r disp_z'
+  #   pressure = p
+  #   component = 0
+  # []
+  # [grad_p_z]
+  #   type = PressureGradient
+  #   variable = disp_z
+  #   # displacements = 'disp_r disp_z'
+  #   pressure = p
+  #   component = 1
+  # []
 []
-
 
 [AuxKernels]
   [accel_r]
@@ -122,29 +117,29 @@
     gamma = 0.5
     execute_on = timestep_end
   []
-  [I_r]
-    type = AcousticIntensity
-    variable = I_r
-    pressure = p
-    velocity = vel_r
-    execute_on = timestep_end
-  []
-  [I_z]
-    type = AcousticIntensity
-    variable = I_z
-    pressure = p
-    velocity = vel_z
-    execute_on = timestep_end
-  []
-  [e]
-    type = AcousticEnergy
-    variable = acoustic_energy
-    pressure = p
-    vel_x = vel_r
-    vel_y = vel_z
-    density = Diff
-    wavespeed = water_wavespeed
-  []
+  # [I_r]
+  #   type = AcousticIntensity
+  #   variable = I_r
+  #   pressure = p
+  #   velocity = vel_r
+  #   execute_on = timestep_end
+  # []
+  # [I_z]
+  #   type = AcousticIntensity
+  #   variable = I_z
+  #   pressure = p
+  #   velocity = vel_z
+  #   execute_on = timestep_end
+  # []
+  # [e]
+  #   type = AcousticEnergy
+  #   variable = acoustic_energy
+  #   pressure = p
+  #   vel_x = vel_r
+  #   vel_y = vel_z
+  #   density = Diff
+  #   wavespeed = water_wavespeed
+  # []
 []
 
 [BCs]
@@ -181,12 +176,12 @@
 [Functions]
   [s_func]
     type = ParsedFunction
-    value = 'r:=sqrt(x^2+(y-1-SD)^2);
+    expression = 'r:=sqrt(x^2+(y-1-SD)^2);
             h:=(1 + tanh((t-t1)/tRT))*exp(-(t-t1)/tL)*cos(2*pi*fL*(t-t1) + pi/3);
             a0:=1 / tP * 4*pi / rho*c1/c2*p0*d1*max(h, 0.0)*1000*p_max;
             if(r<0.1, a0, 0)'
-    vars = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho  p_max SD'
-    vals = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3 ${p_max} ${SD}'
+    symbol_names = 'fL      t1   tRT  tL  tP  p0     d1 c1      c2     rho  p_max SD'
+    symbol_values = '8.33e-2 0.07 0.01 0.8 1.0 2.1e-8 9  12.2189 0.9404 1e-3 ${p_max} ${SD}'
   []
 []
 
@@ -218,25 +213,25 @@
   []
 []
 
-[Postprocessors]
-  [total_acoustic_energy]
-    # type = ElementIntegralVariablePostprocessor
-    type = NodalSum
-    variable = acoustic_energy
-  []
-  [acoustic_energy_on_interface]
-    type = NodalSum
-    # type = SideIntegralVariablePostprocessor
-    variable = acoustic_energy
-    boundary = inner_BC
-  []
-  [acoustic_energy_on_top]
-    type = NodalSum
-    # type = SideIntegralVariablePostprocessor
-    variable = acoustic_energy
-    boundary = top
-  []
-[]
+# [Postprocessors]
+#   [total_acoustic_energy]
+#     # type = ElementIntegralVariablePostprocessor
+#     type = NodalSum
+#     variable = acoustic_energy
+#   []
+#   [acoustic_energy_on_interface]
+#     type = NodalSum
+#     # type = SideIntegralVariablePostprocessor
+#     variable = acoustic_energy
+#     boundary = inner_BC
+#   []
+#   [acoustic_energy_on_top]
+#     type = NodalSum
+#     # type = SideIntegralVariablePostprocessor
+#     variable = acoustic_energy
+#     boundary = top
+#   []
+# []
 
 [Executioner]
   type = Transient
@@ -256,14 +251,16 @@
 []
 
 [Outputs]
-  [./csv]
+  [csv]
     type = CSV
     delimiter = ','
     file_base = 'acoustic_energy'
-  [../]
-  [./exodus]
+    enable = false
+  []
+  [exodus]
     type = Exodus
-    interval = 100
-    file_base = fluid
-  [../]
+    time_step_interval = 100
+    file_base = './out/sd${SD}/fluid'
+    # enable = false
+  []
 []

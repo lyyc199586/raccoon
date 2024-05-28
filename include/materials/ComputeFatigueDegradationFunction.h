@@ -51,10 +51,7 @@ protected:
   /// initial fatigue history variable (alpha_bar)
   const VariableValue * _alpha_bar_init;
 
-  /// degradation function and its old value
-  // const ADMaterialProperty<Real> & _g;
-  // const MaterialProperty<Real> & _g_old;
-
+  /// nucleation energy
   const ADMaterialProperty<Real> & _psic;
 
   /// Fatigue flag to check if fatigue has occured

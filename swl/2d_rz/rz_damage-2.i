@@ -1,15 +1,18 @@
 # Begostone
-# E = 0.02735
-# nu = 0.2
-# Gc_base = 21.88e-9
-# gc_ratio = 1
-# l = 0.1
-# psic = 7.0e-9
+E = 0.02735
+nu = 0.2
+Gc_base = 21.88e-9
+gc_ratio = 1
+l = 0.1 # h = 0.02
+psic0 = 7.0e-9
 # k = 1e-09
-# # alphaT = 8.0e-9
-# SD = 0.75
-# p_max = 3
-# alphaT = 1
+alphaT = 0.02
+SD = 0.75
+p_max = 1
+# alphaT = 1.0
+rho_s = 1.995e-3
+p_f = 1 # paramter in fatigue degradation
+np = 2
 
 # Glass
 # E = 0.0625
@@ -29,32 +32,26 @@ G = '${fparse E/2/(1+nu)}'
 Gc = '${fparse Gc_base*gc_ratio}'
 ###############################################################################
 
-[Problem]
-  coord_type = RZ
-[]
-
 [MultiApps]
   [elastodynamic]
     type = TransientMultiApp
     input_files = 'rz_elastic.i'
     app_type = raccoonApp
     execute_on = 'TIMESTEP_BEGIN'
-    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic=${psic};SD=${SD};p_max=${p_max};gc_ratio=${gc_ratio}'
+    cli_args = 'G=${G};K=${K};Gc=${Gc};l=${l};psic0=${psic0};rho_s=${rho_s};SD=${SD};p_max=${p_max};p_f=${p_f};alphaT=${alphaT}'
   []
 []
 
 [Transfers]
   [to_d]
     type = MultiAppCopyTransfer
-    multi_app = 'elastodynamic'
-    direction = to_multiapp
+    to_multi_app = 'elastodynamic'
     source_variable = 'd'
     variable = 'd'
   []
   [from_psie_active]
     type = MultiAppCopyTransfer
-    multi_app = 'elastodynamic'
-    direction = from_multiapp
+    from_multi_app = 'elastodynamic'
     source_variable = 'psie_active'
     variable = 'psie_active'
   []
@@ -65,8 +62,10 @@ Gc = '${fparse Gc_base*gc_ratio}'
     type = FileMeshGenerator
     #  file = '../mesh/2d/inner.msh'
     use_for_exodus_restart = true
-    file = './damage-19.e'
+    # file = './damage-19.e'
+    file = './out/sd${SD}_p${p_f}_k0.02/damage_${fparse np - 1}.e'
   []
+  coord_type = RZ
 []
 
 [Variables]
@@ -97,13 +96,13 @@ Gc = '${fparse Gc_base*gc_ratio}'
 
 [Bounds]
   [irreversibility]
-    type = VariableOldValueBoundsAux
+    type = VariableOldValueBounds
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     bound_type = lower
   []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = 'bounds_dummy'
     bounded_variable = 'd'
     bound_type = upper
@@ -144,49 +143,64 @@ Gc = '${fparse Gc_base*gc_ratio}'
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'Gc l psic'
-    prop_values = '${Gc} ${l} ${psic}'
+    prop_names = 'Gc l psic0'
+    prop_values = '${Gc} ${l} ${psic0}'
   []
   [degradation]
     type = RationalDegradationFunction
-    f_name = g
+    property_name = g
     phase_field = d
-    material_property_names = 'Gc psic_deg xi c0 l'
+    material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
     parameter_values = '2 1.0 0.0 1e-3'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'alpha*Gc_deg/c0/l+g*psie_active'
-    args = 'd psie_active'
+    property_name = psi
+    expression = 'alpha*Gc_deg/c0/l+g*psie_active'
+    coupled_variables = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc_deg c0 l'
     derivative_order = 1
   []
   [Gc_deg]
     type = ADParsedMaterial
-    f_name = Gc_deg
-    function = 'f_alpha*Gc'
+    property_name = Gc_deg
+    expression = 'f_alpha*Gc'
     material_property_names = 'f_alpha Gc'
   []
   [psic_deg]
     type = ADParsedMaterial
-    f_name = psic_deg
-    function = 'f_alpha*psic'
-    material_property_names = 'f_alpha psic'
+    property_name = psic
+    expression = 'f_alpha*psic0'
+    material_property_names = 'f_alpha psic0'
   []
   [fatigue_mobility]
     type = ComputeFatigueDegradationFunction
     elastic_energy_var = psie_active
+    energy_threshold = psic0
     f_alpha_type = 'asymptotic'
     alpha_T = ${alphaT}
     initial_alpha_bar = "alpha_bar" # for restart
+    p = ${p_f}
+    k = 0.02
+  []
+[]
+
+[VectorPostprocessors]
+  [line]
+    type = LineValueSampler
+    variable = 'd psie_active alpha_bar f_alpha'
+    start_point = '0 1 0'
+    end_point = '3.25 1 0'
+    num_points = 200
+    sort_by = x
+    outputs = csv
   []
 []
 
@@ -204,7 +218,15 @@ Gc = '${fparse Gc_base*gc_ratio}'
 
 [Outputs]
   exodus = true
-  interval = 100
-  file_base = 'damage-20'
+  time_step_interval = 100
+  # sync_times = 2.4
+  file_base = './out/sd${SD}_p${p_f}_k0.02/damage_${np}'
+  [csv]
+    type = CSV
+    # sync_only = true
+    time_step_interval = 100
+    # sync_times = 2.1
+    file_base = './gold/sd${SD}_p${p_f}_k0.02/np_${np}'
+  []
 []
 

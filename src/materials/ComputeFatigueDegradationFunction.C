@@ -65,8 +65,6 @@ ComputeFatigueDegradationFunction::ComputeFatigueDegradationFunction(
     _alpha_T(getParam<Real>("alpha_T")),
     _alpha_bar_init(isParamValid("initial_alpha_bar") ? &coupledValue("initial_alpha_bar")
                                                       : nullptr),
-    // _g(getADMaterialProperty<Real>("degradation_mat")),
-    // _g_old(getMaterialPropertyOld<Real>("degradation_mat")),
     _psic(getADMaterialProperty<Real>("energy_threshold")),
     _fatigue_flag(declareProperty<bool>("fatigue_flag"))
 {
@@ -87,15 +85,15 @@ ComputeFatigueDegradationFunction::computeQpProperties()
       _E_el_active_old ? (*_E_el_active_old)[_qp] : (*_E_el_active_var_old)[_qp];
 
   // calculate degraded active elastic energy
-  ADReal alpha = (E_el_active - _psic[_qp] > 0) ? ((E_el_active - _psic[_qp]) / _psic[_qp]) : 0;
+  ADReal alpha = ((E_el_active - _psic[_qp]) > 0) ? ((E_el_active - _psic[_qp]) / _psic[_qp]) : 0;
   ADReal alpha_old =
-      (E_el_active_old - _psic[_qp] > 0) ? ((E_el_active_old - _psic[_qp]) / _psic[_qp]) : 0;
+      ((E_el_active_old - _psic[_qp]) > 0) ? ((E_el_active_old - _psic[_qp]) / _psic[_qp]) : 0;
 
   // update alpha_bar
   if (alpha > alpha_old)
     _alpha_bar[_qp] = _alpha_bar_old[_qp] + alpha * _dt;
-  ;
-  else _alpha_bar[_qp] = _alpha_bar_old[_qp];
+  else
+    _alpha_bar[_qp] = _alpha_bar_old[_qp];
 
   if (_alpha_bar[_qp] > _alpha_T)
     _fatigue_flag[_qp] = true;
