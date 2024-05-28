@@ -21,7 +21,7 @@ $K_I^0(t, l(t), 0)$: the static stress intensity factor
 
 It has the form:
 
-See P45, and (5.3.10) in L.B. Freund (only consider mode I)
+See P45, and (5.3.10) in L.B. Freund (only consider mode I), dynamic G and K
 $$
 G = \frac{1-\nu^2}{E} A_I(V)K_I^2,
 $$
@@ -77,7 +77,7 @@ $$
 \frac{V^2 \alpha_d}{C_s^2R(V)} \frac{k^2(V)}{1-\nu} G_0 = G
 $$ -->
 
-Recall (see Freund (7.4.2))
+Recall (see Freund (5.3.10) and (7.4.2))
 $$
 G = \frac{1-\nu^2}{E} A_I(V)K_I^2,
 $$
@@ -105,7 +105,11 @@ $$
 > In Freund (7.4.5), it is represented for nonuniform speed
 > 
 > $$
-> f(\dot{l}) = A_I(\dot{l})k(\dot{l})^2\approx 1 - \dot{l}/C_R
+> g(\dot{l}) = A_I(\dot{l})k(\dot{l})^2\approx 1 - \dot{l}/C_R
+> $$
+> Energy balance crack growth criterion under isothermal conditions, ($\Gamma$ is actually dynamic $G_c$)
+> $$
+> G(l, \dot{l}, t, \text{loading}, \text{geo}, \text{material}, ...) = \Gamma,
 > $$
 
 ![factor](../post/factor.png)
@@ -120,8 +124,9 @@ $$
 f(V)G_0 - G = 0
 $$
 
+Test velocity calculation in a dynamic tension
 
-
+Lets say $V=0.25$, we should have $f(V)\approx 1-V/C_R = 1 - 0.25/2.12=0.88$
 
 
 
