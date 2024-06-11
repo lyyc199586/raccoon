@@ -42,18 +42,18 @@
 # delta = 2
 
 # dynamic branching
-
-# E = 32e3 # 32 GPa
-# nu = 0.2
-# # rho = 2.54e-9 # Mg/mm^3
-# Gc = 0.003
-# sigma_ts = 3.08 # MPa
-# sigma_cs = 9.24
-# # psic = '${fparse sigma_ts^2/2/E}'
-# # l = 1.5 # L = 1.25mm, l_ch = 11 mm
-# # delta = 5
-# l = 2
-# delta = 0
+material = pmma
+E = 32e3 # 32 GPa
+nu = 0.2
+# rho = 2.54e-9 # Mg/mm^3
+Gc = 0.003
+sigma_ts = 3.08 # MPa
+sigma_cs = 9.24
+# psic = '${fparse sigma_ts^2/2/E}'
+# l = 1.5 # L = 1.25mm, l_ch = 11 mm
+# delta = 5
+l = 2
+delta = 0
 
 # quasi-static branching
 # E = 20e3
@@ -88,15 +88,15 @@
 # delta = 0
 
 # basalt
-material = basalt
-E = 20.11e3
-nu = 0.24
-Gc = 0.1
-sigma_ts = 11.31
-# sigma_cs = 159.08
-sigma_cs = ${fparse sigma_ts*30}
-l = 2
-delta = 10
+# material = basalt
+# E = 20.11e3
+# nu = 0.24
+# Gc = 0.1
+# sigma_ts = 11.31
+# # sigma_cs = 159.08
+# sigma_cs = ${fparse sigma_ts*30}
+# l = 2
+# delta = 10
 
 # nucleation model
 # l = 2.5
@@ -286,8 +286,8 @@ refine = 3 # fine mesh size: 0.015625
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 0'
@@ -313,7 +313,7 @@ refine = 3 # fine mesh size: 0.015625
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    # outputs = exodus
+    outputs = exodus
   []
 []
 
@@ -327,7 +327,7 @@ refine = 3 # fine mesh size: 0.015625
   []
   [Jint_over_Gc]
     type = ParsedPostprocessor
-    function = 'Jint/${Gc}'
+    expression = 'Jint/${Gc}'
     pp_names = 'Jint'
     use_t = false
   []
@@ -376,7 +376,7 @@ refine = 3 # fine mesh size: 0.015625
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 10
+    time_step_interval = 10
   []
   file_base = './out/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}/${material}_surf'
   print_linear_residuals = false

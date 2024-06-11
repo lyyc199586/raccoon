@@ -102,10 +102,24 @@ gamma = '${fparse 1/2-hht_alpha}'
     combinatorial_geometry = 'abs(x) < 0.05 & y < 25'
     new_sideset_name = load
   []
+  [initial_box]
+    input = load
+    type = SubdomainBoundingBoxGenerator
+    bottom_left = '44 19 0'
+    top_right = '56 31 0'
+    block_id = 3
+  []
+  [intial_refine]
+    input = initial_box
+    type = RefineBlockGenerator
+    block = 3
+    refinement = ${refine}
+  []
+  allow_renumbering = false
 []
 
 [Adaptivity]
-  # initial_marker = initial_marker
+  # initial_marker = initial_box
   # initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
@@ -334,13 +348,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [degradation]
     type = RationalDegradationFunction
-    f_name = g
+    property_name = g
     phase_field = d
     material_property_names = 'Gc psic xi c0 l'
     parameter_names = 'p a2 a3 eta'
@@ -348,8 +362,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   # [degradation]
   #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
+  #   property_name = g
+  #   expression = (1-d)^p*(1-eta)+eta
   #   phase_field = d
   #   parameter_names = 'p eta '
   #   parameter_values = '2 1e-5'
@@ -422,6 +436,66 @@ gamma = '${fparse 1/2-hht_alpha}'
     forces = 'fx fy'
     outputs = "csv"
   []
+  [s1_ul] # upper left
+    type = PointValue
+    elementid = 597
+    variable = s1
+  []
+  [s1_ur] # upper right
+    type = PointValue
+    elementid = 1761
+    variable = s1
+  []
+  [s1_ll] # lower left
+    type = PointValue
+    elementid = 1248
+    variable = s1
+  []
+  [s1_lr] # upper left
+    type = PointValue
+    elementid = 1419
+    variable = s1
+  []
+  [s2_ul] # upper left
+    type = PointValue
+    elementid = 597
+    variable = s2
+  []
+  [s2_ur] # upper right
+    type = PointValue
+    elementid = 1761
+    variable = s2
+  []
+  [s2_ll] # lower left
+    type = PointValue
+    elementid = 1248
+    variable = s2
+  []
+  [s2_lr] # upper left
+    type = PointValue
+    elementid = 1419
+    variable = s2
+  []
+  [s3_ul] # upper left
+    type = PointValue
+    elementid = 597
+    variable = s3
+  []
+  [s3_ur] # upper right
+    type = PointValue
+    elementid = 1761
+    variable = s3
+  []
+  [s3_ll] # lower left
+    type = PointValue
+    elementid = 1248
+    variable = s3
+  []
+  [s3_lr] # upper left
+    type = PointValue
+    elementid = 1419
+    variable = s3
+  []
 []
 
 [Executioner]
@@ -472,11 +546,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     interval = 1
-    minimum_time_interval = 5e-7
+    min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
   file_base = './out/kal_coh_vd_ts${sigma_ts}_l${l}/kal_coh_ts${sigma_ts}_l${l}'
-  interval = 1
+  time_step_interval = 1
   checkpoint = true
   [csv]
     file_base = './gold/kal_coh_vd_ts${sigma_ts}_l${l}'

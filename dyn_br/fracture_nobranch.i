@@ -1,87 +1,39 @@
+# sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
+
 [Mesh]
-  # [gen] #h_c = 1, h_r = 0.25
-  #   type = GeneratedMeshGenerator
-  #   dim = 2
-  #   nx = 100
-  #   ny = 40
-  #   xmin = 0
-  #   xmax = 100
-  #   ymin = -20
-  #   ymax = 20
-  # []
-  # [sub_upper]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = gen
-  #   combinatorial_geometry = 'x < 50 & y > 0'
-  #   block_id = 1
-  # []
-  # [sub_lower]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = sub_upper
-  #   combinatorial_geometry = 'x < 50 & y < 0'
-  #   block_id = 2
-  # []
-  # [split]
-  #   input = sub_lower
-  #   type = BreakMeshByBlockGenerator
-  #   block_pairs = '1 2'
-  #   split_interface = true
-  # []
-  # second_order = true
 []
 
 # [Adaptivity]
-#   initial_marker = initial
-#   initial_steps = ${refine}
+#   marker = combo_marker
+#   max_h_level = ${refine}
+#   cycles_per_step = ${refine}
 #   [Markers]
-#     [initial]
-#       type = BoxMarker
-#       bottom_left = '50 -20 0'
-#       top_right = '100 20 0'
-#       inside = REFINE
-#       outside = DO_NOTHING
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.0001
+#       upper_bound = 1
+#     []
+#     # [strength_marker]
+#     #   type = ValueRangeMarker
+#     #   variable = f_nu_var
+#     #   lower_bound = -1e-4
+#     #   upper_bound = 1e-4
+#     # []
+#     [combo_marker]
+#       type = ComboMarker
+#       # markers = 'damage_marker strength_marker'
+#       markers = 'damage_marker'
 #     []
 #   []
 # []
 
-[Adaptivity]
-  marker = combo_marker
-  max_h_level = ${refine}
-  initial_marker = initial
-  initial_steps = ${refine}
-  cycles_per_step = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueRangeMarker
-      variable = d
-      lower_bound = 0.0001
-      upper_bound = 1
-    []
-    [psic_marker]
-      type = ValueThresholdMarker
-      variable = psie_active
-      refine = 0.00075
-    []
-    [initial]
-      type = BoxMarker
-      bottom_left = '47.9 -2.1 0'
-      top_right = '52.1 2.1 0'
-      inside = REFINE
-      outside = DONT_MARK
-    []
-    [combo_marker]
-      type = ComboMarker
-      markers = 'damage_marker initial'
-    []
-  []
-[]
-
 [Variables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=0&x<=50,1,0)'
+    # []
   []
 []
 
@@ -93,17 +45,23 @@
   [disp_x]
     # initial_from_file_var = 'disp_x' 
     # initial_from_file_timestep = LATEST
-    # order = SECOND
   []
   [disp_y]
     # initial_from_file_var = 'disp_y' 
     # initial_from_file_timestep = LATEST
-    # order = SECOND
   []
-  [strain_zz]
-    #   initial_from_file_var = 'strain_zz' 
-    #   initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   #   initial_from_file_var = 'strain_zz' 
+  #   #   initial_from_file_timestep = LATEST
+  # []
+  # [ce_var]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [delta_var]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
     # initial_from_file_timestep = LATEST
@@ -114,10 +72,6 @@
   #   order = CONSTANT
   #   family = MONOMIAL
   # []
-  [psi_f_var]
-    order = CONSTANT
-    family = MONOMIAL
-  []
 []
 
 [Bounds]
@@ -126,6 +80,7 @@
     variable = bounds_dummy
     bounded_variable = d
     bound_type = lower
+    # block = '3'
   []
   # [conditional]
   #   type = ConditionalBoundsAux
@@ -140,6 +95,30 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = '3'
+  []
+  [upper_fixed]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 0.0001
+    block = '0 1 2'
+  []
+[]
+
+[BCs]
+  [out_flux]
+    type = ADNeumannBC
+    boundary = damage_bnd
+    value = 0
+    variable = d
+  []
+  [out_d]
+    type = ADDirichletBC
+    boundary = damage_bnd
+    value = 0
+    variable = d
   []
 []
 
@@ -160,27 +139,41 @@
   #   type = ADCoefMatSource
   #   variable = d
   #   prop_names = 'ce'
+  #   coefficient = 1
   # []
 []
 
 # [AuxKernels]
-#   # [get_f_nu]
-#   #   type = ADMaterialRealAux
-#   #   property = f_nu
-#   #   variable = f_nu_var
-#   # [
-#   # [get_psi_f_var]
-#   #   type = ADMaterialRealAux
-#   #   property = psi_f
-#   #   variable = psi_f_var
-#   # []
+#   [get_f_nu]
+#     type = ADMaterialRealAux
+#     property = f_nu
+#     variable = f_nu_var
+#   []
+#   [get_ce]
+#     type = ADMaterialRealAux
+#     property = ce
+#     variable = ce_var
+#   []
+#   [get_delta]
+#     type = ADMaterialRealAux
+#     property = delta
+#     variable = delta_var
+#   []
 # []
 
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
+    # prop_names = 'E K G lambda Gc l sigma_ts sigma_hs'
+    # prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${sigma_ts} ${sigma_hs}'
     prop_names = 'E K G lambda Gc l psic'
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${psic}'
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    property_name = alpha
+    expression = 'd'
+    phase_field = d
   []
   [degradation]
     type = RationalDegradationFunction
@@ -190,19 +183,21 @@
     parameter_names = 'p a2 a3 eta'
     parameter_values = '2 1 0.0 1e-6'
   []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    property_name = alpha
-    expression = 'd'
-    phase_field = d
-  []
   # [degradation]
   #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
+  #   property_name = g
+  #   expression = (1-d)^p*(1-eta)+eta
   #   phase_field = d
   #   parameter_names = 'p eta '
   #   parameter_values = '2 1e-5'
+  # []
+  # [psi]
+  #   type = ADDerivativeParsedMaterial
+  #   property_name = psi
+  #   expression = 'g*psie_active+(Gc*delta/c0/l)*alpha'
+  #   coupled_variables = 'd psie_active'
+  #   material_property_names = 'delta alpha(d) g(d) Gc c0 l'
+  #   derivative_order = 1
   # []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -215,48 +210,49 @@
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    expression = 'Gc*gamma'
     coupled_variables = 'd'
+    # expression = 'delta*Gc*gamma'
+    # material_property_names = 'delta gamma(d) Gc'
+    expression = 'Gc*gamma'
     material_property_names = 'gamma(d) Gc'
   []
   [crack_surface_density]
     type = CrackSurfaceDensity
     phase_field = d
   []
-  # [kumar_material] #2020
-  #   type = KLBFNucleationMicroForce
-  #   # phase_field = d
-  #   stress_name = stress
-  #   normalization_constant = c0
-  #   tensile_strength = sigma_ts
-  #   compressive_strength = sigma_cs
-  #   delta = delta
-  #   external_driving_force_name = ce
-  #   stress_balance_name = f_nu
+  # [ce_integral]
+  #   type = ADParsedMaterial
+  #   property_name = ce_int
+  #   expression = 'ce'
+  #   coupled_variables = 'd'
+  #   material_property_names = 'ce'
   # []
-  # [kumar_material] #2022
-  #   type = KLRNucleationMicroForce
+  # [psi_nuc]
+  #   type = ADParsedMaterial
+  #   property_name = psi_nuc
+  #   expression = '-1/3*(1-d)*ce'
+  #   coupled_variables = 'd'
+  #   material_property_names = 'ce'
+  # []
+  # [nucforce]
+  #   type = LDLNucleationMicroForce
   #   phase_field = d
-  #   stress_name = stress
+  #   degradation_function = g
+  #   regularization_length = l
   #   normalization_constant = c0
   #   tensile_strength = sigma_ts
-  #   compressive_strength = sigma_cs
+  #   hydrostatic_strength = sigma_hs
+  #   fracture_toughness = Gc
   #   delta = delta
   #   external_driving_force_name = ce
   #   stress_balance_name = f_nu
-  # []
-  # [strain]
-  #   type = ADComputePlaneSmallStrain
-  #   # out_of_plane_strain = 'strain_zz'
-  #   displacements = 'disp_x disp_y'
+  #   h_correction = true
   # []
   [strain]
-    # type = ADComputeSmallStrain
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    # type = ADComputePlaneSmallStrain
+    type = ADComputeSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    # output_properties = 'total_strain'
-    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -264,12 +260,13 @@
     shear_modulus = G
     phase_field = d
     degradation_function = g
+    # decomposition = NONE
     decomposition = SPECTRAL
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
-    output_properties = 'stress'
+    # output_properties = 'stress'
   []
 []
 
@@ -277,24 +274,34 @@
   [Psi_f]
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
-    execute_on = 'initial timestep_end'
   []
+  # [ce_int]
+  #   type = ADElementIntegralMaterialProperty
+  #   mat_prop = ce_int
+  # []
+  # [Psi_nuc]
+  #   type = ADElementIntegralMaterialProperty
+  #   mat_prop = psi_nuc
+  # []
 []
 
 [Executioner]
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
+  # nl_max_its = 500
 
   # restart
   # start_time = 80e-6
