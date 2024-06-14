@@ -48,12 +48,12 @@ nu = 0.2
 # rho = 2.54e-9 # Mg/mm^3
 Gc = 0.003
 sigma_ts = 3.08 # MPa
-sigma_cs = 9.24
-# psic = '${fparse sigma_ts^2/2/E}'
+# sigma_cs = 9.24
+psic = '${fparse sigma_ts^2/2/E}'
 # l = 1.5 # L = 1.25mm, l_ch = 11 mm
 # delta = 5
-l = 2
-delta = 0
+l = 0.75
+# delta = 0
 
 # quasi-static branching
 # E = 20e3
@@ -120,6 +120,11 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
+# surfing 
+V = 1
+t_lag = 20
+tf = 50
+
 # shape and scale
 a = 10 # crack length
 # a = 5
@@ -136,9 +141,9 @@ refine = 3 # fine mesh size: 0.015625
 [Functions]
   [bc_func]
     type = ParsedFunction
-    expression = c1*((x-20*t)^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-20*t))))*sin(0.5*atan2(y,(x-20*t)))
-    symbol_names = 'c1 c2'
-    symbol_values = '${c1} ${c2}'
+    expression = -1*c1*((x-V*(t-t_lag))^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-V*(t-t_lag)))))*sin(0.5*atan2(y,(x-V*(t-t_lag))))
+    symbol_names = 'c1 c2 V t_lag'
+    symbol_values = '${c1} ${c2} ${V} ${t_lag}'
   []
 []
 
@@ -146,25 +151,34 @@ refine = 3 # fine mesh size: 0.015625
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};nx=${nx};ny=${ny};refine=${refine};length=${length};a=${a}'
+    # cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};delta=${delta};a=${a}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};a=${a}'
     execute_on = 'TIMESTEP_END'
+    clone_parent_mesh = true
   []
 []
 
 [Transfers]
   [from_d]
-    # type = MultiAppCopyTransfer
-    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
-    variable = 'd f_nu_var'
-    source_variable = 'd f_nu_var'
+    variable = 'd'
+    source_variable = 'd'
   []
   [to_psie_active]
-    # type = MultiAppCopyTransfer
-    type = MultiAppGeneralFieldShapeEvaluationTransfer
+    type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     variable = 'disp_x disp_y strain_zz psie_active'
     source_variable = 'disp_x disp_y strain_zz psie_active'
+  []
+  [pp_transfer]
+    type = MultiAppPostprocessorTransfer
+    from_multi_app = fracture
+    from_postprocessor = Psi_f
+    to_postprocessor = fracture_energy
+    reduction_type = average
   []
 []
 
@@ -182,34 +196,53 @@ refine = 3 # fine mesh size: 0.015625
     ymin = '${fparse -1*a}'
     ymax = ${a}
   []
-  [gen2]
-    type = ExtraNodesetGenerator
+  # [gen2]
+  #   type = ExtraNodesetGenerator
+  #   input = gen
+  #   new_boundary = fix_point
+  #   coord = '0 ${fparse -1*a}' # fix left bottom point
+  # []
+  [small]
     input = gen
-    new_boundary = fix_point
-    coord = '0 ${fparse -1*a}' # fix left bottom point
+    type = ParsedSubdomainMeshGenerator
+    block_id = 1
+    combinatorial_geometry = 'abs(y)<2'
+    block_name = small
+  []
+  [box_bnd]
+    input = small 
+    type = SideSetsAroundSubdomainGenerator
+    block = '1'
+    new_boundary = 'box'
+  []
+  [refine]
+    input = box_bnd
+    type = RefineBlockGenerator
+    block = 1
+    refinement = ${refine}
   []
 []
 
-[Adaptivity]
-  initial_marker = initial_tip
-  initial_steps = ${refine}
-  marker = damage_marker
-  max_h_level = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueThresholdMarker
-      variable = d
-      refine = 0.0001
-    []
-    [initial_tip]
-      type = BoxMarker
-      bottom_left = '0 -${fparse 2*l} 0'
-      top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
+# [Adaptivity]
+#   initial_marker = initial_tip
+#   initial_steps = ${refine}
+#   marker = damage_marker
+#   max_h_level = ${refine}
+#   [Markers]
+#     [damage_marker]
+#       type = ValueThresholdMarker
+#       variable = d
+#       refine = 0.0001
+#     []
+#     [initial_tip]
+#       type = BoxMarker
+#       bottom_left = '0 -${fparse 2*l} 0'
+#       top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
+#       outside = DO_NOTHING
+#       inside = REFINE
+#     []
+#   []
+# []
 
 [Variables]
   [disp_x]
@@ -231,10 +264,10 @@ refine = 3 # fine mesh size: 0.015625
   []
   [f_y]
   []
-  [f_nu_var]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [f_nu_var]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
 []
 
 [Kernels]
@@ -258,10 +291,16 @@ refine = 3 # fine mesh size: 0.015625
 []
 
 [BCs]
-  [fix_x]
-    type = DirichletBC
+  [bottom_x]
+    type = ADDirichletBC
     variable = disp_x
-    boundary = fix_point
+    boundary = bottom
+    value = 0
+  []
+  [top_x]
+    type = ADDirichletBC
+    variable = disp_x
+    boundary = top
     value = 0
   []
   [bottom_y]
@@ -281,17 +320,31 @@ refine = 3 # fine mesh size: 0.015625
 [Materials]
   [bulk]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    prop_names = 'E K G lambda Gc l psic'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${psic}'
+  []
+  [crack_geometric]
+    type = CrackGeometricFunction
+    property_name = alpha
+    expression = 'd'
+    phase_field = d
   []
   [degradation]
-    type = PowerDegradationFunction
+    type = RationalDegradationFunction
     property_name = g
-    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 0'
+    material_property_names = 'Gc psic xi c0 l'
+    parameter_names = 'p a2 a3 eta'
+    parameter_values = '2 1 0.0 1e-6'
   []
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   property_name = g
+  #   expression = (1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 0'
+  # []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -305,7 +358,8 @@ refine = 3 # fine mesh size: 0.015625
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = NONE
+    # decomposition = NONE
+    decomposition = SPECTRAL
     output_properties = 'psie psie_active'
     outputs = exodus
   []
@@ -331,6 +385,19 @@ refine = 3 # fine mesh size: 0.015625
     pp_names = 'Jint'
     use_t = false
   []
+  [Jint_box]
+    type = PhaseFieldJIntegral
+    J_direction = '1 0 0'
+    strain_energy_density = psie
+    displacements = 'disp_x disp_y'
+    boundary = 'box'
+  []
+  [Jint_box_over_Gc]
+    type = ParsedPostprocessor
+    expression = 'Jint_box/${Gc}'
+    pp_names = 'Jint_box'
+    use_t = false
+  []
   [bot_react]
     type = NodalSum
     variable = f_y
@@ -340,6 +407,21 @@ refine = 3 # fine mesh size: 0.015625
     type = NodalSum
     variable = f_y
     boundary = top
+  []
+  [fracture_energy]
+    type = Receiver
+    execute_on = 'timestep_end'
+  []
+  [strain_energy]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie
+    execute_on = 'timestep_end'
+  []
+  [external_work]
+    type = ExternalWork
+    boundary = 'top bottom'
+    forces = 'f_x f_y'
+    execute_on = 'timestep_end'
   []
 []
 
@@ -356,8 +438,10 @@ refine = 3 # fine mesh size: 0.015625
   start_time = 0
   # end_time = 5e-1 # for a = 5
   # dt = 1e-3
-  end_time = 1 # for a = 10
-  dt = 1e-3
+  # end_time = 1 # for a = 10
+  end_time = ${tf}
+  # dt = 1e-3
+  dt = 0.5
 
   # fast
   # fixed_point_max_its = 20
@@ -376,12 +460,14 @@ refine = 3 # fine mesh size: 0.015625
 [Outputs]
   [exodus]
     type = Exodus
-    time_step_interval = 10
+    # time_step_interval = 10
   []
-  file_base = './out/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}/${material}_surf'
+  # file_base = './out/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}/${material}_surf'
+  file_base = './out/${material}_coh_cmp/${material}_surf'
   print_linear_residuals = false
   [csv]
     type = CSV
-    file_base = './gold/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}'
+    # file_base = './gold/${material}_nuc22_ts${fparse floor(sigma_ts)}_cs${fparse floor(sigma_cs)}_l${l}_delta${delta}_h${h}_ref${refine}'
+    file_base = './gold/${material}_coh_cmp'
   []
 []

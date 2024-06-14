@@ -78,10 +78,10 @@
 
 [Variables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
+    # []
   []
 []
 
@@ -100,10 +100,10 @@
     # initial_from_file_timestep = LATEST
     # order = SECOND
   []
-  [strain_zz]
-    #   initial_from_file_var = 'strain_zz' 
-    #   initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   #   initial_from_file_var = 'strain_zz' 
+  #   #   initial_from_file_timestep = LATEST
+  # []
   [psie_active]
     # initial_from_file_var = 'psie_active' 
     # initial_from_file_timestep = LATEST
@@ -251,9 +251,9 @@
   #   displacements = 'disp_x disp_y'
   # []
   [strain]
-    # type = ADComputeSmallStrain
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    type = ADComputeSmallStrain
+    # type = ADComputePlaneSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     # output_properties = 'total_strain'
     # outputs = exodus

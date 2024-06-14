@@ -1,35 +1,35 @@
 [Mesh]
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = ${nx}
-    ny = ${ny}
-    xmax = ${length}
-    ymin = ${fparse -1*a}
-    ymax = ${a}
-  []
+  # [gen]
+  #   type = GeneratedMeshGenerator
+  #   dim = 2
+  #   nx = ${nx}
+  #   ny = ${ny}
+  #   xmax = ${length}
+  #   ymin = ${fparse -1*a}
+  #   ymax = ${a}
+  # []
 []
 
-[Adaptivity]
-  initial_marker = initial_tip
-  initial_steps = ${refine}
-  marker = damage_marker
-  max_h_level = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueThresholdMarker
-      variable = d
-      refine = 0.0001
-    []
-    [initial_tip]
-      type = BoxMarker
-      bottom_left = '0 -${fparse 2*l} 0'
-      top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
-      outside = DO_NOTHING
-      inside = REFINE
-    []
-  []
-[]
+# [Adaptivity]
+#   initial_marker = initial_tip
+#   initial_steps = ${refine}
+#   marker = damage_marker
+#   max_h_level = ${refine}
+#   [Markers]
+#     [damage_marker]
+#       type = ValueThresholdMarker
+#       variable = d
+#       refine = 0.0001
+#     []
+#     [initial_tip]
+#       type = BoxMarker
+#       bottom_left = '0 -${fparse 2*l} 0'
+#       top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
+#       outside = DO_NOTHING
+#       inside = REFINE
+#     []
+#   []
+# []
 
 [Variables]
   [d]
@@ -53,26 +53,42 @@
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_nu_var]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [f_nu_var]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
 []
 
 [Bounds]
-  [conditional]
-    type = ConditionalBoundsAux
+  # [conditional]
+  #   type = ConditionalBoundsAux
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   fixed_bound_value = 0
+  #   threshold_value = 0.95
+  # []
+  [irreversibility]
+    type = VariableOldValueBounds
     variable = bounds_dummy
     bounded_variable = d
-    fixed_bound_value = 0
-    threshold_value = 0.95
+    bound_type = lower
+    block = '0 1'
   []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = 1
+  []
+  [fixed]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 0.0001
+    block = '0'
   []
 []
 
@@ -89,39 +105,51 @@
     variable = d
     free_energy = psi
   []
-  [nuc_force]
-    type = ADCoefMatSource
-    variable = d
-    prop_names = 'ce'
-  []
+  # [nuc_force]
+  #   type = ADCoefMatSource
+  #   variable = d
+  #   prop_names = 'ce'
+  # []
 []
 
-[AuxKernels]
-  [get_f_nu]
-    type = ADMaterialRealAux
-    property = f_nu
-    variable = f_nu_var
-  []
-[]
+# [AuxKernels]
+#   [get_f_nu]
+#     type = ADMaterialRealAux
+#     property = f_nu
+#     variable = f_nu_var
+#   []
+# []
 
 [Materials]
   [fracture_properties]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
+    prop_names = 'E K G lambda Gc l psic'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${psic}'
   []
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   property_name = g
+  #   expression = (1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 0'
+  # []
   [degradation]
-    type = PowerDegradationFunction
+    type = RationalDegradationFunction
     property_name = g
-    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 0'
+    material_property_names = 'Gc psic xi c0 l'
+    parameter_names = 'p a2 a3 eta'
+    parameter_values = '2 1 0.0 1e-6'
   []
   [crack_geometric]
     type = CrackGeometricFunction
     property_name = alpha
     expression = 'd'
+    phase_field = d
+  []
+  [crack_surface_density] # calc gamma
+    type = CrackSurfaceDensity
     phase_field = d
   []
   [psi]
@@ -131,6 +159,13 @@
     coupled_variables = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
+  []
+  [psi_f]
+    type = ADParsedMaterial
+    property_name = psi_f
+    expression = 'Gc*gamma'
+    coupled_variables = 'd'
+    material_property_names = 'gamma(d) Gc'
   []
   # [kumar_material]
   #   type = NucleationMicroForce
@@ -142,20 +177,20 @@
   #   output_properties = 'ce'
   #   #outputs = exodus
   # []
-  [kumar_material] 
-    type = KLRNucleationMicroForce
-    # type = KLBFNucleationMicroForce
-    phase_field = d
-    stress_name = stress
-    normalization_constant = c0
-    tensile_strength = '${sigma_ts}'
-    compressive_strength = '${sigma_cs}'
-    delta = '${delta}'
-    external_driving_force_name = ce
-    stress_balance_name = f_nu
-    # output_properties = 'ce f_nu'
-    # outputs = exodus
-  []
+  # [kumar_material] 
+  #   type = KLRNucleationMicroForce
+  #   # type = KLBFNucleationMicroForce
+  #   phase_field = d
+  #   stress_name = stress
+  #   normalization_constant = c0
+  #   tensile_strength = '${sigma_ts}'
+  #   compressive_strength = '${sigma_cs}'
+  #   delta = '${delta}'
+  #   external_driving_force_name = ce
+  #   stress_balance_name = f_nu
+  #   # output_properties = 'ce f_nu'
+  #   # outputs = exodus
+  # []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -167,7 +202,8 @@
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = NONE
+    # decomposition = NONE
+    decomposition = SPECTRAL
     # output_properties = 'psie'
     # outputs = exodus
   []
@@ -176,6 +212,14 @@
     elasticity_model = elasticity
     output_properties = 'stress'
     # outputs = exodus
+  []
+[]
+
+[Postprocessors]
+  [Psi_f]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psi_f
+    execute_on = 'initial timestep_end'
   []
 []
 

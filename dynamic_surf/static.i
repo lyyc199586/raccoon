@@ -1,4 +1,4 @@
-# dynamic branching
+# sharp model, assign V
 
 # PMMA, MPa, N, mm
 material = pmma
@@ -8,10 +8,7 @@ nu = 0.2
 rho = 2.45e3
 # rho = 2.45e2
 Gc = 0.003
-sigma_ts = 3.08 # MPa
-# sigma_cs = 9.24
-psic = '${fparse sigma_ts^2/2/E}'
-l = 0.75
+# sigma_ts = 3.08 # MPa
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -22,13 +19,14 @@ c2 = '${fparse (3-nu)/(1+nu)}'
 # surfing 
 V = 1
 t_lag = 20
+# tc = 36
 tf = 50
 
 # shape and scale
 a = 10 # crack length
 h = 1
 length = '${fparse 6*a}'
-width = '${fparse 2*a}'
+width = '${fparse a}' # half width
 nx = '${fparse length/h}'
 ny = '${fparse width/h}'
 refine = 3 # fine mesh size: 0.125
@@ -41,44 +39,9 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Functions]
   [bc_func]
     type = ParsedFunction
-    expression = -1*c1*((x-V*(t-t_lag))^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-V*(t-t_lag)))))*sin(0.5*atan2(y,(x-V*(t-t_lag))))
+    expression = c1*((x-V*(t-t_lag))^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-V*(t-t_lag)))))*sin(0.5*atan2(y,(x-V*(t-t_lag))))
     symbol_names = 'c1 c2 V t_lag'
     symbol_values = '${c1} ${c2} ${V} ${t_lag}'
-  []
-[]
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    # cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};nx=${nx};ny=${ny};refine=${refine};length=${length};a=${a}'
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};a=${a}'
-    execute_on = 'TIMESTEP_END'
-    clone_parent_mesh = true
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    # type = MultiAppGeneralFieldShapeEvaluationTransfer
-    from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    # type = MultiAppGeneralFieldShapeEvaluationTransfer
-    to_multi_app = fracture
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
-  []
-  [pp_transfer]
-    type = MultiAppPostprocessorTransfer
-    from_multi_app = fracture
-    from_postprocessor = Psi_f
-    to_postprocessor = fracture_energy
-    reduction_type = average
   []
 []
 
@@ -97,15 +60,9 @@ gamma = '${fparse 1/2-hht_alpha}'
     nx = ${nx}
     ny = ${ny}
     xmax = ${length}
-    ymin = '${fparse -1*a}'
+    ymin = 0
     ymax = ${a}
   []
-  # [gen2]
-  #   type = ExtraNodesetGenerator
-  #   input = gen
-  #   new_boundary = fix_point
-  #   coord = '0 ${fparse -1*a}' # fix left bottom point
-  # []
   [small]
     input = gen
     type = ParsedSubdomainMeshGenerator
@@ -125,28 +82,15 @@ gamma = '${fparse 1/2-hht_alpha}'
     block = 1
     refinement = ${refine}
   []
+  [noncrack] # x in (a, 6a), y = 0
+    type = BoundingBoxNodeSetGenerator
+    input = refine 
+    bottom_left = '${fparse a-0.001} -0.001 0'
+    top_right = '${fparse 6*a+0.001} 0.001 0'
+    new_boundary = noncrack
+  []
+  construct_side_list_from_node_list=true
 []
-
-# [Adaptivity]
-#   initial_marker = initial_tip
-#   initial_steps = ${refine}
-#   marker = damage_marker
-#   max_h_level = ${refine}
-#   [Markers]
-#     [damage_marker]
-#       type = ValueThresholdMarker
-#       variable = d
-#       refine = 0.0001
-#     []
-#     [initial_tip]
-#       type = BoxMarker
-#       bottom_left = '0 -${fparse 2*l} 0'
-#       top_right = '${fparse a + 2*l} ${fparse 2*l} 0'
-#       outside = DO_NOTHING
-#       inside = REFINE
-#     []
-#   []
-# []
 
 [Variables]
   [disp_x]
@@ -158,12 +102,6 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [AuxVariables]
-  [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=0&x<=${a},1,0)'
-    []
-  []
   [f_x]
   []
   [f_y]
@@ -175,6 +113,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [vel_x]
   []
   [vel_y]
+  []
+  [d]
   []
 []
 
@@ -213,6 +153,18 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [AuxKernels]
+  # [phi]
+  #   type = FunctionAux
+  #   variable = phi
+  #   function = moving
+  #   execute_on = 'TIMESTEP_BEGIN'
+  # []
+  # [tip_var]
+  #   type = FunctionAux
+  #   variable = tip_var
+  #   function = tip_circ
+  #   execute_on = 'TIMESTEP_BEGIN'
+  # []
   [accel_x]
     type = NewmarkAccelAux
     variable = accel_x
@@ -239,32 +191,27 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
+  # [x_coord]
+  #   type = ParsedAux
+  #   variable = x_coord 
+  #   expression = 'x'
+  #   use_xyzt = true
+  #   boundary = noncrack
+  # []
 []
 
 [BCs]
-  # [fix_x]
-  #   type = DirichletBC
-  #   variable = disp_x
-  #   boundary = fix_point
-  #   value = 0
-  # []
-  [bottom_y]
-    type = FunctionDirichletBC
+  [noncrack]
+    type = ADDirichletBC
     variable = disp_y
-    boundary = bottom
-    function = bc_func
+    boundary = noncrack
+    value = 0
   []
   [top_y]
     type = FunctionDirichletBC
     variable = disp_y
     boundary = top
     function = bc_func
-  []
-  [bottom_x]
-    type = FunctionDirichletBC
-    variable = disp_x
-    boundary = bottom
-    function = 0
   []
   [top_x]
     type = FunctionDirichletBC
@@ -277,8 +224,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Materials]
   [bulk]
     type = ADGenericConstantMaterial
-    prop_names = 'E K G lambda Gc l density psic'
-    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l} ${rho} ${psic}'
+    prop_names = 'E K G lambda Gc density'
+    prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${rho}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -286,22 +233,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = 'd'
     phase_field = d
   []
-  [degradation]
-    type = RationalDegradationFunction
-    property_name = g
+  [nodeg]
+    type = NoDegradation
+    property_name = g 
     phase_field = d
-    material_property_names = 'Gc psic xi c0 l'
-    parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 1 0.0 1e-6'
+    expression = 1
   []
-  # [degradation]
-  #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
-  #   phase_field = d
-  #   parameter_names = 'p eta '
-  #   parameter_values = '2 0'
-  # []
   [strain]
     type = ADComputePlaneSmallStrain
     out_of_plane_strain = 'strain_zz'
@@ -315,8 +252,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    # decomposition = NONE
-    decomposition = SPECTRAL
+    decomposition = NONE
     output_properties = 'psie psie_active'
     outputs = exodus
   []
@@ -329,20 +265,23 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Postprocessors]
+  [dt]
+    type = TimestepSize
+  []
   [Jint]
     type = PhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
-    boundary = 'left top right bottom'
+    boundary = 'left top right'
   []
   [DJint]
     type = DynamicPhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
+    boundary = 'left top right'
     density = density
-    boundary = 'left bottom right top'
   []
   [DJint_2]
     type = DJint
@@ -351,53 +290,47 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocities = 'vel_x vel_y'
     block = '0 1'
   []
-  [Jint_box]
-    type = PhaseFieldJIntegral
-    J_direction = '1 0 0'
-    strain_energy_density = psie
-    displacements = 'disp_x disp_y'
-    boundary = 'box'
-  []
-  [DJint_box]
-    type = DynamicPhaseFieldJIntegral
-    J_direction = '1 0 0'
-    strain_energy_density = psie
-    displacements = 'disp_x disp_y'
-    density = density
-    boundary = 'box'
-  []
-  [DJint_box_2]
-    type = DJint
-    J_direction = '1 0 0'
-    displacements = 'disp_x disp_y'
-    velocities = 'vel_x vel_y'
-    block = '1'
-  []
-  # [Jint_over_Gc]
+  # [tip_adv] # assign V
   #   type = ParsedPostprocessor
-  #   expression = 'Jint/${Gc}'
+  #   # expression = 'if(t>Tc, V*dt, 0)'
+  #   expression = 'if(t<Tc, 0, if(t<=Tc+4, 0.25*V*(t - Tc)*dt, V*dt))' # linear ramp
+  #   # expression = 'if(t<Tc, 0, if(t<=Tc+4, V*dt*sin(pi*(t - Tc)/8), V*dt))' # sine ramp
+  #   constant_names = 'Tc V pi'
+  #   constant_expressions = '${tc} ${V} 3.1415926'
+  #   pp_names = 'dt'
+  #   use_t = true
+  # []
+  # [tip_adv] # Gc formula
+  #   type = ParsedPostprocessor
+  #   expression = 'if(Jint>Gc, 1, 0)'
   #   pp_names = 'Jint'
-  #   use_t = false
+  #   constant_names = 'Gc'
+  #   constant_expressions = '${Gc}'
   # []
-  # [DJint_over_Gc]
+  # [tip_cum]
+  #   type = CumulativeValuePostprocessor
+  #   postprocessor = tip_adv
+  # []
+  # [tip]
   #   type = ParsedPostprocessor
-  #   expression = 'DJint/${Gc}'
-  #   pp_names = 'DJint'
-  #   use_t = false
+  #   expression = '${a} + tip_cum' # initial_tip + tip_cmp
+  #   pp_names = 'tip_cum'
+  #   execute_on = 'INITIAL TIMESTEP_BEGIN'
   # []
-  [bot_react]
-    type = NodalSum
-    variable = f_y
-    boundary = bottom
-  []
+  # [tip_h]
+  #   type = SideExtremeValue
+  #   boundary = noncrack
+  #   value_type = min
+  #   variable = x_coord
+  # []
+  # [tip_adv_h]
+  #   type = ChangeOverTimePostprocessor
+  #   postprocessor = tip_h
+  # []
   [top_react]
     type = NodalSum
     variable = f_y
     boundary = top
-  []
-  [fracture_energy]
-    type = Receiver
-    execute_on = 'timestep_end'
   []
   [kinetic_energy]
     type = KineticEnergy
@@ -410,7 +343,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [external_work]
     type = ExternalWork
-    boundary = 'top bottom'
+    boundary = 'top'
     forces = 'f_x f_y'
     execute_on = 'timestep_end'
   []
@@ -422,31 +355,16 @@ gamma = '${fparse 1/2-hht_alpha}'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
-
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
   start_time = 0
   end_time = ${tf}
   dt = 0.5
+
   # [TimeStepper]
   #   type = FunctionDT
-  #   function = 'if(t<${t_lag},0.5,0.051)'
+  #   function = 'if(t<=${tc}-1,0.5,0.05)'
   # []
   # num_steps = 3
 
-  # fast
-  # fixed_point_max_its = 20
-  # accept_on_max_fixed_point_iteration = false
-  # fixed_point_rel_tol = 1e-3
-  # fixed_point_abs_tol = 1e-5
-
-  # fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
-  # fixed_point_rel_tol = 1e-5
-  # fixed_point_abs_tol = 1e-6
 []
 
 [Outputs]
@@ -455,12 +373,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # min_simulation_time_interval = 0.25
     # time_step_interval = 10
   []
-  # file_base = './out/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}/${material}_surf'
-  file_base = './out/${material}_coh_rho${rho}_cmp/${material}_surf'
+  file_base = './out/${material}_static_rho${rho}/${material}_sharp'
   print_linear_residuals = false
   [csv]
     type = CSV
-    # file_base = './gold/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}'
-    file_base = './gold/${material}_coh_rho${rho}_cmp'
+    file_base = './gold/${material}_static_rho${rho}'
   []
 []

@@ -47,41 +47,6 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
 []
 
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i
-    # cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};nx=${nx};ny=${ny};refine=${refine};length=${length};a=${a}'
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic};a=${a}'
-    execute_on = 'TIMESTEP_END'
-    clone_parent_mesh = true
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    # type = MultiAppGeneralFieldShapeEvaluationTransfer
-    from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    # type = MultiAppGeneralFieldShapeEvaluationTransfer
-    to_multi_app = fracture
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
-  []
-  [pp_transfer]
-    type = MultiAppPostprocessorTransfer
-    from_multi_app = fracture
-    from_postprocessor = Psi_f
-    to_postprocessor = fracture_energy
-    reduction_type = average
-  []
-[]
-
 [GlobalParams]
   displacements = 'disp_x disp_y'
   alpha = ${hht_alpha}
@@ -100,31 +65,44 @@ gamma = '${fparse 1/2-hht_alpha}'
     ymin = '${fparse -1*a}'
     ymax = ${a}
   []
-  # [gen2]
-  #   type = ExtraNodesetGenerator
-  #   input = gen
-  #   new_boundary = fix_point
-  #   coord = '0 ${fparse -1*a}' # fix left bottom point
-  # []
-  [small]
-    input = gen
+  [sub_upper]
     type = ParsedSubdomainMeshGenerator
+    input = gen
+    combinatorial_geometry = 'x < ${a} & y > 0'
     block_id = 1
+  []
+  [sub_lower]
+    type = ParsedSubdomainMeshGenerator
+    input = sub_upper
+    combinatorial_geometry = 'x < ${a} & y < 0'
+    block_id = 2
+  []
+  [split]
+    input = sub_lower
+    type = BreakMeshByBlockGenerator
+    block_pairs = '1 2'
+    split_interface = true
+  []
+  [box]
+    input = split
+    type = ParsedSubdomainMeshGenerator
+    block_id = 3
     combinatorial_geometry = 'abs(y)<2'
-    block_name = small
+    block_name = box
   []
   [box_bnd]
-    input = small 
+    input = box 
     type = SideSetsAroundSubdomainGenerator
-    block = '1'
+    block = '3'
     new_boundary = 'box'
   []
   [refine]
     input = box_bnd
     type = RefineBlockGenerator
-    block = 1
+    block = 3
     refinement = ${refine}
   []
+  allow_renumbering = false
 []
 
 # [Adaptivity]
@@ -159,10 +137,10 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [AuxVariables]
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=0&x<=${a},1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=0&x<=${a},1,0)'
+    # []
   []
   [f_x]
   []
@@ -286,14 +264,19 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = 'd'
     phase_field = d
   []
-  [degradation]
-    type = RationalDegradationFunction
-    property_name = g
+  [nodeg]
+    type = NoDegradation
+    expression = 1
     phase_field = d
-    material_property_names = 'Gc psic xi c0 l'
-    parameter_names = 'p a2 a3 eta'
-    parameter_values = '2 1 0.0 1e-6'
   []
+  # [degradation]
+  #   type = RationalDegradationFunction
+  #   property_name = g
+  #   phase_field = d
+  #   material_property_names = 'Gc psic xi c0 l'
+  #   parameter_names = 'p a2 a3 eta'
+  #   parameter_values = '2 1 0.0 1e-6'
+  # []
   # [degradation]
   #   type = PowerDegradationFunction
   #   f_name = g
@@ -395,10 +378,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = f_y
     boundary = top
   []
-  [fracture_energy]
-    type = Receiver
-    execute_on = 'timestep_end'
-  []
+  # [fracture_energy]
+  #   type = Receiver
+  #   execute_on = 'timestep_end'
+  # []
   [kinetic_energy]
     type = KineticEnergy
     execute_on = 'timestep_end'
@@ -413,6 +396,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'top bottom'
     forces = 'f_x f_y'
     execute_on = 'timestep_end'
+  []
+  [disp_upper]
+    type = NodalVariableValue
+    variable = disp_y
+    nodeid = 8177
   []
 []
 
@@ -456,11 +444,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     # time_step_interval = 10
   []
   # file_base = './out/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}/${material}_surf'
-  file_base = './out/${material}_coh_rho${rho}_cmp/${material}_surf'
+  file_base = './out/${material}_sharp_full_cmp_rho${rho}/${material}_surf'
   print_linear_residuals = false
   [csv]
     type = CSV
     # file_base = './gold/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}'
-    file_base = './gold/${material}_coh_rho${rho}_cmp'
+    file_base = './gold/${material}_sharp_full_cmp_rho${rho}'
   []
 []

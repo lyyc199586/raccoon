@@ -12,11 +12,11 @@ sigma_ts = 3.08 # MPa, sts and scs from guessing
 psic = ${fparse sigma_ts^2/2/E}
 
 # l = 1.25
-l = 1
+l = 0.625
 # delta = 4 # haven't tested
 refine = 3
 # p = 1.2
-p = 0.5
+p = 1
 
 # hht parameters
 hht_alpha = -0.3
@@ -47,10 +47,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppCopyTransfer
     # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
-    variable = 'disp_x disp_y strain_zz psie_active'
-    source_variable = 'disp_x disp_y strain_zz psie_active'
-    # variable = 'disp_x disp_y psie_active'
-    # source_variable = 'disp_x disp_y psie_active'
+    # variable = 'disp_x disp_y strain_zz psie_active'
+    # source_variable = 'disp_x disp_y strain_zz psie_active'
+    variable = 'disp_x disp_y psie_active'
+    source_variable = 'disp_x disp_y psie_active'
   []
   [pp_transfer]
     type = MultiAppPostprocessorTransfer
@@ -162,10 +162,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # initial_from_file_timestep = LATEST
     # order = SECOND
   []
-  [strain_zz]
-    # initial_from_file_var = 'strain_zz'
-    # initial_from_file_timestep = LATEST
-  []
+  # [strain_zz]
+  #   # initial_from_file_var = 'strain_zz'
+  #   # initial_from_file_timestep = LATEST
+  # []
 []
 
 [AuxVariables]
@@ -190,10 +190,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # family = HIERARCHIC 
   []
   [d]
-    [InitialCondition]
-      type = FunctionIC
-      function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
-    []
+    # [InitialCondition]
+    #   type = FunctionIC
+    #   function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
+    # []
   []
   [s1]
     order = CONSTANT
@@ -264,11 +264,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  [plane_stress]
-    type = ADWeakPlaneStress
-    variable = 'strain_zz'
-    displacements = 'disp_x disp_y'
-  []
+  # [plane_stress]
+  #   type = ADWeakPlaneStress
+  #   variable = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  # []
 []
 
 [AuxKernels]
@@ -426,9 +426,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   outputs = exodus
   # []
   [strain]
-    # type = ADComputeSmallStrain
-    type = ADComputePlaneSmallStrain
-    out_of_plane_strain = 'strain_zz'
+    type = ADComputeSmallStrain
+    # type = ADComputePlaneSmallStrain
+    # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     output_properties = 'total_strain'
     outputs = exodus
@@ -479,6 +479,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     displacements = 'disp_x disp_y'
     boundary = 'left bottom right top'
     # outputs = "csv exodus"
+  []
+  [DJint_2]
+    type = DJint
+    J_direction = '1 0 0'
+    displacements = 'disp_x disp_y'
+    velocities = 'vel_x vel_y'
+    # block = '0 1'
   []
   [fracture_energy]
     type = Receiver
@@ -579,12 +586,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/br_coh_plane_stress_p${p}_l${l}/dyn_br'
+  # file_base = './out/br_coh_plane_stress_p${p}_l${l}/dyn_br'
+  file_base = './out/br_coh_plane_strain_p${p}_l${l}/dyn_br'
   # interval = 1
   time_step_interval = 1
   [csv]
     # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-    file_base = './gold/br_coh_plane_stress_p${p}_l${l}'
+    # file_base = './gold/br_coh_plane_stress_p${p}_l${l}'
+    file_base = './gold/br_coh_plane_strain_p${p}_l${l}'
     type = CSV
   []
 []
