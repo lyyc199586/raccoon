@@ -5,7 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h15.msh'
+    file = './mesh/annulus_h10.msh'
   []
 []
 
@@ -33,7 +33,7 @@
     constant_names = 'psic0'
     constant_expressions = '${psic}'
     coupled_variables = scale
-    expression = 'psic0*(10 + ceil(scale))/10'
+    expression = 'psic0*(19 + ceil(scale))/20'
     output_properties = 'psic'
     outputs = exodus
   []

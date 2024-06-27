@@ -1,6 +1,6 @@
 // Define the radii
 r1 = 80;  // Inner radius
-r2 = 120;  // Outer radius
+r2 = 150;  // Outer radius
 h = 4;
 
 // Create points

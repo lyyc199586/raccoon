@@ -54,7 +54,7 @@ DynamicPhaseFieldJIntegral::computeQpIntegral()
   ADReal psik = 0.5 * raw_value(_rho[_qp]) * u_dot * u_dot;
 
   RankTwoTensor I2(RankTwoTensor::initIdentity);
-  ADRankTwoTensor Sigma = (_psie[_qp] + psik) * I2 - H.transpose() * _stress[_qp];
+  ADRankTwoTensor Sigma = (_psie[_qp] + std::abs(psik)) * I2 - H.transpose() * _stress[_qp];
   RealVectorValue n = _normals[_qp];
   
   return raw_value(_t * Sigma * n);

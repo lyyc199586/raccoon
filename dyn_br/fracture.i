@@ -6,6 +6,8 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 [Adaptivity]
   marker = combo_marker
   max_h_level = ${refine}
+  initial_marker = initial
+  initial_steps = ${refine}
   cycles_per_step = ${refine}
   [Markers]
     [damage_marker]
@@ -20,10 +22,17 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
       lower_bound = -1e-4
       upper_bound = 1e-4
     []
+    [initial]
+      type = BoxMarker
+      bottom_left = '47.9 -2.1 0'
+      top_right = '52.1 2.1 0'
+      inside = REFINE
+      outside = DONT_MARK
+    []
     [combo_marker]
       type = ComboMarker
       # markers = 'damage_marker strength_marker'
-      markers = 'damage_marker'
+      markers = 'damage_marker initial'
     []
   []
 []

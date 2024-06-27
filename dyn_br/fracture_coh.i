@@ -64,8 +64,10 @@
     []
     [initial]
       type = BoxMarker
-      bottom_left = '47.9 -2.1 0'
-      top_right = '52.1 2.1 0'
+      # bottom_left = '47.9 -2.1 0'
+      # top_right = '52.1 2.1 0'
+      bottom_left = '${fparse 50-h-0.01} -${fparse h+0.01} 0'
+      top_right = '${fparse 50+h+0.01} ${fparse h+0.01} 0'
       inside = REFINE
       outside = DONT_MARK
     []
@@ -287,14 +289,16 @@
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
   petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-4
+  nl_abs_tol = 1e-6
 
   # restart
   # start_time = 80e-6

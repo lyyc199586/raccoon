@@ -13,33 +13,58 @@
   # []
 []
 
+# [Adaptivity]
+#   marker = damage_marker
+#   # initial_marker = initial
+#   # initial_steps = 2
+#   max_h_level = ${refine}
+#   cycles_per_step = 5
+#   [Markers]
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.01
+#       upper_bound = 1
+#     []
+#     # [initial]
+#     #   type = BoundaryMarker
+#     #   mark = REFINE
+#     #   next_to = inner
+#     # []
+#     # [inner_bnd]
+#     #   type = BoundaryMarker
+#     #   mark = DO_NOTHING
+#     #   next_to = inner
+#     # []
+#     # [combo]
+#     #   type = ComboMarker
+#     #   markers = 'damage_marker inner_bnd'
+#     # []
+#   []
+# []
+
 [Adaptivity]
-  marker = damage_marker
-  # initial_marker = initial
-  # initial_steps = 2
+  marker = combo
+  initial_marker = inner_bnd
+  initial_steps = ${refine}
   max_h_level = ${refine}
   cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
       variable = d
-      lower_bound = 0.01
+      lower_bound = 0.0001
       upper_bound = 1
     []
-    # [initial]
-    #   type = BoundaryMarker
-    #   mark = REFINE
-    #   next_to = inner
-    # []
-    # [inner_bnd]
-    #   type = BoundaryMarker
-    #   mark = DO_NOTHING
-    #   next_to = inner
-    # []
-    # [combo]
-    #   type = ComboMarker
-    #   markers = 'damage_marker inner_bnd'
-    # []
+    [inner_bnd]
+      type = BoundaryMarker
+      mark = REFINE
+      next_to = inner
+    []
+    [combo]
+      type = ComboMarker
+      markers = 'damage_marker inner_bnd'
+    []
   []
 []
 
@@ -82,6 +107,8 @@
   [f_nu]
     order = CONSTANT
     family = MONOMIAL
+  []
+  [strain_zz]
   []
 []
 
@@ -220,7 +247,9 @@
     output_properties = 'stress'
   []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type =  ADComputePlaneSmallStrain
+    out_of_plane_strain = strain_zz
     displacements = 'disp_X disp_Y'
   []
   [nucforce]
@@ -246,21 +275,21 @@
   type = Transient
   line_search = none
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
-  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
-  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
-  # automatic_scaling = true
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
+  automatic_scaling = true
 
   # dt = 1
   # dtmin = 1e-2
   # start_time = 0
   # end_time = 80
   
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 []
 
 [Outputs]

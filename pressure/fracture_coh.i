@@ -5,12 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h1.msh'
-  []
-  parallel_type = DISTRIBUTED
-  [Partitioner]
-    type = LibmeshPartitioner
-    partitioner = parmetis
+    file = './mesh/annulus_h4.msh'
   []
 []
 
@@ -19,7 +14,7 @@
   initial_marker = inner_bnd
   initial_steps = ${refine}
   max_h_level = ${refine}
-  cycles_per_step = 3
+  cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -58,6 +53,8 @@
   [disp_x]
   []
   [disp_y]
+  []
+  [strain_zz]
   []
 []
 
@@ -117,7 +114,7 @@
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0 1e-5'
+    parameter_values = '2 1 0 1e-6'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -147,7 +144,9 @@
     output_properties = 'stress'
   []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = strain_zz
     displacements = 'disp_x disp_y'
   []
 []
@@ -156,12 +155,14 @@
   type = Transient
   line_search = none
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
 []
 
 [Outputs]

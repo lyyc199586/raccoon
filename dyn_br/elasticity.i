@@ -4,7 +4,8 @@ nu = 0.2
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-rho = 2.45e-9 # Mg/mm^3
+# rho = 2.45e-9 # Mg/mm^3
+rho = 2450
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
 sigma_cs = 9.24
@@ -15,6 +16,7 @@ sigma_cs = 9.24
 # l = 0.5
 # l = 0.625
 l = 1
+p = 1
 # delta = 5 # haven't tested
 refine = 3 # 0.125
 
@@ -59,20 +61,20 @@ gamma = '${fparse 1/2-hht_alpha}'
     to_postprocessor = 'fracture_energy'
     reduction_type = average
   []
-  [pp_transfer_2]
-    type = MultiAppPostprocessorTransfer
-    from_multi_app = fracture
-    from_postprocessor = ce_int
-    to_postprocessor = ce_int
-    reduction_type = average
-  []
-  [pp_transfer_3]
-    type = MultiAppPostprocessorTransfer
-    from_multi_app = fracture
-    from_postprocessor = Psi_nuc
-    to_postprocessor = nucleation_energy
-    reduction_type = average
-  []
+  # [pp_transfer_2]
+  #   type = MultiAppPostprocessorTransfer
+  #   from_multi_app = fracture
+  #   from_postprocessor = ce_int
+  #   to_postprocessor = ce_int
+  #   reduction_type = average
+  # []
+  # [pp_transfer_3]
+  #   type = MultiAppPostprocessorTransfer
+  #   from_multi_app = fracture
+  #   from_postprocessor = Psi_nuc
+  #   to_postprocessor = nucleation_energy
+  #   reduction_type = average
+  # []
 []
 
 [GlobalParams]
@@ -117,6 +119,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Adaptivity]
   marker = combo_marker
   max_h_level = ${refine}
+  initial_marker = initial
+  initial_steps = ${refine}
   cycles_per_step = ${refine}
   [Markers]
     [damage_marker]
@@ -131,10 +135,17 @@ gamma = '${fparse 1/2-hht_alpha}'
       lower_bound = -1e-4
       upper_bound = 1e-4
     []
+    [initial]
+      type = BoxMarker
+      bottom_left = '47.9 -2.1 0'
+      top_right = '52.1 2.1 0'
+      inside = REFINE
+      outside = DONT_MARK
+    []
     [combo_marker]
       type = ComboMarker
       # markers = 'damage_marker strength_marker'
-      markers = 'damage_marker'
+      markers = 'damage_marker initial'
     []
   []
 []
@@ -222,8 +233,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [solid_x]
     type = ADDynamicStressDivergenceTensors
     variable = disp_x
-    save_in = fx
     component = 0
+    save_in = fx
   []
   [solid_y]
     type = ADDynamicStressDivergenceTensors
@@ -339,17 +350,20 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
 []
 
+
 [BCs]
   [ytop]
     type = ADPressure
     variable = disp_y
     boundary = top
+    function = ${p}
     factor = -1
   []
   [ybottom]
     type = ADPressure
     variable = disp_y
     boundary = bottom
+    function = ${p}
     factor = -1
   []
 []
@@ -415,7 +429,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = disp_y
     # outputs = "csv exodus"
   []
-  [Jint]
+  [J]
     type = PhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
@@ -423,7 +437,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     # outputs = "csv exodus"
   []
-  [DJint]
+  [DJint_1]
     type = DynamicPhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
@@ -432,11 +446,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     density = density
     # outputs = "csv exodus"
   []
-  [DJ_over_J]
+  [DJint_2]
+    type = DJint
+    J_direction = '1 0 0'
+    displacements = 'disp_x disp_y'
+    velocities = 'vel_x vel_y'
+    density = density
+    # block = '0 1'
+  []
+  [DJ]
     type = ParsedPostprocessor
-    pp_names = 'Jint DJint'
-    expression = 'DJint/Jint'
-    # outputs = "csv exodus"
+    expression = 'DJint_1 + DJint_2'
+    pp_names = 'DJint_1 DJint_2'
   []
   [fracture_energy]
     type = Receiver
@@ -446,10 +467,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = Receiver
     # outputs = "csv"
   []
-  [nucleation_energy]
-    type = Receiver
-    # outputs = "csv"
-  []
+  # [nucleation_energy]
+  #   type = Receiver
+  #   # outputs = "csv"
+  # []
   [kinetic_energy]
     type = KineticEnergy
     # outputs = "csv"
@@ -494,9 +515,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   # nl_abs_tol = 1e-8
   nl_max_its = 200
 
-  dt = 0.5e-7
+  # dt = 0.5e-7
+  dt = 0.5
   # dtmin = 1e-8
-  end_time = 80e-6
+  end_time = 80
 
   # restart
   # start_time = 80e-6
@@ -520,16 +542,18 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     time_step_interval = 1
-    min_simulation_time_interval = 2e-7
+    min_simulation_time_interval = 0.5
   []
   checkpoint = true
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  # file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
+  file_base = './out/br_nuc24_plane_strain_p${p}/dyn_br'
   time_step_interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain'
+    # file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain'
+    file_base = './gold/br_nuc24_plane_strain_p${p}'
     type = CSV
   []
 []

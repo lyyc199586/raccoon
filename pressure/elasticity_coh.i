@@ -2,22 +2,22 @@
 
 ## Rudy's paper Section 5.7
 E = 210e3
-rho = 7.85e-9
+rho = 7850
 nu = 0.3
 sigma_ts = 1e3
 
 Gc = 20
 l = 1
-refine = 3
+refine = 4
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 psic = '${fparse sigma_ts^2/2/E}' # 2.38
 
-T0 = 100e-6
+T0 = 100
 p0 = 400
-seed = 8
+seed = 2
 
 ## hht parameters
 hht_alpha = -0.3
@@ -49,8 +49,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [to_psie_active]
     type = MultiAppCopyTransfer
     to_multi_app = fracture
-    variable = 'psie_active disp_x disp_y psic'
-    source_variable = 'psie_active disp_x disp_y psic'
+    variable = 'psie_active disp_x disp_y psic strain_zz'
+    source_variable = 'psie_active disp_x disp_y psic strain_zz'
   []
 []
 
@@ -72,12 +72,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h1.msh'
-  []
-  parallel_type = DISTRIBUTED
-  [Partitioner]
-    type = LibmeshPartitioner
-    partitioner = parmetis
+    file = './mesh/annulus_h4.msh'
   []
 []
 
@@ -86,7 +81,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   initial_marker = inner_bnd
   initial_steps = ${refine}
   max_h_level = ${refine}
-  cycles_per_step = 3
+  cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
@@ -110,6 +105,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [disp_x]
   []
   [disp_y]
+  []
+  [strain_zz]
   []
 []
 
@@ -184,6 +181,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     density = density
     velocity = vel_y
     acceleration = accel_y
+  []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
   []
 []
 
@@ -307,10 +309,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     material_property_names = 'Gc psic xi c0 l '
     parameter_names = 'p a2 a3 eta '
-    parameter_values = '2 1 0 1e-5'
+    parameter_values = '2 1 0 1e-6'
   []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type =  ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -326,8 +330,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
-    # output_properties = 'stress'
-    # outputs = exodus
+    output_properties = 'stress'
+    outputs = exodus
   []
 []
 
@@ -369,16 +373,16 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # l_abs_tol = 1e-8
   # l_max_its = 200
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-4
+  nl_abs_tol = 1e-6
   # nl_max_its = 200
 
-  line_search = none
-  fixed_point_max_its = 20
+  # line_search = none
+  fixed_point_max_its = 10
   # disable_fixed_point_residual_norm_check = true
   accept_on_max_fixed_point_iteration = true
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
 
   # [TimeStepper]
   #   type = FunctionDT
@@ -386,10 +390,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   growth_factor = 2
   #   cutback_factor_at_failure = 0.5
   # []
-  dt = 1e-6
-  dtmin = 1e-8
+  dt = 1
+  dtmin = 0.01
   start_time = 0
-  end_time = 100e-6
+  end_time = 100
   # num_steps = 1
   # [TimeIntegrator]
   #   type = NewmarkBeta
@@ -399,17 +403,17 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [Outputs]
   [exodus]
-    # type = Exodus 
-    type = Nemesis
+    type = Exodus 
+    # type = Nemesis
     min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
   # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
   # file_base = './out/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_ts${sigma_ts}_l${l}_h1_rf${refine}'
-  file_base = './out/pr_coh_distri_mesh/pr_coh'
+  file_base = './out/pr_coh_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}/pr_coh'
   checkpoint = true
   [csv]
-    file_base = './gold/pr_coh_distri_mesh'
+    file_base = './gold/pr_coh_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}'
     type = CSV
   []
 []

@@ -1,8 +1,9 @@
 # crack from pressurized hole
+# unit: ug, mm, us -> N, MPa, N/mm
 
 ## Rudy's paper Section 5.7
 E = 210e3
-rho = 7.85e-9
+rho = 7.85e3
 # rho = 1e-9
 nu = 0.3
 sigma_ts = 1e3
@@ -12,16 +13,18 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 Gc = 20
 l = 1 # lch = 3/8*Gc*E/sts/sts = 1.575
 # l = 0.5
-refine = 3
+# refine = 2
+refine = 4
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 # psic = '${fparse sigma_ts^2/2/E}' # 2.38
 
-T0 = 80e-6
+T0 = 100
 p0 = 400
 seed = 2
+# seed = 8
 
 ## hht parameters
 hht_alpha = -0.3
@@ -34,7 +37,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
-  use_displaced_mesh = True
+  # use_displaced_mesh = False
 []
 
 [Transfers]
@@ -60,8 +63,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     to_multi_app = fracture
     # variable = 'psie_active disp_X disp_Y E'
     # source_variable = 'psie_active disp_X disp_Y E'
-    variable = 'psie_active disp_X disp_Y sigma_ts sigma_hs'
-    source_variable = 'psie_active disp_X disp_Y sigma_ts sigma_hs'
+    variable = 'psie_active disp_X disp_Y sigma_ts sigma_hs strain_zz'
+    source_variable = 'psie_active disp_X disp_Y sigma_ts sigma_hs strain_zz'
   []
 []
 
@@ -84,7 +87,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_h1.msh'
+    file = './mesh/annulus_h4.msh'
   []
   # [fix_point]
   #   type = ExtraNodesetGenerator
@@ -99,6 +102,36 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   refinement = ${refine}
   # []
 []
+
+# [Adaptivity]
+#   marker = damage_marker
+#   # initial_marker = initial
+#   # initial_steps = 2
+#   max_h_level = ${refine}
+#   cycles_per_step = 5
+#   [Markers]
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.01
+#       upper_bound = 1
+#     []
+#     # [initial]
+#     #   type = BoundaryMarker
+#     #   mark = REFINE
+#     #   next_to = inner
+#     # []
+#     # [inner_bnd]
+#     #   type = BoundaryMarker
+#     #   mark = DO_NOTHING
+#     #   next_to = inner
+#     # []
+#     # [combo]
+#     #   type = ComboMarker
+#     #   markers = 'damage_marker inner_bnd'
+#     # []
+#   []
+# []
 
 [Adaptivity]
   marker = combo
@@ -129,6 +162,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [disp_X]
   []
   [disp_Y]
+  []
+  [strain_zz]
   []
 []
 
@@ -203,6 +238,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [p_bc_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Kernels]
@@ -231,6 +270,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     density = density
     velocity = vel_y
     acceleration = accel_y
+  []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    # displacements = 'disp_x disp_y'
   []
 []
 
@@ -289,6 +333,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = vel_y
     acceleration = accel_y
   []
+  [get_p_mat]
+    type = ADMaterialRealAux
+    property = p_mat
+    variable = p_bc_var
+    boundary = inner
+  []
 []
 
 [Functions]
@@ -303,22 +353,41 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   x = '0    36e-6 39e-6 40e-6 80e-6'
   #   y = '4e-6 4e-6 1e-6 1e-7 1e-7'
   # []
+  # [dts]
+  #   type = PiecewiseLinear
+  #   x = '0 48 48.5   80'
+  #   y = '4 4  0.1  0.1'
+  # []
 []
 
 [BCs]
+  # [pressure_x]
+  #   type = ADPressure
+  #   boundary = inner
+  #   variable = 'disp_X'
+  #   function = p_func
+  #   factor = 1
+  # []
+  # [pressure_y]
+  #   type = ADPressure
+  #   boundary = inner
+  #   variable = 'disp_Y'
+  #   function = p_func
+  #   factor = 1
+  # []
   [pressure_x]
-    type = ADPressure
+    type = CoupledPressureBC
     boundary = inner
     variable = 'disp_X'
-    function = p_func
-    factor = -1
+    pressure = p_bc_var
+    component = 0
   []
   [pressure_y]
-    type = ADPressure
+    type = CoupledPressureBC
     boundary = inner
     variable = 'disp_Y'
-    function = p_func
-    factor = -1
+    pressure = p_bc_var
+    component = 1
   []
   [left_x]
     type = ADDirichletBC
@@ -347,6 +416,28 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Materials]
+  # [degrade_density]
+  #   type = ADParsedMaterial
+  #   property_name = density
+  #   expression = 'g*rho'
+  #   coupled_variables = 'd'
+  #   material_property_names = 'g(d)'
+  #   constant_names = 'rho'
+  #   constant_expressions = '${rho}'
+  #   output_properties = 'density'
+  #   outputs = 'exodus'
+  # []
+  [p_mat]
+    type = ADParsedMaterial
+    property_name = p_mat
+    expression = 'g*p0*exp(-t/T0)'
+    # expression = 'p0*exp(-t/T0)'
+    coupled_variables = 'd'
+    material_property_names = 'g'
+    constant_names = 'p0 T0'
+    constant_expressions = '${p0} ${T0}'
+    extra_symbols = 't'
+  []
   [bulk_properties]
     type = ADGenericConstantMaterial
     prop_names = 'E K G lambda l Gc density'
@@ -397,15 +488,17 @@ gamma = '${fparse 1/2-hht_alpha}'
   [degradation]
     type = PowerDegradationFunction
     property_name = g
-    # expression = (1-d)^p*(1-eta)+eta
-    expression = (1-d)^p+eta
+    expression = (1-d)^p*(1-eta)+eta
+    # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
     # parameter_values = '2 0'
   []
   [strain]
-    type = ADComputeSmallStrain
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = strain_zz
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -421,8 +514,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
-    # output_properties = 'stress'
-    # outputs = exodus
+    output_properties = 'stress'
+    outputs = exodus
   []
 []
 
@@ -432,10 +525,27 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = inner
     variable = pressure
   []
-  [avg_p]
-    type = SideAverageValue
+  [int_p]
+    type = ADSideIntegralMaterialProperty
     boundary = inner
-    variable = pressure
+    property = p_mat
+  []
+  [avg_p]
+    type = ParsedPostprocessor
+    pp_names = 'int_p'
+    expression = 'int_p/(3.1415926*80/2)'
+  []
+  [p_base]
+    type = ParsedPostprocessor
+    expression = 'p0*exp(-t/T0)'
+    constant_names = 'p0 T0'
+    constant_expressions = '${p0} ${T0}'
+    use_t = true
+  []
+  [avg_p_over_p0]
+    type = ParsedPostprocessor
+    pp_names = 'avg_p p_base'
+    expression = 'avg_p/p_base'
   []
   [avg_s1]
     type = SideAverageValue
@@ -452,28 +562,31 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_hypre_type'
-  # petsc_options_value = 'hypre boomeramg'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_hypre_type'
+  petsc_options_value = 'hypre boomeramg'
   # petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
   # petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
+  scaling_group_variables = 'disp_X disp_Y'
 
   # l_abs_tol = 1e-8
   # l_max_its = 200
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-4
+  nl_abs_tol = 1e-6
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
   # nl_max_its = 200
 
-  line_search = none
-  # fixed_point_algorithm = picard
-  fixed_point_max_its = 20
+  # line_search = none
+  # fixed_point_algorithm = 
+  fixed_point_max_its = 10
   # disable_fixed_point_residual_norm_check = true
   accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-6
@@ -482,18 +595,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   fixed_point_abs_tol = 1e-6
   # [TimeStepper]
   #   type = FunctionDT
-  #   function = 'if(t < 44e-5, 1e-6, 1e-7)'
-  #   # function = dts
+  #   function = 'if(t<50,2,0.05)'
+  #   min_dt = 5e-3
   # []
-  # [TimeStepper]
-  #   type = IterationAdaptiveDT
-  #   dt = 1e-6
-  #   optimal_iterations = 5
-  # []
-  dt = 1e-6
-  dtmin = 1e-8
+  dt = 1
+  dtmin = 0.01
   start_time = 0
-  end_time = 100e-6
+  end_time = 100
   # num_steps = 1
   # [TimeIntegrator]
   #   type = NewmarkBeta
@@ -504,20 +612,25 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus 
-    min_simulation_time_interval = 5e-7
+    min_simulation_time_interval = 0.5
+    # execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
-  print_linear_residuals = true
+  # print_linear_residuals = true
   # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
-  file_base = './out/pr_nuc24_seed${seed}_patch4_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h1_rf${refine}/pr_nuc24'
+  # file_base = './out/pr_seed${seed}_patch4_l${l}_h4_rf${refine}/pr'
+  # file_base = './out/pr_nuc24_degrade_rho/pr_nuc24'
+  file_base = './out/pr_nuc24_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}/pr_nuc24'
   # file_base = './out/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5/pr_nuc24'
   checkpoint = true
   [csv]
-    file_base = './gold/pr_nuc24_seed${seed}_patch4_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h1_rf${refine}'
+    # file_base = './gold/pr_seed${seed}_patch4_l${l}_h4_rf${refine}'
+    # file_base = './gold/pr_nuc24_degrade_rho'
+    file_base = './gold/pr_nuc24_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}'
     # file_base = './gold/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5'
     type = CSV
   []
 []
 
 [Debug]
-  show_var_residual_norms = true
+  show_var_residual_norms = false
 []
