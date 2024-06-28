@@ -15,10 +15,18 @@ sigma_cs = 9.24
 # l = 0.25
 # l = 0.5
 # l = 0.625
-l = 1
+l = 0.625
+h = 1
 p = 1
 # delta = 5 # haven't tested
 refine = 3 # 0.125
+
+Tb = 0
+Tf = 70
+nx = '${fparse int(100/h)}'
+ny = '${fparse int(40/h)}'
+
+filebase = nuc24_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
 # hht_alpha = -0.25
@@ -33,7 +41,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};h=${h};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
   []
@@ -54,27 +62,20 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = 'disp_x disp_y psie_active'
     source_variable = 'disp_x disp_y psie_active'
   []
-  [pp_transfer_1]
+  [FE_transfer]
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
-    from_postprocessor = 'Psi_f'
-    to_postprocessor = 'fracture_energy'
+    from_postprocessor = Psi_f
+    to_postprocessor = FE
     reduction_type = average
   []
-  # [pp_transfer_2]
-  #   type = MultiAppPostprocessorTransfer
-  #   from_multi_app = fracture
-  #   from_postprocessor = ce_int
-  #   to_postprocessor = ce_int
-  #   reduction_type = average
-  # []
-  # [pp_transfer_3]
-  #   type = MultiAppPostprocessorTransfer
-  #   from_multi_app = fracture
-  #   from_postprocessor = Psi_nuc
-  #   to_postprocessor = nucleation_energy
-  #   reduction_type = average
-  # []
+  [FE_br_transfer]
+    type = MultiAppPostprocessorTransfer
+    from_multi_app = fracture
+    from_postprocessor = Psi_f_br
+    to_postprocessor = FE_br
+    reduction_type = average
+  []
 []
 
 [GlobalParams]
@@ -89,8 +90,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [gen] #h_c = 1, h_r = 0.25
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
-    ny = 40
+    nx = ${nx}
+    ny = ${ny}
     xmin = 0
     xmax = 100
     ymin = -20
@@ -113,6 +114,19 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = BreakMeshByBlockGenerator
     block_pairs = '1 2'
     split_interface = true
+  []
+  [branch_region]
+    input = split
+    type = SubdomainBoundingBoxGenerator
+    bottom_left = '62.9 -3.1 0'
+    top_right = '73.1 3.1 0'
+    block_id = '3'
+  []
+  [branch_bnd]
+    input = branch_region
+    type = SideSetsAroundSubdomainGenerator
+    block = '3'
+    new_boundary = 'br_bnd'
   []
 []
 
@@ -137,8 +151,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     []
     [initial]
       type = BoxMarker
-      bottom_left = '47.9 -2.1 0'
-      top_right = '52.1 2.1 0'
+      # bottom_left = '47.9 -2.1 0'
+      # top_right = '52.1 2.1 0'
+      bottom_left = '${fparse 50-h-0.01} -${fparse h+0.01} 0'
+      top_right = '${fparse 50+h+0.01} ${fparse h+0.01} 0'
       inside = REFINE
       outside = DONT_MARK
     []
@@ -397,7 +413,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ADComputeSmallStrain
     # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    output_properties = 'total_strain'
+    # output_properties = 'total_strain'
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -437,60 +453,94 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     # outputs = "csv exodus"
   []
-  [DJint_1]
+  [DJ1]
     type = DynamicPhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
     boundary = 'left bottom right top'
     density = density
-    # outputs = "csv exodus"
   []
-  [DJint_2]
+  [DJ2]
     type = DJint
     J_direction = '1 0 0'
     displacements = 'disp_x disp_y'
     velocities = 'vel_x vel_y'
     density = density
-    # block = '0 1'
   []
   [DJ]
     type = ParsedPostprocessor
-    expression = 'DJint_1 + DJint_2'
-    pp_names = 'DJint_1 DJint_2'
+    expression = 'DJ1 + DJ2'
+    pp_names = 'DJ1 DJ2'
   []
-  [fracture_energy]
+  [DJ1_br]
+    type = DynamicPhaseFieldJIntegral
+    J_direction = '1 0 0'
+    strain_energy_density = psie
+    displacements = 'disp_x disp_y'
+    # boundary = 'left bottom right top'
+    boundary = 'br_bnd'
+    density = density
+    # outputs = "csv exodus"
+  []
+  [DJ2_br]
+    type = DJint
+    J_direction = '1 0 0'
+    displacements = 'disp_x disp_y'
+    velocities = 'vel_x vel_y'
+    block = '3'
+    density = density
+    # block = '0 1'
+  []
+  [DJ_br]
+    type = ParsedPostprocessor
+    expression = 'DJ1_br + DJ2_br'
+    pp_names = 'DJ1_br DJ2_br'
+  []
+  [FE]
     type = Receiver
-    # outputs = "csv"
   []
-  [ce_int]
+  [FE_br]
     type = Receiver
-    # outputs = "csv"
   []
+  # [ce_int]
+  #   type = Receiver
+  #   # outputs = "csv"
+  # []
   # [nucleation_energy]
   #   type = Receiver
   #   # outputs = "csv"
   # []
-  [kinetic_energy]
+  [KE]
     type = KineticEnergy
-    # outputs = "csv"
   []
-  [strain_energy]
+  [KE_br]
+    type = KineticEnergy
+    block = 3
+  []
+  [SE]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
-    # outputs = "csv"
   []
-  [external_work]
+  [SE_br]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie
+    block = '3'
+  []
+  [EW]
     type = ExternalWork
     boundary = 'top bottom'
     forces = 'fx fy'
-    # outputs = "csv"
   []
-  [preset_ext_work]
+  [EW_br]
+    type = ExternalWork
+    boundary = 'br_bnd'
+    forces = 'fx fy'
+  []
+  [PEW]
     type = SideIntegralVariablePostprocessor
     variable = w_ext
     boundary = "top bottom"
-    # execute_on = 'initial timestep_end'
   []
 []
 
@@ -498,34 +548,34 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
-  nl_max_its = 200
+  # nl_max_its = 50
 
   # dt = 0.5e-7
-  dt = 0.5
+  dt = 0.25
   # dtmin = 1e-8
-  end_time = 80
+  end_time = ${Tf}
 
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
 
   fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = true
+  accept_on_max_fixed_point_iteration = false
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
@@ -541,19 +591,19 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    time_step_interval = 1
-    min_simulation_time_interval = 0.5
+    # time_step_interval = 1
+    # min_simulation_time_interval = 0.25
   []
   checkpoint = true
   print_linear_residuals = false
   # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
   # file_base = './out/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
-  file_base = './out/br_nuc24_plane_strain_p${p}/dyn_br'
+  file_base = './out/${filebase}/nuc24'
   time_step_interval = 1
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
     # file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain'
-    file_base = './gold/br_nuc24_plane_strain_p${p}'
+    file_base = './gold/${filebase}.csv'
     type = CSV
   []
 []

@@ -1,48 +1,5 @@
 [Mesh]
-  # [gen] #h_c = 1, h_r = 0.25
-  #   type = GeneratedMeshGenerator
-  #   dim = 2
-  #   nx = 100
-  #   ny = 40
-  #   xmin = 0
-  #   xmax = 100
-  #   ymin = -20
-  #   ymax = 20
-  # []
-  # [sub_upper]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = gen
-  #   combinatorial_geometry = 'x < 50 & y > 0'
-  #   block_id = 1
-  # []
-  # [sub_lower]
-  #   type = ParsedSubdomainMeshGenerator
-  #   input = sub_upper
-  #   combinatorial_geometry = 'x < 50 & y < 0'
-  #   block_id = 2
-  # []
-  # [split]
-  #   input = sub_lower
-  #   type = BreakMeshByBlockGenerator
-  #   block_pairs = '1 2'
-  #   split_interface = true
-  # []
-  # second_order = true
 []
-
-# [Adaptivity]
-#   initial_marker = initial
-#   initial_steps = ${refine}
-#   [Markers]
-#     [initial]
-#       type = BoxMarker
-#       bottom_left = '50 -20 0'
-#       top_right = '100 20 0'
-#       inside = REFINE
-#       outside = DO_NOTHING
-#     []
-#   []
-# []
 
 [Adaptivity]
   marker = combo_marker
@@ -279,7 +236,13 @@
   [Psi_f]
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
-    execute_on = 'initial timestep_end'
+    # execute_on = 'initial timestep_end'
+  []
+  [Psi_f_br]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psi_f
+    # execute_on = 'initial timestep_end'
+    block = '3'
   []
 []
 
@@ -295,10 +258,10 @@
   # petsc_options_value = 'asm      vinewtonrsls'
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-4
-  nl_abs_tol = 1e-6
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
 
   # restart
   # start_time = 80e-6

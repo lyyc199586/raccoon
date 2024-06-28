@@ -3,41 +3,41 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 [Mesh]
 []
 
-[Adaptivity]
-  marker = combo_marker
-  max_h_level = ${refine}
-  initial_marker = initial
-  initial_steps = ${refine}
-  cycles_per_step = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueRangeMarker
-      variable = d
-      lower_bound = 0.0001
-      upper_bound = 1
-    []
-    [strength_marker]
-      type = ValueRangeMarker
-      variable = f_nu_var
-      lower_bound = -1e-4
-      upper_bound = 1e-4
-    []
-    [initial]
-      type = BoxMarker
-      # bottom_left = '47.9 -2.1 0'
-      # top_right = '52.1 2.1 0'
-      bottom_left = '${fparse 50-h-0.01} -${fparse h+0.01} 0'
-      top_right = '${fparse 50+h+0.01} ${fparse h+0.01} 0'
-      inside = REFINE
-      outside = DONT_MARK
-    []
-    [combo_marker]
-      type = ComboMarker
-      # markers = 'damage_marker strength_marker'
-      markers = 'damage_marker initial'
-    []
-  []
-[]
+# [Adaptivity]
+#   marker = combo_marker
+#   max_h_level = ${refine}
+#   initial_marker = initial
+#   initial_steps = ${refine}
+#   cycles_per_step = ${refine}
+#   [Markers]
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.0001
+#       upper_bound = 1
+#     []
+#     [strength_marker]
+#       type = ValueRangeMarker
+#       variable = f_nu_var
+#       lower_bound = -1e-4
+#       upper_bound = 1e-4
+#     []
+#     [initial]
+#       type = BoxMarker
+#       # bottom_left = '47.9 -2.1 0'
+#       # top_right = '52.1 2.1 0'
+#       bottom_left = '${fparse 50-h-0.01} -${fparse h+0.01} 0'
+#       top_right = '${fparse 50+h+0.01} ${fparse h+0.01} 0'
+#       inside = REFINE
+#       outside = DONT_MARK
+#     []
+#     [combo_marker]
+#       type = ComboMarker
+#       # markers = 'damage_marker strength_marker'
+#       markers = 'damage_marker initial'
+#     []
+#   []
+# []
 
 [Variables]
   [d]
@@ -105,6 +105,15 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = '4'
+  []
+  [confine]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 0.0001
+    block = '0 1 2 3'
   []
 []
 
@@ -240,11 +249,6 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     type = ADElementIntegralMaterialProperty
     mat_prop = psi_f
   []
-  [Psi_f_br]
-    type = ADElementIntegralMaterialProperty
-    mat_prop = psi_f
-    block = '3'
-  []
   [ce_int]
     type = ADElementIntegralMaterialProperty
     mat_prop = ce_int
@@ -267,10 +271,10 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-4
-  # nl_abs_tol = 1e-6
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-4
+  nl_abs_tol = 1e-6
   # nl_max_its = 500
 
   # restart

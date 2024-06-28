@@ -4,83 +4,73 @@ nu = 0.2
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
-rho = 2.45e-9 # Mg/mm^3
+# rho = 2.45e-9 # Mg/mm^3
+rho = 2450
 Gc = 3e-3 # N/mm -> 3 J/m^2
 sigma_ts = 3.08 # MPa, sts and scs from guessing
+# sigma_ts = 6
 # sigma_cs = 9.24
-# sigma_cs = 15
 psic = ${fparse sigma_ts^2/2/E}
 
-## lch = 3/8*E*Gc/sigma_ts^2 = 3.79
+# lch = 3/8*E*Gc/sts^2 (sts=3, lch=4, sts=6, lch=1)
+# l = 1.25
 # l = 0.25
-# l = 0.5
 l = 0.625
-# l = 1
-# delta = 5 # haven't tested
-refine = 3 # 0.125
+h = 1
+# h = 0.5
+# delta = 4 # haven't tested
+refine = 3 # 1/2^3 = 0.125
+# h = ${fparse 1/2^refine}
+p = 1
+# p = 0.8
+Tb = 0
+Tf = 60
+
+nx = '${fparse int(100/h)}'
+ny = '${fparse int(40/h)}'
+
+filebase = coh_cf_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
-# hht_alpha = -0.25
 hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
-# gamma = 0.5
-# beta = 0.25
-
 [MultiApps]
   [fracture]
     type = TransientMultiApp
-    input_files = fracture_nobranch.i
-    # cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
+    input_files = fracture_coh_cf.i
     cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic}'
+    # cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};psic=${psic}'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
   []
 []
 
 [Transfers]
-  # [from_d]
-  #   type = MultiAppCopyTransfer
-  #   from_multi_app = fracture
-  #   variable = 'd f_nu_var ce_var delta_var'
-  #   source_variable = 'd f_nu_var ce_var delta_var'
-  # []
   [from_d]
     type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
     variable = 'd'
     source_variable = 'd'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
+    # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
     # variable = 'disp_x disp_y strain_zz psie_active'
     # source_variable = 'disp_x disp_y strain_zz psie_active'
     variable = 'disp_x disp_y psie_active'
     source_variable = 'disp_x disp_y psie_active'
   []
-  [pp_transfer_1]
+  [pp_transfer]
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
-    from_postprocessor = 'Psi_f'
-    to_postprocessor = 'fracture_energy'
+    from_postprocessor = Psi_f
+    to_postprocessor = fracture_energy
     reduction_type = average
   []
-  # [pp_transfer_2]
-  #   type = MultiAppPostprocessorTransfer
-  #   from_multi_app = fracture
-  #   from_postprocessor = ce_int
-  #   to_postprocessor = ce_int
-  #   reduction_type = average
-  # []
-  # [pp_transfer_3]
-  #   type = MultiAppPostprocessorTransfer
-  #   from_multi_app = fracture
-  #   from_postprocessor = Psi_nuc
-  #   to_postprocessor = nucleation_energy
-  #   reduction_type = average
-  # []
 []
 
 [GlobalParams]
@@ -92,11 +82,15 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Mesh]
+  # [fmg]
+  #   type = FileMeshGenerator
+  #   file = "./mesh/dyn_br_tri.msh"
+  # []
   [gen] #h_c = 1, h_r = 0.25
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
-    ny = 40
+    nx = ${nx}
+    ny = ${ny}
     xmin = 0
     xmax = 100
     ymin = -20
@@ -123,8 +117,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [refine_block]
     type = SubdomainBoundingBoxGenerator
     input = split
-    bottom_left = '48.9 -2.1 0'
-    top_right = '100.1 2.1 0'
+    bottom_left = '${fparse 50-h-0.01} -${fparse 3*l+0.01} 0'
+    top_right = '${fparse 100+0.01} ${fparse 3*l+0.01} 0'
     block_id = '3'
   []
   [refine] # only for refine
@@ -133,24 +127,34 @@ gamma = '${fparse 1/2-hht_alpha}'
     block = '3'
     refinement = '${refine}'
   []
-  [nobranch]
+  [confine]
     type = SubdomainBoundingBoxGenerator
     input = refine
-    bottom_left = '49 -1.3 0'
-    top_right = '100.1 1.3 0'
-    block_id = '3'
-  []
-  [damage_bnd]
-    type = SideSetsAroundSubdomainGenerator
-    input = nobranch
-    new_boundary = 'damage_bnd'
-    block = 3
+    bottom_left = '${fparse 50-h-0.01} -${fparse 2*l+0.01} 0'
+    top_right = '${fparse 100+0.01} ${fparse 2*l+0.01} 0'
+    block_id = '4'
   []
 []
 
 # [Adaptivity]
+#   initial_marker = initial
+#   initial_steps = ${refine}
+#   [Markers]
+#     [initial]
+#       type = BoxMarker
+#       bottom_left = '50 -20 0'
+#       top_right = '100 20 0'
+#       inside = REFINE
+#       outside = DO_NOTHING
+#     []
+#   []
+# []
+
+# [Adaptivity]
 #   marker = combo_marker
 #   max_h_level = ${refine}
+#   initial_marker = initial
+#   initial_steps = ${refine}
 #   cycles_per_step = ${refine}
 #   [Markers]
 #     [damage_marker]
@@ -159,16 +163,21 @@ gamma = '${fparse 1/2-hht_alpha}'
 #       lower_bound = 0.0001
 #       upper_bound = 1
 #     []
-#     # [strength_marker]
-#     #   type = ValueRangeMarker
-#     #   variable = f_nu_var
-#     #   lower_bound = -1e-4
-#     #   upper_bound = 1e-4
-#     # []
+#     [psic_marker]
+#       type = ValueThresholdMarker
+#       variable = psie_active
+#       refine = 0.00075
+#     []
+#     [initial]
+#       type = BoxMarker
+#       bottom_left = '${fparse 50-h-0.01} -${fparse h+0.01} 0'
+#       top_right = '${fparse 50+h+0.01} ${fparse h+0.01} 0'
+#       inside = REFINE
+#       outside = DONT_MARK
+#     []
 #     [combo_marker]
 #       type = ComboMarker
-#       # markers = 'damage_marker strength_marker'
-#       markers = 'damage_marker'
+#       markers = 'damage_marker initial'
 #     []
 #   []
 # []
@@ -177,10 +186,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   [disp_x]
     # initial_from_file_var = 'disp_x'
     # initial_from_file_timestep = LATEST
+    # order = SECOND
   []
   [disp_y]
     # initial_from_file_var = 'disp_y'
     # initial_from_file_timestep = LATEST
+    # order = SECOND
   []
   # [strain_zz]
   #   # initial_from_file_var = 'strain_zz'
@@ -194,31 +205,27 @@ gamma = '${fparse 1/2-hht_alpha}'
   [accel_y]
   []
   [vel_x]
+    # order = SECOND
+    # family = HIERARCHIC
   []
   [vel_y]
+    # order = SECOND
+    # family = HIERARCHIC
   []
   [fx]
+    # order = SECOND
+    # family = HIERARCHIC 
   []
   [fy]
+    # order = SECOND
+    # family = HIERARCHIC 
   []
   [d]
     # [InitialCondition]
     #   type = FunctionIC
-    #   function = 'if(y=0&x>=0&x<=50,1,0)'
+    #   function = 'if(y=0&x>=49.5&x<=50.5,1,0)'
     # []
   []
-  # [ce_var]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [delta_var]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
-  # [f_nu_var]
-  #   order = CONSTANT
-  #   family = MONOMIAL
-  # []
   [s1]
     order = CONSTANT
     family = MONOMIAL
@@ -247,17 +254,26 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
+  # [kinetic_energy_var]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   [w_ext]
   []
+  [p_ext]
+  []
+  # [psi_f_var]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
 []
-
 
 [Kernels]
   [solid_x]
     type = ADDynamicStressDivergenceTensors
     variable = disp_x
-    save_in = fx
     component = 0
+    save_in = fx
   []
   [solid_y]
     type = ADDynamicStressDivergenceTensors
@@ -292,26 +308,26 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = accel_x
     displacement = disp_x
     velocity = vel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_x] 
     type = NewmarkVelAux
     variable = vel_x
     acceleration = accel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [accel_y]
     type = NewmarkAccelAux
     variable = accel_y
     displacement = disp_y
     velocity = vel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_y]
     type = NewmarkVelAux
     variable = vel_y
     acceleration = accel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [s11]
     type = ADRankTwoAux
@@ -362,6 +378,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     coupled_variables = 's1 s3'
     expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
   []
+  # [kinetic_energy_aux]
+  #   type = ADKineticEnergyAux
+  #   variable = kinetic_energy_var
+  #   density = density
+  #   newmark_velocity_x = vel_x
+  #   newmark_velocity_y = vel_y
+  #   newmark_velocity_z = 0
+  # []
+  [power]
+    type = ParsedAux
+    variable = p_ext
+    expression = 'abs(vel_y)'
+    coupled_variables = 'vel_y'
+    boundary = 'top bottom'
+  []
   [work]
     type = ParsedAux
     variable = w_ext
@@ -373,17 +404,29 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
 []
 
+# [Functions]
+#   [p_func]
+#     type = PiecewiseLinear
+#     x = '${Tb} ${Tf}'
+#     y = '${p} 0'
+#   []
+# []
+
 [BCs]
   [ytop]
     type = ADPressure
     variable = disp_y
     boundary = top
+    function = '${p}'
+    # function = p_func
     factor = -1
   []
   [ybottom]
     type = ADPressure
     variable = disp_y
     boundary = bottom
+    function = '${p}'
+    # function = p_func
     factor = -1
   []
 []
@@ -400,18 +443,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = 'd'
     phase_field = d
   []
-  [crack_surface_density]
-    type = CrackSurfaceDensity
-    phase_field = d
-  []
-  # [degradation]
-  #   type = PowerDegradationFunction
-  #   property_name = g
-  #   expression = (1-d)^p*(1-eta)+eta
-  #   phase_field = d
-  #   parameter_names = 'p eta '
-  #   parameter_values = '2 1e-6'
-  # []
   [degradation]
     type = RationalDegradationFunction
     property_name = g
@@ -420,12 +451,28 @@ gamma = '${fparse 1/2-hht_alpha}'
     parameter_names = 'p a2 a3 eta'
     parameter_values = '2 1 0.0 1e-6'
   []
+  # [degradation]
+  #   type = PowerDegradationFunction
+  #   f_name = g
+  #   function = (1-d)^p*(1-eta)+eta
+  #   phase_field = d
+  #   parameter_names = 'p eta '
+  #   parameter_values = '2 1e-5'
+  # []
+  # [strain]
+  #   type = ADComputePlaneSmallStrain
+  #   # out_of_plane_strain = 'strain_zz'
+  #   displacements = 'disp_x disp_y'
+  #   output_properties = 'total_strain'
+  #   outputs = exodus
+  # []
   [strain]
-    # type = ADComputePlaneSmallStrain
     type = ADComputeSmallStrain
+    # type = ADComputePlaneSmallStrain
     # out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
-    output_properties = 'total_strain'
+    # output_properties = 'total_strain'
+    # outputs = exodus
   []
   [elasticity]
     type = SmallDeformationIsotropicElasticity
@@ -447,7 +494,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Postprocessors]
-  [Fy]
+  [Fy_top]
     type = NodalSum
     variable = fy
     boundary = top
@@ -458,7 +505,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = disp_y
     # outputs = "csv exodus"
   []
-  [Jint]
+  [J]
     type = PhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
@@ -466,53 +513,73 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     # outputs = "csv exodus"
   []
-  [DJint]
+  [DJint_1]
     type = DynamicPhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
     boundary = 'left bottom right top'
-    density = density
     # outputs = "csv exodus"
   []
-  [DJ_over_J]
+  [DJint_2]
+    type = DJint
+    J_direction = '1 0 0'
+    displacements = 'disp_x disp_y'
+    velocities = 'vel_x vel_y'
+    # block = '0 1'
+  []
+  [DJ]
     type = ParsedPostprocessor
-    pp_names = 'Jint DJint'
-    expression = 'DJint/Jint'
-    # outputs = "csv exodus"
+    expression = 'DJint_1 + DJint_2'
+    pp_names = 'DJint_1 DJint_2'
   []
   [fracture_energy]
     type = Receiver
     # outputs = "csv"
+    execute_on = 'timestep_end'
   []
-  # [ce_int]
-  #   type = Receiver
-  #   # outputs = "csv"
-  # []
-  # [nucleation_energy]
-  #   type = Receiver
-  #   # outputs = "csv"
-  # []
   [kinetic_energy]
     type = KineticEnergy
     # outputs = "csv"
+    execute_on = 'timestep_end'
+    # implicit = false
   []
+  # [kinetic_moose]
+  #   type = ElementIntegralVariablePostprocessor
+  #   variable = kinetic_energy_var
+  #   outputs = "csv"
+  #   execute_on = 'initial timestep_end'
+  # []
   [strain_energy]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
-    # outputs = "csv"
+    outputs = "exodus csv"
+    execute_on = 'timestep_end'
   []
   [external_work]
     type = ExternalWork
     boundary = 'top bottom'
     forces = 'fx fy'
-    # outputs = "csv"
+    outputs = "exodus csv"
+    execute_on = 'initial timestep_end'
+  []
+  [preset_ext_work_p]
+    type = TimeIntegratedPostprocessor
+    value = preset_ext_power
+    execute_on = 'initial timestep_end'
+    # outputs = ''
+  []
+  [preset_ext_power]
+    type = SideIntegralVariablePostprocessor
+    variable = p_ext
+    boundary = "top bottom"
+    execute_on = 'initial timestep_end'
   []
   [preset_ext_work]
     type = SideIntegralVariablePostprocessor
     variable = w_ext
     boundary = "top bottom"
-    # execute_on = 'initial timestep_end'
+    execute_on = 'initial timestep_end'
   []
 []
 
@@ -520,59 +587,65 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'hypre       boomeramg                 '
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
-  nl_max_its = 200
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-4
+  nl_abs_tol = 1e-6
 
-  dt = 1e-7
-  dtmin = 1e-8
-  end_time = 80e-6
+  # dt = 5e-7
+  # end_time = 100e-6
+  dt = 0.5
+  end_time = ${Tf}
 
   # restart
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = false
+  fixed_point_max_its = 10
+  accept_on_max_fixed_point_iteration = true
+  # accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-4
+  fixed_point_abs_tol = 1e-6
 
+  # [Quadrature]
+  #   type = GAUSS
+  #   order = FOURTH
+  # []
   # [TimeIntegrator]
   #   type = NewmarkBeta
-  #   # gamma = '${fparse 5/6}'
-  #   # beta = '${fparse 4/9}'
   # []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
+    # interval = 5
     time_step_interval = 1
-    min_simulation_time_interval = 2e-7
+    min_simulation_time_interval = 0.25
   []
   checkpoint = true
   print_linear_residuals = false
-  # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
-  file_base = './out/coh_nobranch_l${l}_width2.6_plane_strain/coh_nobranch'
+  # file_base = './out/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+  # file_base = './out/br_coh_plane_stress_p${p}_l${l}/dyn_br'
+  # file_base = './out/br_coh_plane_strain_p${p}_tb${Tb}_tf${Tf}/dyn_br'
+  file_base = './out/${filebase}/coh'
+  # interval = 1
   time_step_interval = 1
   [csv]
-    # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
-    file_base = './gold/coh_nobranch_l${l}_width2.6_plane_strain'
+    # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'
+    # file_base = './gold/br_coh_plane_stress_p${p}_l${l}'
+    # file_base = './gold/br_coh_plane_strain_p${p}_tb${Tb}_tf${Tf}_l${l}_h${}'
+    file_base = './gold/${filebase}'
     type = CSV
   []
 []
