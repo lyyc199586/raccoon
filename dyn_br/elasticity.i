@@ -603,7 +603,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [csv]
     # file_base = './gold/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}_plane_strain'
     # file_base = './gold/dyn_br_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}_plane_strain'
-    file_base = './gold/${filebase}.csv'
+    file_base = './gold/${filebase}'
     type = CSV
   []
 []

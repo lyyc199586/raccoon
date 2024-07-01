@@ -64,11 +64,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = 'disp_x disp_y psie_active'
     source_variable = 'disp_x disp_y psie_active'
   []
-  [pp_transfer]
+  [FE_transfer]
     type = MultiAppPostprocessorTransfer
     from_multi_app = fracture
-    from_postprocessor = Psi_f
-    to_postprocessor = fracture_energy
+    from_postprocessor = 'Psi_f'
+    to_postprocessor = 'FE'
+    reduction_type = average
+  []
+  [FE_br_transfer]
+    type = MultiAppPostprocessorTransfer
+    from_multi_app = fracture
+    from_postprocessor = Psi_f_br
+    to_postprocessor = FE_br
     reduction_type = average
   []
 []
@@ -133,6 +140,19 @@ gamma = '${fparse 1/2-hht_alpha}'
     bottom_left = '${fparse 50-h-0.01} -${fparse 2*l+0.01} 0'
     top_right = '${fparse 100+0.01} ${fparse 2*l+0.01} 0'
     block_id = '4'
+  []
+  [branch_region]
+    input = confine
+    type = SubdomainBoundingBoxGenerator
+    bottom_left = '62.9 -${fparse 2*l+0.01} 0'
+    top_right = '73.1 ${fparse 2*l+0.01} 0'
+    block_id = '5'
+  []
+  [branch_bnd]
+    input = branch_region
+    type = SideSetsAroundSubdomainGenerator
+    block = '5'
+    new_boundary = 'br_bnd'
   []
 []
 
@@ -513,73 +533,83 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     # outputs = "csv exodus"
   []
-  [DJint_1]
+  [DJ1]
     type = DynamicPhaseFieldJIntegral
     J_direction = '1 0 0'
     strain_energy_density = psie
     displacements = 'disp_x disp_y'
     boundary = 'left bottom right top'
-    # outputs = "csv exodus"
+    density = density
   []
-  [DJint_2]
+  [DJ2]
     type = DJint
     J_direction = '1 0 0'
     displacements = 'disp_x disp_y'
     velocities = 'vel_x vel_y'
-    # block = '0 1'
+    density = density
   []
   [DJ]
     type = ParsedPostprocessor
-    expression = 'DJint_1 + DJint_2'
-    pp_names = 'DJint_1 DJint_2'
+    expression = 'DJ1 + DJ2'
+    pp_names = 'DJ1 DJ2'
   []
-  [fracture_energy]
+  [DJ1_br]
+    type = DynamicPhaseFieldJIntegral
+    J_direction = '1 0 0'
+    strain_energy_density = psie
+    displacements = 'disp_x disp_y'
+    boundary = 'br_bnd'
+    density = density
+  []
+  [DJ2_br]
+    type = DJint
+    J_direction = '1 0 0'
+    displacements = 'disp_x disp_y'
+    velocities = 'vel_x vel_y'
+    block = '5'
+    density = density
+  []
+  [DJ_br]
+    type = ParsedPostprocessor
+    expression = 'DJ1_br + DJ2_br'
+    pp_names = 'DJ1_br DJ2_br'
+  []
+  [FE]
     type = Receiver
-    # outputs = "csv"
-    execute_on = 'timestep_end'
   []
-  [kinetic_energy]
+  [FE_br]
+    type = Receiver
+  []
+  [KE]
     type = KineticEnergy
-    # outputs = "csv"
-    execute_on = 'timestep_end'
-    # implicit = false
   []
-  # [kinetic_moose]
-  #   type = ElementIntegralVariablePostprocessor
-  #   variable = kinetic_energy_var
-  #   outputs = "csv"
-  #   execute_on = 'initial timestep_end'
-  # []
-  [strain_energy]
+  [KE_br]
+    type = KineticEnergy
+    block = 5
+  []
+  [SE]
     type = ADElementIntegralMaterialProperty
     mat_prop = psie
-    outputs = "exodus csv"
-    execute_on = 'timestep_end'
   []
-  [external_work]
+  [SE_br]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psie
+    block = '5'
+  []
+  [EW]
     type = ExternalWork
     boundary = 'top bottom'
     forces = 'fx fy'
-    outputs = "exodus csv"
-    execute_on = 'initial timestep_end'
   []
-  [preset_ext_work_p]
-    type = TimeIntegratedPostprocessor
-    value = preset_ext_power
-    execute_on = 'initial timestep_end'
-    # outputs = ''
+  [EW_br]
+    type = ExternalWork
+    boundary = 'br_bnd'
+    forces = 'fx fy'
   []
-  [preset_ext_power]
-    type = SideIntegralVariablePostprocessor
-    variable = p_ext
-    boundary = "top bottom"
-    execute_on = 'initial timestep_end'
-  []
-  [preset_ext_work]
+  [PEW]
     type = SideIntegralVariablePostprocessor
     variable = w_ext
     boundary = "top bottom"
-    execute_on = 'initial timestep_end'
   []
 []
 
@@ -602,7 +632,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # dt = 5e-7
   # end_time = 100e-6
-  dt = 0.5
+  dt = 0.25
   end_time = ${Tf}
 
   # restart
@@ -610,8 +640,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   # end_time = 120e-6
 
   fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = true
   # accept_on_max_fixed_point_iteration = true
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-4

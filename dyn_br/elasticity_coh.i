@@ -665,7 +665,6 @@ gamma = '${fparse 1/2-hht_alpha}'
   # file_base = './out/br_coh_plane_stress_p${p}_l${l}/dyn_br'
   # file_base = './out/br_coh_plane_strain_p${p}_tb${Tb}_tf${Tf}/dyn_br'
   file_base = './out/${filebase}/coh'
-  # interval = 1
   time_step_interval = 1
   [csv]
     # file_base = './csv/dyn_br_nuc22_ts${sigma_ts}_cs${sigma_cs}_l${l}_delta${delta}'

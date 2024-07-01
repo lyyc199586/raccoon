@@ -65,7 +65,7 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
-    block = '4'
+    block = '4 5'
   []
   [confine]
     type = ConstantBounds
@@ -213,6 +213,11 @@
     mat_prop = psi_f
     execute_on = 'initial timestep_end'
   []
+  [Psi_f_br]
+    type = ADElementIntegralMaterialProperty
+    mat_prop = psi_f
+    block = '5'
+  []
 []
 
 [Executioner]
@@ -228,9 +233,9 @@
   automatic_scaling = true
 
   # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-4
-  nl_abs_tol = 1e-6
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-4
+  # nl_abs_tol = 1e-6
 
   # restart
   # start_time = 80e-6
