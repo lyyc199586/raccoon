@@ -20,6 +20,7 @@ h = 1
 # h = 0.5
 # delta = 4 # haven't tested
 refine = 3 # 1/2^3 = 0.125
+# refine = 4
 # h = ${fparse 1/2^refine}
 p = 1
 # p = 0.8
@@ -29,7 +30,7 @@ Tf = 60
 nx = '${fparse int(100/h)}'
 ny = '${fparse int(40/h)}'
 
-filebase = coh_cf_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
+filebase = coh_partial_6l_cf_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
 hht_alpha = -0.3
@@ -124,8 +125,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   [refine_block]
     type = SubdomainBoundingBoxGenerator
     input = split
-    bottom_left = '${fparse 50-h-0.01} -${fparse 3*l+0.01} 0'
-    top_right = '${fparse 100+0.01} ${fparse 3*l+0.01} 0'
+    bottom_left = '${fparse 50-h-0.01} -${fparse 7*l+0.01} 0'
+    # top_right = '${fparse 100+0.01} ${fparse 3*l+0.01} 0'
+    top_right = '101 21 0'
     block_id = '3'
   []
   [refine] # only for refine
@@ -137,8 +139,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   [confine]
     type = SubdomainBoundingBoxGenerator
     input = refine
-    bottom_left = '${fparse 50-h-0.01} -${fparse 2*l+0.01} 0'
-    top_right = '${fparse 100+0.01} ${fparse 2*l+0.01} 0'
+    bottom_left = '${fparse 50-h-0.01} -${fparse 6*l+0.01} 0'
+    # top_right = '${fparse 100+0.01} ${fparse 2*l+0.01} 0'
+    top_right = '101 21 0'
     block_id = '4'
   []
   [branch_region]
@@ -258,22 +261,22 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [s11]
+  [hoop]
     order = CONSTANT
     family = MONOMIAL
   []
-  [s22]
+  [vms]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_1]
+  [hydrostatic]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [f_quadrant_2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   # [kinetic_energy_var]
   #   order = CONSTANT
   #   family = MONOMIAL
@@ -349,22 +352,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
-  [s11]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s11
-    index_i = 0
-    index_j = 0
-    execute_on = 'TIMESTEP_END'
-  []
-  [s22]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s22
-    index_i = 1
-    index_j = 1
-    execute_on = 'TIMESTEP_END'
-  []
   [s1]
     type = ADRankTwoScalarAux
     rank_two_tensor = stress
@@ -386,18 +373,39 @@ gamma = '${fparse 1/2-hht_alpha}'
     scalar_type = MinPrincipal
     execute_on = 'TIMESTEP_END'
   []
-  [quadrant]
-    type = ParsedAux
-    variable = f_quadrant_1
-    coupled_variables = 's11 s22'
-    expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  [hoop]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hoop
+    scalar_type = HoopStress
+    execute_on = 'TIMESTEP_END'
   []
-  [quadrant2]
-    type = ParsedAux
-    variable = f_quadrant_2
-    coupled_variables = 's1 s3'
-    expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  [hydrostatic]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hydrostatic
+    scalar_type = Hydrostatic
+    execute_on = 'TIMESTEP_END'
   []
+  [vms]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = vms
+    scalar_type = VonMisesStress
+    execute_on = 'TIMESTEP_END'
+  []
+  # [quadrant]
+  #   type = ParsedAux
+  #   variable = f_quadrant_1
+  #   coupled_variables = 's11 s22'
+  #   expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  # []
+  # [quadrant2]
+  #   type = ParsedAux
+  #   variable = f_quadrant_2
+  #   coupled_variables = 's1 s3'
+  #   expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  # []
   # [kinetic_energy_aux]
   #   type = ADKineticEnergyAux
   #   variable = kinetic_energy_var
@@ -509,7 +517,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    outputs = exodus
+    # outputs = exodus
   []
 []
 

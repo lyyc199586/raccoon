@@ -22,11 +22,11 @@ p = 1
 refine = 3 # 0.125
 
 Tb = 0
-Tf = 60
+Tf = 70
 nx = '${fparse int(100/h)}'
 ny = '${fparse int(40/h)}'
 
-filebase = nuc24_cf_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
+filebase = nuc24_cf_partial_y6l_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
 # hht_alpha = -0.25
@@ -76,20 +76,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     to_postprocessor = FE_br
     reduction_type = average
   []
-  # [pp_transfer_2]
-  #   type = MultiAppPostprocessorTransfer
-  #   from_multi_app = fracture
-  #   from_postprocessor = ce_int
-  #   to_postprocessor = ce_int
-  #   reduction_type = average
-  # []
-  # [pp_transfer_3]
-  #   type = MultiAppPostprocessorTransfer
-  #   from_multi_app = fracture
-  #   from_postprocessor = Psi_nuc
-  #   to_postprocessor = nucleation_energy
-  #   reduction_type = average
-  # []
 []
 
 [GlobalParams]
@@ -104,8 +90,6 @@ gamma = '${fparse 1/2-hht_alpha}'
   [gen] #h_c = 1, h_r = 0.25
     type = GeneratedMeshGenerator
     dim = 2
-    # nx = 100
-    # ny = 40
     nx = ${nx}
     ny = ${ny}
     xmin = 0
@@ -134,8 +118,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   [refine_block]
     type = SubdomainBoundingBoxGenerator
     input = split
-    bottom_left = '${fparse 50-h-0.01} -${fparse 3*l+0.01} 0'
-    top_right = '${fparse 100+0.01} ${fparse 3*l+0.01} 0'
+    bottom_left = '${fparse 50-h-0.01} -${fparse 7*l+0.01} 0'
+    # top_right = '${fparse 100+0.01} ${fparse 3*l+0.01} 0'
+    top_right = '101 21 0'
     block_id = '3'
   []
   [refine] # only for refine
@@ -147,8 +132,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   [confine]
     type = SubdomainBoundingBoxGenerator
     input = refine
-    bottom_left = '${fparse 50-h-0.01} -${fparse 2*l+0.01} 0'
-    top_right = '${fparse 100+0.01} ${fparse 2*l+0.01} 0'
+    bottom_left = '${fparse 50-h-0.01} -${fparse 6*l+0.01} 0'
+    # top_right = '${fparse 100+0.01} ${fparse 2*l+0.01} 0'
+    top_right = '101 21 0'
     block_id = '4'
   []
   [branch_region]
@@ -260,26 +246,37 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [s11]
+  [hoop]
     order = CONSTANT
     family = MONOMIAL
   []
-  [s22]
+  [vms]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_1]
+  [hydrostatic]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [s11]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s22]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [f_quadrant_1]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [f_quadrant_2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   [w_ext]
   []
 []
-
 
 [Kernels]
   [solid_x]
@@ -321,43 +318,43 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = accel_x
     displacement = disp_x
     velocity = vel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
-  [vel_x] 
+  [vel_x]
     type = NewmarkVelAux
     variable = vel_x
     acceleration = accel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [accel_y]
     type = NewmarkAccelAux
     variable = accel_y
     displacement = disp_y
     velocity = vel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_y]
     type = NewmarkVelAux
     variable = vel_y
     acceleration = accel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
-  [s11]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s11
-    index_i = 0
-    index_j = 0
-    execute_on = 'TIMESTEP_END'
-  []
-  [s22]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s22
-    index_i = 1
-    index_j = 1
-    execute_on = 'TIMESTEP_END'
-  []
+  # [s11]
+  #   type = ADRankTwoAux
+  #   rank_two_tensor = stress
+  #   variable = s11
+  #   index_i = 0
+  #   index_j = 0
+  #   execute_on = 'TIMESTEP_END'
+  # []
+  # [s22]
+  #   type = ADRankTwoAux
+  #   rank_two_tensor = stress
+  #   variable = s22
+  #   index_i = 1
+  #   index_j = 1
+  #   execute_on = 'TIMESTEP_END'
+  # []
   [s1]
     type = ADRankTwoScalarAux
     rank_two_tensor = stress
@@ -379,29 +376,49 @@ gamma = '${fparse 1/2-hht_alpha}'
     scalar_type = MinPrincipal
     execute_on = 'TIMESTEP_END'
   []
-  [quadrant]
-    type = ParsedAux
-    variable = f_quadrant_1
-    coupled_variables = 's11 s22'
-    expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  [hoop]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hoop
+    scalar_type = HoopStress
+    execute_on = 'TIMESTEP_END'
   []
-  [quadrant2]
-    type = ParsedAux
-    variable = f_quadrant_2
-    coupled_variables = 's1 s3'
-    expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  [hydrostatic]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hydrostatic
+    scalar_type = Hydrostatic
+    execute_on = 'TIMESTEP_END'
   []
+  [vms]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = vms
+    scalar_type = VonMisesStress
+    execute_on = 'TIMESTEP_END'
+  []
+  # [quadrant]
+  #   type = ParsedAux
+  #   variable = f_quadrant_1
+  #   coupled_variables = 's11 s22'
+  #   expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  # []
+  # [quadrant2]
+  #   type = ParsedAux
+  #   variable = f_quadrant_2
+  #   coupled_variables = 's1 s3'
+  #   expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  # []
   [work]
     type = ParsedAux
     variable = w_ext
     # expression = 'disp_y^2/sqrt(disp_x^2 + disp_y^2) + disp_x^2/sqrt(disp_x^2 + disp_y^2)'
-    expression = 'if(x > 0.5, if(x < 99.5, abs(disp_y), abs(disp_y)/2), abs(disp_y)/2)'
+    expression = 'if(x > 0.01, if(x < 99.9, abs(disp_y)*1, abs(disp_y)/2*1), abs(disp_y)/2*1)'
     coupled_variables = 'disp_y'
     boundary = 'top bottom'
     use_xyzt = true
   []
 []
-
 
 [BCs]
   [ytop]
@@ -465,7 +482,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    outputs = exodus
+    # outputs = exodus
   []
 []
 
@@ -595,7 +612,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   nl_abs_tol = 1e-6
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
-  nl_max_its = 50
+  # nl_max_its = 50
 
   # dt = 0.5e-7
   dt = 0.25
@@ -623,8 +640,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    # time_step_interval = 1
-    # min_simulation_time_interval = 0.25
+    time_step_interval = 1
+    min_simulation_time_interval = 0.25
   []
   checkpoint = true
   print_linear_residuals = false

@@ -28,7 +28,7 @@ Tf = 70
 nx = '${fparse int(100/h)}'
 ny = '${fparse int(40/h)}'
 
-filebase = coh_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
+filebase = coh_plain_stress_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
 hht_alpha = -0.3
@@ -59,10 +59,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppCopyTransfer
     # type = MultiAppGeneralFieldShapeEvaluationTransfer
     to_multi_app = fracture
-    # variable = 'disp_x disp_y strain_zz psie_active'
-    # source_variable = 'disp_x disp_y strain_zz psie_active'
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
+    variable = 'disp_x disp_y strain_zz psie_active'
+    source_variable = 'disp_x disp_y strain_zz psie_active'
+    # variable = 'disp_x disp_y psie_active'
+    # source_variable = 'disp_x disp_y psie_active'
   []
   [FE_transfer]
     type = MultiAppPostprocessorTransfer
@@ -190,10 +190,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     # initial_from_file_timestep = LATEST
     # order = SECOND
   []
-  # [strain_zz]
-  #   # initial_from_file_var = 'strain_zz'
-  #   # initial_from_file_timestep = LATEST
-  # []
+  [strain_zz]
+    # initial_from_file_var = 'strain_zz'
+    # initial_from_file_timestep = LATEST
+  []
 []
 
 [AuxVariables]
@@ -235,22 +235,22 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [s11]
+  [hoop]
     order = CONSTANT
     family = MONOMIAL
   []
-  [s22]
+  [vms]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_1]
+  [hydrostatic]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [f_quadrant_2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   # [kinetic_energy_var]
   #   order = CONSTANT
   #   family = MONOMIAL
@@ -292,11 +292,11 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocity = vel_y
     acceleration = accel_y
   []
-  # [plane_stress]
-  #   type = ADWeakPlaneStress
-  #   variable = 'strain_zz'
-  #   displacements = 'disp_x disp_y'
-  # []
+  [plane_stress]
+    type = ADWeakPlaneStress
+    variable = 'strain_zz'
+    displacements = 'disp_x disp_y'
+  []
 []
 
 [AuxKernels]
@@ -326,22 +326,6 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
-  [s11]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s11
-    index_i = 0
-    index_j = 0
-    execute_on = 'TIMESTEP_END'
-  []
-  [s22]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s22
-    index_i = 1
-    index_j = 1
-    execute_on = 'TIMESTEP_END'
-  []
   [s1]
     type = ADRankTwoScalarAux
     rank_two_tensor = stress
@@ -363,25 +347,38 @@ gamma = '${fparse 1/2-hht_alpha}'
     scalar_type = MinPrincipal
     execute_on = 'TIMESTEP_END'
   []
-  [quadrant]
-    type = ParsedAux
-    variable = f_quadrant_1
-    coupled_variables = 's11 s22'
-    expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  [hoop]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hoop
+    scalar_type = HoopStress
+    execute_on = 'TIMESTEP_END'
   []
-  [quadrant2]
-    type = ParsedAux
-    variable = f_quadrant_2
-    coupled_variables = 's1 s3'
-    expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  [hydrostatic]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hydrostatic
+    scalar_type = Hydrostatic
+    execute_on = 'TIMESTEP_END'
   []
-  # [kinetic_energy_aux]
-  #   type = ADKineticEnergyAux
-  #   variable = kinetic_energy_var
-  #   density = density
-  #   newmark_velocity_x = vel_x
-  #   newmark_velocity_y = vel_y
-  #   newmark_velocity_z = 0
+  [vms]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = vms
+    scalar_type = VonMisesStress
+    execute_on = 'TIMESTEP_END'
+  []
+  # [quadrant]
+  #   type = ParsedAux
+  #   variable = f_quadrant_1
+  #   coupled_variables = 's11 s22'
+  #   expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  # []
+  # [quadrant2]
+  #   type = ParsedAux
+  #   variable = f_quadrant_2
+  #   coupled_variables = 's1 s3'
+  #   expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
   # []
   [power]
     type = ParsedAux
@@ -463,9 +460,9 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   outputs = exodus
   # []
   [strain]
-    type = ADComputeSmallStrain
-    # type = ADComputePlaneSmallStrain
-    # out_of_plane_strain = 'strain_zz'
+    # type = ADComputeSmallStrain
+    type = ADComputePlaneSmallStrain
+    out_of_plane_strain = 'strain_zz'
     displacements = 'disp_x disp_y'
     # output_properties = 'total_strain'
     # outputs = exodus
@@ -485,7 +482,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    outputs = exodus
+    # outputs = exodus
   []
 []
 
