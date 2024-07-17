@@ -224,22 +224,22 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [s11]
+  [hoop]
     order = CONSTANT
     family = MONOMIAL
   []
-  [s22]
+  [vms]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_1]
+  [hydrostatic]
     order = CONSTANT
     family = MONOMIAL
   []
-  [f_quadrant_2]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [f_quadrant_2]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   [w_ext]
   []
 []
@@ -285,43 +285,43 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = accel_x
     displacement = disp_x
     velocity = vel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_x] 
     type = NewmarkVelAux
     variable = vel_x
     acceleration = accel_x
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [accel_y]
     type = NewmarkAccelAux
     variable = accel_y
     displacement = disp_y
     velocity = vel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
   [vel_y]
     type = NewmarkVelAux
     variable = vel_y
     acceleration = accel_y
-    execute_on = timestep_end
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
-  [s11]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s11
-    index_i = 0
-    index_j = 0
-    execute_on = 'TIMESTEP_END'
-  []
-  [s22]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s22
-    index_i = 1
-    index_j = 1
-    execute_on = 'TIMESTEP_END'
-  []
+  # [s11]
+  #   type = ADRankTwoAux
+  #   rank_two_tensor = stress
+  #   variable = s11
+  #   index_i = 0
+  #   index_j = 0
+  #   execute_on = 'TIMESTEP_END'
+  # []
+  # [s22]
+  #   type = ADRankTwoAux
+  #   rank_two_tensor = stress
+  #   variable = s22
+  #   index_i = 1
+  #   index_j = 1
+  #   execute_on = 'TIMESTEP_END'
+  # []
   [s1]
     type = ADRankTwoScalarAux
     rank_two_tensor = stress
@@ -343,23 +343,44 @@ gamma = '${fparse 1/2-hht_alpha}'
     scalar_type = MinPrincipal
     execute_on = 'TIMESTEP_END'
   []
-  [quadrant]
-    type = ParsedAux
-    variable = f_quadrant_1
-    coupled_variables = 's11 s22'
-    expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  [hoop]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hoop
+    scalar_type = HoopStress
+    execute_on = 'TIMESTEP_END'
   []
-  [quadrant2]
-    type = ParsedAux
-    variable = f_quadrant_2
-    coupled_variables = 's1 s3'
-    expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  [hydrostatic]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hydrostatic
+    scalar_type = Hydrostatic
+    execute_on = 'TIMESTEP_END'
   []
+  [vms]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = vms
+    scalar_type = VonMisesStress
+    execute_on = 'TIMESTEP_END'
+  []
+  # [quadrant]
+  #   type = ParsedAux
+  #   variable = f_quadrant_1
+  #   coupled_variables = 's11 s22'
+  #   expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  # []
+  # [quadrant2]
+  #   type = ParsedAux
+  #   variable = f_quadrant_2
+  #   coupled_variables = 's1 s3'
+  #   expression = 'if(s1>=0, if(s3>=0, 1, 4), if(s3>=0, 2, 3))'
+  # []
   [work]
     type = ParsedAux
     variable = w_ext
     # expression = 'disp_y^2/sqrt(disp_x^2 + disp_y^2) + disp_x^2/sqrt(disp_x^2 + disp_y^2)'
-    expression = 'if(x > 0.5, if(x < 99.5, abs(disp_y), abs(disp_y)/2), abs(disp_y)/2)'
+    expression = 'if(x > 0.01, if(x < 99.99, abs(disp_y), abs(disp_y)/2), abs(disp_y)/2)'
     coupled_variables = 'disp_y'
     boundary = 'top bottom'
     use_xyzt = true
@@ -368,19 +389,31 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 
 [BCs]
+  # [ytop]
+  #   type = ADPressure
+  #   variable = disp_y
+  #   boundary = top
+  #   function = ${p}
+  #   factor = -1
+  # []
+  # [ybottom]
+  #   type = ADPressure
+  #   variable = disp_y
+  #   boundary = bottom
+  #   function = ${p}
+  #   factor = -1
+  # []
   [ytop]
-    type = ADPressure
+    type = ADNeumannBC
     variable = disp_y
     boundary = top
-    function = ${p}
-    factor = -1
+    value = ${fparse p}
   []
   [ybottom]
-    type = ADPressure
+    type = ADNeumannBC
     variable = disp_y
     boundary = bottom
-    function = ${p}
-    factor = -1
+    value = ${fparse -p}
   []
 []
 
@@ -422,14 +455,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active'
+    output_properties = 'psie_active psie'
     outputs = exodus
   []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
     output_properties = 'stress'
-    outputs = exodus
+    # outputs = exodus
   []
 []
 
@@ -468,7 +501,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     velocities = 'vel_x vel_y'
     density = density
   []
-  [DJ]
+  [DJint]
     type = ParsedPostprocessor
     expression = 'DJ1 + DJ2'
     pp_names = 'DJ1 DJ2'
@@ -559,10 +592,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-8
+  # nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   # nl_max_its = 50
 
   # dt = 0.5e-7
@@ -575,7 +608,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # end_time = 120e-6
 
   fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = false
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6
@@ -591,8 +624,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    # time_step_interval = 1
-    # min_simulation_time_interval = 0.25
+    time_step_interval = 1
+    min_simulation_time_interval = 0.25
   []
   checkpoint = true
   print_linear_residuals = false

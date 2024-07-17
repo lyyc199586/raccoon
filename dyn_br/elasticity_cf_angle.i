@@ -26,7 +26,8 @@ Tf = 70
 # nx = '${fparse int(100/h)}'
 # ny = '${fparse int(40/h)}'
 
-filebase = nuc24_cf_angle_80_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
+# filebase = nuc24_cf_angle_55_x55_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
+filebase = nuc24_cf_angle_55_x55_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
 
 # hht parameters
 # hht_alpha = -0.25
@@ -89,7 +90,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = "./mesh/br_cf_80deg_l0.625.msh"
+    file = "./mesh/br_cf_55deg_x55_l0.625.msh"
   []
   construct_node_list_from_side_list = true
   construct_side_list_from_node_list = true
@@ -356,7 +357,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ParsedAux
     variable = w_ext
     # expression = 'disp_y^2/sqrt(disp_x^2 + disp_y^2) + disp_x^2/sqrt(disp_x^2 + disp_y^2)'
-    expression = 'if(x > 0.01, if(x < 99.9, abs(disp_y)*1, abs(disp_y)/2*1), abs(disp_y)/2*1)'
+    expression = 'if(x > 0.01, if(x < 99.99, abs(disp_y)*${p}, abs(disp_y)/2*${p}), abs(disp_y)/2*${p})'
     coupled_variables = 'disp_y'
     boundary = 'top bottom'
     use_xyzt = true
@@ -365,18 +366,16 @@ gamma = '${fparse 1/2-hht_alpha}'
 
 [BCs]
   [ytop]
-    type = ADPressure
+    type = ADNeumannBC
     variable = disp_y
     boundary = top
-    function = ${p}
-    factor = 1
+    value = ${fparse p}
   []
   [ybottom]
-    type = ADPressure
+    type = ADNeumannBC
     variable = disp_y
     boundary = bottom
-    function = ${p}
-    factor = 1
+    value = ${fparse -p}
   []
 []
 
@@ -418,7 +417,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active'
+    output_properties = 'psie_active psie'
     outputs = exodus
   []
   [stress]
@@ -567,7 +566,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # end_time = 120e-6
 
   fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = false
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
   fixed_point_rel_tol = 1e-6

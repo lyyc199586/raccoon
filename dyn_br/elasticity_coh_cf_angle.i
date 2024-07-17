@@ -30,7 +30,8 @@ Tf = 70
 # nx = '${fparse int(100/h)}'
 # ny = '${fparse int(40/h)}'
 
-filebase = coh_cf_angle_80_y4l_p${p}_l${l}_tb${Tb}_tf${Tf}
+# filebase = coh_cf_angle_55_x55_y4l_p${p}_l${l}_tb${Tb}_tf${Tf}
+filebase = coh_cf_tbr_angle_80_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
 
 # hht parameters
 hht_alpha = -0.3
@@ -92,7 +93,9 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = "./mesh/br_cf_80deg_l0.625.msh"
+    # file = "./mesh/br_cf_55deg_x55.msh"
+    # file = "./mesh/br_cf_80deg_l0.625.msh"
+    file = './mesh/tbr_cf_80deg_l0.625.msh'
   []
   construct_node_list_from_side_list = true
   construct_side_list_from_node_list = true
@@ -380,21 +383,33 @@ gamma = '${fparse 1/2-hht_alpha}'
 # []
 
 [BCs]
+  # [ytop]
+  #   type = ADPressure
+  #   variable = disp_y
+  #   boundary = top
+  #   function = '${p}'
+  #   # function = p_func
+  #   factor = 1
+  # []
+  # [ybottom]
+  #   type = ADPressure
+  #   variable = disp_y
+  #   boundary = bottom
+  #   function = '${p}'
+  #   # function = p_func
+  #   factor = 1
+  # []
   [ytop]
-    type = ADPressure
+    type = ADNeumannBC
     variable = disp_y
     boundary = top
-    function = '${p}'
-    # function = p_func
-    factor = 1
+    value = ${fparse p}
   []
   [ybottom]
-    type = ADPressure
+    type = ADNeumannBC
     variable = disp_y
     boundary = bottom
-    function = '${p}'
-    # function = p_func
-    factor = 1
+    value = ${fparse -p}
   []
 []
 

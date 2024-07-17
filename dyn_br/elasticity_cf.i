@@ -413,7 +413,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = ParsedAux
     variable = w_ext
     # expression = 'disp_y^2/sqrt(disp_x^2 + disp_y^2) + disp_x^2/sqrt(disp_x^2 + disp_y^2)'
-    expression = 'if(x > 0.01, if(x < 99.9, abs(disp_y)*1, abs(disp_y)/2*1), abs(disp_y)/2*1)'
+    expression = 'if(x > 0.01, if(x < 99.99, abs(disp_y)*${p}, abs(disp_y)/2*${p}), abs(disp_y)/2*${p})'
     coupled_variables = 'disp_y'
     boundary = 'top bottom'
     use_xyzt = true
@@ -475,7 +475,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active'
+    output_properties = 'psie_active psie'
     outputs = exodus
   []
   [stress]
@@ -608,10 +608,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-4
-  nl_abs_tol = 1e-6
-  # nl_rel_tol = 1e-6
-  # nl_abs_tol = 1e-8
+  # nl_rel_tol = 1e-4
+  # nl_abs_tol = 1e-6
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   # nl_max_its = 50
 
   # dt = 0.5e-7
@@ -624,11 +624,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   # end_time = 120e-6
 
   fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = false
+  accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
-  fixed_point_rel_tol = 1e-4
-  fixed_point_abs_tol = 1e-6
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
 
   # [TimeIntegrator]
   #   type = NewmarkBeta
