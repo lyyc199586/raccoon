@@ -578,21 +578,21 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # l_abs_tol = 1e-8
   # l_max_its = 200
-  nl_rel_tol = 1e-4
-  nl_abs_tol = 1e-6
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-4
+  # nl_abs_tol = 1e-6
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   # nl_max_its = 200
 
   # line_search = none
   # fixed_point_algorithm = 
-  fixed_point_max_its = 10
+  fixed_point_max_its = 50
   # disable_fixed_point_residual_norm_check = true
-  accept_on_max_fixed_point_iteration = true
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-4
-  fixed_point_abs_tol = 1e-6
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-4
+  # fixed_point_abs_tol = 1e-6
   # [TimeStepper]
   #   type = FunctionDT
   #   function = 'if(t<50,2,0.05)'
@@ -619,13 +619,13 @@ gamma = '${fparse 1/2-hht_alpha}'
   # file_base = './out/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}/pr_coh_p${p0}_t${T0}_l${l}_h1_rf${refine}'
   # file_base = './out/pr_seed${seed}_patch4_l${l}_h4_rf${refine}/pr'
   # file_base = './out/pr_nuc24_degrade_rho/pr_nuc24'
-  file_base = './out/pr_nuc24_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}/pr_nuc24'
+  file_base = './out/test_pr_nuc24_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}/pr_nuc24'
   # file_base = './out/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5/pr_nuc24'
   checkpoint = true
   [csv]
     # file_base = './gold/pr_seed${seed}_patch4_l${l}_h4_rf${refine}'
     # file_base = './gold/pr_nuc24_degrade_rho'
-    file_base = './gold/pr_nuc24_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}'
+    file_base = './gold/test_pr_nuc24_plane_stress_p${p0}_t${T0}_l${l}_h4_rf${refine}'
     # file_base = './gold/pr_nuc24_seed${seed}_patch10_p${p0}_t${T0}_ts${sigma_ts}_cs${sigma_cs}_gc${Gc}_l${l}_h0.5'
     type = CSV
   []

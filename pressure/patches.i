@@ -16,13 +16,13 @@
   []
 []
 
-[Distributions]
-  [normal]
-    type = Normal 
-    mean = 1
-    standard_deviation = 0.05
-  []
-[]
+# [Distributions]
+#   [normal]
+#     type = Normal 
+#     mean = 1
+#     standard_deviation = 0.05
+#   []
+# []
 
 [ICs]
   [random]

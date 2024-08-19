@@ -381,7 +381,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     degradation_function = g
     # decomposition = SPECTRAL
-    decomposition = VOLDEV
+    # decomposition = VOLDEV
+    decomposition = NONE
     output_properties = 'psie_active'
     outputs = exodus
   []
@@ -436,66 +437,66 @@ gamma = '${fparse 1/2-hht_alpha}'
     forces = 'fx fy'
     outputs = "csv"
   []
-  [s1_ul] # upper left
-    type = PointValue
-    elementid = 597
-    variable = s1
-  []
-  [s1_ur] # upper right
-    type = PointValue
-    elementid = 1761
-    variable = s1
-  []
-  [s1_ll] # lower left
-    type = PointValue
-    elementid = 1248
-    variable = s1
-  []
-  [s1_lr] # upper left
-    type = PointValue
-    elementid = 1419
-    variable = s1
-  []
-  [s2_ul] # upper left
-    type = PointValue
-    elementid = 597
-    variable = s2
-  []
-  [s2_ur] # upper right
-    type = PointValue
-    elementid = 1761
-    variable = s2
-  []
-  [s2_ll] # lower left
-    type = PointValue
-    elementid = 1248
-    variable = s2
-  []
-  [s2_lr] # upper left
-    type = PointValue
-    elementid = 1419
-    variable = s2
-  []
-  [s3_ul] # upper left
-    type = PointValue
-    elementid = 597
-    variable = s3
-  []
-  [s3_ur] # upper right
-    type = PointValue
-    elementid = 1761
-    variable = s3
-  []
-  [s3_ll] # lower left
-    type = PointValue
-    elementid = 1248
-    variable = s3
-  []
-  [s3_lr] # upper left
-    type = PointValue
-    elementid = 1419
-    variable = s3
-  []
+  # [s1_ul] # upper left
+  #   type = PointValue
+  #   elementid = 597
+  #   variable = s1
+  # []
+  # [s1_ur] # upper right
+  #   type = PointValue
+  #   elementid = 1761
+  #   variable = s1
+  # []
+  # [s1_ll] # lower left
+  #   type = PointValue
+  #   elementid = 1248
+  #   variable = s1
+  # []
+  # [s1_lr] # upper left
+  #   type = PointValue
+  #   elementid = 1419
+  #   variable = s1
+  # []
+  # [s2_ul] # upper left
+  #   type = PointValue
+  #   elementid = 597
+  #   variable = s2
+  # []
+  # [s2_ur] # upper right
+  #   type = PointValue
+  #   elementid = 1761
+  #   variable = s2
+  # []
+  # [s2_ll] # lower left
+  #   type = PointValue
+  #   elementid = 1248
+  #   variable = s2
+  # []
+  # [s2_lr] # upper left
+  #   type = PointValue
+  #   elementid = 1419
+  #   variable = s2
+  # []
+  # [s3_ul] # upper left
+  #   type = PointValue
+  #   elementid = 597
+  #   variable = s3
+  # []
+  # [s3_ur] # upper right
+  #   type = PointValue
+  #   elementid = 1761
+  #   variable = s3
+  # []
+  # [s3_ll] # lower left
+  #   type = PointValue
+  #   elementid = 1248
+  #   variable = s3
+  # []
+  # [s3_lr] # upper left
+  #   type = PointValue
+  #   elementid = 1419
+  #   variable = s3
+  # []
 []
 
 [Executioner]
@@ -517,12 +518,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   end_time = 90e-6
   nl_max_its = 20
 
-  fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
-  # fixed_point_rel_tol = 1e-6
-  # fixed_point_abs_tol = 1e-8
-  fixed_point_rel_tol = 1e-3
-  fixed_point_abs_tol = 1e-5
+  fixed_point_max_its = 50
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-6
+  fixed_point_abs_tol = 1e-8
+  # fixed_point_rel_tol = 1e-3
+  # fixed_point_abs_tol = 1e-5
   # dt = 5e-7
   [TimeStepper]
     type = FunctionDT
@@ -531,29 +532,25 @@ gamma = '${fparse 1/2-hht_alpha}'
     # dt = 5e-7
     cutback_factor_at_failure = 0.5
   []
-  [TimeIntegrator]
-    type = NewmarkBeta
-    beta = ${beta}
-    gamma = ${gamma}
-  []
-  # [Predictor]
-  #   type = SimplePredictor
-  #   scale = 1
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   beta = ${beta}
+  #   gamma = ${gamma}
   # []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 1
+    time_step_interval = 1
     min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
-  file_base = './out/kal_coh_vd_ts${sigma_ts}_l${l}/kal_coh_ts${sigma_ts}_l${l}'
+  file_base = './out/kal_coh_none_ts${sigma_ts}_l${l}/kal_coh_ts${sigma_ts}_l${l}'
   time_step_interval = 1
   checkpoint = true
   [csv]
-    file_base = './gold/kal_coh_vd_ts${sigma_ts}_l${l}'
+    file_base = './gold/kal_coh_none_ts${sigma_ts}_l${l}'
     type = CSV
   []
 []

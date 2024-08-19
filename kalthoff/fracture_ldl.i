@@ -43,15 +43,16 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 []
 
 [Adaptivity]
-  # initial_marker = initial_marker
-  # initial_steps = ${refine}
+  initial_marker = initial_box
+  initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = ${refine}
   [Markers]
     [initial_box]
       type = BoxMarker
-      bottom_left = '44 19 0'
+      # bottom_left = '44 19 0'
+      bottom_left = '0 0 0'
       top_right = '56 31 0'
       inside = refine
       outside = DO_NOTHING
@@ -62,11 +63,11 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
       lower_bound = 0.0001
       upper_bound = 1
     []
-    [psie_marker]
-      type = ValueThresholdMarker
-      variable = psie_active
-      refine = 3
-    []
+    # [psie_marker]
+    #   type = ValueThresholdMarker
+    #   variable = psie_active
+    #   refine = 3
+    # []
     [combo_marker]
       type = ComboMarker
       markers = 'initial_box damage_marker'
@@ -146,24 +147,23 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
   []
-  
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(delta*Gc/c0/l)*alpha'
-    args = 'd psie_active'
+    property_name = psi
+    expression = 'g*psie_active+(delta*Gc/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
     material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
@@ -199,7 +199,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     external_driving_force_name = ce
     stress_balance_name = f_nu
     output_properties = 'ce f_nu delta'
-    # outputs = exodus
+    outputs = exodus
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -261,11 +261,11 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   # []
 []
 
-# [Outputs]
-#   [exodus]
-#     type = Exodus
-#     interval = 1
-#     minimum_time_interval = 5e-7
-#   []
-#   file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/fracture'
-# []
+[Outputs]
+  [exodus]
+    type = Exodus
+    # interval = 1
+    # minimum_time_interval = 5e-7
+  []
+  file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/fracture'
+[]

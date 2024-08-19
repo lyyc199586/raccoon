@@ -7,7 +7,8 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 sigma_ts = 1733 # MPa
-sigma_cs = 5199
+# sigma_cs = 5199
+sigma_cs = 1800
 # psic = '${fparse sigma_ts^2/2/E}'
 
 # l = 0.35
@@ -40,8 +41,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = MultiAppCopyTransfer
     # type = MultiAppGeneralFieldShapeEvaluationTransfer
     from_multi_app = fracture
-    variable = 'd'
-    source_variable = 'd'
+    variable = 'd f_nu'
+    source_variable = 'd f_nu'
   []
   [to_psie_active]
     type = MultiAppCopyTransfer
@@ -71,7 +72,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
-  use_displaced_mesh = true
+  # use_displaced_mesh = true
 []
 
 [Mesh]
@@ -116,15 +117,22 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Adaptivity]
-  # initial_marker = initial_marker
-  # initial_steps = ${refine}
+  initial_marker = initial_box
+  initial_steps = ${refine}
   marker = combo_marker
   max_h_level = ${refine}
   cycles_per_step = ${refine}
   [Markers]
+    # [initial_box]
+    #   type = BoxMarker
+    #   bottom_left = '44 19 0'
+    #   top_right = '56 31 0'
+    #   inside = refine
+    #   outside = DO_NOTHING
+    # []
     [initial_box]
       type = BoxMarker
-      bottom_left = '44 19 0'
+      bottom_left = '0 0 0'
       top_right = '56 31 0'
       inside = refine
       outside = DO_NOTHING
@@ -183,19 +191,23 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
   []
-  [s11]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [s22]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-  [f_quadrant_1]
-    order = CONSTANT
-    family = MONOMIAL
-  []
+  # [s11]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [s22]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
+  # [f_quadrant_1]
+  #   order = CONSTANT
+  #   family = MONOMIAL
+  # []
   [f_quadrant_2]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [f_nu]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -262,22 +274,22 @@ gamma = '${fparse 1/2-hht_alpha}'
     acceleration = accel_y
     execute_on = timestep_end
   []
-  [s11]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s11
-    index_i = 0
-    index_j = 0
-    execute_on = 'TIMESTEP_END'
-  []
-  [s22]
-    type = ADRankTwoAux
-    rank_two_tensor = stress
-    variable = s22
-    index_i = 1
-    index_j = 1
-    execute_on = 'TIMESTEP_END'
-  []
+  # [s11]
+  #   type = ADRankTwoAux
+  #   rank_two_tensor = stress
+  #   variable = s11
+  #   index_i = 0
+  #   index_j = 0
+  #   execute_on = 'TIMESTEP_END'
+  # []
+  # [s22]
+  #   type = ADRankTwoAux
+  #   rank_two_tensor = stress
+  #   variable = s22
+  #   index_i = 1
+  #   index_j = 1
+  #   execute_on = 'TIMESTEP_END'
+  # []
   [s1]
     type = ADRankTwoScalarAux
     rank_two_tensor = stress
@@ -299,13 +311,13 @@ gamma = '${fparse 1/2-hht_alpha}'
     scalar_type = MinPrincipal
     execute_on = 'TIMESTEP_END'
   []
+  # [quadrant]
+  #   type = ParsedAux
+  #   variable = f_quadrant_1
+  #   coupled_variables = 's11 s22'
+  #   expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
+  # []
   [quadrant]
-    type = ParsedAux
-    variable = f_quadrant_1
-    coupled_variables = 's11 s22'
-    expression = 'if(s11>=0, if(s22>=0, 1, 4), if(s22>=0, 2, 3))'
-  []
-  [quadrant2]
     type = ParsedAux
     variable = f_quadrant_2
     coupled_variables = 's1 s3'
@@ -345,14 +357,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [degradation]
     type = PowerDegradationFunction
-    f_name = g
-    function = (1-d)^p*(1-eta)+eta
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
@@ -382,8 +394,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = elasticity
-    # output_properties = 'stress'
-    # outputs = exodus
+    output_properties = 'stress'
+    outputs = exodus
   []
 []
 
@@ -445,10 +457,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
-  petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
-  petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_iname = '-pc_type -ksp_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap -sub_pc_factor_shift_type -sub_pc_factor_shift_amount ' 
+  # petsc_options_value = 'asm      gmres     200                preonly       lu           1  NONZERO 1e-14  '
   # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
   #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
   #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
@@ -456,14 +468,15 @@ gamma = '${fparse 1/2-hht_alpha}'
   # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
   start_time = 0
   end_time = 90e-6
   # nl_max_its = 20
 
   fixed_point_max_its = 20
-  accept_on_max_fixed_point_iteration = true
+  # accept_on_max_fixed_point_iteration = true
+  accept_on_max_fixed_point_iteration = false
   fixed_point_rel_tol = 1e-6
   fixed_point_abs_tol = 1e-8
   # fixed_point_rel_tol = 1e-3
@@ -477,11 +490,11 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   # dt = 5e-7
   #   cutback_factor_at_failure = 0.5
   # []
-  [TimeIntegrator]
-    type = NewmarkBeta
-    beta = ${beta}
-    gamma = ${gamma}
-  []
+  # [TimeIntegrator]
+  #   type = NewmarkBeta
+  #   beta = ${beta}
+  #   gamma = ${gamma}
+  # []
   # [Predictor]
   #   type = SimplePredictor
   #   scale = 1
@@ -491,16 +504,16 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    interval = 1
-    minimum_time_interval = 5e-7
+    time_step_interval = 1
+    min_simulation_time_interval = 5e-7
   []
   print_linear_residuals = false
   # file_base = './out/na_kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}/kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
   file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
-  interval = 1
+  # interval = 1
   checkpoint = true
   [csv]
-    minimum_time_interval = 1e-8
+    min_simulation_time_interval = 1e-8
     # file_base = './gold/na_kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}'
     file_base = './out/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}/kal_nuc24_ts${sigma_ts}_cs${sigma_cs}_l${l}'
     type = CSV

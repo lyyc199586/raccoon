@@ -186,7 +186,8 @@
     phase_field = d
     degradation_function = g
     # decomposition = SPECTRAL
-    decomposition = VOLDEV
+    # decomposition = VOLDEV
+    decomposition = NONE
   []
   [stress]
     type = ComputeSmallDeformationStress
