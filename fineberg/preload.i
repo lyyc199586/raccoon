@@ -8,7 +8,7 @@ u0 = 4.5
 # u0 = 27
 t0 = 0.01
 h = 0.125
-# refine = 1
+refine = 2
 cw = 2 # crack region width
 # l = 1
 
@@ -21,6 +21,13 @@ cw = 2 # crack region width
   [fmg]
     type = FileMeshGenerator
     file = './mesh/fineberg_cw${cw}_h${h}.msh'
+  []
+  [initial_refine_block]
+    type = RefineSidesetGenerator
+    boundaries = 'pre_crack_upper pre_crack_lower'
+    input = fmg
+    refinement = '${refine} ${refine}'
+    boundary_side = 'both both'
   []
   # [gen] # h = 0.25
   #   type = GeneratedMeshGenerator
@@ -260,6 +267,6 @@ cw = 2 # crack region width
   print_linear_residuals = false
   # file_base = './pre_y_free_u${u0}_h${h}'
   # file_base = './pre_free_u${u0}_h${h}_rf${refine}'
-  file_base = './pre_free_cw${cw}_u${u0}_h${h}'
+  file_base = './pre_free_cw${cw}_u${u0}_h${h}_rf${refine}'
   time_step_interval = 1
 []

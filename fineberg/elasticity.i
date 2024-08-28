@@ -1,4 +1,4 @@
-# 
+# MPa, mm, ms
 G = 31.44e-3 # MPa
 K = '${fparse 10*G}'
 E = '${fparse 9*K*G/(3*K+G)}'
@@ -15,7 +15,14 @@ cw = 2
 l = 0.5
 # h = 0.25
 h = 0.125
-dt = 0.025
+# dt = 0.01
+dt = 0.05
+
+# wave speed: c=sqrt(E/rho) = 9.554 mm/ms
+# cfl condition: dt_cr = h/c = 0.013 ms
+# crack releasing speed: use 0.1*c ~= 0.9 mm/ms
+tip_v = 1.5
+refine = 2
 
 u = 4.5
 # u = 27
@@ -27,13 +34,13 @@ hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
-filebase = unzip_cw${cw}_sts${sigma_ts}_u${u}_l${l}_h${h}
+filebase = unzip_cw${cw}_v${tip_v}_sts${sigma_ts}_u${u}_l${l}_h${h}_rf${refine}
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};'
+    cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};refine=${refine}'
     # cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic}'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
@@ -69,7 +76,7 @@ filebase = unzip_cw${cw}_sts${sigma_ts}_u${u}_l${l}_h${h}
 [GlobalParams]
   displacements = 'disp_x disp_y'
   use_displaced_mesh = false
-  volumetric_locking_correction = true
+  volumetric_locking_correction = false
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
@@ -96,8 +103,13 @@ filebase = unzip_cw${cw}_sts${sigma_ts}_u${u}_l${l}_h${h}
     bottom_left = '-0.01 -0.01 0' 
     top_right = '2.01 0 0'
   []
-  # construct_node_list_from_side_list = true
-  # construct_side_list_from_node_list = true
+  # [initial_refine_block]
+  #   type = RefineSidesetGenerator
+  #   boundaries = 'pre_crack_upper pre_crack_lower'
+  #   input = crack_faces2
+  #   refinement = '${refine} ${refine}'
+  #   boundary_side = 'both both'
+  # []
 []
 
 [UserObjects]
@@ -124,43 +136,44 @@ filebase = unzip_cw${cw}_sts${sigma_ts}_u${u}_l${l}_h${h}
 [Functions]
   [moving]
     type = ParsedFunction
-    expression = 'x - t/dt*h'
-    symbol_names = 'dt h'
-    symbol_values = '${dt} ${h}'
+    # expression = 'x - t/dt*h'
+    expression = 'x - v*t - 0.01'
+    symbol_names = 'dt v'
+    symbol_values = '${dt} ${tip_v}'
   []
 []
 
-# [Adaptivity]
-#   marker = combo_marker
-#   max_h_level = ${refine}
-#   initial_marker = initial
-#   initial_steps = ${refine}
-#   cycles_per_step = ${refine}
-#   [Markers]
-#     [damage_marker]
-#       type = ValueRangeMarker
-#       variable = d
-#       lower_bound = 0.01
-#       upper_bound = 1
-#     []
-#     [psie_marker]
-#       type = ValueThresholdMarker
-#       variable = psie_active
-#       refine = '${fparse 0.9*psic}'
-#     []
-#     [initial]
-#       type = BoxMarker
-#       bottom_left = '9.9 -1.1 0'
-#       top_right = '11.1 1.1 0'
-#       inside = REFINE
-#       outside = DONT_MARK
-#     []
-#     [combo_marker]
-#       type = ComboMarker
-#       markers = 'damage_marker initial'
-#     []
-#   []
-# []
+[Adaptivity]
+  marker = combo_marker
+  max_h_level = ${refine}
+  # initial_marker = initial
+  # initial_steps = ${refine}
+  cycles_per_step = ${refine}
+  [Markers]
+    [damage_marker]
+      type = ValueRangeMarker
+      variable = d
+      lower_bound = 0.05
+      upper_bound = 1
+    []
+    [psie_marker]
+      type = ValueThresholdMarker
+      variable = psie_active
+      refine = '${fparse 0.9*psic}'
+    []
+    # [initial]
+    #   type = BoxMarker
+    #   bottom_left = '9.9 -1.1 0'
+    #   top_right = '11.1 1.1 0'
+    #   inside = REFINE
+    #   outside = DONT_MARK
+    # []
+    [combo_marker]
+      type = ComboMarker
+      markers = 'damage_marker'
+    []
+  []
+[]
 
 [Variables]
   [disp_x]
@@ -511,16 +524,16 @@ filebase = unzip_cw${cw}_sts${sigma_ts}_u${u}_l${l}_h${h}
   type = Transient
 
   solve_type = NEWTON
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'hypre       boomeramg                 '
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_value = 'hypre       boomeramg                 '
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   # nl_rel_tol = 1e-4
   # nl_abs_tol = 1e-6
 
@@ -535,12 +548,12 @@ filebase = unzip_cw${cw}_sts${sigma_ts}_u${u}_l${l}_h${h}
   # end_time = 120e-6
 
   fixed_point_max_its = 50
-  accept_on_max_fixed_point_iteration = false
+  accept_on_max_fixed_point_iteration = true
   # accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-5
+  fixed_point_abs_tol = 1e-7
   # num_steps = 10
 
   # [Quadrature]

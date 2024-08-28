@@ -27,7 +27,8 @@ Tf = 70
 # ny = '${fparse int(40/h)}'
 
 # filebase = nuc24_cf_angle_55_x55_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
-filebase = nuc24_cf_angle_55_x55_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
+# filebase = nuc24_cf_angle_55_x55_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
+filebase = nuc24_cf_tbr_angle_80_y2l_p${p}_l${l}_tb${Tb}_tf${Tf}
 
 # hht parameters
 # hht_alpha = -0.25
@@ -90,7 +91,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = "./mesh/br_cf_55deg_x55_l0.625.msh"
+    # file = "./mesh/br_cf_55deg_x55_l0.625.msh"
+    file = './mesh/tbr_cf_80deg_l0.625.msh'
   []
   construct_node_list_from_side_list = true
   construct_side_list_from_node_list = true
@@ -539,19 +541,19 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
-  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
-  #                       '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
-  #                       '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
-  #                       '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
-  # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -ksp_gmres_restart '
+                        '-pc_hypre_boomeramg_strong_threshold -pc_hypre_boomeramg_interp_type '
+                        '-pc_hypre_boomeramg_coarsen_type -pc_hypre_boomeramg_agg_nl '
+                        '-pc_hypre_boomeramg_agg_num_paths -pc_hypre_boomeramg_truncfactor'
+  petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
   # nl_abs_tol = 1e-8
   # nl_max_its = 50
@@ -565,12 +567,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = true
-  # fixed_point_rel_tol = 1e-8
-  # fixed_point_abs_tol = 1e-10
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_max_its = 50
+  accept_on_max_fixed_point_iteration = false
+  fixed_point_rel_tol = 1e-8
+  fixed_point_abs_tol = 1e-10
+  # fixed_point_rel_tol = 1e-6
+  # fixed_point_abs_tol = 1e-8
 
   # [TimeIntegrator]
   #   type = NewmarkBeta

@@ -4,37 +4,37 @@ Lambda = '${fparse K - 2/3*G}'
 [Mesh]
 []
 
-# [Adaptivity]
-#   marker = combo_marker
-#   max_h_level = ${refine}
-#   initial_marker = initial
-#   initial_steps = ${refine}
-#   cycles_per_step = ${refine}
-#   [Markers]
-#     [damage_marker]
-#       type = ValueRangeMarker
-#       variable = d
-#       lower_bound = 0.01
-#       upper_bound = 1
-#     []
-#     [psie_marker]
-#       type = ValueThresholdMarker
-#       variable = psie_active
-#       refine = '${fparse 0.9*psic}'
-#     []
-#     [initial]
-#       type = BoxMarker
-#       bottom_left = '9.9 -1.1 0'
-#       top_right = '11.1 1.1 0'
-#       inside = REFINE
-#       outside = DONT_MARK
-#     []
-#     [combo_marker]
-#       type = ComboMarker
-#       markers = 'damage_marker initial'
-#     []
-#   []
-# []
+[Adaptivity]
+  marker = combo_marker
+  max_h_level = ${refine}
+  # initial_marker = initial
+  # initial_steps = ${refine}
+  cycles_per_step = ${refine}
+  [Markers]
+    [damage_marker]
+      type = ValueRangeMarker
+      variable = d
+      lower_bound = 0.05
+      upper_bound = 1
+    []
+    [psie_marker]
+      type = ValueThresholdMarker
+      variable = psie_active
+      refine = '${fparse 0.9*psic}'
+    []
+    # [initial]
+    #   type = BoxMarker
+    #   bottom_left = '9.9 -1.1 0'
+    #   top_right = '11.1 1.1 0'
+    #   inside = REFINE
+    #   outside = DONT_MARK
+    # []
+    [combo_marker]
+      type = ComboMarker
+      markers = 'damage_marker'
+    []
+  []
+[]
 
 [Variables]
   [d]

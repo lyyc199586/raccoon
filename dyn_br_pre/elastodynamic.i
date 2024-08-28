@@ -8,102 +8,159 @@ rho = 2450
 Gc = 3e-3 # N/mm -> 3 J/m^2
 
 u0 = 0.0025
-t0 = 0.01
+tf = 10
 h = 1
 l = 1
-# ref = 3
 
-nx = '${fparse int(100/h)}'
-ny = '${fparse int(40/h)}'
+# hht parameters
+hht_alpha = -0.3
+# hht_alpha = 0
+beta = '${fparse (1-hht_alpha)^2/4}'
+gamma = '${fparse 1/2-hht_alpha}'
 
-filebase = pre_u${u0}_h${h}
+filebase = elastodyanmic_u${u0}_h${h}
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  alpha = ${hht_alpha}
+  gamma = ${gamma}
+  beta = ${beta}
 []
 
 [Mesh]
-  [gen] #h_c = 1, h_r = 0.25
-    type = GeneratedMeshGenerator
-    dim = 2
-    nx = ${nx}
-    ny = ${ny}
-    xmin = 0
-    xmax = 100
-    ymin = -20
-    ymax = 20
-  []
-  [sub_upper]
-    type = ParsedSubdomainMeshGenerator
-    input = gen
-    combinatorial_geometry = 'x < 10 & y > 0'
-    block_id = 1
-  []
-  [sub_lower]
-    type = ParsedSubdomainMeshGenerator
-    input = sub_upper
-    combinatorial_geometry = 'x < 10 & y < 0'
-    block_id = 2
-  []
-  [split]
-    input = sub_lower
-    type = BreakMeshByBlockGenerator
-    block_pairs = '1 2'
-    split_interface = true
-    add_interface_on_two_sides = true
+  [fmg]
+    type = FileMeshGenerator
+    file = './pre/pre_u${u0}_h${h}.e'
+    use_for_exodus_restart = true
   []
 []
 
 [Variables]
   [disp_x]
+    initial_from_file_var = 'disp_x'
+    initial_from_file_timestep = LATEST
   []
   [disp_y]
+    initial_from_file_var = 'disp_y'
+    initial_from_file_timestep = LATEST
   []
+  # [strain_zz]
+  #   initial_from_file_var = 'strain_zz'
+  #   initial_from_file_timestep = LATEST
+  # []
 []
 
 [AuxVariables]
+  [accel_x]
+  []
+  [accel_y]
+  []
+  [vel_x]
+  []
+  [vel_y]
+  []
+  [fx]
+  []
+  [fy]
+  []
   [d]
+  []
+  [vms]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [hydrostatic]
+    order = CONSTANT
+    family = MONOMIAL
   []
 []
 
 [Kernels]
   [solid_x]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_x
     component = 0
+    save_in = fx
   []
   [solid_y]
-    type = ADStressDivergenceTensors
+    type = ADDynamicStressDivergenceTensors
     variable = disp_y
     component = 1
+    save_in = fy
+  []
+  [inertia_x]
+    type = ADInertialForce
+    variable = disp_x
+    density = density
+    velocity = vel_x
+    acceleration = accel_x
+  []
+  [inertia_y]
+    type = ADInertialForce
+    variable = disp_y
+    density = density
+    velocity = vel_y
+    acceleration = accel_y
   []
 []
 
-[Functions]
-  [top_func]
-    type = PiecewiseLinear
-    x = '0 ${t0}'
-    y = '0 ${u0}'
+[AuxKernels]
+  [accel_x]
+    type = NewmarkAccelAux
+    variable = accel_x
+    displacement = disp_x
+    velocity = vel_x
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
   []
-  [bottom_func]
-    type = PiecewiseLinear
-    x = '0 ${t0}'
-    y = '0 -${u0}'
+  [vel_x] 
+    type = NewmarkVelAux
+    variable = vel_x
+    acceleration = accel_x
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
+  []
+  [accel_y]
+    type = NewmarkAccelAux
+    variable = accel_y
+    displacement = disp_y
+    velocity = vel_y
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
+  []
+  [vel_y]
+    type = NewmarkVelAux
+    variable = vel_y
+    acceleration = accel_y
+    execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
+  []
+  [hydrostatic]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = hydrostatic
+    scalar_type = Hydrostatic
+    execute_on = 'TIMESTEP_END'
+  []
+  [vms]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = vms
+    scalar_type = VonMisesStress
+    execute_on = 'TIMESTEP_END'
   []
 []
 
 [BCs]
   [ytop]
-    type = ADFunctionDirichletBC
+    type = ADDirichletBC
     variable = disp_y
     boundary = top
-    function = top_func
+    value = ${u0}
+    # value = 0
   []
   [ybottom]
-    type = ADFunctionDirichletBC
+    type = ADDirichletBC
     variable = disp_y
     boundary = bottom
-    function = bottom_func
+    value = -${u0}
+    # value = 0
   []
   [xtop]
     type = ADDirichletBC
@@ -117,30 +174,6 @@ filebase = pre_u${u0}_h${h}
     boundary = bottom
     value = 0
   []
-  [yupper]
-    type = ADDirichletBC
-    variable = disp_y
-    boundary = 'Block1_Block2'
-    value = 0
-  []
-  [ylower]
-    type = ADDirichletBC
-    variable = disp_y
-    boundary = 'Block2_Block1'
-    value = 0
-  []
-  # [crack_upper]
-  #   type = ADDirichletBC
-  #   variable = disp_y
-  #   boundary = pre_crack_upper
-  #   value = 0
-  # []
-  # [crack_lower]
-  #   type = ADDirichletBC
-  #   variable = disp_y
-  #   boundary = pre_crack_lower
-  #   value = 0
-  # []
 []
 
 [Materials]
@@ -201,10 +234,10 @@ filebase = pre_u${u0}_h${h}
   nl_max_its = 100
 
   # dt = ${fparse t0*0.1}
-  dt = ${fparse t0*0.025}
+  dt = ${fparse tf*0.1}
   # dt = ${fparse t0*0.005}
   # dt = ${t0}
-  end_time = ${t0}
+  end_time = ${tf}
 
   # [TimeIntegrator]
   #   type = NewmarkBeta
@@ -214,10 +247,10 @@ filebase = pre_u${u0}_h${h}
 [Outputs]
   [exodus]
     # time_step_interval = ${fparse t0*0.1}
-    min_simulation_time_interval = ${fparse t0*0.05}
+    # min_simulation_time_interval = ${fparse t0*0.05}
     type = Exodus
   []
   print_linear_residuals = false
-  file_base = './pre/${filebase}'
+  file_base = '${filebase}'
   time_step_interval = 1
 []
