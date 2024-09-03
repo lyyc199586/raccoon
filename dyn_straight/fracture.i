@@ -3,39 +3,39 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 [Mesh]
 []
 
-[Adaptivity]
-  marker = combo_marker
-  max_h_level = ${refine}
-  initial_marker = initial
-  initial_steps = ${refine}
-  cycles_per_step = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueRangeMarker
-      variable = d
-      lower_bound = 0.01
-      upper_bound = 1
-    []
-    [strength_marker]
-      type = ValueRangeMarker
-      variable = f_nu_var
-      lower_bound = -1e-4
-      upper_bound = 1e-4
-    []
-    [initial]
-      type = BoxMarker
-      bottom_left = '48.9 -1.1 0'
-      top_right = '51.1 1.1 0'
-      inside = REFINE
-      outside = DONT_MARK
-    []
-    [combo_marker]
-      type = ComboMarker
-      # markers = 'damage_marker strength_marker'
-      markers = 'damage_marker strength_marker initial'
-    []
-  []
-[]
+# [Adaptivity]
+#   marker = combo_marker
+#   max_h_level = ${refine}
+#   initial_marker = initial
+#   initial_steps = ${refine}
+#   cycles_per_step = ${refine}
+#   [Markers]
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.01
+#       upper_bound = 1
+#     []
+#     [strength_marker]
+#       type = ValueRangeMarker
+#       variable = f_nu_var
+#       lower_bound = -1e-4
+#       upper_bound = 1e-4
+#     []
+#     [initial]
+#       type = BoxMarker
+#       bottom_left = '48.9 -1.1 0'
+#       top_right = '51.1 1.1 0'
+#       inside = REFINE
+#       outside = DONT_MARK
+#     []
+#     [combo_marker]
+#       type = ComboMarker
+#       # markers = 'damage_marker strength_marker'
+#       markers = 'damage_marker strength_marker initial'
+#     []
+#   []
+# []
 
 [Variables]
   [d]

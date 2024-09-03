@@ -36,37 +36,39 @@
 [Mesh] # cloned from the parent app
 []
 
-# [Adaptivity]
-#   # initial_marker = initial_marker
-#   # initial_steps = ${refine}
-#   marker = combo_marker
-#   max_h_level = ${refine}
-#   cycles_per_step = ${refine}
-#   [Markers]
-#     [initial_box]
-#       type = BoxMarker
-#       bottom_left = '44 19 0'
-#       top_right = '56 31 0'
-#       inside = refine
-#       outside = DO_NOTHING
-#     []
-#     [damage_marker]
-#       type = ValueRangeMarker
-#       variable = d
-#       lower_bound = 0.0001
-#       upper_bound = 1
-#     []
-#     [psie_marker]
-#       type = ValueThresholdMarker
-#       variable = psie_active
-#       refine = 3
-#     []
-#     [combo_marker]
-#       type = ComboMarker
-#       markers = 'initial_box damage_marker'
-#     []
-#   []
-# []
+[Adaptivity]
+  initial_marker = initial_box
+  initial_steps = ${refine}
+  marker = combo_marker
+  max_h_level = ${refine}
+  cycles_per_step = ${refine}
+  [Markers]
+    [initial_box]
+      type = BoxMarker
+      # bottom_left = '44 19 0'
+      # top_right = '56 31 0'
+      bottom_left = '47 22 0'
+      top_right = '53 28 0'
+      inside = refine
+      outside = DO_NOTHING
+    []
+    [damage_marker]
+      type = ValueRangeMarker
+      variable = d
+      lower_bound = 0.0001
+      upper_bound = 1
+    []
+    [psie_marker]
+      type = ValueThresholdMarker
+      variable = psie_active
+      refine = 3
+    []
+    [combo_marker]
+      type = ComboMarker
+      markers = 'initial_box damage_marker'
+    []
+  []
+[]
 
 [Variables]
   [d]
@@ -107,12 +109,12 @@
     threshold_value = 0.95
   []
   [upper]
-    type = ConstantBoundsAux
+    type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = d
     bound_type = upper
-    # bound_value = 1
-    bound_value = 0
+    bound_value = 1
+    # bound_value = 0
   []
 []
 
@@ -151,38 +153,38 @@
     prop_values = '${E} ${K} ${G} ${Lambda} ${Gc} ${l}'
   []
   # [degradation]
-  #   type = RationalDegradationFunction
-  #   f_name = g
+  #   type = RationalDegradationexpression
+  #   property_name = g
   #   phase_field = d
   #   material_property_names = 'Gc psic xi c0 l'
   #   parameter_names = 'p a2 a3 eta'
   #   parameter_values = '2 1 0 1e-9'
   # []
-  # [degradation]
-  #   type = PowerDegradationFunction
-  #   f_name = g
-  #   function = (1-d)^p*(1-eta)+eta
-  #   phase_field = d
-  #   parameter_names = 'p eta '
-  #   parameter_values = '2 0'
-  # []
   [degradation]
-    type = NoDegradation
-    f_name = g
+    type = PowerDegradationFunction
+    property_name = g
+    expression = (1-d)^p*(1-eta)+eta
     phase_field = d
-    function = 1
+    parameter_names = 'p eta '
+    parameter_values = '2 1e-6'
   []
+  # [degradation]
+  #   type = NoDegradation
+  #   property_name = g
+  #   phase_field = d
+  #   expression = 1
+  # []
   [crack_geometric]
     type = CrackGeometricFunction
-    f_name = alpha
-    function = 'd'
+    property_name = alpha
+    expression = 'd'
     phase_field = d
   []
   [psi]
     type = ADDerivativeParsedMaterial
-    f_name = psi
-    function = 'g*psie_active+(Gc/c0/l)*alpha'
-    args = 'd psie_active'
+    property_name = psi
+    expression = 'g*psie_active+(Gc/c0/l)*alpha'
+    coupled_variables = 'd psie_active'
     material_property_names = 'alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
@@ -196,7 +198,7 @@
   [kumar_material] 
     # type = KLRNucleationMicroForce
     type = KLBFNucleationMicroForce
-    # phase_field = d
+    phase_field = d
     stress_name = stress
     normalization_constant = c0
     tensile_strength = '${sigma_ts}'
@@ -250,11 +252,11 @@
   # petsc_options_value = 'asm      ilu          200         200                0                     vinewtonrsls'
   automatic_scaling = true
 
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
   # [TimeStepper]
-  #   type = FunctionDT
-  #   function = 'if(t <= 3.1e-5, 5e-7, 5e-8)'
+  #   type = expressionDT
+  #   expression = 'if(t <= 3.1e-5, 5e-7, 5e-8)'
   #   # type = ConstantDT
   #   # dt = 5e-7
   #   cutback_factor_at_failure = 0.5

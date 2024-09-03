@@ -6,23 +6,23 @@ rho = 2450
 Gc = 3e-3 # N/mm -> 3 J/m^2
 # sigma_ts = 3.08 # MPa, sts and scs from guessing
 # sigma_cs = 9.24
-sigma_ts = 6
+sigma_ts = 4.75
 sigma_cs = 18
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
-# lch = 3/8*E*Gc/sigma_ts^2 = 3.79
+# lch = 3/8*E*Gc/sigma_ts^2 = 3.79 lch/5 = 0.75
 # l: 1, 0.75, 0.5 mm
-l = 1
+l = 0.625
 
-refine = 3 # 0.125
+refine = 4 # 0.125
 u0 = 0.0015
 Tp = 20
-Tf = 100
+Tf = 50
 
 #
-filename = 'straight_u${u0}_l${l}_tp${Tp}_tf${Tf}/nuc24'
+filename = 'straight_u${u0}_l${l}_rf${refine}_rho${rho}_sts${sigma_ts}_tp${Tp}_tf${Tf}/nuc24'
 
 # hht parameters
 hht_alpha = -0.3
@@ -33,7 +33,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};refine=${refine}'
+    cli_args = 'E=${E};K=${K};G=${G};Lambda=${Lambda};Gc=${Gc};l=${l};sigma_cs=${sigma_cs};sigma_ts=${sigma_ts};'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
   []
@@ -73,23 +73,23 @@ gamma = '${fparse 1/2-hht_alpha}'
   [gen] #h_c = 1, h_r = 0.25
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 100
+    nx = 40
     ny = 40
     xmin = 0
-    xmax = 100
+    xmax = 40
     ymin = -20
     ymax = 20
   []
   [sub_upper]
     type = ParsedSubdomainMeshGenerator
     input = gen
-    combinatorial_geometry = 'x < 50 & y > 0'
+    combinatorial_geometry = 'x < 20 & y > 0'
     block_id = 1
   []
   [sub_lower]
     type = ParsedSubdomainMeshGenerator
     input = sub_upper
-    combinatorial_geometry = 'x < 50 & y < 0'
+    combinatorial_geometry = 'x < 20 & y < 0'
     block_id = 2
   []
   [split]
@@ -98,40 +98,53 @@ gamma = '${fparse 1/2-hht_alpha}'
     block_pairs = '1 2'
     split_interface = true
   []
-[]
-
-[Adaptivity]
-  marker = combo_marker
-  max_h_level = ${refine}
-  initial_marker = initial
-  initial_steps = ${refine}
-  cycles_per_step = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueRangeMarker
-      variable = d
-      lower_bound = 0.01
-      upper_bound = 1
-    []
-    [strength_marker]
-      type = ValueRangeMarker
-      variable = f_nu_var
-      lower_bound = -1e-4
-      upper_bound = 1e-4
-    []
-    [initial]
-      type = BoxMarker
-      bottom_left = '48.9 -1.1 0'
-      top_right = '51.1 1.1 0'
-      inside = REFINE
-      outside = DONT_MARK
-    []
-    [combo_marker]
-      type = ComboMarker
-      markers = 'damage_marker strength_marker initial'
-    []
+  [initial_refine_block]
+    input = split
+    type = SubdomainBoundingBoxGenerator
+    bottom_left = '18.9 -1.1 -0.1'
+    top_right = '40.1 1.1 0.1'
+    block_id = '3'
+  []
+  [refine]
+    input = initial_refine_block
+    type = RefineBlockGenerator
+    block = '3'
+    refinement = ${refine}
   []
 []
+
+# [Adaptivity]
+#   marker = combo_marker
+#   max_h_level = ${refine}
+#   initial_marker = initial
+#   initial_steps = ${refine}
+#   cycles_per_step = ${refine}
+#   [Markers]
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.01
+#       upper_bound = 1
+#     []
+#     [strength_marker]
+#       type = ValueRangeMarker
+#       variable = f_nu_var
+#       lower_bound = -1e-4
+#       upper_bound = 1e-4
+#     []
+#     [initial]
+#       type = BoxMarker
+#       bottom_left = '48.9 -1.1 0'
+#       top_right = '51.1 1.1 0'
+#       inside = REFINE
+#       outside = DONT_MARK
+#     []
+#     [combo_marker]
+#       type = ComboMarker
+#       markers = 'damage_marker strength_marker initial'
+#     []
+#   []
+# []
 
 [Variables]
   [disp_x]
@@ -261,6 +274,35 @@ gamma = '${fparse 1/2-hht_alpha}'
   # []
 []
 
+[BCs]
+  [ytop]
+    type = ADFunctionDirichletBC
+    variable = disp_y
+    boundary = top
+    function = top_func
+    # function = ${u0}
+  []
+  [ybottom]
+    type = ADFunctionDirichletBC
+    variable = disp_y
+    boundary = bottom
+    function = bottom_func
+    # function = -${u0}
+  []
+  # [xtop]
+  #   type = ADDirichletBC
+  #   variable = disp_x
+  #   boundary = top
+  #   value = 0
+  # []
+  # [xbottom]
+  #   type = ADDirichletBC
+  #   variable = disp_x
+  #   boundary = bottom
+  #   value = 0
+  # []
+[]
+
 [Materials]
   [bulk_properties]
     type = ADGenericConstantMaterial
@@ -299,7 +341,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     degradation_function = g
     decomposition = NONE
-    output_properties = 'psie_active'
+    output_properties = 'psie_active psie'
     outputs = exodus
   []
   [stress]
@@ -361,8 +403,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   # petsc_options_value = 'hypre boomeramg 400 0.25 ext+i PMIS 4 2 0.4'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
+  # petsc_options_iname = '-pc_type -pc_hypre_type'
+  # petsc_options_value = 'hypre boomeramg       '
   automatic_scaling = true
-
+  # line_search = none
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
   # nl_rel_tol = 1e-6
@@ -372,7 +416,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # dt = 0.5e-7
   [TimeStepper]
     type = FunctionDT
-    function = 'if(t>${Tp}, 0.25, 0.05)'
+    function = 'if(t < ${Tp}, 0.5, 0.1)'
   []
   # dtmin = 1e-8
   end_time = ${Tf}
@@ -382,7 +426,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # end_time = 120e-6
 
   fixed_point_max_its = 10
-  accept_on_max_fixed_point_iteration = true
+  accept_on_max_fixed_point_iteration = false
   fixed_point_rel_tol = 1e-6
   fixed_point_abs_tol = 1e-8
   # fixed_point_rel_tol = 1e-4
@@ -392,7 +436,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    min_simulation_time_interval = 0.25
+    min_simulation_time_interval = 0.5
   []
   checkpoint = true
   print_linear_residuals = false
