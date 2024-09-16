@@ -2,13 +2,15 @@
 G = 31.44e-3
 K = '${fparse 10*G}'
 
-u0 = 4.5
+stretch = 1.05
+u0 = ${fparse (stretch-1)*90/2}
+# u0 = 4.5
 # u0 = 1
 # u0 = 9
 # u0 = 27
 t0 = 0.01
 h = 0.125
-refine = 2
+# refine = 2
 cw = 2 # crack region width
 # l = 1
 
@@ -22,13 +24,13 @@ cw = 2 # crack region width
     type = FileMeshGenerator
     file = './mesh/fineberg_cw${cw}_h${h}.msh'
   []
-  [initial_refine_block]
-    type = RefineSidesetGenerator
-    boundaries = 'pre_crack_upper pre_crack_lower'
-    input = fmg
-    refinement = '${refine} ${refine}'
-    boundary_side = 'both both'
-  []
+  # [initial_refine_block]
+  #   type = RefineSidesetGenerator
+  #   boundaries = 'pre_crack_upper pre_crack_lower'
+  #   input = fmg
+  #   refinement = '${refine} ${refine}'
+  #   boundary_side = 'both both'
+  # []
   # [gen] # h = 0.25
   #   type = GeneratedMeshGenerator
   #   dim = 2
@@ -267,6 +269,6 @@ cw = 2 # crack region width
   print_linear_residuals = false
   # file_base = './pre_y_free_u${u0}_h${h}'
   # file_base = './pre_free_u${u0}_h${h}_rf${refine}'
-  file_base = './pre_free_cw${cw}_u${u0}_h${h}_rf${refine}'
+  file_base = './pre_free_cw${cw}_stretch${stretch}_h${h}'
   time_step_interval = 1
 []

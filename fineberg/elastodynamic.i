@@ -3,15 +3,18 @@
 G = 31.44e-3 # MPa
 K = '${fparse 10*G}'
 
-u = 4.5
+stretch = 1.05
+u = ${fparse (stretch-1)*90/2}
+
+# u = 4.5
 cw = 2
 # u = 9
 # u = 1
 # u = 27
 rho = 1e-3
 # h = 0.5
-h = 0.25
-# refine = 1
+h = 0.125
+# refine = 2
 
 # hht parameters
 hht_alpha = -0.3
@@ -19,11 +22,11 @@ hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
-filebase = free_elastodynamic_cw${cw}_u${u}_h${h}
+filebase = free_elastodynamic_cw${cw}_stretch${stretch}_h${h}
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
-  volumetric_locking_correction = true
+  volumetric_locking_correction = false
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
@@ -32,7 +35,8 @@ filebase = free_elastodynamic_cw${cw}_u${u}_h${h}
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = 'pre_free_cw${cw}_u${u}_h${h}.e'
+    # file = 'pre_free_cw${cw}_u${u}_h${h}.e'
+    file = 'pre_free_cw${cw}_stretch${stretch}_h${h}.e'
     use_for_exodus_restart = true
   []
   # [crack_region]

@@ -22,9 +22,11 @@ dt = 0.05
 # cfl condition: dt_cr = h/c = 0.013 ms
 # crack releasing speed: use 0.1*c ~= 0.9 mm/ms
 tip_v = 1.5
-refine = 2
+# refine = 3
 
-u = 4.5
+stretch = 1.05
+u = ${fparse (stretch-1)*90/2}
+# u = 4.5
 # u = 27
 Tf = 10
 
@@ -34,13 +36,15 @@ hht_alpha = -0.3
 beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
-filebase = unzip_cw${cw}_v${tip_v}_sts${sigma_ts}_u${u}_l${l}_h${h}_rf${refine}
+filebase = unzip_cw${cw}_stretch${stretch}_v${tip_v}_sts${sigma_ts}_l${l}_h${h}
+# filebase = unzip_cw${cw}_stretch${stretch}_v${tip_v}_sts${sigma_ts}_l${l}_h${h}_rf${refine}
 
 [MultiApps]
   [fracture]
     type = TransientMultiApp
     input_files = fracture.i
-    cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};refine=${refine}'
+    # cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};refine=${refine}'
+    cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic};sigma_ts=${sigma_ts};sigma_cs=${sigma_cs};'
     # cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l};psic=${psic}'
     execute_on = 'TIMESTEP_END'
     clone_parent_mesh = true
@@ -86,7 +90,8 @@ filebase = unzip_cw${cw}_v${tip_v}_sts${sigma_ts}_u${u}_l${l}_h${h}_rf${refine}
   [fmg]
     type = FileMeshGenerator
     # file = 'pre_free_u${u}_h${h}.e'
-    file = 'pre_free_cw${cw}_u${u}_h${h}.e'
+    # file = 'pre_free_cw${cw}_u${u}_h${h}.e'
+    file = 'pre_free_cw${cw}_stretch${stretch}_h${h}.e'
     use_for_exodus_restart = true
   []
   [crack_faces]
@@ -143,37 +148,37 @@ filebase = unzip_cw${cw}_v${tip_v}_sts${sigma_ts}_u${u}_l${l}_h${h}_rf${refine}
   []
 []
 
-[Adaptivity]
-  marker = combo_marker
-  max_h_level = ${refine}
-  # initial_marker = initial
-  # initial_steps = ${refine}
-  cycles_per_step = ${refine}
-  [Markers]
-    [damage_marker]
-      type = ValueRangeMarker
-      variable = d
-      lower_bound = 0.05
-      upper_bound = 1
-    []
-    [psie_marker]
-      type = ValueThresholdMarker
-      variable = psie_active
-      refine = '${fparse 0.9*psic}'
-    []
-    # [initial]
-    #   type = BoxMarker
-    #   bottom_left = '9.9 -1.1 0'
-    #   top_right = '11.1 1.1 0'
-    #   inside = REFINE
-    #   outside = DONT_MARK
-    # []
-    [combo_marker]
-      type = ComboMarker
-      markers = 'damage_marker'
-    []
-  []
-[]
+# [Adaptivity]
+#   marker = combo_marker
+#   max_h_level = ${refine}
+#   # initial_marker = initial
+#   # initial_steps = ${refine}
+#   cycles_per_step = ${refine}
+#   [Markers]
+#     [damage_marker]
+#       type = ValueRangeMarker
+#       variable = d
+#       lower_bound = 0.01
+#       upper_bound = 1
+#     []
+#     [psie_marker]
+#       type = ValueThresholdMarker
+#       variable = psie_active
+#       refine = '${fparse 0.9*psic}'
+#     []
+#     # [initial]
+#     #   type = BoxMarker
+#     #   bottom_left = '9.9 -1.1 0'
+#     #   top_right = '11.1 1.1 0'
+#     #   inside = REFINE
+#     #   outside = DONT_MARK
+#     # []
+#     [combo_marker]
+#       type = ComboMarker
+#       markers = 'damage_marker'
+#     []
+#   []
+# []
 
 [Variables]
   [disp_x]
@@ -524,14 +529,14 @@ filebase = unzip_cw${cw}_v${tip_v}_sts${sigma_ts}_u${u}_l${l}_h${h}_rf${refine}
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'hypre       boomeramg                 '
   # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'lu       superlu_dist                 '
+  # petsc_options_value = 'hypre       boomeramg                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu       superlu_dist                 '
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'asm'
   automatic_scaling = true
-
+  line_search = NONE
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   # nl_rel_tol = 1e-4
@@ -570,6 +575,7 @@ filebase = unzip_cw${cw}_v${tip_v}_sts${sigma_ts}_u${u}_l${l}_h${h}_rf${refine}
     type = Exodus
     time_step_interval = 1
     # min_simulation_time_interval = 0.25
+    additional_execute_on = FAILED
   []
   checkpoint = true
   print_linear_residuals = false

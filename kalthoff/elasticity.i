@@ -486,7 +486,9 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = Exodus
     time_step_interval = 1
     min_simulation_time_interval = 5e-7
+    additional_execute_on = FAILED
   []
+  
   print_linear_residuals = false
   file_base = './out/kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_rf${refine}/kal_nuc20_ts${sigma_ts}_cs${sigma_cs}_l${l}_d${delta}_rf${refine}'
   # file_base = './out/kal_elastic'
