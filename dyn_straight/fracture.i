@@ -81,6 +81,10 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     order = CONSTANT
     family = MONOMIAL
   []
+  [k_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
 []
 
 [Bounds]
@@ -177,8 +181,8 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   [psi]
     type = ADDerivativeParsedMaterial
     property_name = psi
-    expression = 'g*psie_active+(Gc*delta/c0/l)*alpha'
-    coupled_variables = 'd psie_active'
+    expression = 'g*(psie_active+k_var)+(Gc*delta/c0/l)*alpha'
+    coupled_variables = 'd psie_active k_var'
     material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []

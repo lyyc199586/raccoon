@@ -6,7 +6,8 @@ rho = 2450
 Gc = 3e-3 # N/mm -> 3 J/m^2
 # sigma_ts = 3.08 # MPa, sts and scs from guessing
 # sigma_cs = 9.24
-sigma_ts = 4.75
+# sigma_ts = 4.75
+sigma_ts = 5.5
 sigma_cs = 18
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -14,7 +15,8 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 # lch = 3/8*E*Gc/sigma_ts^2 = 3.79 lch/5 = 0.75
 # l: 1, 0.75, 0.5 mm
-l = 0.625
+# l = 0.625
+l = 0.375
 
 refine = 4 # 0.125
 u0 = 0.0015
@@ -22,7 +24,7 @@ Tp = 20
 Tf = 50
 
 #
-filename = 'straight_u${u0}_l${l}_rf${refine}_rho${rho}_sts${sigma_ts}_tp${Tp}_tf${Tf}/nuc24'
+filename = 'straight_with_K_u${u0}_l${l}_rf${refine}_rho${rho}_sts${sigma_ts}_tp${Tp}_tf${Tf}/nuc24'
 
 # hht parameters
 hht_alpha = -0.3
@@ -49,8 +51,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [to_psie_active]
     type = MultiAppCopyTransfer
     to_multi_app = fracture
-    variable = 'disp_x disp_y psie_active'
-    source_variable = 'disp_x disp_y psie_active'
+    variable = 'disp_x disp_y psie_active k_var'
+    source_variable = 'disp_x disp_y psie_active k_var'
   []
   [pp_transfer]
     type = MultiAppPostprocessorTransfer
@@ -170,6 +172,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   []
   [vel_y]
   []
+  [vel_z]
+  []
   [fx]
   []
   [fy]
@@ -185,6 +189,10 @@ gamma = '${fparse 1/2-hht_alpha}'
     family = MONOMIAL
   []
   [f_nu_var]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [k_var]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -250,6 +258,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = vel_y
     acceleration = accel_y
     execute_on = timestep_end
+  []
+  [kinetic_energy_aux]
+    type = ADKineticEnergyAux
+    variable = k_var
+    newmark_velocity_x = vel_x
+    newmark_velocity_y = vel_y
+    newmark_velocity_z = vel_z
+    density = density
   []
 []
 

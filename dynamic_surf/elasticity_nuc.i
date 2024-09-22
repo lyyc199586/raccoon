@@ -1,7 +1,7 @@
 # dynamic branching
 
 # PMMA, MPa, N, mm
-material = pmma
+# material = pmma
 E = 32e3 # 32 GPa
 nu = 0.2
 # rho = 2.54e-9 # Mg/mm^3
@@ -12,7 +12,7 @@ sigma_ts = 3.08 # MPa
 sigma_cs = 9.24
 sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
 # psic = '${fparse sigma_ts^2/2/E}'
-l = 0.75
+l = 0.625
 
 K = '${fparse E/3/(1-2*nu)}'
 G = '${fparse E/2/(1+nu)}'
@@ -21,9 +21,14 @@ c1 = '${fparse (1+nu)*sqrt(Gc)/sqrt(2*pi*E)}'
 c2 = '${fparse (3-nu)/(1+nu)}'
 
 # surfing 
-V = 1
+# CR=2.128 mm/us
+# V = 1
+
+# V = 0.2128
+# V = 0.4256
+V = 0.8512
 t_lag = 20
-tf = 50
+tf = 70
 
 # shape and scale
 a = 10 # crack length
@@ -42,7 +47,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Functions]
   [bc_func]
     type = ParsedFunction
-    expression = -1*c1*((x-V*(t-t_lag))^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-V*(t-t_lag)))))*sin(0.5*atan2(y,(x-V*(t-t_lag))))
+    expression = c1*((x-V*(t-t_lag))^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-V*(t-t_lag)))))*sin(0.5*atan2(y,(x-V*(t-t_lag))))
     symbol_names = 'c1 c2 V t_lag'
     symbol_values = '${c1} ${c2} ${V} ${t_lag}'
   []
@@ -111,7 +116,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     input = gen
     type = ParsedSubdomainMeshGenerator
     block_id = 1
-    combinatorial_geometry = 'abs(y)<2'
+    combinatorial_geometry = 'abs(y)<5'
     block_name = small
   []
   [box_bnd]
@@ -301,7 +306,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 1e-6'
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -351,6 +356,16 @@ gamma = '${fparse 1/2-hht_alpha}'
     displacements = 'disp_x disp_y'
     velocities = 'vel_x vel_y'
     block = '0 1'
+  []
+  [DJ]
+    type = ParsedPostprocessor
+    expression = 'DJint + DJint_2'
+    pp_names = 'DJint DJint_2'
+  []
+  [DJ_box]
+    type = ParsedPostprocessor
+    expression = 'DJint_box + DJint_box_2'
+    pp_names = 'DJint_box DJint_box_2'
   []
   [Jint_box]
     type = PhaseFieldJIntegral
@@ -444,8 +459,8 @@ gamma = '${fparse 1/2-hht_alpha}'
 
   # fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = false
-  fixed_point_rel_tol = 1e-6
-  fixed_point_abs_tol = 1e-8
+  fixed_point_rel_tol = 1e-8
+  fixed_point_abs_tol = 1e-10
   # fixed_point_rel_tol = 1e-5
   # fixed_point_abs_tol = 1e-6
 []
@@ -453,15 +468,17 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    # min_simulation_time_interval = 0.25
+    min_simulation_time_interval = 1
     # time_step_interval = 10
   []
   # file_base = './out/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}/${material}_surf'
-  file_base = './out/${material}_nuc24_rho${rho}_cmp/${material}_surf'
+  # file_base = './out/${material}_nuc24_l${l}_rho${rho}_cmp/${material}_surf'
+  file_base = './out/surf_nuc24_v${V}/surf_nuc24_v${V}'
   print_linear_residuals = false
+  checkpoint = true
   [csv]
     type = CSV
     # file_base = './gold/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}'
-    file_base = './gold/${material}_nuc24_rho${rho}_cmp'
+    file_base = './gold/surf_nuc24_v${V}'
   []
 []

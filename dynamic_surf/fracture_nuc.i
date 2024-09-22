@@ -59,21 +59,21 @@
 []
 
 [Bounds]
-  [irreversibility]
-    type = VariableOldValueBounds
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = lower
-    block = '0 1'
-  []
-  # [conditional]
-  #   type = ConditionalBoundsAux
+  # [irreversibility]
+  #   type = VariableOldValueBounds
   #   variable = bounds_dummy
   #   bounded_variable = d
-  #   fixed_bound_value = 0
-  #   threshold_value = 0.95
+  #   bound_type = lower
   #   block = '0 1'
   # []
+  [conditional]
+    type = ConditionalBoundsAux
+    variable = bounds_dummy
+    bounded_variable = d
+    fixed_bound_value = 0
+    threshold_value = 0.95
+    block = '0 1'
+  []
   [upper]
     type = ConstantBounds
     variable = bounds_dummy
@@ -134,7 +134,7 @@
     expression = (1-d)^p*(1-eta)+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 0'
+    parameter_values = '2 1e-6'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -149,17 +149,17 @@
   [psi]
     type = ADDerivativeParsedMaterial
     property_name = psi
-    expression = 'g*psie_active+(Gc/c0/l)*alpha'
+    expression = 'g*psie_active+(Gc*delta/c0/l)*alpha'
     coupled_variables = 'd psie_active'
-    material_property_names = 'alpha(d) g(d) Gc c0 l'
+    material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
   []
   [psi_f]
     type = ADParsedMaterial
     property_name = psi_f
-    expression = 'Gc*gamma'
+    expression = 'delta*Gc*gamma'
     coupled_variables = 'd'
-    material_property_names = 'gamma(d) Gc'
+    material_property_names = 'delta gamma(d) Gc'
   []
   [strain]
     type = ADComputePlaneSmallStrain
@@ -172,7 +172,8 @@
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = SPECTRAL
+    # decomposition = SPECTRAL
+    decomposition = NONE
   []
   [nucleation_micro_force]
     type = LDLNucleationMicroForce

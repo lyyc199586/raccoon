@@ -33,8 +33,8 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     []
     [combo_marker]
       type = ComboMarker
-      # markers = 'damage_marker strength_marker'
-      markers = 'damage_marker initial'
+      markers = 'damage_marker strength_marker initial'
+      # markers = 'damage_marker initial'
     []
   []
 []

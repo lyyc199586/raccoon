@@ -26,7 +26,7 @@ Tf = 70
 nx = '${fparse int(100/h)}'
 ny = '${fparse int(40/h)}'
 
-filebase = nuc24_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
+filebase = nuc24_energy_cmp_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
 # hht_alpha = -0.25
@@ -160,8 +160,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     []
     [combo_marker]
       type = ComboMarker
-      # markers = 'damage_marker strength_marker'
-      markers = 'damage_marker initial'
+      markers = 'damage_marker strength_marker initial'
+      # markers = 'damage_marker initial'
     []
   []
 []
@@ -189,6 +189,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [vel_x]
   []
   [vel_y]
+  []
+  [vel_z]
   []
   [fx]
   []
@@ -241,6 +243,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   family = MONOMIAL
   # []
   [w_ext]
+  []
+  [k_var]
+    order = CONSTANT
+    family = MONOMIAL
   []
 []
 
@@ -305,6 +311,14 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = vel_y
     acceleration = accel_y
     execute_on = 'TIMESTEP_BEGIN TIMESTEP_END'
+  []
+  [kinetic_energy_aux]
+    type = ADKineticEnergyAux
+    variable = k_var
+    newmark_velocity_x = vel_x
+    newmark_velocity_y = vel_y
+    newmark_velocity_z = vel_z
+    density = density
   []
   # [s11]
   #   type = ADRankTwoAux
