@@ -22,11 +22,13 @@ c2 = '${fparse (3-nu)/(1+nu)}'
 # surfing 
 # CR=2.128 mm/us
 # V = 1
-V = 0.2128
+# V = 0.2128
 # V = 0.4256
-# V = 0.8512
+V = 0.8512
 t_lag = 20
-tf = 150
+tf = 57
+t_ramp_start = 50
+t_ramp_end = 55
 
 # shape and scale
 a = 10 # crack length
@@ -43,11 +45,20 @@ beta = '${fparse (1-hht_alpha)^2/4}'
 gamma = '${fparse 1/2-hht_alpha}'
 
 [Functions]
-  [bc_func]
+  [surf_func]
     type = ParsedFunction
     expression = c1*((x-V*(t-t_lag))^2+y^2)^(0.25)*(c2-cos(atan2(y,(x-V*(t-t_lag)))))*sin(0.5*atan2(y,(x-V*(t-t_lag))))
     symbol_names = 'c1 c2 V t_lag'
     symbol_values = '${c1} ${c2} ${V} ${t_lag}'
+  []
+  [ramp_func]
+    type = PiecewiseLinear
+    x = '0 ${t_ramp_start} ${t_ramp_end} ${tf}'
+    y = '1 1 0 0'
+  []
+  [bc_func]
+    type = CompositeFunction
+    functions = 'ramp_func surf_func'
   []
 []
 
@@ -470,12 +481,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     # time_step_interval = 10
   []
   # file_base = './out/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}/${material}_surf'
-  file_base = './out/surf_coh_v${V}/surf_coh_v${V}'
+  file_base = './out/surf_arrest_coh_v${V}_rstart${t_ramp_start}_rend${t_ramp_end}/surf_arrest_coh_v${V}_rstart${t_ramp_start}_rend${t_ramp_end}'
   print_linear_residuals = false
   checkpoint = true
   [csv]
     type = CSV
     # file_base = './gold/${material}_coh_rho${rho}_tlag${t_lag}_tf${tf}_v${V}_l${l}_h${h}_ref${refine}'
-    file_base = './gold/surf_coh_v${V}'
+    file_base = './gold/surf_arrest_coh_v${V}_rstart${t_ramp_start}_rend${t_ramp_end}'
   []
 []
