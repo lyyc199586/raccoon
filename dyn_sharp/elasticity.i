@@ -9,9 +9,9 @@ G = '${fparse E/2/(1+nu)}'
 Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 refine = 2 # 2 -> 0.5
-# p0 = 5
+p0 = 5
 # p0 = 30
-p0 = 62
+# p0 = 62
 T0 = 25
 Tf = 100
 
@@ -21,7 +21,7 @@ Tf = 100
 a = 105
 
 #
-filename = 'sharp_a${a}_p0${p0}'
+filename = 'sharp_a${a}_p${p0}'
 
 # hht parameters
 hht_alpha = -0.3
