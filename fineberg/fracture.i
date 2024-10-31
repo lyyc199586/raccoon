@@ -102,7 +102,7 @@ Lambda = '${fparse K - 2/3*G}'
   [diff]
     type = ADPFFDiffusion
     variable = d
-    fracture_toughness = Gc
+    fracture_toughness = Gc_delta
     regularization_length = l
     normalization_constant = c0
   []
@@ -191,6 +191,12 @@ Lambda = '${fparse K - 2/3*G}'
     coupled_variables = 'd psie_active'
     material_property_names = 'delta alpha(d) g(d) Gc c0 l'
     derivative_order = 1
+  []
+  [Gc_delta]
+    type = ADParsedMaterial
+    property_name = Gc_delta
+    expression = 'Gc*delta'
+    material_property_names = 'Gc delta'
   []
   [psi_f]
     type = ADParsedMaterial

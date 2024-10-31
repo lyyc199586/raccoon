@@ -500,50 +500,50 @@ gamma = '${fparse 1/2-hht_alpha}'
     boundary = 'left bottom right top'
     # outputs = "csv exodus"
   []
-  [DJ1]
-    type = DynamicPhaseFieldJIntegral
-    J_direction = '1 0 0'
-    strain_energy_density = psie
-    displacements = 'disp_x disp_y'
-    boundary = 'left bottom right top'
-    density = density
-  []
-  [DJ2]
-    type = DJint
-    J_direction = '1 0 0'
-    displacements = 'disp_x disp_y'
-    velocities = 'vel_x vel_y'
-    density = density
-  []
-  [DJint]
-    type = ParsedPostprocessor
-    expression = 'DJ1 + DJ2'
-    pp_names = 'DJ1 DJ2'
-  []
-  [DJ1_br]
-    type = DynamicPhaseFieldJIntegral
-    J_direction = '1 0 0'
-    strain_energy_density = psie
-    displacements = 'disp_x disp_y'
-    # boundary = 'left bottom right top'
-    boundary = 'br_bnd'
-    density = density
-    # outputs = "csv exodus"
-  []
-  [DJ2_br]
-    type = DJint
-    J_direction = '1 0 0'
-    displacements = 'disp_x disp_y'
-    velocities = 'vel_x vel_y'
-    block = '3'
-    density = density
-    # block = '0 1'
-  []
-  [DJ_br]
-    type = ParsedPostprocessor
-    expression = 'DJ1_br + DJ2_br'
-    pp_names = 'DJ1_br DJ2_br'
-  []
+  # [DJ1]
+  #   type = DynamicPhaseFieldJIntegral
+  #   J_direction = '1 0 0'
+  #   strain_energy_density = psie
+  #   displacements = 'disp_x disp_y'
+  #   boundary = 'left bottom right top'
+  #   density = density
+  # []
+  # [DJ2]
+  #   type = DJint
+  #   J_direction = '1 0 0'
+  #   displacements = 'disp_x disp_y'
+  #   velocities = 'vel_x vel_y'
+  #   density = density
+  # []
+  # [DJint]
+  #   type = ParsedPostprocessor
+  #   expression = 'DJ1 + DJ2'
+  #   pp_names = 'DJ1 DJ2'
+  # []
+  # [DJ1_br]
+  #   type = DynamicPhaseFieldJIntegral
+  #   J_direction = '1 0 0'
+  #   strain_energy_density = psie
+  #   displacements = 'disp_x disp_y'
+  #   # boundary = 'left bottom right top'
+  #   boundary = 'br_bnd'
+  #   density = density
+  #   # outputs = "csv exodus"
+  # []
+  # [DJ2_br]
+  #   type = DJint
+  #   J_direction = '1 0 0'
+  #   displacements = 'disp_x disp_y'
+  #   velocities = 'vel_x vel_y'
+  #   block = '3'
+  #   density = density
+  #   # block = '0 1'
+  # []
+  # [DJ_br]
+  #   type = ParsedPostprocessor
+  #   expression = 'DJ1_br + DJ2_br'
+  #   pp_names = 'DJ1_br DJ2_br'
+  # []
   [FE]
     type = Receiver
   []
