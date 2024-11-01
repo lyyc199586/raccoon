@@ -13,20 +13,20 @@ sigma_cs = 9.24
 
 ## lch = 3/8*E*Gc/sigma_ts^2 = 3.79
 # l = 0.25
-# l = 0.5
+l = 0.5
 # l = 0.625
-l = 0.625
+# l = 0.6
 h = 1
 p = 1
 # delta = 5 # haven't tested
 refine = 3 # 0.125
 
 Tb = 0
-Tf = 70
+Tf = 80
 nx = '${fparse int(100/h)}'
 ny = '${fparse int(40/h)}'
 
-filebase = nuc24_energy_cmp_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
+filebase = nuc24_p${p}_l${l}_h${h}_rf${refine}_tb${Tb}_tf${Tf}
 
 # hht parameters
 # hht_alpha = -0.25
@@ -83,7 +83,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   gamma = ${gamma}
   beta = ${beta}
-  use_displaced_mesh = true
+  use_displaced_mesh = false
 []
 
 [Mesh]
@@ -135,12 +135,12 @@ gamma = '${fparse 1/2-hht_alpha}'
   max_h_level = ${refine}
   initial_marker = initial
   initial_steps = ${refine}
-  cycles_per_step = ${refine}
+  cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
       variable = d
-      lower_bound = 0.0001
+      lower_bound = 1e-6
       upper_bound = 1
     []
     [strength_marker]
@@ -454,6 +454,7 @@ gamma = '${fparse 1/2-hht_alpha}'
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
+    # parameter_values = '2 0.0'
   []
   [strain]
     # type = ADComputePlaneSmallStrain
@@ -606,10 +607,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   # petsc_options_value = 'asm'
   automatic_scaling = true
 
-  # nl_rel_tol = 1e-8
-  # nl_abs_tol = 1e-10
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-8
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  # nl_rel_tol = 1e-6
+  # nl_abs_tol = 1e-8
   # nl_max_its = 50
 
   # dt = 0.5e-7
@@ -621,7 +622,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   # start_time = 80e-6
   # end_time = 120e-6
 
-  fixed_point_max_its = 10
+  fixed_point_max_its = 30
   accept_on_max_fixed_point_iteration = true
   # fixed_point_rel_tol = 1e-8
   # fixed_point_abs_tol = 1e-10
@@ -639,7 +640,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     time_step_interval = 1
-    min_simulation_time_interval = 0.25
+    min_simulation_time_interval = 0.5
   []
   checkpoint = true
   print_linear_residuals = false

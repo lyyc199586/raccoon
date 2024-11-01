@@ -8,12 +8,12 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   max_h_level = ${refine}
   initial_marker = initial
   initial_steps = ${refine}
-  cycles_per_step = ${refine}
+  cycles_per_step = 5
   [Markers]
     [damage_marker]
       type = ValueRangeMarker
       variable = d
-      lower_bound = 0.0001
+      lower_bound = 1e-6
       upper_bound = 1
     []
     [strength_marker]
@@ -166,6 +166,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     phase_field = d
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
+    # parameter_values = '2 0.0'
   []
   [psi]
     type = ADDerivativeParsedMaterial
@@ -265,13 +266,14 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   type = Transient
 
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
-  petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package -snes_type'
+  # petsc_options_value = 'lu       superlu_dist                  vinewtonrsls'
   # petsc_options_iname = '-pc_type -snes_type'
   # petsc_options_value = 'asm      vinewtonrsls'
-  # petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
-  # petsc_options_value = 'hypre boomeramg      vinewtonrsls '
+  petsc_options_iname = '-pc_type -pc_hypre_type -snes_type '
+  petsc_options_value = 'hypre boomeramg      vinewtonrsls '
   automatic_scaling = true
+  line_search = NONE
 
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
