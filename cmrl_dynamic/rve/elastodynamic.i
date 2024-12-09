@@ -197,8 +197,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [density]
     type = ADPiecewiseConstantByBlockMaterial
     prop_name = 'density'
-    subdomain_to_prop_value = '0 ${rho_epoxy}
-                               1 ${rho_pzt}'
+    subdomain_to_prop_value = '1 ${rho_epoxy}
+                               2 ${rho_pzt}'
   []
   [epoxy]
     type = ComputeIsotropicElasticityTensor
@@ -261,6 +261,6 @@ gamma = '${fparse 1/2-hht_alpha}'
   checkpoint = true
 []
 
-[Debug]
-  show_material_props = true
-[]
+# [Debug]
+#   show_material_props = true
+# []
