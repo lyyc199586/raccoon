@@ -1,6 +1,10 @@
 # material params,
-rho_epoxy = 1.3e3
-rho_pzt = 2.6e3
+rho_epoxy = 1.3
+rho_pzt = 2.6
+K_epoxy = 2.17e6
+G_epoxy = 1e6
+K_pzt = 115e6
+G_pzt = 4.5e6
 
 # hht params
 hht_alpha = -0.00
@@ -19,7 +23,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   alpha = ${hht_alpha}
   beta = ${beta}
   gamma = ${gamma}
-  large_kinematics = true
+  # large_kinematics = true
   use_displaced_mesh = false
 []
 
@@ -52,8 +56,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
     [AuxKernel]
-      type = RankTwoAux
-      rank_two_tensor = cauchy_stress
+      type = ADRankTwoAux
+      rank_two_tensor = stress
       index_i = 0
       index_j = 0
       execute_on = 'INITIAL TIMESTEP_END'
@@ -63,8 +67,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
     [AuxKernel]
-      type = RankTwoAux
-      rank_two_tensor = cauchy_stress
+      type = ADRankTwoAux
+      rank_two_tensor = stress
       index_i = 1
       index_j = 1
       execute_on = 'INITIAL TIMESTEP_END'
@@ -74,18 +78,21 @@ gamma = '${fparse 1/2-hht_alpha}'
     order = CONSTANT
     family = MONOMIAL
     [AuxKernel]
-      type = RankTwoAux
-      rank_two_tensor = cauchy_stress
+      type = ADRankTwoAux
+      rank_two_tensor = stress
       index_i = 2
       index_j = 2
       execute_on = 'INITIAL TIMESTEP_END'
     []
   []
+  [d]
+  []
 []
 
 [Kernels]
   [solid_x]
-    type = TotalLagrangianStressDivergence
+    # type = TotalLagrangianStressDivergence
+    type = ADStressDivergenceTensors
     variable = disp_x
     displacements = 'disp_x disp_y disp_z'
     component = 0
@@ -99,7 +106,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     # use_displaced_mesh = true
   []
   [solid_y]
-    type = TotalLagrangianStressDivergence
+    # type = TotalLagrangianStressDivergence
+    type = ADStressDivergenceTensors
     variable = disp_y
     displacements = 'disp_x disp_y disp_z'
     component = 1
@@ -113,7 +121,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     # use_displaced_mesh = true
   []
   [solid_z]
-    type = TotalLagrangianStressDivergence
+    # type = TotalLagrangianStressDivergence
+    type = ADStressDivergenceTensors
     variable = disp_z
     displacements = 'disp_x disp_y disp_z'
     component = 2
@@ -173,8 +182,10 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Functions]
   [load_func]
     type = PiecewiseLinear
-    x = '0.00 1.00E-05 4.00E-05 1.60E-04 1.00E+00'
-    y = '0.00 1.28E-06 3.69E-06 5.87E-06 6.00E-06'
+    # x = '0.00 1.00E-05 4.00E-05 1.60E-04 1.00E+00'
+    # y = '0.00 1.28E-06 3.69E-06 5.87E-06 6.00E-06'
+    x = '0.00 1.00E-05 4.00E-05 1.60E-04 6.30E-04 0.1'
+    y = '0.00 1.024E-04 2.952E-04 4.696E-04 4.800E-04 4.800E-04'
   []
 []
 
@@ -191,6 +202,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     variable = disp_y
     function = load_func
   []
+  [fix_x]
+    type = ADDirichletBC
+    variable = disp_x
+    value = 0
+    boundary = '4 5'
+  []
 []
 
 [Materials]
@@ -200,25 +217,58 @@ gamma = '${fparse 1/2-hht_alpha}'
     subdomain_to_prop_value = '1 ${rho_epoxy}
                                2 ${rho_pzt}'
   []
-  [epoxy]
-    type = ComputeIsotropicElasticityTensor
-    shear_modulus = 1e9
-    poissons_ratio = 0.3
-    block = '1'
+  # [epoxy]
+  #   type = ComputeIsotropicElasticityTensor
+  #   shear_modulus = 1e9
+  #   poissons_ratio = 0.3
+  #   block = '1'
+  # []
+  # [pzt]
+  #   type = ComputeElasticityTensor
+  #   C_ijkl = '129.3e9 91.6e9 87.1e9 116.8e9 9.7e9'
+  #   fill_method = AXISYMMETRIC_RZ
+  #   block = '2'
+  [bulk_modulus]
+    type = ADPiecewiseConstantByBlockMaterial
+    prop_name = 'K'
+    subdomain_to_prop_value = '1 ${K_epoxy}
+                               2 ${K_pzt}'
   []
-  [pzt]
-    type = ComputeElasticityTensor
-    C_ijkl = '129.3e9 91.6e9 87.1e9 116.8e9 9.7e9'
-    fill_method = AXISYMMETRIC_RZ
-    block = '2'
+  [shear_modulus]
+    type = ADPiecewiseConstantByBlockMaterial
+    prop_name = 'G'
+    subdomain_to_prop_value = '1 ${G_epoxy}
+                               2 ${G_pzt}'
+  []
+  [small_deformation_elasticity]
+    type = SmallDeformationIsotropicElasticity
+    bulk_modulus = K
+    shear_modulus = G
+    phase_field = d
+    degradation_function = g
+    decomposition = NONE
+  []
+  [no_deg] # no deg for testing
+    type = NoDegradation
+    phase_field = d 
+    property_name = g
+    expression = 1
   []
   [stress]
-    type = ComputeLagrangianLinearElasticStress
-    # outputs = 'vtk'
+    type = ComputeSmallDeformationStress
+    elasticity_model = small_deformation_elasticity
+    output_properties = 'stress'
   []
   [strain]
-    type = ComputeLagrangianStrain 
+    type = ADComputeSmallStrain
   []
+  # [stress]
+  #   type = ComputeLagrangianLinearElasticStress
+  #   # outputs = 'vtk'
+  # []
+  # [strain]
+  #   type = ComputeLagrangianStrain 
+  # []
 []
 
 # [Preconditioning]
