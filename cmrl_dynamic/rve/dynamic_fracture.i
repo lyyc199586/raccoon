@@ -27,7 +27,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   beta = ${beta}
   gamma = ${gamma}
   # large_kinematics = true
-  use_displaced_mesh = false
+  # use_displaced_mesh = false
   # use_displaced_mesh = true
 []
 
@@ -204,6 +204,15 @@ gamma = '${fparse 1/2-hht_alpha}'
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = 1
+  []
+  [fixed]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 1e-10
+    block = 2
   []
 []
 
@@ -238,12 +247,12 @@ gamma = '${fparse 1/2-hht_alpha}'
     value = 0
     boundary = '4 5'
   []
-  [fix_d]
-    type = ADDirichletBC
-    variable = d
-    boundary = '2 3 4 5'
-    value = 0
-  []
+  # [fix_d]
+  #   type = ADDirichletBC
+  #   variable = d
+  #   boundary = '2 3 4 5'
+  #   value = 0
+  # []
 []
 
 [Materials]
@@ -346,7 +355,7 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
   solve_type = NEWTON
   start_time = 0
-  end_time = 1
+  end_time = 1e-6
   dtmin = 1e-15
   dtmax = 1e-3
   dt = 1e-8
@@ -365,10 +374,10 @@ gamma = '${fparse 1/2-hht_alpha}'
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   line_search = None
-  # [TimeIntegrator]
-  #   type = NewmarkBeta
-  #   inactive_tsteps = 1
-  # []
+  [TimeIntegrator]
+    type = NewmarkBeta
+    inactive_tsteps = 1
+  []
 []
 
 [Outputs]
