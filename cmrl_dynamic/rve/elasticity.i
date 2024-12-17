@@ -341,17 +341,17 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
   solve_type = NEWTON
   start_time = 0
-  end_time = 1e-4
+  end_time = 1e-3
   dtmin = 1e-15
   dtmax = 1e-3
-  dt = 1e-7
-  # [TimeStepper]
-  #   type = IterationAdaptiveDT
-  #   dt = 1e-8
-  #   optimal_iterations = 50
-  #   iteration_window = 10
-  #   growth_factor = 5
-  # []
+  # dt = 1e-7
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = 1e-8
+    optimal_iterations = 50
+    iteration_window = 10
+    growth_factor = 5
+  []
   # petsc_options_iname = '-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount'
   # petsc_options_value = 'lu       vinewtonrsls NONZERO               1e-10'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
@@ -374,9 +374,9 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    # min_simulation_time_interval = 1e-3
+    min_simulation_time_interval = 1e-5
     # simulation_time_interval = 1e-2
-    time_step_interval = 10
+    # time_step_interval = 10
   []
   # simulation_time_interval = 1e-3
   # print_linear_residuals = false
