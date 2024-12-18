@@ -44,6 +44,18 @@ gamma = '${fparse 1/2-hht_alpha}'
     type = FileMeshGenerator
     file = './mesh/compositeRVE.msh'
   []
+  [break]
+    type = BreakMeshByBlockGenerator
+    input = fmg
+    split_interface = true
+    block_pairs = '1 2'
+  []
+[]
+
+[Physics/SolidMechanics/CohesiveZone]
+  [czm_12]
+    boundary = 'Vol_Matrix_Vol_Fiber'
+  []
 []
 
 [GlobalParams]
@@ -245,15 +257,16 @@ gamma = '${fparse 1/2-hht_alpha}'
     value = 0
     boundary = '4 5'
   []
-  # [fix_d]
-  #   type = ADDirichletBC
-  #   variable = d
-  #   boundary = '2 3 4 5'
-  #   value = 0
-  # []
 []
 
 [Materials]
+  [czm]
+    type = PureElasticTractionSeparation
+    displacements = 'disp_x disp_y disp_z'
+    normal_stiffness = 170
+    tangent_stiffness = 120
+    boundary = 'Vol_Matrix_Vol_Fiber'
+  []
   [density]
     type = ADPiecewiseConstantByBlockMaterial
     prop_name = 'density'
@@ -344,14 +357,14 @@ gamma = '${fparse 1/2-hht_alpha}'
   end_time = 1e-3
   dtmin = 1e-15
   dtmax = 1e-3
-  # dt = 1e-7
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = 1e-8
-    optimal_iterations = 50
-    iteration_window = 10
-    growth_factor = 5
-  []
+  dt = 1e-7
+  # [TimeStepper]
+  #   type = IterationAdaptiveDT
+  #   dt = 1e-8
+  #   optimal_iterations = 50
+  #   iteration_window = 10
+  #   growth_factor = 5
+  # []
   # petsc_options_iname = '-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount'
   # petsc_options_value = 'lu       vinewtonrsls NONZERO               1e-10'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
@@ -375,8 +388,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   [exodus]
     type = Exodus
     min_simulation_time_interval = 1e-5
-    # simulation_time_interval = 1e-2
-    # time_step_interval = 10
+    simulation_time_interval = 1e-5
+    time_step_interval = 100
   []
   # simulation_time_interval = 1e-3
   # print_linear_residuals = false

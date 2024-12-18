@@ -34,16 +34,16 @@
     bounded_variable = d
     bound_type = upper
     bound_value = 1
-    block = 1
+    # block = 1
   []
-  [fixed]
-    type = ConstantBounds
-    variable = bounds_dummy
-    bounded_variable = d
-    bound_type = upper
-    bound_value = 1e-10
-    block = 2
-  []
+  # [fixed]
+  #   type = ConstantBounds
+  #   variable = bounds_dummy
+  #   bounded_variable = d
+  #   bound_type = upper
+  #   bound_value = 1e-10
+  #   block = 2
+  # []
 []
 
 [Kernels]
@@ -55,6 +55,15 @@
     type = ADPFFSource
     variable = d
     free_energy = psi
+  []
+[]
+
+[BCs]
+  [fix_d]
+    type = ADDirichletBC
+    variable = d
+    boundary = '2 3 4 5'
+    value = 0
   []
 []
 
