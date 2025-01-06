@@ -1,13 +1,15 @@
 # material params,
-rho_epoxy = 1.3
-rho_pzt = 2.6
-K_epoxy = 2.17e6
-G_epoxy = 1e6
-K_pzt = 115e6
-G_pzt = 4.5e6
-l = 0.02
+rho_epoxy = 1.3e-6
+rho_pzt = 2.6e-6
+K_epoxy = 2.17e3
+G_epoxy = 1e3
+K_pzt = 11.74e3
+G_pzt = 4.5e3
+l = 0.022
 Gc_epoxy = 165e-3
 Gc_pzt = 400e-3
+
+u = 1.5e-2
 
 # hht params
 hht_alpha = -0.0
@@ -42,7 +44,7 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/compositeRVE.msh'
+    file = './mesh/fine.msh'
   []
   [break]
     type = BreakMeshByBlockGenerator
@@ -55,6 +57,9 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Physics/SolidMechanics/CohesiveZone]
   [czm_12]
     boundary = 'Vol_Matrix_Vol_Fiber'
+    # strain = SMALL
+    strain = FINITE
+    generate_output = 'normal_traction tangent_traction normal_jump tangent_jump'
   []
 []
 
@@ -227,15 +232,17 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Functions]
-  [load_func]
-    type = PiecewiseLinear
-    x = '0.00 1.00E-05 4.00E-05 1.60E-04 6.30E-04 0.1'
-    y = '0.00 1.024E-05 2.952E-05 4.696E-05 4.800E-05 4.800E-05'
-  []
   # [load_func]
-  #   type = ADParsedFunction
-  #   expression = 't*0.0002'
+  #   type = PiecewiseLinear
+  #   x = '0.00 1.00E-05 4.00E-05 1.60E-04 6.30E-04 0.1'
+  #   y = '0.00 1.024E-05 2.952E-05 4.696E-05 4.800E-05 4.800E-05'
   # []
+  [load_func]
+    type = ADParsedFunction
+    expression = 'a*(1-exp(-b*t))'
+    symbol_names = 'a b'
+    symbol_values = '${u} 2.4e4'
+  []
 []
 
 [BCs]
@@ -260,12 +267,26 @@ gamma = '${fparse 1/2-hht_alpha}'
 []
 
 [Materials]
+  # [czm_3dc]
+  #   type = SalehaniIrani3DCTraction
+  #   boundary = 'Vol_Matrix_Vol_Fiber'
+  #   normal_gap_at_maximum_normal_traction = 1e-6
+  #   tangential_gap_at_maximum_shear_traction = 1e-6
+  #   maximum_normal_traction = 170
+  #   maximum_shear_traction = 120
+  #   # base_name = 'czm_b012'
+  # []
   [czm]
-    type = PureElasticTractionSeparation
-    displacements = 'disp_x disp_y disp_z'
-    normal_stiffness = 170
-    tangent_stiffness = 120
+    type = BiLinearMixedModeTraction
     boundary = 'Vol_Matrix_Vol_Fiber'
+    penalty_stiffness = 1e6
+    GI_c = ${Gc_epoxy}
+    GII_c = ${Gc_epoxy}
+    normal_strength = 170
+    shear_strength = 120
+    displacements = 'disp_x disp_y disp_z'
+    eta = 2.2
+    viscosity = 1e-3
   []
   [density]
     type = ADPiecewiseConstantByBlockMaterial
@@ -302,7 +323,8 @@ gamma = '${fparse 1/2-hht_alpha}'
     shear_modulus = G
     phase_field = d
     degradation_function = g
-    decomposition = NONE
+    # decomposition = NONE
+    decomposition = VOLDEV
     output_properties = 'psie psie_active'
     outputs = 'exodus'
   []
@@ -313,6 +335,8 @@ gamma = '${fparse 1/2-hht_alpha}'
   #   phase_field = d
   #   degradation_function = g
   #   decomposition = NONE
+  #   output_properties = 'psie_active'
+  #   outputs = 'exodus'
   # []
   [stress]
     type = ComputeLargeDeformationStress
@@ -344,9 +368,37 @@ gamma = '${fparse 1/2-hht_alpha}'
     expression = 'd^2'
     phase_field = d
   []
-  [crack_surface_density]
-    type = CrackSurfaceDensity
-    phase_field = d
+  # [crack_surface_density]
+  #   type = CrackSurfaceDensity
+  #   phase_field = d
+  # []
+[]
+
+[Postprocessors]
+  [dt]
+    type = TimestepSize
+  []
+  [Fy]
+    type = NodalSum
+    variable = fy
+    boundary = 2
+  []
+  [d_max]
+    type = NodalExtremeValue
+    variable = d
+    value_type = max
+    # block = 1
+  []
+  [disp_y_max]
+    type = NodalExtremeValue
+    variable = disp_y
+    value_type = max
+  []
+  [stress_yy_max]
+    type = ElementExtremeValue
+    variable = stress_yy
+    value_type = max
+    # block = 2
   []
 []
 
@@ -354,26 +406,31 @@ gamma = '${fparse 1/2-hht_alpha}'
   type = Transient
   solve_type = NEWTON
   start_time = 0
-  end_time = 1e-3
+  # end_time = 0.1
+  end_time = 2e-4
   dtmin = 1e-15
-  dtmax = 1e-3
-  dt = 1e-7
-  # [TimeStepper]
-  #   type = IterationAdaptiveDT
-  #   dt = 1e-8
-  #   optimal_iterations = 50
-  #   iteration_window = 10
-  #   growth_factor = 5
-  # []
+  dtmax = 1e-6
+  # dt = 1e-7
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = 1e-8
+    optimal_iterations = 15
+    iteration_window = 10
+    growth_factor = 2
+  []
   # petsc_options_iname = '-pc_type -snes_type   -pc_factor_shift_type -pc_factor_shift_amount'
   # petsc_options_value = 'lu       vinewtonrsls NONZERO               1e-10'
+  # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  # petsc_options_value = 'hypre boomeramg'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'hypre boomeramg'
+  petsc_options_value = 'lu       superlu_dist                 '
   automatic_scaling = true
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
   # line_search = None
 
+  # num_steps = 10
+  
   fixed_point_max_its = 50
   accept_on_max_fixed_point_iteration = false
   fixed_point_rel_tol = 1e-6
@@ -387,14 +444,19 @@ gamma = '${fparse 1/2-hht_alpha}'
 [Outputs]
   [exodus]
     type = Exodus
-    min_simulation_time_interval = 1e-5
-    simulation_time_interval = 1e-5
-    time_step_interval = 100
+    min_simulation_time_interval = 1e-7
+    # simulation_time_interval = 1e-5
+    # time_step_interval = 10
   []
-  # simulation_time_interval = 1e-3
-  # print_linear_residuals = false
-  file_base = './out/fracture'
-  # checkpoint = true
+  [csv]
+    type = CSV
+    file_base = './gold/interface'
+  []
+  print_linear_residuals = false
+  file_base = './out/dynamic_blm_u${u}_rho1e3'
+    # file_base = './out/noiterface_dynamic_small_def_u${u}'
+  checkpoint = true
+  
 []
 
 # [Debug]

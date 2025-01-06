@@ -3,7 +3,7 @@
 # rho_pzt = 2.6e3
 K_epoxy = 2.17e6
 G_epoxy = 1e6
-K_pzt = 115e6
+K_pzt = 11.74e6
 G_pzt = 4.5e6
 l = 0.022
 Gc = 0.1
@@ -16,18 +16,38 @@ Gc = 0.1
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/compositeRVE.msh'
+    file = './mesh/fine.msh'
+    # file = './mesh/coarse.e'
   []
+  # [bottom]
+  #   input = fmg
+  #   type = ParsedGenerateSideset
+  #   combinatorial_geometry = 'y <= -0.25e-3'
+  #   new_sideset_name = 'bottom'
+  # []
+  # [top]
+  #   input = bottom
+  #   type = ParsedGenerateSideset
+  #   combinatorial_geometry = 'y >= 0.25e-3'
+  #   new_sideset_name = 'top'
+  # []
+  # [left]
+  #   input = top
+  #   type = ParsedGenerateSideset
+  #   combinatorial_geometry = 'x <= -0.25e-3'
+  #   new_sideset_name = 'left'
+  # []
+  # [right]
+  #   input = left
+  #   type = ParsedGenerateSideset
+  #   combinatorial_geometry = 'x >= 0.25e-3'
+  #   new_sideset_name = 'right'
+  # []
 []
 
 [GlobalParams]
   displacements = 'disp_x disp_y disp_z'
-  # alpha = ${hht_alpha}
-  # beta = ${beta}
-  # gamma = ${gamma}
-  # large_kinematics = true
   use_displaced_mesh = false
-  # use_displaced_mesh = true
 []
 
 [Variables]
@@ -122,6 +142,15 @@ Gc = 0.1
     bounded_variable = d
     bound_type = upper
     bound_value = 1
+    block = 'Vol_Matrix'
+  []
+  [fixed]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = d
+    bound_type = upper
+    bound_value = 0.000001
+    block = 'Vol_Fiber'
   []
 []
 
@@ -132,8 +161,9 @@ Gc = 0.1
   #   y = '0.00 1.28E-06 3.69E-06 5.87E-06 6.00E-06'
   # []
   [load_func]
-    type = ADParsedFunction
-    expression = 't*0.0002'
+    type = PiecewiseLinear
+    x = '0.00 1000.00'
+    y = '0.00 8e-4'
   []
 []
 
@@ -142,11 +172,13 @@ Gc = 0.1
     type = ADDirichletBC
     variable = disp_y
     boundary = '3'
+    # boundary = 'bottom'
     value = 0
   []
   [ytop]
     type = ADFunctionDirichletBC
     boundary = '2'
+    # boundary = 'top'
     variable = disp_y
     function = load_func
   []
@@ -155,16 +187,23 @@ Gc = 0.1
     variable = disp_x
     value = 0
     boundary = '4 5'
+    # boundary = 'left right'
   []
   [fix_d]
     type = ADDirichletBC
     variable = d
     boundary = '2 3 4 5'
+    # boundary = 'top bottom left right'
     value = 0
   []
 []
 
 [Materials]
+  # [bulk]
+  #   type = ADGenericConstantMaterial
+  #   prop_names = 'K G Gc l'
+  #   prop_values = '${K_epoxy} ${G_epoxy} ${Gc} ${l}'
+  # []
   [bulk_modulus]
     type = ADPiecewiseConstantByBlockMaterial
     prop_name = 'K'
@@ -192,21 +231,35 @@ Gc = 0.1
     phase_field = d
     degradation_function = g
     decomposition = NONE
+    # block = 'Vol_Matrix'
   []
+  # [fiber]
+  #   type = ComputeElasticityTensor
+  #   C_ijkl = '129.3e6 91.6e6 87.1e6 116.8e6 9.7e6'
+  #   fill_method = AXISYMMETRIC_RZ
+  #   block = 'Vol_Fiber'
+  # []
   # [stress]
   #   type = ComputeLargeDeformationStress
   #   elasticity_model = cnh
   # []
-  # [defgrad]
-  #   type = ComputeDeformationGradient
+  # [fiber_stress]
+  #   type = ComputeLagrangianLinearElasticStress
+  #   block = 'Vol_Fiber'
+  # []
+  # [fiber_strain]
+  #   type = ComputeLagrangianStrain 
+  #   block = 'Vol_Fiber'
   # []
   [stress]
     type = ComputeSmallDeformationStress
     elasticity_model = small_deformation_elasticity
     output_properties = 'stress'
+    # block = 'Vol_Matrix'
   []
   [strain]
     type = ADComputeSmallStrain
+    # block = 'Vol_Matrix'
   []
   # damage
   [fracture_properties]
@@ -227,6 +280,7 @@ Gc = 0.1
     expression = (1-d)^p*(1-eta)+eta
     parameter_names = 'p eta '
     parameter_values = '2 1e-6'
+    # block = 'Vol_Matrix'
   []
   [crack_geometric]
     type = CrackGeometricFunction
@@ -252,12 +306,13 @@ Gc = 0.1
   type = Transient
   solve_type = NEWTON
   start_time = 0
-  end_time = 1
-  dtmin = 1e-10
-  dtmax = 1e-2
+  end_time = 1000
+  dtmin = 0.01
+  dtmax = 10
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1e-3
+    # dt = 1e-3
+    dt = 0.01
     optimal_iterations = 50
     iteration_window = 10
     growth_factor = 5
@@ -270,21 +325,22 @@ Gc = 0.1
   nl_rel_tol = 1e-6
   nl_abs_tol = 1e-8
   line_search = None
-  # [TimeIntegrator]
-  #   type = NewmarkBeta
-  #   inactive_tsteps = 1
-  # []
+  [TimeIntegrator]
+    type = NewmarkBeta
+    inactive_tsteps = 1
+  []
 []
 
 [Outputs]
   [exodus]
     type = Exodus
-    min_simulation_time_interval = 1e-3
-    simulation_time_interval = 1e-2
+    min_simulation_time_interval = 10
+    simulation_time_interval = 10
   []
   # simulation_time_interval = 1e-3
   print_linear_residuals = false
-  file_base = './out/static'
+  # file_base = './out/qsstatic_elastic_small_def'
+  file_base = './out/qsstatic_small_def'
   checkpoint = true
 []
 
