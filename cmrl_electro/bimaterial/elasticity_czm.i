@@ -1,34 +1,6 @@
-# material properties: m, N, ...
-l = 0.2e-6 # h = 5e-7
-Gc = 10e6
+# l = 0.2e-6 # h = 5e-7
+Gc = 10
 Tmax = 80e6
-K = 11.74e9
-G = 4.5e9
-
-[MultiApps]
-  [fracture]
-    type = TransientMultiApp
-    input_files = fracture.i 
-    cli_args = 'K=${K};G=${G};Gc=${Gc};l=${l}'
-    execute_on = 'TIMESTEP_END'
-    clone_parent_mesh = true
-  []
-[]
-
-[Transfers]
-  [from_d]
-    type = MultiAppCopyTransfer
-    from_multi_app = fracture
-    source_variable = d
-    variable = d
-  []
-  [to_psie_active]
-    type = MultiAppCopyTransfer
-    to_multi_app = fracture
-    source_variable = 'disp_x disp_y psie_active'
-    variable = 'disp_x disp_y psie_active'
-  []
-[]
 
 [Mesh]
   [fmg]
@@ -73,8 +45,6 @@ G = 4.5e9
 []
 
 [AuxVariables]
-  [d]
-  []
   [stress_xx]
     order = CONSTANT
     family = MONOMIAL
@@ -143,8 +113,8 @@ G = 4.5e9
 [Functions]
   [load_func]
     type = PiecewiseLinear
-    x = '0 0.01 100'
-    y = '0 0 2e-7'
+    x = '0 100'
+    y = '0 2e-7'
   []
 []
 
@@ -176,46 +146,10 @@ G = 4.5e9
 []
 
 [Materials]
-  [bulk]
-    type = ADGenericConstantMaterial
-    prop_names = 'K G l Gc'
-    prop_values = '${K} ${G} ${l} ${Gc}'
-  []
-  [crack_geometric]
-    type = CrackGeometricFunction
-    expression = 'd^2'
-    phase_field = 'd'
-  []
-  [degradation]
-    type = PowerDegradationFunction
-    property_name = g
-    expression = (1-d)^p*(1-eta)+eta
-    phase_field = d
-    parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
-  []
-  # [nodeg]
-  #   type = NoDegradation
-  #   phase_field = d
-  # []
-  [small_deformation_elasticity]
-    type = SmallDeformationIsotropicElasticity
-    bulk_modulus = K
-    shear_modulus = G
-    phase_field = d
-    degradation_function = g
-    decomposition = NONE
-    # decomposition = SPECTRAL
-    output_properties = 'psie_active'
-    outputs = exodus
-  []
-  [strain]
-    type = ADComputeSmallStrain
-  []
-  [stress]
-    type = ComputeSmallDeformationStress
-    elasticity_model = small_deformation_elasticity
-    output_properties = 'stress'
+  [pzt]
+    type = ADComputeElasticityTensor
+    C_ijkl = '1.39e11 7.78e10 7.43e10 1.39e11 7.43e10 1.15e11 2.56e10 2.56e10 3.06e10'
+    fill_method = SYMMETRIC9
   []
   [czm]
     type = BiLinearMixedModeTraction
@@ -224,8 +158,22 @@ G = 4.5e9
     GI_c = ${Gc}
     eta = 2
     normal_strength = ${Tmax}
-    penalty_stiffness = 5e15
+    penalty_stiffness = 1e15
     shear_strength = ${Tmax}
+  []
+  # [czm]
+  #   type = PureElasticTractionSeparation
+  #   boundary = 'Lower_Upper'
+  #   normal_stiffness =
+  #   tangent_stiffness =
+  # []
+  [stress]
+    type = ADComputeLinearElasticStress
+    output_properties = 'stress'
+    # outputs = 'exodus'
+  []
+  [strain]
+    type = ADComputeSmallStrain
   []
 []
 
@@ -234,11 +182,6 @@ G = 4.5e9
     type = NodalSum
     variable = fz
     boundary = 'Top'
-  []
-  [max_d]
-    type = NodalExtremeValue
-    variable = d
-    value_type = max
   []
   [max_disp_z]
     type = NodalExtremeValue
@@ -257,19 +200,12 @@ G = 4.5e9
   solve_type = NEWTON
   start_time = 0
   end_time = 100
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = 0.01
-    optimal_iterations = 15
-    iteration_window = 10
-    growth_factor = 2
-  []
+  dt = 1
   dtmin = 1e-8
-  dtmax = 0.5
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu       superlu_dist                 '
   # petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  # petsc_options_value = 'hypre boomeramg'
+  # petsc_options_value = 'lu       superlu_dist                 '
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'hypre boomeramg'
   automatic_scaling = true
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
@@ -279,11 +215,10 @@ G = 4.5e9
 [Outputs]
   [exodus]
     type = Exodus
-    # simulation_time_interval = 1
-    # time_step_interval = 1
-    min_simulation_time_interval = 1
+    simulation_time_interval = 1
+    time_step_interval = 1
   []
   print_linear_residuals = false
-  file_base = './out/phasefield_czm'
+  file_base = './out/elastic_czm'
   checkpoint = true
 []
