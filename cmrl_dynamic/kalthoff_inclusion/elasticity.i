@@ -6,8 +6,10 @@ E = 1.9e5
 nu = 0.3
 Gc = 22.2
 l = 0.6
-factor = 0.05
+factor = 3
 filebase = 'frac_czm_${factor}Gc'
+
+## what is the strength for AT2?
 
 ##
 K = '${fparse E/3/(1-2*nu)}'
