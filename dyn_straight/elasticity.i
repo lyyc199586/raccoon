@@ -15,7 +15,7 @@ Lambda = '${fparse E*nu/(1+nu)/(1-2*nu)}'
 
 # lch = 3/8*E*Gc/sigma_ts^2 = 3.79 lch/5 = 0.75
 # l: 1, 0.75, 0.5 mm
-# l = 0.625
+# l = 0.5
 l = 0.375
 
 refine = 4 # 0.125

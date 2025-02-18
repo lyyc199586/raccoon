@@ -123,7 +123,7 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
   [diff]
     type = ADPFFDiffusion
     variable = d
-    fracture_toughness = Gc
+    fracture_toughness = Gc_delta
     regularization_length = l
     normalization_constant = c0
   []
@@ -192,6 +192,12 @@ sigma_hs = '${fparse 2/3*sigma_ts*sigma_cs/(sigma_cs - sigma_ts)}'
     expression = 'delta*Gc*gamma'
     coupled_variables = 'd'
     material_property_names = 'delta gamma(d) Gc'
+  []
+  [Gc_delta]
+    type = ADParsedMaterial
+    property_name = Gc_delta
+    expression = 'Gc*delta'
+    material_property_names = 'delta Gc'
   []
   [crack_surface_density]
     type = CrackSurfaceDensity
