@@ -5,8 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    # file = './mesh/annulus_r0.245_h0.1.msh'
-    file = './mesh/mesh.msh'
+    file = './mesh.msh'
   []
 []
 
@@ -19,17 +18,10 @@
   cycles_per_step = 5
   [Markers]
     [damage_marker]
-      type = ValueThresholdMarker
+      type = ValueRangeMarker
       variable = d
-      refine = 1e-6
-      coarsen = -1
-      # lower_bound = 0.0001
-      # upper_bound = 1
-    []
-    [stress_marker]
-      type = ValueThresholdMarker
-      variable = f_nu
-      refine = -0.5
+      lower_bound = 0.0001
+      upper_bound = 1
     []
     [inner_bnd]
       type = BoundaryMarker
@@ -38,7 +30,7 @@
     []
     [combo]
       type = ComboMarker
-      markers = 'damage_marker stress_marker inner_bnd'
+      markers = 'damage_marker inner_bnd'
     []
   []
 []
@@ -114,7 +106,7 @@
   [diff]
     type = ADPFFDiffusion
     variable = d
-    fracture_toughness = Gc_delta
+    fracture_toughness = Gc
     regularization_length = l
     normalization_constant = c0
   []
@@ -175,7 +167,7 @@
     # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-5'
+    parameter_values = '2 1e-6'
     # parameter_values = '2 0'
   []
   [psi]
@@ -188,27 +180,21 @@
   []
   # [psic]
   #   type = ADParsedMaterial
-  #   property_name = psic 
+  #   property_name = psic
   #   coupled_variables = 'psic'
   #   expression = 'psic'
   #   # outputs = exodus
   # []
-  [Gc_delta]
-    type = ADParsedMaterial
-    property_name = Gc_delta 
-    material_property_names = 'Gc delta'
-    expression = 'Gc*delta'
-  []
   [sigma_ts]
     type = ADParsedMaterial
-    property_name = sigma_ts 
+    property_name = sigma_ts
     coupled_variables = 'sigma_ts'
     expression = 'sigma_ts'
     # outputs = exodus
   []
   [sigma_hs]
     type = ADParsedMaterial
-    property_name = sigma_hs 
+    property_name = sigma_hs
     coupled_variables = 'sigma_hs'
     expression = 'sigma_hs'
     # outputs = exodus
@@ -266,7 +252,7 @@
   # dtmin = 1e-2
   # start_time = 0
   # end_time = 80
-  
+
   # nl_rel_tol = 1e-8
   # nl_abs_tol = 1e-10
   nl_rel_tol = 1e-6

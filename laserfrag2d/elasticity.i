@@ -82,7 +82,8 @@ filename = 'p${p0}_t${T0}_sts${sigma_ts}_scs${sigma_cs}_l${l}_h0.1_rf${refine}/f
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/annulus_r0.245_h0.1.msh'
+    # file = './mesh/annulus_r0.245_h0.1.msh'
+    file = './mesh/mesh.msh'
   []
 []
 
@@ -94,10 +95,17 @@ filename = 'p${p0}_t${T0}_sts${sigma_ts}_scs${sigma_cs}_l${l}_h0.1_rf${refine}/f
   cycles_per_step = 5
   [Markers]
     [damage_marker]
-      type = ValueRangeMarker
+      type = ValueThresholdMarker
       variable = d
-      lower_bound = 0.0001
-      upper_bound = 1
+      refine = 1e-6
+      coarsen = -1
+      # lower_bound = 0.0001
+      # upper_bound = 1
+    []
+    [stress_marker]
+      type = ValueThresholdMarker
+      variable = f_nu
+      refine = -0.5
     []
     [inner_bnd]
       type = BoundaryMarker
@@ -106,7 +114,7 @@ filename = 'p${p0}_t${T0}_sts${sigma_ts}_scs${sigma_cs}_l${l}_h0.1_rf${refine}/f
     []
     [combo]
       type = ComboMarker
-      markers = 'damage_marker inner_bnd'
+      markers = 'damage_marker stress_marker inner_bnd'
     []
   []
 []
@@ -328,18 +336,18 @@ filename = 'p${p0}_t${T0}_sts${sigma_ts}_scs${sigma_cs}_l${l}_h0.1_rf${refine}/f
     pressure = p_bc_var
     component = 1
   []
-  [left_x]
-    type = ADDirichletBC
-    boundary = left
-    variable = disp_X
-    value = 0
-  []
-  [bottom_y]
-    type = ADDirichletBC
-    boundary = bottom 
-    variable = disp_Y
-    value = 0
-  []
+  # [left_x]
+  #   type = ADDirichletBC
+  #   boundary = left
+  #   variable = disp_X
+  #   value = 0
+  # []
+  # [bottom_y]
+  #   type = ADDirichletBC
+  #   boundary = bottom 
+  #   variable = disp_Y
+  #   value = 0
+  # []
 []
 
 [Materials]
@@ -386,7 +394,7 @@ filename = 'p${p0}_t${T0}_sts${sigma_ts}_scs${sigma_cs}_l${l}_h0.1_rf${refine}/f
     # expression = (1-d)^p+eta
     phase_field = d
     parameter_names = 'p eta '
-    parameter_values = '2 1e-6'
+    parameter_values = '2 1e-5'
     # parameter_values = '2 0'
   []
   [strain]
@@ -484,7 +492,7 @@ filename = 'p${p0}_t${T0}_sts${sigma_ts}_scs${sigma_cs}_l${l}_h0.1_rf${refine}/f
 [Outputs]
   [exodus]
     type = Exodus 
-    min_simulation_time_interval = 0.2
+    min_simulation_time_interval = 0.5
     # execute_on = 'INITIAL TIMESTEP_END FAILED'
   []
   file_base = './out/${filename}'

@@ -5,7 +5,7 @@
 [Mesh]
   [fmg]
     type = FileMeshGenerator
-    file = './mesh/mesh.msh'
+    file = './mesh.msh'
   []
 []
 
@@ -18,7 +18,7 @@
 
 # [Distributions]
 #   [normal]
-#     type = Normal 
+#     type = Normal
 #     mean = 1
 #     standard_deviation = 0.05
 #   []
